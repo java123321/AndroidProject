@@ -1,0 +1,51 @@
+<resources>
+
+    <!--如果更换服务器，请修改下列的ip地址为你的服务器地址-->
+
+
+    <!--
+      <string name="ipAdrress">"http://139.196.103.219:8080/"</string>
+      <string name="ipAdrressSocket">"ws://139.196.103.219:8080/"</string>
+     -->
+
+      <string name="ipAdrress">"http://10.0.2.2:8080/"</string>
+      <string name="ipAdrressSocket">"ws://10.0.2.2:8080/"</string>
+
+
+    <!--以下代表学生端存储在本地的数据信息,调用方法统一为CommonMethod类里的getFileData,存数据为saveFileData-->
+    <string name="ID">"用户的id"</string>
+    <string name="Address">"用户的收获地址"</string>
+    <string name="Passworld">"用户密码"</string>
+    <string name="Type">"存储当前是医生登录还是学生登录---返回值：Stu代表学生---Doc代表医生"</string>
+    <string name="Phone">"收获人手机号码"</string>
+    <string name="Sex">"用户的性别"</string>
+    <string name="Weight">"用户的体重"</string>
+    <string name="Height">"用户的身高"</string>
+    <string name="Name">"用户的名字"</string>
+    <string name="Birthday">"用户的出生年月"</string>
+    <string name="GuaHaoNumber">"当前排队的人数"</string>
+    <string name="WorkTime">"获取医生上班时间"</string>
+
+
+    <!-- 取该图片需要使用CommonMethod类里的readObjFromSDCard，参数为Icon，存方法为saveObj2SDCard-->
+    <string name="Icon">"用户的头像"</string>
+    <string name="DocIcon">"医生的头像"</string>
+    <string name="DocLicense">"医生的执照"</string>
+
+
+    <!--以下代表医生端存储在本地的数据信息,调用方法统一为CommonMethod类里的getFileData,存数据为saveFileData-->
+    <string name="DocName">"医生的名字"</string>
+    <string name="DocSex">"医生的性别"</string>
+    <string name="DocTitle">"医生的职称"</string>
+    <string name="DocOffice">"医生的科室"</string>
+    <string name="DocIntroduce">"医生的简介</string>
+
+    <!--支付宝测试账号
+    商家账号：vlweqk2984@sandbox.com
+    商家密码：111111
+
+    买家账号：tfteyf3398@sandbox.com
+    卖家密码：111111
+    -->
+
+</resources>

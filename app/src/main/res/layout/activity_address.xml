@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="670dp"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="#FD0896F5"
+            android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:text="收货地址"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:layout_weight="10"
+            android:textSize="25dp" />
+
+        <Button
+            android:id="@+id/submit"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:visibility="invisible"
+            android:layout_gravity="center_vertical"
+            android:background="#00000000"
+            android:text="保存"
+            android:layout_weight="2"
+            android:textColor="#FFFFFF"
+            android:textSize="16dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:layout_marginTop="12dp">
+            <TextView
+                android:id="@+id/msg"
+                android:layout_width="312dp"
+                android:layout_height="match_parent"
+                android:singleLine="false"
+                android:text="地址展示"
+                android:layout_marginLeft="10dp"
+                android:textSize="14sp" />
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="70dp"
+                android:background="#525252"
+                />
+
+            <Button
+            android:id="@+id/compile"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:background="#00000000"
+            android:text="编辑"
+            android:textSize="16dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="505dp"
+            android:layout_marginTop="50dp"
+            android:background="#FFFFFF"
+            android:orientation="vertical">
+            <EditText
+                android:id="@+id/con_name"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:textCursorDrawable="@null"
+                android:background="@drawable/edit_selector"
+                android:visibility="invisible"
+                android:hint="收货人姓名" />
+
+            <EditText
+                android:id="@+id/con_phone"
+                android:layout_width="match_parent"
+                android:layout_height="61dp"
+                android:textCursorDrawable="@null"
+                android:background="@drawable/edit_selector"
+                android:visibility="invisible"
+                android:hint="收货人电话" />
+
+            <EditText
+                android:id="@+id/con_address"
+                android:layout_width="match_parent"
+                android:textCursorDrawable="@null"
+                android:background="@drawable/edit_selector"
+                android:layout_height="59dp"
+                android:visibility="invisible"
+                android:hint="收货人地址" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

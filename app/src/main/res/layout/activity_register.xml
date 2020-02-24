@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingLeft="30dp"
+            android:paddingTop="60dp"
+            android:text="注册账户"
+            android:textColor="#161515"
+            android:textSize="30sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="30dp"
+            android:paddingTop="20dp"
+            android:text="填写您的邮箱，密码及验证码"
+            android:textColor="#0C0000" />
+
+        <EditText
+
+            android:id="@+id/stuNo"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="35dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="35dp"
+            android:background="@drawable/edit_selector"
+            android:hint="邮箱"
+            android:textCursorDrawable="@null"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+        <EditText
+
+            android:id="@+id/stuPwd"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
+            android:background="@drawable/edit_selector"
+            android:drawableRight="@drawable/biyan"
+            android:hint="密码"
+            android:inputType="textPassword"
+            android:textCursorDrawable="@null"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+
+        <EditText
+            android:id="@+id/stuPwd_two"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="35dp"
+            android:background="@drawable/edit_selector"
+            android:drawableRight="@drawable/biyan"
+            android:hint="再次确认密码"
+            android:inputType="textPassword"
+            android:textCursorDrawable="@null"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp">
+
+            <EditText
+                android:id="@+id/msg"
+                android:layout_width="244dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="35dp"
+                android:background="@drawable/edit_selector"
+                android:hint="请填写您收到的验证码"
+                android:textCursorDrawable="@null"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/getmsg"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_gravity="right"
+                android:layout_marginRight="35dp"
+                android:background="@drawable/btn2"
+                android:text="获取验证码"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/stuReg"
+            android:layout_width="342dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/style_jianbian"
+            android:text="下一步"
+            android:textColor="#FCFFFFFF"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+</LinearLayout>

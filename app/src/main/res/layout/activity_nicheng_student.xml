@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="#FD0896F5"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="18"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="25dp"
+            android:text="更改姓名"></TextView>
+
+        <TextView
+            android:id="@+id/baocun"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:textColor="#FFFFFF"
+            android:textSize="16dp"
+            android:text="保存"></TextView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="#FFFFFF"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/xingming"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:textCursorDrawable="@null"
+            android:layout_marginLeft="10dp"
+            android:background="#FFFFFF"
+            android:drawableRight="@drawable/chahao"
+            android:maxLength="10"
+            android:hint="请输入姓名"
+            android:textSize="14sp"></EditText>
+    </LinearLayout>
+</LinearLayout>

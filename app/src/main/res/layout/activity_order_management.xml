@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".OrderManagement">
+
+    <TextView
+        android:textSize="25dp"
+        android:gravity="center"
+        android:text="订单管理"
+        android:textColor="#FFFFFF"
+        android:background="#FD0896F5"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/needPost"
+          android:text="待发货"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="37dp"/>
+
+        <Button
+            android:id="@+id/alreadyPost"
+            android:text="已发货"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:background="#FFFFFF"
+            android:layout_height="37dp"/>
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/orderManageRecylerview"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_height="match_parent"/>
+</LinearLayout>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ssss"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:textSize="25dp"
+        android:text="问诊"
+        android:textColor="#FFFFFF"
+        android:background="#FD0896F5"
+        android:gravity="center" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="629dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <Button
+                android:id="@+id/wenzhen1"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:background="@drawable/style_round"
+                android:text="人工问诊"
+                android:textColor="#FFFFFF"
+                android:textSize="16dp" />
+
+            <com.example.ourprojecttest.DiffuseView1
+                android:id="@+id/diffuseView1"
+                android:layout_width="wrap_content"
+                android:layout_height="240dp"
+                android:layout_gravity="center"
+                android:background="#00000000"
+                app:diffuse_color="#84FFFF"
+                app:diffuse_coreColor="#0FEEEE"
+                app:diffuse_coreImage="@android:drawable/ic_menu_search"
+                app:diffuse_coreRadius="150"
+                app:diffuse_maxWidth="280"
+                app:diffuse_speed="2"
+                app:diffuse_width="4" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/wenzhen2"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:background="@drawable/style_round"
+
+
+                android:text="机器问诊"
+                android:textColor="#FFFFFF"
+                android:textSize="16dp" />
+
+
+            <com.example.ourprojecttest.DiffuseView1
+                android:id="@+id/diffuseView"
+                android:layout_width="wrap_content"
+                android:layout_height="243dp"
+                android:background="#00000000"
+                app:diffuse_color="#CE9BF3"
+                app:diffuse_coreColor="#9104F5"
+                app:diffuse_coreImage="@android:drawable/ic_menu_search"
+                app:diffuse_coreRadius="150"
+                app:diffuse_maxWidth="260"
+                app:diffuse_speed="2"
+                app:diffuse_width="4" />
+        </FrameLayout>
+    </LinearLayout>
+
+</LinearLayout>

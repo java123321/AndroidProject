@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="NumPickView">
+        <attr name="totalNum" format="integer"/>
+        <attr name="showNum" format="integer"/>
+        <attr name="offices" format="integer"/>
+        <attr name="source"   format="integer"/>
+        <attr name="office"   format="integer"/>
+        <attr name="totalNum2" format="integer"/>
+        <attr name="textColor" format="color"/>
+    </declare-styleable>
+    <!--扩散圆颜色-->
+
+
+    <attr format="color" name="diffuse_color"/>
+
+    <!--中心圆颜色-->
+
+
+    <attr format="color" name="diffuse_coreColor"/>
+
+    <!--中心圆图片-->
+
+
+    <attr format="reference" name="diffuse_coreImage"/>
+
+    <!--中心圆半径-->
+
+
+    <attr format="float" name="diffuse_coreRadius"/>
+
+    <!--扩散圆宽度,值越小越宽-->
+
+
+    <attr format="integer" name="diffuse_width"/>
+
+    <!--最大扩散宽度-->
+
+
+    <attr format="integer" name="diffuse_maxWidth"/>
+
+    <!--扩散速度，值越大越快-->
+
+
+    <attr format="integer" name="diffuse_speed"/>
+
+
+    <declare-styleable name="DiffuseView">
+
+    <attr name="diffuse_color"/>
+
+    <attr name="diffuse_coreColor"/>
+
+    <attr name="diffuse_coreImage"/>
+
+    <attr name="diffuse_coreRadius"/>
+
+    <attr name="diffuse_width"/>
+
+    <attr name="diffuse_maxWidth"/>
+
+    <attr name="diffuse_speed"/>
+
+</declare-styleable>
+
+</resources>

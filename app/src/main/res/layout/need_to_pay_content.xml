@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="400dp"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:background="@drawable/jiesuan2"
+    >
+
+    <ImageView
+        android:id="@+id/drugPicture"
+        android:src="@drawable/test"
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>
+
+    <TextView
+        android:id="@+id/drugName"
+        android:textSize="16dp"
+        android:text="999感冒灵"
+        android:layout_width="150dp"
+        android:textColor="#000000"
+        android:layout_marginLeft="10dp"
+        android:gravity="center_vertical"
+        android:layout_height="50dp"/>
+
+    <LinearLayout
+        android:paddingRight="5dp"
+        android:layout_marginLeft="60dp"
+        android:layout_gravity="right"
+        android:orientation="vertical"
+        android:layout_width="100dp"
+        android:layout_height="100dp">
+
+        <TextView
+            android:id="@+id/drugUnite"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:gravity="center_vertical"
+            android:text="￥ 68.45"
+            android:textColor="#000000"
+            android:textSize="16dp" />
+        <TextView
+            android:id="@+id/drugAmount"
+            android:text="x 3"
+            android:textColor="#000000"
+            android:gravity="center_vertical"
+            android:textSize="16dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_width="100dp"
+            android:layout_height="50dp"/>
+    </LinearLayout>
+
+</LinearLayout>

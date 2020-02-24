@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:textSize="25dp"
+        android:text="接诊"
+        android:textColor="#FFFFFF"
+        android:background="#FD0896F5"
+        android:gravity="center" />
+    <FrameLayout
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <Button
+            android:id="@+id/jiezhen"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:textSize="16dp"
+            android:textColor="#FFFFFF"
+            android:text="接诊"
+            android:layout_gravity="center"
+            android:background="@drawable/style_round"/>
+        <com.example.ourprojecttest.DiffuseView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:background="#00000000"
+            android:layout_gravity="center"
+            android:id="@+id/diffuseView"
+            app:diffuse_width="4"
+            app:diffuse_speed="2"
+            app:diffuse_maxWidth="300"
+            app:diffuse_coreRadius="120"
+            app:diffuse_coreImage="@android:drawable/ic_menu_search"
+            app:diffuse_coreColor="@color/color_bottom"
+            app:diffuse_color="#03ADFC"/>
+    </FrameLayout>
+
+</LinearLayout>

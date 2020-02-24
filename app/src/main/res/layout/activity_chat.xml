@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#d8e0e8">
+    <LinearLayout
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal"
+        android:background="#FD0896F5">
+        <TextView
+            android:gravity="center"
+            android:id="@+id/chatWindowName"
+            android:text="华佗"
+            android:textSize="18dp"
+            android:layout_marginLeft="190dp"
+            android:layout_marginRight="110dp"
+            android:textColor="#FFFFFF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:textColor="#FFFFFF"
+            android:text="开处方"/>
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/msg_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dp"
+        android:background="#FF909090"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background=" #FFFFFF">
+        <ImageView
+            android:id="@+id/videoChat"
+            android:src="@drawable/shipin1"
+            android:layout_gravity="center_vertical"
+            android:layout_width="60dp"
+            android:layout_height="45dp"
+        />
+        <EditText
+            android:id="@+id/input_text"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/yunajiao"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:textCursorDrawable="@null"
+            android:maxLines="2"/>
+        <Button
+            android:id="@+id/send"
+            android:layout_width="75dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="40dp"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/style_jiesuan"
+            android:text="发送"/>
+    </LinearLayout>
+</LinearLayout>
+
