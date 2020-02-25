@@ -1,4 +1,4 @@
-package com.example.ourprojecttest.StuNeedToPay;
+package com.example.ourprojecttest.StuMine.StuNeedToPay;
 
 public class FooterInfoBean {
     String drugAmount;

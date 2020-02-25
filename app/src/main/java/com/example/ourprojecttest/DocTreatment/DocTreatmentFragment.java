@@ -10,13 +10,8 @@ import android.app.Fragment;
 import android.widget.Button;
 
 import com.example.ourprojecttest.DiffuseView;
-import com.example.ourprojecttest.DocOperatActivity;
 import com.example.ourprojecttest.DocService;
 import com.example.ourprojecttest.R;
-
-import de.hdodenhof.circleimageview.CircleImageView;
-
-
 
 
 public class DocTreatmentFragment extends Fragment {

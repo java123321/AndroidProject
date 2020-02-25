@@ -1,6 +1,5 @@
 package com.example.ourprojecttest;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,8 +11,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,16 +18,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.json.JSONObject;
+import com.example.ourprojecttest.DocTreatment.DocOperatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.WebSocket;
-import okhttp3.WebSocketListener;
 
 public class Chat extends AppCompatActivity {
     public static final int TYPE_RECEIVED=0;
@@ -166,7 +157,7 @@ public class Chat extends AppCompatActivity {
                             .setNegativeButton("不开单", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    Intent intent=new Intent(Chat.this,DocOperatActivity.class);
+                                    Intent intent=new Intent(Chat.this, DocOperatActivity.class);
                                     startActivity(intent);
                                 }
                             })

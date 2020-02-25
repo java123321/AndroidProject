@@ -24,7 +24,7 @@ import android.widget.TextView;
 
 import com.example.ourprojecttest.CommonMethod;
 import com.example.ourprojecttest.DocBottomNavigation;
-import com.example.ourprojecttest.DocOrderManagement.OrderManagement;
+import com.example.ourprojecttest.DocMine.DocOrderManagement.OrderManagement;
 import com.example.ourprojecttest.ImmersiveStatusbar;
 import com.example.ourprojecttest.MainActivity;
 import com.example.ourprojecttest.ModifyPassword;

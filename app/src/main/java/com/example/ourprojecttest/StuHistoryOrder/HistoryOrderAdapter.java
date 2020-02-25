@@ -11,8 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ourprojecttest.StuNeedToPay.ContentInfoBean;
-import com.example.ourprojecttest.StuNeedToPay.HeadInfoBean;
+import com.example.ourprojecttest.StuMine.StuNeedToPay.ContentInfoBean;
+import com.example.ourprojecttest.StuMine.StuNeedToPay.HeadInfoBean;
 import com.example.ourprojecttest.R;
 
 import java.util.ArrayList;

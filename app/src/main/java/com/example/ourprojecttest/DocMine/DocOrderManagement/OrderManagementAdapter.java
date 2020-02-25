@@ -1,4 +1,4 @@
-package com.example.ourprojecttest.StuNeedToPay;
+package com.example.ourprojecttest.DocMine.DocOrderManagement;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,23 +7,22 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ourprojecttest.AddressActivity;
+import com.example.ourprojecttest.StuMine.StuNeedToPay.ContentInfoBean;
 import com.example.ourprojecttest.R;
 
 import java.util.ArrayList;
 
-public class NeedToPayAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class OrderManagementAdapter extends RecyclerView.Adapter <RecyclerView.ViewHolder> {
     private final int ITEM_HEADER=1,ITEM_CONTENT=2,ITEM_FOOTER=3;
-    Intent intent=new Intent("com.example.ourprojecttest.BUY_ORDER");
-    private Context mContext;
+    Intent intent=new Intent("com.example.ourprojecttest.OrderManagement");
+    Context mContext;
+    private ArrayList<Object> dataList;
 
- private ArrayList<Object> dataList;
-
-
-    public NeedToPayAdapter(Context context){
+    public OrderManagementAdapter(Context context){
         mContext=context;
     }
 
@@ -32,15 +31,19 @@ public class NeedToPayAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
 
-
-
     //头部布局持有者类
     class HeadViewHolder extends RecyclerView.ViewHolder{
-        TextView time;
+        TextView receiverName;
+        TextView receiverTelephone;
+        TextView receiverAddress;
+        TextView receiverDate;
 
         public HeadViewHolder(@NonNull View itemView) {
             super(itemView);
-            time=itemView.findViewById(R.id.orderTime);
+            receiverName=itemView.findViewById(R.id.receiverName);
+            receiverTelephone=itemView.findViewById(R.id.receiverTelephone);
+            receiverAddress=itemView.findViewById(R.id.receiverAddress);
+            receiverDate=itemView.findViewById(R.id.orderTime);
         }
     }
     //药品布局持有者类
@@ -60,25 +63,11 @@ public class NeedToPayAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
     //脚部布局持有者类
     class FootViewHolder extends RecyclerView.ViewHolder{
-        TextView orderInfo;
-        Button modefyAddress;
-        Button deleteOrder;
-        Button goToPay;
+        Button alreadPost;
+        TextView orderTime;
         public FootViewHolder(@NonNull View itemView) {
             super(itemView);
-            orderInfo=itemView.findViewById(R.id.orderInfo);
-            modefyAddress=itemView.findViewById(R.id.modefyAddress);
-            deleteOrder=itemView.findViewById(R.id.deleteOrder);
-            goToPay=itemView.findViewById(R.id.goToPay);
-
-            //设置修改地址的点击事件
-            modefyAddress.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent=new Intent(mContext, AddressActivity.class);
-                    mContext.startActivity(intent);
-                }
-            });
+            alreadPost=itemView.findViewById(R.id.alreadyPostDoc);
         }
     }
 
@@ -94,6 +83,7 @@ public class NeedToPayAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         else {
             return ITEM_FOOTER;
         }
+
     }
 
     @NonNull
@@ -105,41 +95,40 @@ public class NeedToPayAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             return new ContentViewHolder(view);
         }
         else if (viewType==ITEM_HEADER){
-            view=View.inflate(mContext,R.layout.need_to_pay_header,null);
+            view=View.inflate(mContext,R.layout.need_to_post_header,null);
             return new HeadViewHolder(view);
         }
         else{
-            view=View.inflate(mContext,R.layout.need_to_pay_footer,null);
+            view=View.inflate(mContext,R.layout.need_to_post_footer,null);
             return new FootViewHolder(view);
         }
     }
 
-
     @Override
-    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
-            int type=getItemViewType(position);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        int type=getItemViewType(position);
         //绑定药品内容
         if (type==ITEM_CONTENT){
             ContentViewHolder contentViewHolder=(ContentViewHolder)holder;
             ContentInfoBean bean=(ContentInfoBean) dataList.get(position);
-
-           contentViewHolder.drugUnite.setText("￥ "+bean.getDrugUnite());
-           contentViewHolder.drugAmount.setText("X "+bean.getDrugAmount());
-           contentViewHolder.drugName.setText(bean.getDrugName());
-
-           contentViewHolder.drugPicture.setImageBitmap(bean.getDrugPicture());
-
+            contentViewHolder.drugUnite.setText("￥ "+bean.getDrugUnite());
+            contentViewHolder.drugAmount.setText("X "+bean.getDrugAmount());
+            contentViewHolder.drugName.setText(bean.getDrugName());
+            contentViewHolder.drugPicture.setImageBitmap(bean.getDrugPicture());
         }//绑定订单头部
         else if(type==ITEM_HEADER){
             HeadViewHolder headViewHolder=(HeadViewHolder)holder;
             HeadInfoBean bean=(HeadInfoBean)dataList.get(position);
-            headViewHolder.time.setText("订单时间: "+bean.getOrderTime());
+            headViewHolder.receiverName.setText(bean.getReceiverName());
+            headViewHolder.receiverTelephone.setText(bean.getReceiverTelephone());
+            headViewHolder.receiverAddress.setText(bean.getReceiverAddress());
+            headViewHolder.receiverDate.setText(bean.getOrderTime());
         }
         else{//绑定脚部信息
             FootViewHolder footViewHolder=(FootViewHolder)holder;
             FooterInfoBean bean=(FooterInfoBean) dataList.get(position);
-            footViewHolder.orderInfo.setText("共"+bean.getDrugAmount()+"件商品 合计:￥ "+bean.getOrderPrice());
         }
+
     }
 
     @Override

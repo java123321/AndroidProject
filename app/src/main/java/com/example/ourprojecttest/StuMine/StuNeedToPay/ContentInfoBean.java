@@ -1,4 +1,4 @@
-package com.example.ourprojecttest.StuNeedToPay;
+package com.example.ourprojecttest.StuMine.StuNeedToPay;
 
 import android.graphics.Bitmap;
 

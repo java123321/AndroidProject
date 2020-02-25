@@ -1,6 +1,6 @@
-package com.example.ourprojecttest.DocOrderManagement;
+package com.example.ourprojecttest.DocMine.DocOrderManagement;
 
-import com.example.ourprojecttest.StuNeedToPay.ContentInfoBean;
+import com.example.ourprojecttest.StuMine.StuNeedToPay.ContentInfoBean;
 
 import java.util.ArrayList;
 

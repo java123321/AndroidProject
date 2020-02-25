@@ -1,4 +1,4 @@
-package com.example.ourprojecttest.StuNeedToPost;
+package com.example.ourprojecttest.StuMine.StuNeedToReceive;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,32 +9,33 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import com.example.ourprojecttest.ImmersiveStatusbar;
+import com.example.ourprojecttest.StuMine.StuNeedToPay.ContentInfoBean;
 import com.example.ourprojecttest.R;
-import com.example.ourprojecttest.StuNeedToPay.ContentInfoBean;
-import com.example.ourprojecttest.StuNeedToReceive.NeedToReceiveHelper;
-import com.example.ourprojecttest.StuNeedToReceive.OrderListBean;
 
 import java.util.ArrayList;
 
-public class NeedToPost extends AppCompatActivity {
+public class NeedToReceive extends AppCompatActivity {
 
+    private Bitmap Rfile2Bitmap(){
+    return BitmapFactory.decodeResource(getResources(),R.drawable.test);
+}
 
     RecyclerView recyclerView;
-    NeedToPostAdapter adapter;
+    NeedToReceiveAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_need_to_post);
+        setContentView(R.layout.activity_need_to_receive);
         initView();
         ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
     }
 
     private void initView(){
-        recyclerView=findViewById(R.id.needToPost);
-        adapter=new   NeedToPostAdapter();
-        adapter.setContext(NeedToPost.this);
-        LinearLayoutManager manager=new LinearLayoutManager(NeedToPost.this);
+        recyclerView=findViewById(R.id.needToReceiveRecycler);
+        adapter=new NeedToReceiveAdapter();
+        adapter.setContext(NeedToReceive.this);
+        LinearLayoutManager manager=new LinearLayoutManager(NeedToReceive.this);
         recyclerView.setLayoutManager(manager);
 
         //创建模拟订单数据
@@ -67,10 +68,9 @@ public class NeedToPost extends AppCompatActivity {
         dataList.add(data);
         bean.setDrugInfoBeans(dataList);
         orderListBeans.add(bean);
+
         adapter.setList(NeedToReceiveHelper.getDataAfterHandle(orderListBeans));
         recyclerView.setAdapter(adapter);
     }
-    private Bitmap Rfile2Bitmap(){
-        return BitmapFactory.decodeResource(getResources(),R.drawable.test);
-    }
+
 }

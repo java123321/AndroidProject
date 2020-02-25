@@ -1,4 +1,4 @@
-package com.example.ourprojecttest.DocOrderManagement;
+package com.example.ourprojecttest.DocMine.DocOrderManagement;
 
 public class HeadInfoBean {
     private String receiverName;

@@ -22,6 +22,8 @@ import android.widget.TextView;
 
 import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
+import com.example.ourprojecttest.StuMine.AddressActivity;
+
 import java.text.DecimalFormat;
 import java.util.Map;
 
@@ -289,7 +291,7 @@ public class StuBuyDrug extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent intent=new Intent(StuBuyDrug.this,AddressActivity.class);
+                Intent intent=new Intent(StuBuyDrug.this, AddressActivity.class);
                 startActivity(intent);
             }
         });

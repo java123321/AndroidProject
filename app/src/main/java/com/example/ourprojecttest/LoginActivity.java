@@ -21,7 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.example.ourprojecttest.DocOrderManagement.OrderManagement;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.IOException;
@@ -329,6 +329,7 @@ public class LoginActivity extends AppCompatActivity {
 
             //将医生的名字保存到本地
             if(jsonObject.has("Doc_Name")){
+                Log.d("docname",jsonObject.getString("Doc_Name"));
                 method.saveFileData("DocName",jsonObject.getString("Doc_Name"),LoginActivity.this);
             }
             else{

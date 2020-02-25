@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StuNeedToPay.NeedToPay">
+    tools:context=".StuMine.StuNeedToPay.NeedToPay">
 <TextView
     android:gravity="center"  android:background="#FD0896F5"
     android:textSize="25dp"

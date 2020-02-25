@@ -1,4 +1,4 @@
-package com.example.ourprojecttest.StuNeedToPay;
+package com.example.ourprojecttest.StuMine.StuNeedToPay;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;

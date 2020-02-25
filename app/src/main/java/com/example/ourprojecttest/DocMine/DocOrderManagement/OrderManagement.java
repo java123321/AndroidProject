@@ -1,4 +1,4 @@
-package com.example.ourprojecttest.DocOrderManagement;
+package com.example.ourprojecttest.DocMine.DocOrderManagement;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ourprojecttest.ImmersiveStatusbar;
-import com.example.ourprojecttest.StuNeedToPay.ContentInfoBean;
+import com.example.ourprojecttest.StuMine.StuNeedToPay.ContentInfoBean;
 import com.example.ourprojecttest.R;
 
 import java.util.ArrayList;

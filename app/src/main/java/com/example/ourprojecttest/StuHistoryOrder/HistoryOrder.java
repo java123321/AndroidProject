@@ -10,9 +10,9 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.ourprojecttest.ImmersiveStatusbar;
-import com.example.ourprojecttest.StuNeedToPay.ContentInfoBean;
-import com.example.ourprojecttest.StuNeedToReceive.NeedToReceiveHelper;
-import com.example.ourprojecttest.StuNeedToReceive.OrderListBean;
+import com.example.ourprojecttest.StuMine.StuNeedToPay.ContentInfoBean;
+import com.example.ourprojecttest.StuMine.StuNeedToReceive.NeedToReceiveHelper;
+import com.example.ourprojecttest.StuMine.StuNeedToReceive.OrderListBean;
 import com.example.ourprojecttest.R;
 
 import java.util.ArrayList;

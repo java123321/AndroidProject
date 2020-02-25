@@ -23,10 +23,10 @@
         android:theme="@style/Noactionbar"
         android:usesCleartextTraffic="true">
         <activity android:name=".StuHistoryOrder.HistoryOrder"></activity>
-        <activity android:name=".StuNeedToPost.NeedToPost" />
-        <activity android:name=".StuNeedToReceive.NeedToReceive" />
-        <activity android:name=".StuNeedToPay.NeedToPay" />
-        <activity android:name=".DocOrderManagement.OrderManagement" />
+        <activity android:name=".StuMine.StuNeedToPost.NeedToPost" />
+        <activity android:name=".StuMine.StuNeedToReceive.NeedToReceive" />
+        <activity android:name=".StuMine.StuNeedToPay.NeedToPay" />
+        <activity android:name=".DocMine.DocOrderManagement.OrderManagement" />
         <activity android:name=".Chat" />
         <activity android:name=".StuDiagnosis.RenGongWenZhen" />
         <activity android:name=".activity_doc_name" />
@@ -36,10 +36,10 @@
         <activity android:name=".FindPass" />
         <activity android:name=".UpDrugMsgActivity" />
         <activity android:name=".PerfeActivity" />
-        <activity android:name=".AddressActivity" />
+        <activity android:name=".StuMine.AddressActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MailboxActivity" />
-        <activity android:name=".DocOperatActivity" />
+        <activity android:name=".DocTreatment.DocOperatActivity" />
         <activity android:name=".DocMainActivity" />
         <activity android:name=".ModifyActivity" />
         <activity android:name=".activity_name_student" />

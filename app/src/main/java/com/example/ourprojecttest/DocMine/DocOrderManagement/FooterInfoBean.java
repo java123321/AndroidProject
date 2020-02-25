@@ -1,7 +1,7 @@
-package com.example.ourprojecttest.StuNeedToPay;
+package com.example.ourprojecttest.DocMine.DocOrderManagement;
 
-public class HeadInfoBean {
-    String orderTime;
+public class FooterInfoBean {
+   private String orderTime;
 
     public String getOrderTime() {
         return orderTime;

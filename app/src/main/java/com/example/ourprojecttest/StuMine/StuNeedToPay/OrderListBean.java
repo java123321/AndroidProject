@@ -1,11 +1,19 @@
-package com.example.ourprojecttest.StuNeedToReceive;
-
-import com.example.ourprojecttest.StuNeedToPay.ContentInfoBean;
+package com.example.ourprojecttest.StuMine.StuNeedToPay;
 
 import java.util.ArrayList;
 
 public class OrderListBean {
-    private String orderTime;
+   private String orderTime;
+
+    public String getOrderPrice() {
+        return orderPrice;
+    }
+
+    public void setOrderPrice(String orderPrice) {
+        this.orderPrice = orderPrice;
+    }
+
+    private String orderPrice;
     private ArrayList<ContentInfoBean> drugInfoBeans;
 
     public ArrayList<ContentInfoBean> getDrugInfoBeans() {
@@ -23,4 +31,8 @@ public class OrderListBean {
     public void setOrderTime(String orderTime) {
         this.orderTime = orderTime;
     }
+
+
+
+
 }

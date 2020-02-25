@@ -1,4 +1,4 @@
-package com.example.ourprojecttest;
+package com.example.ourprojecttest.DocTreatment;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,8 +16,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
+
+import com.example.ourprojecttest.Chat;
+import com.example.ourprojecttest.DisplayStuAdapter;
+import com.example.ourprojecttest.DisplayStuList;
+import com.example.ourprojecttest.DocService;
+import com.example.ourprojecttest.ImmersiveStatusbar;
+import com.example.ourprojecttest.R;
 
 import java.util.ArrayList;
 
@@ -196,7 +202,7 @@ public class DocOperatActivity extends AppCompatActivity {
                 }
                 else{//如果学生统一和医生沟通
                     Log.d("docop","intoChat");
-                    Intent intentToChat=new Intent(DocOperatActivity.this,Chat.class);
+                    Intent intentToChat=new Intent(DocOperatActivity.this, Chat.class);
                     startActivity(intentToChat);
                 }
             }
