@@ -1,15 +1,16 @@
 package com.example.ourprojecttest;
 
 
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,7 +18,9 @@ import java.util.List;
  */
 
 public  class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
-    private List<Msg>mMsgList;
+    private ArrayList<Msg>mMsgList;
+    Bitmap left;
+    Bitmap right;
     static class ViewHolder extends RecyclerView.ViewHolder
     {
         LinearLayout leftLayout;
@@ -26,6 +29,7 @@ public  class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
         TextView rightMsg;
         Roundimage iconLeft;
         Roundimage iconRight;
+
         public ViewHolder(View view)
         {
             super(view);
@@ -38,9 +42,11 @@ public  class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
             rightMsg=view.findViewById(R.id.right_msg);
         }
     }
-    public MsgAdapter(List<Msg>msgList)
+    public MsgAdapter(ArrayList<Msg> msgList, Bitmap left, Bitmap right)
     {
         mMsgList=msgList;
+        this.left=left;
+        this.right=right;
     }
 
     @NonNull
@@ -59,6 +65,7 @@ public  class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
         {
             //如果是收到的消息则显示左边的布局,将右边的布局隐藏掉
             holder.leftLayout.setVisibility(View.VISIBLE);
+            holder.iconLeft.setImageBitmap(left);
             holder.rightLayout.setVisibility(View.GONE);
             holder.leftMsg.setText(msg.getContent());
         }
@@ -66,6 +73,7 @@ public  class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
         {
             //如果是收到的消息则显示右边的布局，将左边的布局隐藏掉
             holder.rightLayout.setVisibility(View.VISIBLE);
+            holder.iconRight.setImageBitmap(right);
             holder.leftLayout.setVisibility(View.GONE);
             holder.rightMsg.setText(msg.getContent());
         }

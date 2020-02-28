@@ -3,35 +3,30 @@ package com.example.ourprojecttest;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.util.Log;
 
+import com.example.ourprojecttest.StuMine.ShoppingCart.ShoppingCartBean;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OptionalDataException;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StreamCorruptedException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -121,10 +116,10 @@ public class CommonMethod {
      * @param length     数组的长度
      * @return true 保存成功
      */
-    public Double calculatePrice(ArrayList<ShoppingCartList> lists, int length) {
+    public Double calculatePrice(ArrayList<ShoppingCartBean> lists, int length) {
         Double price = 0.0;
         for (int i = 0; i < length; i++) {
-            ShoppingCartList list = lists.get(i);
+            ShoppingCartBean list = lists.get(i);
             if (list.getChecked().equals("true")) {
                 Log.d("method",i+"");
                 price += list.getTotalPrice();
@@ -137,35 +132,6 @@ public class CommonMethod {
     }
 
 
-    /**
-     * 该方法用于将购物车对象数组集合写入sd卡
-     *
-     * @param fileName 文件名
-     * @param list     集合
-     * @return true 保存成功
-     */
-    public boolean writeListIntoSDcard(String fileName, ArrayList<ShoppingCartList> list) {
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            File sdCardDir = Environment.getExternalStorageDirectory();//获取sd卡目录
-            File sdFile = new File(sdCardDir, fileName);
-            try {
-                FileOutputStream fos = new FileOutputStream(sdFile);
-                ObjectOutputStream oos = new ObjectOutputStream(fos);
-                oos.writeObject(list);//写入
-                fos.close();
-                oos.close();
-                return true;
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                return false;
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
 
 
     /**
@@ -241,15 +207,15 @@ public class CommonMethod {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public ArrayList<ShoppingCartList> readListFromSdCard(String fileName) {
+    public ArrayList<ShoppingCartBean> readListFromSdCard(String fileName) {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {  //检测sd卡是否存在
-            ArrayList<ShoppingCartList> list;
+            ArrayList<ShoppingCartBean> list;
             File sdCardDir = Environment.getExternalStorageDirectory();
             File sdFile = new File(sdCardDir, fileName);
             try {
                 FileInputStream fis = new FileInputStream(sdFile);
                 ObjectInputStream ois = new ObjectInputStream(fis);
-                list = (ArrayList<ShoppingCartList>) ois.readObject();
+                list = (ArrayList<ShoppingCartBean>) ois.readObject();
                 fis.close();
                 ois.close();
                 return list;
@@ -273,6 +239,181 @@ public class CommonMethod {
             return null;
         }
     }
+
+    /**
+     * 读取消息记录对象数组
+     *
+     * @param fileName 文件名
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public ArrayList<MessageBean> readMessageRecordListFromSdCard(String fileName) {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {  //检测sd卡是否存在
+            ArrayList<MessageBean> list;
+            File sdCardDir = Environment.getExternalStorageDirectory();
+            File sdFile = new File(sdCardDir, fileName);
+            try {
+                FileInputStream fis = new FileInputStream(sdFile);
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                list = (ArrayList<MessageBean>) ois.readObject();
+                fis.close();
+                ois.close();
+                return list;
+            } catch (StreamCorruptedException e) {
+                e.printStackTrace();
+                return null;
+            } catch (OptionalDataException e) {
+                e.printStackTrace();
+                return null;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                return null;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+
+    /**
+     * 该方法用于将购物车对象数组集合写入sd卡
+     *
+     * @param fileName 文件名
+     * @param list     集合
+     * @return true 保存成功
+     */
+    public boolean writeListIntoSDcard(String fileName, ArrayList<ShoppingCartBean> list) {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            File sdCardDir = Environment.getExternalStorageDirectory();//获取sd卡目录
+            File sdFile = new File(sdCardDir, fileName);
+            try {
+                FileOutputStream fos = new FileOutputStream(sdFile);
+                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                oos.writeObject(list);//写入
+                fos.close();
+                oos.close();
+                return true;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                return false;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+
+    /**
+     * 该方法用于将消息记录集合写入sd卡
+     *
+     * @param fileName 文件名
+     * @param list     集合
+     * @return true 保存成功
+     */
+    public boolean writeMessageRecordListIntoSDcard(String fileName, ArrayList<MessageBean> list) {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            File sdCardDir = Environment.getExternalStorageDirectory();//获取sd卡目录
+            File sdFile = new File(sdCardDir, fileName);
+            try {
+                FileOutputStream fos = new FileOutputStream(sdFile);
+                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                oos.writeObject(list);//写入
+                fos.close();
+                oos.close();
+                return true;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                return false;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+
+    /**
+     * 读取消息Msg数组
+     *
+     * @param fileName 文件名
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public ArrayList<Msg> readMessageContentFromSdCard(String fileName) {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {  //检测sd卡是否存在
+            ArrayList<Msg> list;
+            File sdCardDir = Environment.getExternalStorageDirectory();
+            File sdFile = new File(sdCardDir, fileName);
+            try {
+                FileInputStream fis = new FileInputStream(sdFile);
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                list = (ArrayList<Msg>) ois.readObject();
+                fis.close();
+                ois.close();
+                return list;
+            } catch (StreamCorruptedException e) {
+                e.printStackTrace();
+                return null;
+            } catch (OptionalDataException e) {
+                e.printStackTrace();
+                return null;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                return null;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+
+    /**
+     * 该方法用于将将消息内容msg数据保存到本地
+     *
+     * @param fileName 文件名
+     * @param list     集合
+     * @return true 保存成功
+     */
+    public boolean writeMessageContentIntoSDcard(String fileName, ArrayList<Msg> list) {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            File sdCardDir = Environment.getExternalStorageDirectory();//获取sd卡目录
+            File sdFile = new File(sdCardDir, fileName);
+            try {
+                FileOutputStream fos = new FileOutputStream(sdFile);
+                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                oos.writeObject(list);//写入
+                fos.close();
+                oos.close();
+                return true;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                return false;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
 
     /**
      * 保存数据到本地
@@ -398,5 +539,24 @@ public class CommonMethod {
             sb.append(chars[bit]);
         }
         return sb.toString().trim();
+    }
+
+        //该方法用来截取Str字符串中strStart和strEnd之间的部分
+    public static String subString(String str, String strStart, String strEnd) {
+
+        /* 找出指定的2个字符在 该字符串里面的 位置 */
+        int strStartIndex = str.indexOf(strStart);
+        int strEndIndex = str.indexOf(strEnd);
+
+        /* index 为负数 即表示该字符串中 没有该字符 */
+        if (strStartIndex < 0) {
+            return "字符串 :---->" + str + "<---- 中不存在 " + strStart + ", 无法截取目标字符串";
+        }
+        if (strEndIndex < 0) {
+            return "字符串 :---->" + str + "<---- 中不存在 " + strEnd + ", 无法截取目标字符串";
+        }
+        /* 开始截取 */
+        String result = str.substring(strStartIndex, strEndIndex).substring(strStart.length());
+        return result;
     }
 }

@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.IBinder;
 import android.util.Log;
 import androidx.annotation.Nullable;
@@ -19,6 +20,10 @@ import androidx.core.app.NotificationCompat;
 import com.example.ourprojecttest.StuDiagnosis.RenGongWenZhen;
 
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.net.URL;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -30,7 +35,8 @@ public class DocService extends Service {
 
     LocalReceiver localReceiver;
     IntentFilter intentFilter;
-    Intent intent=new Intent("com.example.ourprojecttest.DOC_UPDATE_PERSONS");
+    Intent intent=new Intent("com.example.ourprojecttest.DOC_UPDATE_PERSONS");//该意图是通知DocOperator里医生接诊前的准备服务
+    Intent intentToChat=new Intent("com.example.ourprojecttest.ChatMessage");//该意图是向聊天活动发送聊天消息
     CommonMethod method=new CommonMethod();
     Retreatment listener = new Retreatment();
     ChatListener chatListener = new ChatListener();
@@ -51,9 +57,17 @@ public class DocService extends Service {
     class LocalReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            String msg;
 
-            //如果是查看排队人数的信息
-            if(intent.getStringExtra("msg").equals("View")){
+            //如果是聊天信息
+            if(intent.hasExtra("sendMsg")){
+                msg=intent.getStringExtra("sendMsg");
+                chatListener.socket.send(msg);
+                if(msg.contains("再见！")){
+                    chatListener.socket.close(1000,"正常关闭");
+                }
+            }    //如果是查看排队人数的信息
+            else if(intent.getStringExtra("msg").equals("View")){
                 //startForeground(1,getNotification(CHANNEL_ID,"正在接收通知"));
                 send();
                 Log.d("候诊服务","服务收到查看人数广播通知");
@@ -198,19 +212,31 @@ public class DocService extends Service {
             text=parseJSONWithJSONObject(text);
             Log.d("学生消息1",text);
             //如果学生发送的是沟通
-            if (text.equals("chat")){
+            if (text.contains("chat")){
                 intent.putExtra("validate",stuId);
+                intent.putExtra("stuName",method.subString(text,"学生名字为","学生头像为"));
+                //获取学生的头像
+                int position=text.indexOf("学生头像为");
+                String stuPictureUrl=text.substring(position+5);
+                byte[]stuPicture=null;
+                try {
+                   stuPicture=method.bitmap2Bytes(method.drawableToBitamp(Drawable.createFromStream(new URL(stuPictureUrl).openStream(), "image.jpg"))) ;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Log.d("chat","stuPicture"+(stuPicture==null));
+                intent.putExtra("stuPicture",stuPicture);
                 sendBroadcast(intent);
                 Log.d("学生消息2","chat");
             }
-            else if (text.equals("deny")){//如果学生发送的是拒绝
+            else if (text.contains("deny")){//如果学生发送的是拒绝
                 intent.putExtra("validate",text);
                 sendBroadcast(intent);
                 Log.d("学生消息3","deny");
             }
             else if(!text.equals("上线成功!")){//如果学生发送的是正常消息
-                intent.putExtra("chatmsg",text);
-                sendBroadcast(intent);
+                intentToChat.putExtra("ReceiveMsg",text);
+                sendBroadcast(intentToChat);
                 Log.d("学生消息4","chatmsg");
             }
 

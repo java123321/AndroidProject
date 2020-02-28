@@ -28,7 +28,7 @@ import com.example.ourprojecttest.CommonMethod;
 import com.example.ourprojecttest.Drug_Information;
 import com.example.ourprojecttest.ImmersiveStatusbar;
 import com.example.ourprojecttest.R;
-import com.example.ourprojecttest.ShoppingCartActivity;
+import com.example.ourprojecttest.StuMine.ShoppingCart.ShoppingCartActivity;
 import com.example.ourprojecttest.StuId;
 import com.example.ourprojecttest.UpDrugMsgActivity;
 import org.json.JSONArray;

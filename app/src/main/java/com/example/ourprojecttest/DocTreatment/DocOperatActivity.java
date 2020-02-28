@@ -18,7 +18,7 @@ import android.view.View;
 import android.widget.Button;
 
 
-import com.example.ourprojecttest.Chat;
+import com.example.ourprojecttest.StuDiagnosis.Chat;
 import com.example.ourprojecttest.DisplayStuAdapter;
 import com.example.ourprojecttest.DisplayStuList;
 import com.example.ourprojecttest.DocService;
@@ -187,11 +187,12 @@ public class DocOperatActivity extends AppCompatActivity {
 
             Log.d("docop","received");
 
-            Log.d("docop","has chatmsg?"+intent.hasExtra("chatmsg"));
+            Log.d("docop5","has chatmsg?"+intent.hasExtra("chatmsg"));
+            Log.d("docop6","has chatmsg?"+intent.hasExtra("chatmsg"));
             Log.d("docop","has validate?"+intent.hasExtra("validate"));
             //如果学生发送的是正常聊天消息
             if(intent.hasExtra("chatmsg")){
-
+                Log.d("docop1","chatmsgis:"+intent.getStringExtra("chatmsg"));
             }
             else{//如果学生发送的是chat或者deny
                 String validateResult=intent.getStringExtra("validate");
@@ -203,6 +204,9 @@ public class DocOperatActivity extends AppCompatActivity {
                 else{//如果学生统一和医生沟通
                     Log.d("docop","intoChat");
                     Intent intentToChat=new Intent(DocOperatActivity.this, Chat.class);
+                    intentToChat.putExtra("stuId",validateResult);
+                    intentToChat.putExtra("stuName",intent.getStringExtra("stuName"));
+                    intentToChat.putExtra("stuPicture",intent.getByteArrayExtra("stuPicture"));
                     startActivity(intentToChat);
                 }
             }

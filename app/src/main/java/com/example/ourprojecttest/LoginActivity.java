@@ -269,10 +269,6 @@ public class LoginActivity extends AppCompatActivity {
                     method.saveFileData("ID","11111",LoginActivity.this);
                     method.saveFileData("Passworld","11111",LoginActivity.this);
                 }
-
-
-
-
                 msg.what = SUCCESS;
                 if(radioButton_stu.isChecked()) {
                     method.saveFileData("Type","Stu",LoginActivity.this);
@@ -499,6 +495,9 @@ public class LoginActivity extends AppCompatActivity {
                 pictureStore=new PictureStore();
             }
             if(jsonObject.has("Stu_Icon")){
+                //将学生头像的url保存到本地，后续聊天的时候学生会将自己的头像url发送给医生
+                method.saveFileData("StuIconUrl",jsonObject.getString("Stu_Icon"),LoginActivity.this);
+
                 pictureStore.setFlag(true);
                 byte[] as=method.bitmap2Bytes(method.drawableToBitamp(loadImageFromNetwork(jsonObject.getString("Stu_Icon"))));
                 pictureStore.setPicture(as);

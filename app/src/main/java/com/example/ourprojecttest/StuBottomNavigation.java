@@ -87,7 +87,7 @@ public class StuBottomNavigation extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stu_bott_navi);
         //当用户登录成功之后销毁欢迎界面
-        MainActivity.main.finish();
+      //  MainActivity.main.finish();
 
         BottomNavigationView bottomNavigationView;
         bottomNavigationView = findViewById(R.id.stu_bott_view);

@@ -13,6 +13,11 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"/>
 
+    <TextView
+    android:id="@+id/noRecord"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:layout_marginTop="10dp"
         android:id="@+id/stuMsgRecordRecycler"

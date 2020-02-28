@@ -9,7 +9,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.IBinder;
 import android.util.Log;
 import androidx.core.app.NotificationCompat;
@@ -17,6 +19,9 @@ import androidx.core.app.NotificationCompat;
 import com.example.ourprojecttest.StuDiagnosis.RenGongWenZhen;
 
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import okhttp3.OkHttpClient;
@@ -26,15 +31,17 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 
 public class GuaHaoService extends Service {
+    CommonMethod method=new CommonMethod();
     String docId="11111";
     LocalReceiver localReceiver;
     IntentFilter intentFilter;
-    Intent intent=new Intent("com.example.ourprojecttest.UPDATE_PERSONS");
-    CommonMethod method=new CommonMethod();
+    Intent intent=new Intent("com.example.ourprojecttest.UPDATE_PERSONS");//该意图是通知RenGongWenZhen里的聊天前的准备服务
+    Intent intentToChat=new Intent("com.example.ourprojecttest.ChatMessage");//该意图是向聊天活动发送聊天消息
     GuaHaoListener guaHaoListener = new GuaHaoListener();
     ChatListener chatListener = new ChatListener();
     private String CHANNEL_ID = "com.example.ourprojecttest.GuaHao";
     String CHANNEL_NAME = "GuaHao";
+    String name;
 
         //当接收到活动发来的挂号通知时进行挂号操作
     class LocalReceiver extends BroadcastReceiver {
@@ -43,8 +50,8 @@ public class GuaHaoService extends Service {
             String msg;
 
             //如果是聊天信息
-            if(intent.hasExtra("chatMsg")){
-                msg=intent.getStringExtra("chatMsg");
+            if(intent.hasExtra("sendMsg")){
+                msg=intent.getStringExtra("sendMsg");
                 chatListener.socket.send(msg);
                 if(msg.contains("再见！")){
                     chatListener.socket.close(1000,"正常关闭");
@@ -52,16 +59,18 @@ public class GuaHaoService extends Service {
             }
             else{//如果是挂号和聊天前的准备信息
                  msg=intent.getStringExtra("msg");
+                 //如果关闭挂号则关闭socket连接和服务
                 if(msg.equals("ExitGuaHao")){
-                    guaHaoListener.socket.send("cancel");
+                    guaHaoListener.socket.close(1000, null);
+                    stopSelf();
                     Log.d("stustop","sent");
                 }
                 else if(msg.equals("Chat")){//如果是学生点击了沟通操作
                     Log.d("guahao","chat");
-                    chatListener.socket.send(docId+"|chat");
+                    chatListener.socket.send(docId+"|chat学生名字为"+name+"学生头像为"+method.getFileData("StuIconUrl",GuaHaoService.this));
                 }
                 else if(msg.equals("Deny")){
-                    chatListener.socket.send(docId+"|deny");
+                    chatListener.socket.send(docId+"|deny"+name);
                 }
             }
         }
@@ -73,6 +82,7 @@ public class GuaHaoService extends Service {
         //初始化通知信道服务
         initChannel();
         //开始注册广播监听器，准备接受发送给服务的更新挂号信息
+        name=method.getFileData("Name",GuaHaoService.this);
         intentFilter=new IntentFilter();
         intentFilter.addAction("com.example.ourprojecttest.UPDATE_SERVICE");
         localReceiver=new LocalReceiver();
@@ -132,18 +142,33 @@ public class GuaHaoService extends Service {
 
              startForeground(1,getNotification(CHANNEL_ID,info));
             }//服务器发送到我的通知时
-            else if(info.equals("到你啦！")){
-                startForeground(1,getNotification(CHANNEL_ID,info));
-                  webSocket.close(1000,"再见");
+            else if(info.contains("到你啦！")){
+                //获取医生的id
+                String docId=method.subString(info,"医生id为","医生姓名为");
+                //获取医生的名字
+                String docName=method.subString(info,"医生姓名为","医生头像为");
+                //获取医生的头像
+                int position=info.indexOf("医生头像为");
+                String docPictureUrl=info.substring(position+5);
+                byte[] docPicture=null;
+                try {
+                     docPicture=method.bitmap2Bytes(method.drawableToBitamp(Drawable.createFromStream(new URL(docPictureUrl).openStream(), "image.jpg"))) ;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 //将到你的通知发送个活动
                 intent.putExtra("persons","-1");
+                intent.putExtra("docId",docId);
+                intent.putExtra("docName",docName);
+                Log.d("chat","docPicture"+(docPicture==null));
+                intent.putExtra("docPicture",docPicture);
+                startForeground(1,getNotification(CHANNEL_ID,info));
+                webSocket.close(1000,"再见");
+
                 sendBroadcast(intent);
                 //-1代表到你了
                 method.saveFileData("GuaHaoNumber","-1",GuaHaoService.this);
-            }
-            else if(info.startsWith("取消挂号成功！")){
-                Log.d("stustop","finished");
-              stopSelf();
             }
         }
 
@@ -178,8 +203,8 @@ public class GuaHaoService extends Service {
         public void onMessage(WebSocket webSocket, String text) {
             Log.d("interfacechat","123"+text);
             text=parseJSONWithJSONObject(text);
-            intent.putExtra("ReceiveMsg",text);
-            sendBroadcast(intent);
+            intentToChat.putExtra("ReceiveMsg",text);
+            sendBroadcast(intentToChat);
         }
 
         @Override
@@ -246,9 +271,6 @@ public class GuaHaoService extends Service {
         //解除广播注册
         unregisterReceiver(localReceiver);
     }
-
-
-
 
     //开启前台服务
     private void initChannel() {

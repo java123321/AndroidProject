@@ -19,7 +19,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ourprojecttest.Chat;
 import com.example.ourprojecttest.CommonMethod;
 import com.example.ourprojecttest.DisplayDocAdapter;
 import com.example.ourprojecttest.DisplayDocList;
@@ -62,7 +61,7 @@ public class RenGongWenZhen extends AppCompatActivity {
      */
     class LocalReceiver extends BroadcastReceiver {
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(Context context, final Intent intent) {
             if(intent.hasExtra("persons")){
                 String person=intent.getStringExtra("persons");
 
@@ -74,10 +73,15 @@ public class RenGongWenZhen extends AppCompatActivity {
                             .setPositiveButton("沟通", new DialogInterface.OnClickListener() {//如果用户点击了确定按钮则进入与医生的聊天界面
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
+                                    //给医生发通知表明学生统一看病
                                     intentToService.putExtra("msg","Chat");
                                     sendBroadcast(intentToService);
-                                    Intent intent=new Intent(RenGongWenZhen.this, Chat.class);
-                                    startActivity(intent);
+                                    //准备跳到聊天界面，并将医生的di放到意图里
+                                    Intent intentToChat=new Intent(RenGongWenZhen.this, Chat.class);
+                                    intentToChat.putExtra("docId",intent.getStringExtra("docId"));
+                                    intentToChat.putExtra("docName",intent.getStringExtra("docName"));
+                                    intentToChat.putExtra("docPicture",intent.getByteArrayExtra("docPicture"));
+                                    startActivity(intentToChat);
                                 }
                             })
                             .setNegativeButton("放弃", new DialogInterface.OnClickListener() {
@@ -216,9 +220,6 @@ public class RenGongWenZhen extends AppCompatActivity {
                     Intent intentStartService = new Intent(RenGongWenZhen.this, GuaHaoService.class);
                     startService(intentStartService);
                 }
-
-
-
             }
         });
 

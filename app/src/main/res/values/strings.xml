@@ -8,8 +8,8 @@
       <string name="ipAdrressSocket">"ws://139.196.103.219:8080/"</string>
      -->
 
-      <string name="ipAdrress">"http://10.0.2.2:8080/"</string>
-      <string name="ipAdrressSocket">"ws://10.0.2.2:8080/"</string>
+    <string name="ipAdrress">"http://10.0.2.2:8080/"</string>
+    <string name="ipAdrressSocket">"ws://10.0.2.2:8080/"</string>
 
 
     <!--以下代表学生端存储在本地的数据信息,调用方法统一为CommonMethod类里的getFileData,存数据为saveFileData-->
@@ -25,7 +25,7 @@
     <string name="Birthday">"用户的出生年月"</string>
     <string name="GuaHaoNumber">"当前排队的人数"</string>
     <string name="WorkTime">"获取医生上班时间"</string>
-
+    <string name="StuIconUrl">"学生头像的url"</string>
 
     <!-- 取该图片需要使用CommonMethod类里的readObjFromSDCard，参数为Icon，存方法为saveObj2SDCard-->
     <string name="Icon">"用户的头像"</string>

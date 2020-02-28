@@ -22,17 +22,18 @@
         android:supportsRtl="true"
         android:theme="@style/Noactionbar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".StuHistoryOrder.HistoryOrder"></activity>
+        <activity android:name=".StuMessage.DisplayMessageDetail"></activity>
+        <activity android:name=".StuMine.StuHistoryOrder.HistoryOrder" />
         <activity android:name=".StuMine.StuNeedToPost.NeedToPost" />
         <activity android:name=".StuMine.StuNeedToReceive.NeedToReceive" />
         <activity android:name=".StuMine.StuNeedToPay.NeedToPay" />
         <activity android:name=".DocMine.DocOrderManagement.OrderManagement" />
-        <activity android:name=".Chat" />
+        <activity android:name=".StuDiagnosis.Chat" />
         <activity android:name=".StuDiagnosis.RenGongWenZhen" />
         <activity android:name=".activity_doc_name" />
         <activity android:name=".StuBuyDrug" />
         <activity android:name=".DocBottomNavigation" />
-        <activity android:name=".Stu_Yaodian_Drug_Detail_Information" />
+        <activity android:name=".StuDrugStore.StuDrugDetail" />
         <activity android:name=".FindPass" />
         <activity android:name=".UpDrugMsgActivity" />
         <activity android:name=".PerfeActivity" />
@@ -44,7 +45,7 @@
         <activity android:name=".ModifyActivity" />
         <activity android:name=".activity_name_student" />
         <activity android:name=".ModifyPassword" />
-        <activity android:name=".ShoppingCartActivity" />
+        <activity android:name=".StuMine.ShoppingCart.ShoppingCartActivity" />
         <activity android:name=".StuBottomNavigation" />
         <activity android:name=".DocInformation" />
         <activity

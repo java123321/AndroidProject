@@ -37,6 +37,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ourprojecttest.StuMine.ShoppingCart.ShoppingCartBean;
+
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
@@ -650,15 +652,15 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
      * @return
      */
     @SuppressWarnings("unchecked")
-    public ArrayList<ShoppingCartList> readListFromSdCard(String fileName) {
+    public ArrayList<ShoppingCartBean> readListFromSdCard(String fileName) {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {  //检测sd卡是否存在
-            ArrayList<ShoppingCartList> list;
+            ArrayList<ShoppingCartBean> list;
             File sdCardDir = Environment.getExternalStorageDirectory();
             File sdFile = new File(sdCardDir, fileName);
             try {
                 FileInputStream fis = new FileInputStream(sdFile);
                 ObjectInputStream ois = new ObjectInputStream(fis);
-                list = (ArrayList<ShoppingCartList>) ois.readObject();
+                list = (ArrayList<ShoppingCartBean>) ois.readObject();
                 fis.close();
                 ois.close();
                 return list;

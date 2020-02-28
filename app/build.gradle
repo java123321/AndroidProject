@@ -31,7 +31,6 @@ android {
 
 
 dependencies {
-
     implementation 'com.blankj:utilcode:1.23.7'
     implementation 'de.hdodenhof:circleimageview:3.0.1'
     implementation 'com.squareup.okhttp3:okhttp:4.0.1'

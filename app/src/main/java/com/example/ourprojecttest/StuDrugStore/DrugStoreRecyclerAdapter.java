@@ -8,9 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -19,17 +17,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ourprojecttest.CommonMethod;
 import com.example.ourprojecttest.Drug_Information;
 import com.example.ourprojecttest.R;
-import com.example.ourprojecttest.ShoppingCartList;
+import com.example.ourprojecttest.StuMine.ShoppingCart.ShoppingCartBean;
 import com.example.ourprojecttest.StuId;
-import com.example.ourprojecttest.Stu_Yaodian_Drug_Detail_Information;
 import com.example.ourprojecttest.UpDrugMsgActivity;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.OptionalDataException;
 import java.io.StreamCorruptedException;
@@ -84,7 +79,7 @@ public class DrugStoreRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                     //如果当前是学生登录
 
                     if(type.equals("Stu")){
-                        Intent intent=new Intent(mContext, Stu_Yaodian_Drug_Detail_Information.class);
+                        Intent intent=new Intent(mContext, StuDrugDetail.class);
                         intent.putExtra("id",drug_information.getId());
                         intent.putExtra("picture",method.bitmap2Bytes(method.drawableToBitamp(drug_information.getDrug_Picture())));
                         intent.putExtra("name",drug_information.getDrug_Name());
@@ -97,23 +92,23 @@ public class DrugStoreRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                         mContext.startActivity(intent);
                     }else if (StuId.stuId != ""){
                         //将药品信息放入到对象中
-                        ShoppingCartList shoppingCartList=new ShoppingCartList();
-                        shoppingCartList.setId(drug_information.getId());
-                        shoppingCartList.setDrugName(drug_information.getDrug_Name());
-                        shoppingCartList.setDrugPrice(drug_information.getDrug_Price());
-                        shoppingCartList.setTotalPrice(Double.valueOf(drug_information.getDrug_Price()));
-                        shoppingCartList.setDrugPicture(method.bitmap2Bytes(method.drawableToBitamp(drug_information.getDrug_Picture())));
-                        shoppingCartList.setChecked("false");
+                        ShoppingCartBean shoppingCartBean =new ShoppingCartBean();
+                        shoppingCartBean.setId(drug_information.getId());
+                        shoppingCartBean.setDrugName(drug_information.getDrug_Name());
+                        shoppingCartBean.setDrugPrice(drug_information.getDrug_Price());
+                        shoppingCartBean.setTotalPrice(Double.valueOf(drug_information.getDrug_Price()));
+                        shoppingCartBean.setDrugPicture(method.bitmap2Bytes(method.drawableToBitamp(drug_information.getDrug_Picture())));
+                        shoppingCartBean.setChecked("false");
                         //在往本地存储购物车数据时先从中取出
-                        ArrayList<ShoppingCartList> cartLists=readListFromSdCard("DocShoppingCartList1");
+                        ArrayList<ShoppingCartBean> cartLists=readListFromSdCard("DocShoppingCartList1");
                         //如果没有数组就说明这是用户第一次加入购物车，新建一个即可
                         if(cartLists==null){
                             cartLists=new ArrayList<>();
-                            cartLists.add(shoppingCartList);
+                            cartLists.add(shoppingCartBean);
                         }
                         else{
                             //将当前药品加入数组
-                            cartLists.add(shoppingCartList);
+                            cartLists.add(shoppingCartBean);
                         }
                         //再将数组保存到本地
                         method.writeListIntoSDcard("DocShoppingCartList1",cartLists);
@@ -140,15 +135,15 @@ public class DrugStoreRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         return null;
     }
 
-    public ArrayList<ShoppingCartList> readListFromSdCard(String fileName) {
+    public ArrayList<ShoppingCartBean> readListFromSdCard(String fileName) {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {  //检测sd卡是否存在
-            ArrayList<ShoppingCartList> list;
+            ArrayList<ShoppingCartBean> list;
             File sdCardDir = Environment.getExternalStorageDirectory();
             File sdFile = new File(sdCardDir, fileName);
             try {
                 FileInputStream fis = new FileInputStream(sdFile);
                 ObjectInputStream ois = new ObjectInputStream(fis);
-                list = (ArrayList<ShoppingCartList>) ois.readObject();
+                list = (ArrayList<ShoppingCartBean>) ois.readObject();
                 fis.close();
                 ois.close();
                 return list;
@@ -188,8 +183,6 @@ public class DrugStoreRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                ((MyViewHolder) holder).OTCFlag.setText("RX   ");
                ((MyViewHolder) holder).OTCFlag.setTextColor(Color.RED);
            }
-
-
         } else if (holder instanceof FootViewHolder) {
 
             FootViewHolder footViewHolder = (FootViewHolder) holder;
@@ -224,6 +217,7 @@ public class DrugStoreRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
     @Override
     public int getItemCount() {
+        Log.d("msginit","drug:"+mList.size());
         return mList != null ? mList.size()+1 : 0;
     }
 

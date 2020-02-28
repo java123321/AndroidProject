@@ -23,7 +23,7 @@ import com.example.ourprojecttest.CommonMethod;
 import com.example.ourprojecttest.DocBottomNavigation;
 import com.example.ourprojecttest.MainActivity;
 import com.example.ourprojecttest.ModifyPassword;
-import com.example.ourprojecttest.StuHistoryOrder.HistoryOrder;
+import com.example.ourprojecttest.StuMine.StuHistoryOrder.HistoryOrder;
 import com.example.ourprojecttest.ImmersiveStatusbar;
 import com.example.ourprojecttest.ModifyActivity;
 import com.example.ourprojecttest.StuMine.StuNeedToPay.NeedToPay;
@@ -32,7 +32,7 @@ import com.example.ourprojecttest.StuMine.StuNeedToReceive.NeedToReceive;
 import com.example.ourprojecttest.PictureStore;
 import com.example.ourprojecttest.R;
 import com.example.ourprojecttest.Roundimage;
-import com.example.ourprojecttest.ShoppingCartActivity;
+import com.example.ourprojecttest.StuMine.ShoppingCart.ShoppingCartActivity;
 
 public class StuMineFragment extends Fragment {
     Context mContext;
