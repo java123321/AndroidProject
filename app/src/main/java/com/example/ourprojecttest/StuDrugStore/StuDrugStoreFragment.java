@@ -77,10 +77,8 @@ public class StuDrugStoreFragment extends Fragment {
     TextView baojianshipin;
     TextView yiliaoqixie;
     TextView qita;
-    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView mRecycler;
     private DrugStoreRecyclerAdapter mAdapter;
-    LinearLayoutManager linearLayoutManager;
     GridLayoutManager gridLayoutManager;
     int lastVisibleItem;
     boolean isLoading = false;//用来控制进入getdata()的次数

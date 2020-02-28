@@ -3,6 +3,7 @@ package com.example.ourprojecttest.StuMessage;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -24,6 +25,7 @@ public class DisplayMessageDetail extends AppCompatActivity {
     private MsgAdapter adapter;
     private String type;
     private TextView title;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +36,8 @@ public class DisplayMessageDetail extends AppCompatActivity {
     private void initView(){
         Intent intent=getIntent();
         type=method.getFileData("Type",this);
+
+
         mRecycler=findViewById(R.id.recycler);
         title=findViewById(R.id.chatName);
         LinearLayoutManager layoutManager=new LinearLayoutManager(this);
