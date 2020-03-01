@@ -16,8 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.ourprojecttest.CommonMethod;
-import com.example.ourprojecttest.DisplayDocAdapter;
-import com.example.ourprojecttest.DisplayDocList;
 import com.example.ourprojecttest.MessageBean;
 import com.example.ourprojecttest.MsgRecordAdapter;
 import com.example.ourprojecttest.R;
@@ -42,7 +40,7 @@ public class StuMessageFragment extends Fragment {
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-            refresh.setRefreshing(true);
+                 refresh.setRefreshing(true);
                getData();
                refresh.setRefreshing(false);
             }

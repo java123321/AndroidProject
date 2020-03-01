@@ -1,8 +1,10 @@
 package com.example.ourprojecttest.StuDiagnosis;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -12,7 +14,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,27 +26,68 @@ import android.widget.Toast;
 
 import com.example.ourprojecttest.CommonMethod;
 import com.example.ourprojecttest.DisplayDocAdapter;
-import com.example.ourprojecttest.DisplayDocList;
+import com.example.ourprojecttest.DisplayDocBean;
 import com.example.ourprojecttest.GuaHaoService;
 import com.example.ourprojecttest.ImmersiveStatusbar;
 import com.example.ourprojecttest.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+
+import kotlin.SuccessOrFailureKt;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 //import okio.ByteString;
 
 
 public class RenGongWenZhen extends AppCompatActivity {
+    private final int SUCCESS=1;
+    private final int FAULT=0;
     CommonMethod method=new CommonMethod();
     Intent intentToService=new Intent("com.example.ourprojecttest.UPDATE_SERVICE");
     LocalReceiver localReceiver;
     IntentFilter intentFilter;
+    private TextView noDoctor;
     private Button guanbi;
     private Button guaHao;
     private TextView text;
     private DisplayDocAdapter adapter;
     private RecyclerView mRecycler;
-    private ArrayList<DisplayDocList> lists=new ArrayList<>();
+    private ArrayList<DisplayDocBean> lists=new ArrayList<>();
+    private SwipeRefreshLayout refresh;
+    private Handler handler=new Handler(){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            Log.d("msgwhat","what:"+msg.what);
+            refresh.setRefreshing(false);
+            switch (msg.what){
+
+                case SUCCESS:
+                    ArrayList<DisplayDocBean>list=(ArrayList<DisplayDocBean>)msg.obj;
+                    Log.d("msgwhat","size"+list.size());
+                    adapter.setList(list);
+                    adapter.notifyDataSetChanged();
+                    noDoctor.setVisibility(View.GONE);
+                    mRecycler.setVisibility(View.VISIBLE);
+                    break;
+                case FAULT:
+                    noDoctor.setVisibility(View.VISIBLE);
+                    mRecycler.setVisibility(View.GONE);
+
+                    break;
+            }
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +100,6 @@ public class RenGongWenZhen extends AppCompatActivity {
         intentFilter.addAction("com.example.ourprojecttest.UPDATE_PERSONS");
         localReceiver=new LocalReceiver();
         registerReceiver(localReceiver,intentFilter);
-
     }
     /**
      * 接收服务里传过来的挂号更新信息
@@ -137,9 +182,65 @@ public class RenGongWenZhen extends AppCompatActivity {
         Log.d("wenzhen","onDestroy");
     }
 
+    //从服务器获取当前在线医生的信息
+    private void getData(){
+        refresh.setRefreshing(true);
+        final String url=getResources().getString(R.string.ipAdrress)+"IM/GetOnlineDoc";
+         new Thread(new Runnable() {
+        @Override
+        public void run() {
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(url)
+                    .build();
+            try {
+                Response response = client.newCall(request).execute();
+                String responseData = response.body().string();
+                parseJSONToDoc(responseData);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }).start();
+    }
+    //解析在线医生信息json
+    private void parseJSONToDoc(String data){
+        Log.d("msgwhat","data"+data);
+        ArrayList<DisplayDocBean> list=new ArrayList<>();
+        Message msg=Message.obtain();
+        try{
+            JSONArray jsonArray=new JSONArray(data);
+          for(int i=0;i<jsonArray.length();i++){
+              JSONObject jsonObject=jsonArray.getJSONObject(i);
 
-    private Bitmap Rfile2Bitmap(){
-        return BitmapFactory.decodeResource(getResources(),R.drawable.person);
+              if(!jsonObject.has("#x")){
+                  DisplayDocBean info=new DisplayDocBean();
+                  info.setName(jsonObject.getString("Doc_Name"));;
+                  info.setBrief(jsonObject.getString("Doc_Introduce"));
+                  info.setSex(jsonObject.getString("Doc_Sex"));
+                  //设置医生头像
+                  info.setIcon(method.drawableToBitamp( Drawable.createFromStream(new URL(jsonObject.getString("Doc_Icon")).openStream(),"image.jpg")));
+                    //设置医生的执照
+                  info.setLicense(method.drawableToBitamp( Drawable.createFromStream(new URL(jsonObject.getString("Doc_License")).openStream(),"image.jpg")));
+                  list.add(info);
+              }
+              else {//如果当前没有在线医生
+                    msg.what=FAULT;
+                    handler.sendMessage(msg);
+                    return;
+              }
+          }
+
+          Log.d("msgwhat","size1"+list.size());
+          msg.what=SUCCESS;
+          msg.obj=list;
+          handler.sendMessage(msg);
+
+        } catch (JSONException | MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initView(){
@@ -155,53 +256,23 @@ public class RenGongWenZhen extends AppCompatActivity {
           }
 
         }
+        refresh=findViewById(R.id.swipeRefresh);
+        //设置下拉刷新的的更新事件
+        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getData();
+            }
+        });
+        noDoctor=findViewById(R.id.noDoctor);
+        noDoctor.setText("当前暂无医生在线，请稍后再来！");
         mRecycler=findViewById(R.id.stuDisplayDoc);
         LinearLayoutManager layoutManager=new LinearLayoutManager(this);
         mRecycler.setLayoutManager(layoutManager);
         adapter = new DisplayDocAdapter(RenGongWenZhen.this);
         mRecycler.setAdapter(adapter);
-
-        DisplayDocList d=new DisplayDocList();
-        d.setIcon(Rfile2Bitmap());
-        d.setName("华佗");
-        d.setBrief("华佗手术很很牛皮");
-        lists.add(d);
-        d=new DisplayDocList();
-        d.setIcon(Rfile2Bitmap());
-        d.setName("李时珍");
-        d.setBrief("李时珍尝遍百草");
-        lists.add(d);
-        d=new DisplayDocList();
-        d.setIcon(Rfile2Bitmap());
-        d.setName("钟南山");
-        d.setBrief("钟南山抗击非典");
-        lists.add(d);
-        lists.add(d);
-        lists.add(d);
-        lists.add(d);
-        lists.add(d);
-        lists.add(d);
-        lists.add(d);
-        lists.add(d);
-        lists.add(d);
-        lists.add(d);
-        lists.add(d);
-        lists.add(d);
-        lists.add(d);
-        lists.add(d);
-        lists.add(d);
-        lists.add(d);
-        lists.add(d);
-        lists.add(d);
-        lists.add(d);
-        lists.add(d);
-        lists.add(d);
-        lists.add(d);
-        lists.add(d);
-        lists.add(d);
-        adapter.setList(lists);
-        adapter.notifyDataSetChanged();
-
+        //联网获取数据
+        getData();
         guanbi=findViewById(R.id.stu_wenzhen_guanbi);
         guaHao=findViewById(R.id.stu_wenzhen_guahao);
         text=findViewById(R.id.stuWenZhenDisplayGuaHaoInfo);

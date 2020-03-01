@@ -163,7 +163,7 @@ public class GuaHaoService extends Service {
                 intent.putExtra("docName",docName);
                 Log.d("chat","docPicture"+(docPicture==null));
                 intent.putExtra("docPicture",docPicture);
-                startForeground(1,getNotification(CHANNEL_ID,info));
+                startForeground(1,getNotification(CHANNEL_ID,"到你了，"+docName+"医生即将为您接诊！"));
                 webSocket.close(1000,"再见");
 
                 sendBroadcast(intent);

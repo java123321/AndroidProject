@@ -60,30 +60,37 @@ public class DocService extends Service {
             String msg;
 
             //如果是聊天信息
-            if(intent.hasExtra("sendMsg")){
-                msg=intent.getStringExtra("sendMsg");
+            if (intent.hasExtra("sendMsg")) {
+                msg = intent.getStringExtra("sendMsg");
                 chatListener.socket.send(msg);
-                if(msg.contains("再见！")){
-                    chatListener.socket.close(1000,"正常关闭");
+                if (msg.contains("再见！")) {
+                    chatListener.socket.close(1000, "正常关闭");
                 }
             }    //如果是查看排队人数的信息
-            else if(intent.getStringExtra("msg").equals("View")){
-                //startForeground(1,getNotification(CHANNEL_ID,"正在接收通知"));
-                send();
-                Log.d("候诊服务","服务收到查看人数广播通知");
+            else{
+                switch (intent.getStringExtra("msg")){
+                    case "View":
+                        //startForeground(1,getNotification(CHANNEL_ID,"正在接收通知"));
+                        send();
+                        Log.d("候诊服务", "服务收到查看人数广播通知");
+                    break;
+                    //医生上线的消息
+                    case "Online":
+                        retreatmentConnect();
+                        Log.d("医生上线", "医生上线了");
+                        break;
+                    //医生通知队列中第一个学生看病
+                    case "Access":
+                        webSocket.send("next");
+                        client.dispatcher().executorService().shutdown();
+                        Log.d("接诊", "弹出队首学生");
+                        break;
+                    case "exit":
+                        listener.socket.close(1000, "正常关闭");
 
+                }
 
-            }//医生上线的消息
-            else if (intent.getStringExtra("msg").equals("Online")){
-                retreatmentConnect();
-                Log.d("医生上线","医生上线了");
-
-            }//医生通知队列中第一个学生看病
-            else if (intent.getStringExtra("msg").equals("Access")){
-                webSocket.send("next");
-                client.dispatcher().executorService().shutdown();
-                Log.d("接诊","弹出队首学生");
-            }
+        }
 
         }
     }
@@ -133,10 +140,10 @@ public class DocService extends Service {
         Log.d("查看人数","查看人数成功");
     }
     private final class Retreatment extends WebSocketListener {
-
+        WebSocket socket=null;
         @Override
         public void onOpen(WebSocket webSocket, okhttp3.Response response) {
-
+            socket=webSocket;
             Log.d("监听器状态","监听器打开");
 
         }

@@ -2,11 +2,29 @@ package com.example.ourprojecttest;
 
 import android.graphics.Bitmap;
 
-public class DisplayDocList {
+public class DisplayDocBean {
 
     Bitmap icon;
     String name;
     String brief;
+    String sex;
+    Bitmap license;
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public Bitmap getLicense() {
+        return license;
+    }
+
+    public void setLicense(Bitmap license) {
+        this.license = license;
+    }
 
     public Bitmap getIcon() {
         return icon;

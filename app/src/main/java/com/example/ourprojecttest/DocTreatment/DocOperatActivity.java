@@ -1,5 +1,6 @@
 package com.example.ourprojecttest.DocTreatment;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -8,12 +9,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 
@@ -147,37 +150,35 @@ public class DocOperatActivity extends AppCompatActivity {
     private Bitmap Rfile2Bitmap(){
         return BitmapFactory.decodeResource(getResources(),R.drawable.person);
     }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d("候诊页面状态","onResume");
 
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d("候诊页面状态","onPause");
-    }
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d("候诊页面状态","onStart");
-    }
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.d("候诊页面状态","onRestart");
-    }
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d("候诊页面状态","onStope");
-    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
         Log.d("候诊页面状态","onDestroy");
     }
+
+
+    @Override  //退出接诊活动时弹出提示框
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode==KeyEvent.KEYCODE_BACK){
+            AlertDialog.Builder bdr=new AlertDialog.Builder(this);
+            bdr.setMessage("确定要退出接诊吗?");
+
+            bdr.setNegativeButton("取消",null);
+            bdr.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //通知医生服务退出看病
+                intentToService.putExtra("msg","exit");
+                sendBroadcast(intentToService);
+                finish();
+                }
+            });
+            bdr.show();
+        }
+        return false;
+    }
+
     /**
      * 接收服务里传过来的挂号更新信息
      */

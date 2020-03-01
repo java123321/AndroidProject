@@ -6,77 +6,96 @@
     android:layout_height="match_parent"
     tools:context=".StuDiagnosis.RenGongWenZhen">
 
-    <TextView
-        android:gravity="center"
-        android:text="当前医生在线状况"
-        android:layout_width="match_parent"
-        android:layout_gravity="center_vertical"
-        android:textColor="#FFFFFF"
-        android:textSize="25dp"
-        android:background="#FD0896F5"
-        android:layout_height="80dp"/>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="#525252"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/stuDisplayDoc"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_weight="1" />
-    <View
-        android:layout_width="match_parent"
-        android:layout_marginTop="10dp"
-        android:layout_height="0.5dp"
-        android:background="#525252"/>
-    <TextView
-        android:gravity="center"
-        android:text="当前排队状况"
-        android:background="#FFFFFF"
-        android:textColor="#000000"
-        android:textSize="16dp"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"/>
-    <TextView
-        android:id="@+id/stuWenZhenDisplayGuaHaoInfo"
-        android:layout_width="match_parent"
-        android:layout_gravity="center_vertical"
-        android:gravity="center"
-        android:background="#FFFFFF"
-        android:layout_height="40dp" />
+        <TextView
+            android:gravity="center"
+            android:text="当前医生在线状况"
+            android:layout_width="match_parent"
+            android:layout_gravity="center_vertical"
+            android:textColor="#FFFFFF"
+            android:textSize="25dp"
+            android:background="#FD0896F5"
+            android:layout_height="80dp"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#525252"/>
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+
+        <TextView
+            android:id="@+id/noDoctor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/stuDisplayDoc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </LinearLayout>
 
     <LinearLayout
-        android:gravity="center"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="#FFFFFF"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/stu_wenzhen_guahao"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:textColor="#F1EEEE"
+        android:layout_height="wrap_content">
+        <View
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_height="0.5dp"
+            android:background="#525252"/>
+        <TextView
+            android:gravity="center"
+            android:text="当前排队状况"
+            android:background="#FFFFFF"
+            android:textColor="#000000"
             android:textSize="16dp"
-            android:background="@drawable/style_jiesuan"
-            android:text="立即挂号" />
+            android:layout_width="match_parent"
+            android:layout_height="20dp"/>
+        <TextView
+            android:id="@+id/stuWenZhenDisplayGuaHaoInfo"
+            android:layout_width="match_parent"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:background="#FFFFFF"
+            android:layout_height="40dp" />
 
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="#FFFFFF"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/stu_wenzhen_guahao"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:textColor="#F1EEEE"
+                android:textSize="16dp"
+                android:background="@drawable/style_jiesuan"
+                android:text="立即挂号" />
 
-        <Button
+            <Button
+                android:id="@+id/stu_wenzhen_guanbi"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:textColor="#F1EEEE"
+                android:textSize="16dp"
+                android:background="@drawable/style_jiesuan"
+                android:text="取消挂号" />
+        </LinearLayout>
 
-            android:id="@+id/stu_wenzhen_guanbi"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:textColor="#F1EEEE"
-            android:textSize="16dp"
-            android:background="@drawable/style_jiesuan"
-            android:text="取消挂号" />
     </LinearLayout>
+
 
 
 </LinearLayout>

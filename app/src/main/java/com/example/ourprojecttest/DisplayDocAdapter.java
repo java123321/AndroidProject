@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 
 public class DisplayDocAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    private ArrayList<DisplayDocList> mList;
+    private ArrayList<DisplayDocBean> mList=new ArrayList<>();
     private Context mContext;
     private View view;
 
@@ -20,7 +20,7 @@ public class DisplayDocAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.mContext=context;
     }
 
-    public void setList(ArrayList<DisplayDocList> list){
+    public void setList(ArrayList<DisplayDocBean> list){
         mList = list;
     }
 
@@ -51,7 +51,7 @@ public class DisplayDocAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
-         DisplayDocList info=mList.get(position);
+         DisplayDocBean info=mList.get(position);
         ((ViewHolder) holder).docIcon.setImageBitmap(info.getIcon());
         ((ViewHolder) holder).docName.setText(info.getName());
         ((ViewHolder) holder).docBrief.setText(info.getBrief());
