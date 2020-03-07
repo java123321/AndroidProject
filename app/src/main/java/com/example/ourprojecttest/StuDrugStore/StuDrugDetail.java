@@ -169,10 +169,11 @@ private String Flag;
         description.setText(intent.getStringExtra("description"));
         rest.setText("库存量 "+intent.getStringExtra("rest"));
         Flag=intent.getStringExtra("Flag");
+        byte[]pic=intent.getByteArrayExtra("picture");
+        picture.setImageBitmap(BitmapFactory.decodeByteArray(pic,0,pic.length));
 
 
-        byte[] appIcon=getIntent().getByteArrayExtra("picture");
-        picture.setImageBitmap(BitmapFactory.decodeByteArray(appIcon,0,appIcon.length));
+
     }
 
     /**

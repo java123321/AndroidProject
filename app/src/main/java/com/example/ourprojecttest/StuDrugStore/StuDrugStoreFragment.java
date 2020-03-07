@@ -21,15 +21,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.ourprojecttest.CommonMethod;
-import com.example.ourprojecttest.Drug_Information;
+import com.example.ourprojecttest.DrugInformation;
 import com.example.ourprojecttest.ImmersiveStatusbar;
 import com.example.ourprojecttest.R;
-import com.example.ourprojecttest.StuMine.ShoppingCart.ShoppingCartActivity;
-import com.example.ourprojecttest.StuId;
 import com.example.ourprojecttest.UpDrugMsgActivity;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,7 +39,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class StuDrugStoreFragment extends Fragment {
-
+    public boolean flag=false;
     private final String loadNum="16";
     LoadThread load;
     CommonMethod method=new CommonMethod();
@@ -53,7 +50,6 @@ public class StuDrugStoreFragment extends Fragment {
     int last=0;
     SwipeRefreshLayout refreshLayout;
     Button addNewDrug;
-    Button myOrder;
     TextView lastColorName;
     Button sousuo;
     EditText inputInspect;
@@ -87,7 +83,7 @@ public class StuDrugStoreFragment extends Fragment {
     Handler handler=new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
-            List<Drug_Information> list=(List<Drug_Information>)msg.obj;
+            List<DrugInformation> list=(List<DrugInformation>)msg.obj;
             //如果清空list
             if(clear){
                 mAdapter.setList(list);
@@ -114,8 +110,10 @@ public class StuDrugStoreFragment extends Fragment {
         initTextView(view);
         Log.d("msg","获取图片");
         getData("1",loadNum,"-1","");
+
         return view;
     }
+
 
     //初始化RecyclerView布局
     private void initView(View view) {
@@ -124,12 +122,11 @@ public class StuDrugStoreFragment extends Fragment {
         gridLayoutManager=new GridLayoutManager(getActivity(),2);
         mRecycler.setLayoutManager(gridLayoutManager);
         //为RecyclerView添加适配器
-        mAdapter = new DrugStoreRecyclerAdapter(getContext());
+        mAdapter = new DrugStoreRecyclerAdapter(getContext(),this);
         mRecycler.setAdapter(mAdapter);
         mRecycler.setVisibility(View.VISIBLE);
         inputInspect=view.findViewById(R.id.stu_yaodian_search_box);
         sousuo=view.findViewById(R.id.stu_yaodian_sousuo);
-        myOrder = view.findViewById(R.id.my_order);
         Drawable searchEditDraw = context.getResources().getDrawable(R.drawable.sousou);
         searchEditDraw.setBounds(0, 0, 55, 55);
         sousuo.setCompoundDrawables(searchEditDraw, null, null, null);
@@ -150,15 +147,6 @@ public class StuDrugStoreFragment extends Fragment {
                 Log.d("yaodian","choiced:"+selectedMenu+"    input:"+inputInspect.getText().toString().trim());
             }
         });
-
-        myOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(getContext(),ShoppingCartActivity.class);
-                startActivity(intent);
-            }
-        });
-
 
         //给recyclerView添加滑动监听
         mRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -240,7 +228,7 @@ public class StuDrugStoreFragment extends Fragment {
                     totalNum = jsonArray.length() - 1;
                     currentNum = 0;//每次访问数据库的时候将已加载的数目重置为0
                     Log.d("yaodian", "the total num is :" + String.valueOf(totalNum));
-                    List<Drug_Information> list=new ArrayList<>();
+                    List<DrugInformation> list=new ArrayList<>();
                     JSONObject jsonObject = jsonArray.getJSONObject(0);
 
                     /*-------读取json数组中的第一个信息↓-----*/
@@ -270,7 +258,7 @@ public class StuDrugStoreFragment extends Fragment {
                         jsonObject=jsonArray.getJSONObject(i);
                             try {
                                 Log.d("yaodianName", jsonObject.getString("Drug_Name"));
-                                final Drug_Information drug_information = new Drug_Information(); //创建药品对象
+                                final DrugInformation drug_information = new DrugInformation(); //创建药品对象
                                 drug_information.setDrug_Describe(jsonObject.getString("Drug_Describe"));
                                 drug_information.setDrug_Amount(jsonObject.getString("Drug_Amount"));
                                 drug_information.setDrug_Name(jsonObject.getString("Drug_Name"));
@@ -290,6 +278,7 @@ public class StuDrugStoreFragment extends Fragment {
                             }
 
                     }
+
                     Message msg=Message.obtain();
                     msg.obj=list;
                     handler.sendMessage(msg);
@@ -325,26 +314,18 @@ public class StuDrugStoreFragment extends Fragment {
         load.start();
     }
     private void initTextView(View view){
-        if(StuId.stuId =="")
-        {
-            myOrder.setVisibility(View.GONE);
-        }
+
         //获取控件实例
         addNewDrug=view.findViewById(R.id.doc_yaodian_add_yaopin);
         //如果是医生登录则显示添加药品的按钮
-        if(method.getFileData("Type",getContext()).equals("Doc")&&StuId.stuId == ""){
+        if(method.getFileData("Type",getContext()).equals("Doc")){
             addNewDrug.setVisibility(View.VISIBLE);
             addNewDrug.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (StuId.stuId == ""){
                         Intent intent=new Intent(getContext(), UpDrugMsgActivity.class);
                         intent.putExtra("adjust","0");
                         startActivity(intent);
-                    }else {
-                        Intent intent=new Intent(getContext(), ShoppingCartActivity.class);
-                        startActivity(intent);
-                    }
                 }
             });
         }

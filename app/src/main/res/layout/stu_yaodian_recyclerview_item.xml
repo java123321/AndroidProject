@@ -31,11 +31,16 @@
             android:gravity="center"
             android:text="三九感冒灵"
             />
-
     </LinearLayout>
 
-
-
+    <TextView
+        android:id="@+id/drugPrice"
+        android:paddingTop="5dp"
+        android:layout_gravity="right"
+        android:textColor="#DC143C"
+        android:text="￥ 12.25"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
 

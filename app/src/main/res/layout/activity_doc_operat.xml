@@ -14,16 +14,36 @@
     android:gravity="center"
     android:background="#FD0896F5"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/docDisplayStu"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="0dp">
+        <TextView
+            android:id="@+id/noStudent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/docDisplayStu"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </LinearLayout>
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
     <Button
         android:id="@+id/view"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:text="查看"
@@ -36,6 +56,10 @@
         android:layout_gravity="bottom|right"
         android:text="接入"
         />
+
+</LinearLayout>
+
+
 </LinearLayout>
 
 

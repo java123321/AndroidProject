@@ -52,36 +52,6 @@
                 app:diffuse_width="4" />
         </FrameLayout>
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:id="@+id/wenzhen2"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                android:background="@drawable/style_round"
-
-
-                android:text="机器问诊"
-                android:textColor="#FFFFFF"
-                android:textSize="16dp" />
-
-
-            <com.example.ourprojecttest.DiffuseView1
-                android:id="@+id/diffuseView"
-                android:layout_width="wrap_content"
-                android:layout_height="243dp"
-                android:background="#00000000"
-                app:diffuse_color="#CE9BF3"
-                app:diffuse_coreColor="#9104F5"
-                app:diffuse_coreImage="@android:drawable/ic_menu_search"
-                app:diffuse_coreRadius="150"
-                app:diffuse_maxWidth="260"
-                app:diffuse_speed="2"
-                app:diffuse_width="4" />
-        </FrameLayout>
     </LinearLayout>
 
 </LinearLayout>

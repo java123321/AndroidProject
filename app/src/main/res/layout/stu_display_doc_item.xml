@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/displayDocItem"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="100dp"
    >
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_marginTop="10dp"
-    android:layout_height="95dp"
-    android:background="@drawable/yuanjiao1"
-    >
     <com.example.ourprojecttest.Roundimage
         android:id="@+id/docIcon"
         android:layout_width="60dp"
@@ -19,10 +13,15 @@
         android:layout_marginLeft="10dp"
         android:src="@drawable/person">
     </com.example.ourprojecttest.Roundimage>
-
     <TextView
-
         android:id="@+id/docName"
+        android:text="李时珍"
+        android:layout_marginLeft="20dp"
+        android:layout_gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/docSex"
         android:text="李时珍"
         android:layout_marginLeft="20dp"
         android:layout_gravity="center_vertical"
@@ -37,5 +36,4 @@
         android:layout_gravity="center_vertical"
         android:layout_width="200dp"
         android:layout_height="wrap_content"/>
-</LinearLayout>
 </LinearLayout>

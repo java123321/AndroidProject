@@ -12,8 +12,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,8 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ourprojecttest.CommonMethod;
-import com.example.ourprojecttest.DisplayDocAdapter;
-import com.example.ourprojecttest.DisplayDocBean;
 import com.example.ourprojecttest.GuaHaoService;
 import com.example.ourprojecttest.ImmersiveStatusbar;
 import com.example.ourprojecttest.R;
@@ -40,7 +36,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import kotlin.SuccessOrFailureKt;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -70,7 +65,6 @@ public class RenGongWenZhen extends AppCompatActivity {
             Log.d("msgwhat","what:"+msg.what);
             refresh.setRefreshing(false);
             switch (msg.what){
-
                 case SUCCESS:
                     ArrayList<DisplayDocBean>list=(ArrayList<DisplayDocBean>)msg.obj;
                     Log.d("msgwhat","size"+list.size());

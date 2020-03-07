@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.util.Log;
 
+import com.example.ourprojecttest.DocTreatment.PrescribeBean;
 import com.example.ourprojecttest.StuMine.ShoppingCart.ShoppingCartBean;
 
 import org.jetbrains.annotations.NotNull;
@@ -130,9 +131,6 @@ public class CommonMethod {
         }
         return price;
     }
-
-
-
 
     /**
      *该方法用于将对象(非数组)保存到本地

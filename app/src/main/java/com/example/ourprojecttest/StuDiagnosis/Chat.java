@@ -21,15 +21,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.ourprojecttest.CommonMethod;
-import com.example.ourprojecttest.DocTreatment.DocOperatActivity;
+import com.example.ourprojecttest.DocTreatment.Prescribe;
 import com.example.ourprojecttest.ImmersiveStatusbar;
 import com.example.ourprojecttest.MessageBean;
 import com.example.ourprojecttest.Msg;
 import com.example.ourprojecttest.MsgAdapter;
 import com.example.ourprojecttest.PictureStore;
 import com.example.ourprojecttest.R;
-import com.example.ourprojecttest.StuId;
-import com.example.ourprojecttest.StuMine.ShoppingCart.ShoppingCartActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -115,6 +113,9 @@ public class Chat extends AppCompatActivity {
         //如果是医生登录的话，填写要聊天的学生id
         Intent intent=getIntent();
         if(Type.equals("Doc")){
+            //如果是医生登录，则设置开处方可见
+            close.setVisibility(View.VISIBLE);
+
             stuOrDocId = intent.getStringExtra("stuId").trim();
             String stuName=intent.getStringExtra("stuName").trim();
             messageBean.setName(stuName);
@@ -135,6 +136,9 @@ public class Chat extends AppCompatActivity {
             stuOrDoc = false;
         }
         else {//如果是学生登录的话，则填写要聊天的医生id
+            //如果是学生登录，则设置开处方不可见
+            close.setVisibility(View.INVISIBLE);
+
             stuOrDocId=intent.getStringExtra("docId").trim();
             String docName=intent.getStringExtra("docName").trim();
             messageBean.setName(docName);
@@ -188,7 +192,7 @@ public class Chat extends AppCompatActivity {
                         }
                     }
                 });
-
+        //设置医生开出方的点击事件
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -205,17 +209,14 @@ public class Chat extends AppCompatActivity {
                             .setPositiveButton("开单", new DialogInterface.OnClickListener() {//如果用户点击了确定按钮则进入与医生的聊天界面
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    StuId.stuId = stuOrDocId;
-                                    Log.d("学生ID",StuId.stuId);
-                                    Intent intent=new Intent(Chat.this, ShoppingCartActivity.class);
+                                    Intent intent=new Intent(Chat.this, Prescribe.class);
                                     startActivity(intent);
                                 }
                             })
                             .setNegativeButton("不开单", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    Intent intent=new Intent(Chat.this, DocOperatActivity.class);
-                                    startActivity(intent);
+                                    finish();
                                 }
                             })
                             .show();

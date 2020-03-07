@@ -6,6 +6,9 @@ public class ShoppingCartBean implements Serializable{
     String drugName;
     String drugPrice;
     byte[] drugPicture;
+    String checked;
+    double totalPrice;
+    String id;
 
     public String getId() {
         return id;
@@ -15,9 +18,6 @@ public class ShoppingCartBean implements Serializable{
         this.id = id;
     }
 
-    String checked;
-    double totalPrice;
-    String id;
 
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;

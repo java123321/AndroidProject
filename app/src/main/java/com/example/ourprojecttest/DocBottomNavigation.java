@@ -6,11 +6,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.ourprojecttest.DocMine.DocMineFragment;
@@ -21,11 +25,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomnavigation.LabelVisibilityMode;
 
 public class DocBottomNavigation extends AppCompatActivity {
+    private BottomNavigationView bottomNavigationView;
     public static Activity activity;
     private StuDrugStoreFragment yaodian_frag = null;
     private DocMineFragment wode=null;
     private DocTreatmentFragment houzhen=null;
     private StuMessageFragment msg=null;
+    private LocalReceiver localReceiver;
+    private IntentFilter intentFilter;
     /** 上次点击返回键的时间 */
     private long lastBackPressed;
     /** 两次点击的间隔时间 */
@@ -47,7 +54,6 @@ public class DocBottomNavigation extends AppCompatActivity {
                 case R.id.navigation_yaodian:
                     switchContent(3);
                     return true;
-
                 case R.id.navigation_wode:
                     switchContent(4);
                     return true;
@@ -55,6 +61,19 @@ public class DocBottomNavigation extends AppCompatActivity {
             return false;
         }
     };
+
+    class LocalReceiver extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+        String msg=intent.getStringExtra("msg");
+        if(msg.equals("success")){
+            Toast.makeText(DocBottomNavigation.this, "药品添加成功！", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(DocBottomNavigation.this, "此药品已添加！", Toast.LENGTH_SHORT).show();
+        }
+        }
+    }
 
 
     @Override
@@ -76,13 +95,11 @@ public class DocBottomNavigation extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doc_bott_navi);
         activity=this;
-
         //当用户登录成功之后销毁欢迎界面
         Log.d("bottom","0");
        // MainActivity.main.finish();
@@ -91,8 +108,6 @@ public class DocBottomNavigation extends AppCompatActivity {
         //创建医生接收信息的前台服务
         Intent intentStartService = new Intent(DocBottomNavigation.this, DocService.class);
         startService(intentStartService);
-
-        BottomNavigationView bottomNavigationView;
         bottomNavigationView = findViewById(R.id.doc_bott_view);
         bottomNavigationView.setSelectedItemId(bottomNavigationView.getMenu().getItem(0).getItemId());
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -105,24 +120,22 @@ public class DocBottomNavigation extends AppCompatActivity {
         FragmentManager fragmentManager = getFragmentManager();
         // 开始事务管理
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-
         //创建碎片并加入transaction
         yaodian_frag = new StuDrugStoreFragment();
         wode=new DocMineFragment();
         houzhen=new DocTreatmentFragment();
         msg=new StuMessageFragment();
-
         transaction.add(R.id.doc_main_layout,msg);
         transaction.add(R.id.doc_main_layout, yaodian_frag);
         transaction.add(R.id.doc_main_layout,wode);
         transaction.add(R.id.doc_main_layout,houzhen);
-
         transaction.hide(msg);
         transaction.hide(wode);
         transaction.hide(yaodian_frag);
         transaction.show(houzhen);
         transaction.commit();
     }
+
     private void switchContent(int choice) {
 
         switch (choice){

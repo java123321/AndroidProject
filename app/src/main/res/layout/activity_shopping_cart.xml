@@ -12,24 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:background="#FD0896F5">
-        <Button
-            android:id="@+id/doc_add_grug"
-            android:background="@drawable/style_jiesuan"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="5dp"
-            android:text="添加药品"
-            android:layout_marginRight="5dp"
-            android:textColor="#F1EEEE"
-            android:textSize="16dp"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"/>
         <TextView
             android:layout_gravity="center_vertical"
             android:layout_width="wrap_content"
             android:gravity="center"
             android:layout_height="wrap_content"
-            android:text="购物车"
+            android:text="购 物 车"
             android:layout_marginLeft="15dp"
             android:textColor="#FFFFFF"
             android:layout_weight="10" 
@@ -49,8 +37,7 @@
     </LinearLayout>
         <TextView
             android:layout_marginTop="10dp"
-        android:id="@+id/stu_shopping_cart_display_empty"
-        android:text="当前购物车是空的"
+        android:id="@+id/empty"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

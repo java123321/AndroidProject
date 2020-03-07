@@ -22,7 +22,12 @@
         android:supportsRtl="true"
         android:theme="@style/Noactionbar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".StuMessage.DisplayMessageDetail"></activity>
+        <activity android:name=".DocTreatment.DocDrugStore"
+            android:launchMode="singleInstance"
+            />
+        <activity android:name=".DocTreatment.Prescribe" />
+        <activity android:name=".StuDiagnosis.OnlineDocDetail" />
+        <activity android:name=".StuMessage.DisplayMessageDetail" />
         <activity android:name=".StuMine.StuHistoryOrder.HistoryOrder" />
         <activity android:name=".StuMine.StuNeedToPost.NeedToPost" />
         <activity android:name=".StuMine.StuNeedToReceive.NeedToReceive" />
@@ -60,7 +65,6 @@
         <activity
             android:name=".LoginActivity"
             android:launchMode="singleTask" />
-
         <service
             android:name=".GuaHaoService"
             android:enabled="true"
@@ -69,7 +73,6 @@
             android:name=".DocService"
             android:enabled="true"
             android:exported="true" />
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="url"

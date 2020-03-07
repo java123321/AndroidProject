@@ -15,10 +15,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ourprojecttest.CommonMethod;
-import com.example.ourprojecttest.Drug_Information;
+import com.example.ourprojecttest.DrugInformation;
 import com.example.ourprojecttest.R;
 import com.example.ourprojecttest.StuMine.ShoppingCart.ShoppingCartBean;
-import com.example.ourprojecttest.StuId;
 import com.example.ourprojecttest.UpDrugMsgActivity;
 
 import java.io.File;
@@ -32,12 +31,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DrugStoreRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    Intent intentToPrescribe=new Intent("com.example.ourprojecttest.Perscribe");
     CommonMethod method=new CommonMethod();
-
+    StuDrugStoreFragment fragment;
     String type;
     int num=1;
     private Context mContext;
-    private List<Drug_Information> mList;
+
+    private List<DrugInformation> mList=new ArrayList<>();
     //普通布局的type
     static final int TYPE_ITEM = 0;
     //脚布局
@@ -51,15 +52,16 @@ public class DrugStoreRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     //脚布局当前的状态,默认为还有更多
     int footer_state = 1;
 
-    public DrugStoreRecyclerAdapter(Context context) {
+    public DrugStoreRecyclerAdapter(Context context,StuDrugStoreFragment fragment) {
         mContext = context;
         this.type=method.getFileData("Type",mContext);
+        this.fragment=fragment;
     }
 
-    public void setList(List<Drug_Information> list){
+    public void setList(List<DrugInformation> list){
         mList = list;
     }
-    public void addList(List<Drug_Information> list){
+    public void addList(List<DrugInformation> list){
         mList.addAll(list);
     }
     @Override
@@ -75,7 +77,7 @@ public class DrugStoreRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                 //进行点击事件的页面跳转
 
                     //首先将点击位置的数据取出
-                    Drug_Information drug_information= mList.get(position);
+                    DrugInformation drug_information= mList.get(position);
                     //如果当前是学生登录
 
                     if(type.equals("Stu")){
@@ -90,38 +92,28 @@ public class DrugStoreRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                         
                         Log.d("yaodian","hahahha");
                         mContext.startActivity(intent);
-                    }else if (StuId.stuId != ""){
-                        //将药品信息放入到对象中
-                        ShoppingCartBean shoppingCartBean =new ShoppingCartBean();
-                        shoppingCartBean.setId(drug_information.getId());
-                        shoppingCartBean.setDrugName(drug_information.getDrug_Name());
-                        shoppingCartBean.setDrugPrice(drug_information.getDrug_Price());
-                        shoppingCartBean.setTotalPrice(Double.valueOf(drug_information.getDrug_Price()));
-                        shoppingCartBean.setDrugPicture(method.bitmap2Bytes(method.drawableToBitamp(drug_information.getDrug_Picture())));
-                        shoppingCartBean.setChecked("false");
-                        //在往本地存储购物车数据时先从中取出
-                        ArrayList<ShoppingCartBean> cartLists=readListFromSdCard("DocShoppingCartList1");
-                        //如果没有数组就说明这是用户第一次加入购物车，新建一个即可
-                        if(cartLists==null){
-                            cartLists=new ArrayList<>();
-                            cartLists.add(shoppingCartBean);
+                    }else{//如果是医生登录
+                        Log.d("cribe","flag1"+fragment.flag);
+                        //如果是从医生开订单哪里过来的
+                        if(fragment.flag){
+                            intentToPrescribe.putExtra("drugId",drug_information.getId());
+                            intentToPrescribe.putExtra("drugName",drug_information.getDrug_Name());
+                            intentToPrescribe.putExtra("drugPrice",drug_information.getDrug_Price());
+                            intentToPrescribe.putExtra("drugPicture",method.bitmap2Bytes(method.drawableToBitamp(drug_information.getDrug_Picture())));
+                            mContext.sendBroadcast(intentToPrescribe);
+                            Log.d("cribe","sent");
                         }
                         else{
-                            //将当前药品加入数组
-                            cartLists.add(shoppingCartBean);
+                            Intent intent=new Intent(mContext, UpDrugMsgActivity.class);
+                            intent.putExtra("adjust","1");
+                            intent.putExtra("amount",drug_information.getDrug_Amount());
+                            intent.putExtra("drugName",drug_information.getDrug_Name());
+                            intent.putExtra("drugPrice",drug_information.getDrug_Price());
+                            intent.putExtra("drugDescription",drug_information.getDrug_Describe());
+                            intent.putExtra("drugPicture",method.bitmap2Bytes(method.drawableToBitamp(drug_information.getDrug_Picture())));
+                            mContext.startActivity(intent);
                         }
-                        //再将数组保存到本地
-                        method.writeListIntoSDcard("DocShoppingCartList1",cartLists);
-                        Log.d("添加药品","结束");
-                    } else{//如果是医生登录
-                        Intent intent=new Intent(mContext, UpDrugMsgActivity.class);
-                        intent.putExtra("adjust","1");
-                        intent.putExtra("amount",drug_information.getDrug_Amount());
-                        intent.putExtra("drugName",drug_information.getDrug_Name());
-                        intent.putExtra("drugPrice",drug_information.getDrug_Price());
-                        intent.putExtra("drugDescription",drug_information.getDrug_Describe());
-                        intent.putExtra("drugPicture",method.bitmap2Bytes(method.drawableToBitamp(drug_information.getDrug_Picture())));
-                        mContext.startActivity(intent);
+
                     }
                 }
             });
@@ -172,9 +164,10 @@ public class DrugStoreRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Log.d("adpter","onBindView is started :"+num++);
         if (holder instanceof MyViewHolder) {
-            ((MyViewHolder) holder).mTextView.setText(mList.get(position).getDrug_Name());
-            ((MyViewHolder) holder).imageView.setImageDrawable(mList.get(position).getDrug_Picture());
-
+            DrugInformation info=mList.get(position);
+            ((MyViewHolder) holder).mTextView.setText(info.getDrug_Name());
+            ((MyViewHolder) holder).imageView.setImageDrawable(info.getDrug_Picture());
+            ((MyViewHolder) holder).drugPrice.setText("￥"+info.getDrug_Price());
            if(mList.get(position).getDrug_OTC().equals("true")){
                ((MyViewHolder) holder).OTCFlag.setText("OTC   ");
                ((MyViewHolder) holder).OTCFlag.setTextColor(Color.GREEN);
@@ -227,6 +220,7 @@ public class DrugStoreRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     class MyViewHolder extends RecyclerView.ViewHolder {
         TextView mTextView;
         ImageView imageView;
+        TextView drugPrice;
         View itemViewFather;
         TextView OTCFlag;
 
@@ -236,6 +230,7 @@ public class DrugStoreRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
             mTextView = itemView.findViewById(R.id.stu_yaopin_item_name);
             imageView= itemView.findViewById(R.id.stu_yaopin_item_pic);
             OTCFlag=itemView.findViewById(R.id.stu_otc_flag);
+            drugPrice=itemView.findViewById(R.id.drugPrice);
         }
     }
 

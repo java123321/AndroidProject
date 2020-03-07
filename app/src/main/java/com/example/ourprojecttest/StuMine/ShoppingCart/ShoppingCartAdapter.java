@@ -30,7 +30,6 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     ShoppingCartActivity cartActivity=new ShoppingCartActivity();
     public ShoppingCartAdapter(Context context) {
         mContext = context;
-
     }
 
     public ArrayList<ShoppingCartBean> getList(){
