@@ -374,9 +374,6 @@ public class LoginActivity extends AppCompatActivity {
                 pictureStore.setFlag(false);
                 method.saveObj2SDCard("DocIcon",pictureStore);
             }
-
-
-
             //将医生的执照保存到本地
             pictureStore=( PictureStore)method.readObjFromSDCard("DocLicense");
             if(pictureStore==null){

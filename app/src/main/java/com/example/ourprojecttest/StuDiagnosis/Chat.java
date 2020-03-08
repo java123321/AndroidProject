@@ -210,6 +210,7 @@ public class Chat extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     Intent intent=new Intent(Chat.this, Prescribe.class);
+                                    intent.putExtra("stuId",stuOrDocId);
                                     startActivity(intent);
                                 }
                             })
