@@ -13,14 +13,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ourprojecttest.StuMine.AddressActivity;
 import com.example.ourprojecttest.R;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class NeedToPayAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int ITEM_HEADER=1,ITEM_CONTENT=2,ITEM_FOOTER=3;
-    Intent intent=new Intent("com.example.ourprojecttest.BUY_ORDER");
+    Intent intentToNeedToPay=new Intent("com.example.ourprojecttest.BUY_ORDER");
     private Context mContext;
 
- private ArrayList<Object> dataList;
+
+ private ArrayList<Object> dataList=new ArrayList<>();
 
 
     public NeedToPayAdapter(Context context){
@@ -79,6 +83,7 @@ public class NeedToPayAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     mContext.startActivity(intent);
                 }
             });
+
         }
     }
 
@@ -122,23 +127,33 @@ public class NeedToPayAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if (type==ITEM_CONTENT){
             ContentViewHolder contentViewHolder=(ContentViewHolder)holder;
             ContentInfoBean bean=(ContentInfoBean) dataList.get(position);
-
            contentViewHolder.drugUnite.setText("￥ "+bean.getDrugUnite());
            contentViewHolder.drugAmount.setText("X "+bean.getDrugAmount());
            contentViewHolder.drugName.setText(bean.getDrugName());
-
-           contentViewHolder.drugPicture.setImageBitmap(bean.getDrugPicture());
+           contentViewHolder.drugPicture.setImageDrawable(bean.getDrugPicture());
 
         }//绑定订单头部
         else if(type==ITEM_HEADER){
             HeadViewHolder headViewHolder=(HeadViewHolder)holder;
             HeadInfoBean bean=(HeadInfoBean)dataList.get(position);
-            headViewHolder.time.setText("订单时间: "+bean.getOrderTime());
+                                   Date date=new Date();
+                        date.setTime(Long.valueOf(bean.getOrderTime()));
+                        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            headViewHolder.time.setText("订单时间: "+format.format(date));
         }
         else{//绑定脚部信息
             FootViewHolder footViewHolder=(FootViewHolder)holder;
-            FooterInfoBean bean=(FooterInfoBean) dataList.get(position);
+            final FooterInfoBean bean=(FooterInfoBean) dataList.get(position);
             footViewHolder.orderInfo.setText("共"+bean.getDrugAmount()+"件商品 合计:￥ "+bean.getOrderPrice());
+            //设置去付款的点击事件
+            footViewHolder.goToPay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    intentToNeedToPay.putExtra("price",bean.getOrderPrice());
+                    intentToNeedToPay.putExtra("orderId",bean.getOrderId());
+                    mContext.sendBroadcast(intentToNeedToPay);
+                }
+            });
         }
     }
 

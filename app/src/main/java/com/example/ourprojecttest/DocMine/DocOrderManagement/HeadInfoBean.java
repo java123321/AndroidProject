@@ -4,7 +4,7 @@ public class HeadInfoBean {
     private String receiverName;
     private String receiverTelephone;
     private String receiverAddress;
-    private String orderTime;
+
 
     public String getReceiverName() {
         return receiverName;
@@ -28,13 +28,6 @@ public class HeadInfoBean {
 
     public void setReceiverAddress(String receiverAddress) {
         this.receiverAddress = receiverAddress;
-    }
-    public String getOrderTime() {
-        return orderTime;
-    }
-
-    public void setOrderTime(String orderTime) {
-        this.orderTime = orderTime;
     }
 }
 

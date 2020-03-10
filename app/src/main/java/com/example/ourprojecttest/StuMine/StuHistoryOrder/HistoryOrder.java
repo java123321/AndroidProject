@@ -50,7 +50,7 @@ public class HistoryOrder extends AppCompatActivity {
         data.setDrugName("999感冒灵");
         data.setDrugUnite("12");
 
-        data.setDrugPicture(Rfile2Bitmap());
+
         dataList.add(data);
         dataList.add(data);
         dataList.add(data);
@@ -63,7 +63,7 @@ public class HistoryOrder extends AppCompatActivity {
         data.setDrugAmount("25");
         data.setDrugName("999感冒灵");
         data.setDrugUnite("12");
-        data.setDrugPicture(Rfile2Bitmap());
+
         dataList=new ArrayList<>();
         dataList.add(data);
         dataList.add(data);

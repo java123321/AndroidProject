@@ -110,7 +110,7 @@ public class HistoryOrderAdapter extends RecyclerView.Adapter <RecyclerView.View
             contentViewHolder.drugUnite.setText("￥ "+bean.getDrugUnite());
             contentViewHolder.drugAmount.setText("X "+bean.getDrugAmount());
             contentViewHolder.drugName.setText(bean.getDrugName());
-            contentViewHolder.drugPicture.setImageBitmap(bean.getDrugPicture());
+            contentViewHolder.drugPicture.setImageDrawable(bean.getDrugPicture());
         }//绑定订单头部
         else if(type==ITEM_HEADER){
             HeadViewHolder headViewHolder=(HeadViewHolder)holder;

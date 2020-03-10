@@ -25,7 +25,8 @@ public class NeedToPayHelper {
          FooterInfoBean footerInfoBean=new FooterInfoBean();
          footerInfoBean.setDrugAmount(String.valueOf(contentList.size()));
          footerInfoBean.setOrderPrice(orderListBean.getOrderPrice());
-        dataList.add(footerInfoBean);
+         footerInfoBean.setOrderId(orderListBean.getOrderTime());
+         dataList.add(footerInfoBean);
         }
 
         return dataList;

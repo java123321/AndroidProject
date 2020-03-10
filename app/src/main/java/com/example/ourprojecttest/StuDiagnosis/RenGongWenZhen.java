@@ -140,37 +140,6 @@ public class RenGongWenZhen extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d("wenzhen","onResume");
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d("wenzhen","onPause");
-    }
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d("wenzhen","onStart");
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.d("wenzhen","onRestart");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d("wenzhen","onStope");
-    }
-
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         Log.d("wenzhen","onDestroy");

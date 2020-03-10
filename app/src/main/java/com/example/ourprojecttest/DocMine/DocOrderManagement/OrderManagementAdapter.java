@@ -14,20 +14,26 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ourprojecttest.StuMine.StuNeedToPay.ContentInfoBean;
 import com.example.ourprojecttest.R;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class OrderManagementAdapter extends RecyclerView.Adapter <RecyclerView.ViewHolder> {
     private final int ITEM_HEADER=1,ITEM_CONTENT=2,ITEM_FOOTER=3;
-    Intent intent=new Intent("com.example.ourprojecttest.OrderManagement");
+    Intent intentToOrderManagement =new Intent("com.example.ourprojecttest.OrderManagement");
     Context mContext;
-    private ArrayList<Object> dataList;
+    private final int NOT_POST=2;
+    private final int HAVE_POST=5;
+    private int TYPE;
+    private ArrayList<Object> dataList=new ArrayList<>();
 
     public OrderManagementAdapter(Context context){
         mContext=context;
     }
-
-    public void setList(ArrayList<Object> list){
+    public void setList(ArrayList<Object> list,int type){
         dataList=list;
+        TYPE=type;
     }
 
 
@@ -36,14 +42,12 @@ public class OrderManagementAdapter extends RecyclerView.Adapter <RecyclerView.V
         TextView receiverName;
         TextView receiverTelephone;
         TextView receiverAddress;
-        TextView receiverDate;
-
         public HeadViewHolder(@NonNull View itemView) {
             super(itemView);
             receiverName=itemView.findViewById(R.id.receiverName);
             receiverTelephone=itemView.findViewById(R.id.receiverTelephone);
             receiverAddress=itemView.findViewById(R.id.receiverAddress);
-            receiverDate=itemView.findViewById(R.id.orderTime);
+
         }
     }
     //药品布局持有者类
@@ -68,6 +72,13 @@ public class OrderManagementAdapter extends RecyclerView.Adapter <RecyclerView.V
         public FootViewHolder(@NonNull View itemView) {
             super(itemView);
             alreadPost=itemView.findViewById(R.id.alreadyPostDoc);
+            if(TYPE==HAVE_POST){//如果是已经发货的
+                alreadPost.setText("删除订单");
+            }
+            else{
+                alreadPost.setText("已发货");
+            }
+            orderTime=itemView.findViewById(R.id.orderTime);
         }
     }
 
@@ -114,19 +125,38 @@ public class OrderManagementAdapter extends RecyclerView.Adapter <RecyclerView.V
             contentViewHolder.drugUnite.setText("￥ "+bean.getDrugUnite());
             contentViewHolder.drugAmount.setText("X "+bean.getDrugAmount());
             contentViewHolder.drugName.setText(bean.getDrugName());
-            contentViewHolder.drugPicture.setImageBitmap(bean.getDrugPicture());
+            contentViewHolder.drugPicture.setImageDrawable(bean.getDrugPicture());
         }//绑定订单头部
         else if(type==ITEM_HEADER){
             HeadViewHolder headViewHolder=(HeadViewHolder)holder;
             HeadInfoBean bean=(HeadInfoBean)dataList.get(position);
-            headViewHolder.receiverName.setText(bean.getReceiverName());
-            headViewHolder.receiverTelephone.setText(bean.getReceiverTelephone());
-            headViewHolder.receiverAddress.setText(bean.getReceiverAddress());
-            headViewHolder.receiverDate.setText(bean.getOrderTime());
+            headViewHolder.receiverName.setText("收货人姓名:"+bean.getReceiverName());
+            headViewHolder.receiverTelephone.setText("电话:"+bean.getReceiverTelephone());
+            headViewHolder.receiverAddress.setText("地址:"+bean.getReceiverAddress());
         }
         else{//绑定脚部信息
             FootViewHolder footViewHolder=(FootViewHolder)holder;
-            FooterInfoBean bean=(FooterInfoBean) dataList.get(position);
+            final FooterInfoBean bean=(FooterInfoBean) dataList.get(position);
+            Date date=new Date();
+            date.setTime(Long.valueOf(bean.getOrderTime()));
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            footViewHolder.orderTime.setText("订单时间:"+format.format(date));
+
+            //设置已发货的点击事件
+            footViewHolder.alreadPost.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(TYPE==NOT_POST){//如果是点击的已发货按钮
+                        intentToOrderManagement.putExtra("havePost",bean.getOrderTime());
+                        mContext.sendBroadcast(intentToOrderManagement);
+                    }
+                    else{//如果是点击的删除订单按钮
+                        intentToOrderManagement.putExtra("delete",bean.getOrderTime());
+                        mContext.sendBroadcast(intentToOrderManagement);
+                    }
+
+                }
+            });
         }
 
     }

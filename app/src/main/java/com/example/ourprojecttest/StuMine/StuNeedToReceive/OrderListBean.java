@@ -5,6 +5,16 @@ import com.example.ourprojecttest.StuMine.StuNeedToPay.ContentInfoBean;
 import java.util.ArrayList;
 
 public class OrderListBean {
+    private String orderPrice;
+
+    public String getOrderPrice() {
+        return orderPrice;
+    }
+
+    public void setOrderPrice(String orderPrice) {
+        this.orderPrice = orderPrice;
+    }
+
     private String orderTime;
     private ArrayList<ContentInfoBean> drugInfoBeans;
 

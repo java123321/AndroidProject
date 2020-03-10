@@ -25,6 +25,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.example.ourprojecttest.CommonMethod;
@@ -282,8 +283,8 @@ public class DocOperatActivity extends AppCompatActivity {
                 String validateResult=intent.getStringExtra("validate");
                 Log.d("docop",validateResult);
                 //如果学生拒绝了和医生沟通
-                if(validateResult.equals("deny")){
-
+                if(validateResult.contains("deny")){
+                    Toast.makeText(context, "当前学生:"+validateResult.substring(4)+"放弃了接诊", Toast.LENGTH_SHORT).show();
                 }
                 else{//如果学生统一和医生沟通
                     Log.d("docop","intoChat");

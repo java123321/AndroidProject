@@ -1,12 +1,21 @@
 package com.example.ourprojecttest.StuMine.StuNeedToPay;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 
 public class ContentInfoBean {
     String drugName;
-    Bitmap drugPicture;
+    Drawable drugPicture;
     String drugAmount;
     String drugUnite;
+
+    public Drawable getDrugPicture() {
+        return drugPicture;
+    }
+
+    public void setDrugPicture(Drawable drugPicture) {
+        this.drugPicture = drugPicture;
+    }
 
     public String getDrugName() {
         return drugName;
@@ -16,13 +25,6 @@ public class ContentInfoBean {
         this.drugName = drugName;
     }
 
-    public Bitmap getDrugPicture() {
-        return drugPicture;
-    }
-
-    public void setDrugPicture(Bitmap drugPicture) {
-        this.drugPicture = drugPicture;
-    }
 
     public String getDrugAmount() {
         return drugAmount;

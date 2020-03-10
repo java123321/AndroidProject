@@ -22,6 +22,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.example.ourprojecttest.CommonMethod;
 import com.example.ourprojecttest.DocBottomNavigation;
 import com.example.ourprojecttest.DocMine.DocOrderManagement.OrderManagement;
@@ -47,6 +49,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class DocMineFragment extends Fragment {
+    private SwipeRefreshLayout refresh;
     private Dialog dialog;
     Context mContext;
     private CommonMethod commonMethod=new CommonMethod();

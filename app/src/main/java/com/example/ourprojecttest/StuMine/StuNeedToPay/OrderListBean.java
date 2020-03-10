@@ -4,7 +4,8 @@ import java.util.ArrayList;
 
 public class OrderListBean {
    private String orderTime;
-
+    private String orderPrice;
+    private ArrayList<ContentInfoBean> drugInfoBeans;
     public String getOrderPrice() {
         return orderPrice;
     }
@@ -13,8 +14,7 @@ public class OrderListBean {
         this.orderPrice = orderPrice;
     }
 
-    private String orderPrice;
-    private ArrayList<ContentInfoBean> drugInfoBeans;
+
 
     public ArrayList<ContentInfoBean> getDrugInfoBeans() {
         return drugInfoBeans;

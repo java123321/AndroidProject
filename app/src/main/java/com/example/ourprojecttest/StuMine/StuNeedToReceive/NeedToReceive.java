@@ -48,21 +48,17 @@ public class NeedToReceive extends AppCompatActivity {
         data.setDrugAmount("25");
         data.setDrugName("999感冒灵");
         data.setDrugUnite("12");
-
-        data.setDrugPicture(Rfile2Bitmap());
         dataList.add(data);
         dataList.add(data);
         dataList.add(data);
         bean.setDrugInfoBeans(dataList);
         orderListBeans.add(bean);
-
         bean=new OrderListBean();
         bean.setOrderTime("2222/12/22");
         data=new ContentInfoBean();
         data.setDrugAmount("25");
         data.setDrugName("999感冒灵");
         data.setDrugUnite("12");
-        data.setDrugPicture(Rfile2Bitmap());
         dataList=new ArrayList<>();
         dataList.add(data);
         dataList.add(data);

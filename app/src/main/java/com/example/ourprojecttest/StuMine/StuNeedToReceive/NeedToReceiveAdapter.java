@@ -112,7 +112,7 @@ public class NeedToReceiveAdapter extends RecyclerView.Adapter <RecyclerView.Vie
                 contentViewHolder.drugUnite.setText("￥ "+bean.getDrugUnite());
                 contentViewHolder.drugAmount.setText("X "+bean.getDrugAmount());
                 contentViewHolder.drugName.setText("药品名: "+bean.getDrugName());
-                contentViewHolder.drugPicture.setImageBitmap(bean.getDrugPicture());
+                contentViewHolder.drugPicture.setImageDrawable(bean.getDrugPicture());
             }//绑定订单头部
             else if(type==ITEM_HEADER){
                 HeadViewHolder headViewHolder=(HeadViewHolder)holder;
