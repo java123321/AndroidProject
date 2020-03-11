@@ -1,50 +1,96 @@
 package com.example.ourprojecttest.DocTreatment;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.CountDownTimer;
+import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.example.ourprojecttest.CommonMethod;
 import com.example.ourprojecttest.StuDiagnosis.Chat;
 import com.example.ourprojecttest.DocService;
 import com.example.ourprojecttest.ImmersiveStatusbar;
 import com.example.ourprojecttest.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
-public class DocOperatActivity extends AppCompatActivity {
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
+public class DocOperatActivity extends AppCompatActivity {
+    private final int SUCCESS=1;
+    private final int FAULT=0;
     Intent intentToService=new Intent("com.example.ourprojecttest.DOC_UPDATE_SERVICE");//改
     LocalReceiver localReceiver;
     IntentFilter intentFilter;
+    private CommonMethod method=new CommonMethod();
     private RecyclerView mRecycler;
+    private SwipeRefreshLayout refresh;
     private Button view;
     private Button access;
+    private TextView noStudent;
     private DisplayStuAdapter adapter;
+    private ArrayList<DisplayStuBean> lists=new ArrayList<>();
     private ProgressDialog waitingDialog;
     CountDownTimer cdt;
     private String flag = "";
     String stuID = null;
+
+    private Handler handler=new Handler(){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            Log.d("msgwhat","what:"+msg.what);
+            refresh.setRefreshing(false);
+            switch (msg.what){
+                case SUCCESS:
+                    ArrayList<DisplayStuBean>list=(ArrayList<DisplayStuBean>)msg.obj;
+                    Log.d("msgwhat","size"+list.size());
+                    adapter.setList(list);
+                    adapter.notifyDataSetChanged();
+                    noStudent.setVisibility(View.GONE);
+                    mRecycler.setVisibility(View.VISIBLE);
+                    break;
+                case FAULT:
+                    noStudent.setVisibility(View.VISIBLE);
+                    mRecycler.setVisibility(View.GONE);
+                    break;
+            }
+
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +104,72 @@ public class DocOperatActivity extends AppCompatActivity {
         localReceiver=new LocalReceiver();
         getApplicationContext().registerReceiver(localReceiver,intentFilter);
         Log.d("目的","监听学生人数开始");
+    }
+
+
+    //从服务器获取当前在线学生的信息
+    private void getData(){
+        refresh.setRefreshing(true);
+        final String url=getResources().getString(R.string.ipAdrress)+"IM/GetOnlineStu";
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url(url)
+                        .build();
+                try {
+                    Response response = client.newCall(request).execute();
+                    String responseData = response.body().string();
+                    parseJSONToStu(responseData);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    //解析在线医生信息json
+    private void parseJSONToStu(String data){
+        Log.d("msgwhat","data"+data);
+        ArrayList<DisplayStuBean> list=new ArrayList<>();
+        Message msg=Message.obtain();
+        try{
+            JSONArray jsonArray=new JSONArray(data);
+            for(int i=0;i<jsonArray.length();i++){
+                JSONObject jsonObject=jsonArray.getJSONObject(i);
+
+                if(!jsonObject.has("#x")){
+                    DisplayStuBean info=new  DisplayStuBean();
+                    info.setName(jsonObject.getString("Stu_Name"));;
+                    info.setSex(jsonObject.getString("Stu_Sex"));
+                    info.setBirthday(jsonObject.getString("Stu_Birth"));
+                    info.setHeight(jsonObject.getString("Stu_Height"));
+                    info.setWeight(jsonObject.getString("Stu_Weight"));
+                    info.setPhone(jsonObject.getString("Stu_Phone"));
+                    info.setAddress(jsonObject.getString("Stu_Address"));
+                    //设置学生头像
+                    info.setIcon(method.drawableToBitamp( Drawable.createFromStream(new URL(jsonObject.getString("Stu_Icon")).openStream(),"image.jpg")));
+
+                    list.add(info);
+                }
+                else {//如果当前没有在线学生
+                    msg.what=FAULT;
+                    handler.sendMessage(msg);
+                    return;
+                }
+            }
+
+            Log.d("msgwhat","size1"+list.size());
+            msg.what=SUCCESS;
+            msg.obj=list;
+            handler.sendMessage(msg);
+
+        } catch (JSONException | MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initView(){
@@ -77,6 +189,16 @@ public class DocOperatActivity extends AppCompatActivity {
             }
 
         }
+        refresh=findViewById(R.id.swipeRefresh);
+        //设置下拉刷新的的更新事件
+        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getData();
+            }
+        });
+        noStudent=findViewById(R.id.noStudent);
+        noStudent.setText("当前暂无学生问诊，请等待！");
         access=findViewById(R.id.access);
         mRecycler=findViewById(R.id.docDisplayStu);
         LinearLayoutManager layoutManager=new LinearLayoutManager(this);
@@ -84,6 +206,11 @@ public class DocOperatActivity extends AppCompatActivity {
         adapter = new DisplayStuAdapter(DocOperatActivity.this);
         mRecycler.setAdapter(adapter);
         //联网获取数据
+        getData();
+
+
+
+
         cdt = new CountDownTimer(10000,1000) {
             int i = 10;
             @Override
@@ -126,21 +253,21 @@ public class DocOperatActivity extends AppCompatActivity {
         if(keyCode==KeyEvent.KEYCODE_BACK){
             AlertDialog.Builder bdr=new AlertDialog.Builder(this);
             bdr.setMessage("确定要退出接诊吗?");
+
             bdr.setNegativeButton("取消",null);
             bdr.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     //通知医生服务退出看病
-                intentToService.putExtra("msg","exit");
-                sendBroadcast(intentToService);
-                finish();
+                    intentToService.putExtra("msg","exit");
+                    sendBroadcast(intentToService);
+                    finish();
                 }
             });
             bdr.show();
         }
         return false;
     }
-
 
     /**
      * 接收服务里传过来的挂号更新信息
@@ -187,8 +314,7 @@ public class DocOperatActivity extends AppCompatActivity {
                         intentToChat.putExtra("stuPicture",intent.getByteArrayExtra("stuPicture"));
                         startActivity(intentToChat);
                     }
-                    }
-
+                }
             }
         }
     }
