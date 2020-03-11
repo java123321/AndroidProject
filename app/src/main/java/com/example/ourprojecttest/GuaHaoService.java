@@ -31,6 +31,7 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 
 public class GuaHaoService extends Service {
+    String stuId;
     CommonMethod method=new CommonMethod();
     String docId="11111";
     LocalReceiver localReceiver;
@@ -79,6 +80,7 @@ public class GuaHaoService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        stuId=method.getFileData("ID",GuaHaoService.this);
         //初始化通知信道服务
         initChannel();
         //开始注册广播监听器，准备接受发送给服务的更新挂号信息
@@ -96,7 +98,7 @@ public class GuaHaoService extends Service {
     //挂号连接方法
    private void guaHaoConnect() {
         Request request = new Request.Builder()
-                .url(getResources().getString(R.string.ipAdrressSocket)+"IM/websocket?12345")
+                .url(getResources().getString(R.string.ipAdrressSocket)+"IM/websocket?"+stuId)
                 .build();
         OkHttpClient client = new OkHttpClient();
         client.newWebSocket(request, guaHaoListener);

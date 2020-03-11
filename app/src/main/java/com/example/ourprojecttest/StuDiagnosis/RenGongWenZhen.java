@@ -86,7 +86,6 @@ public class RenGongWenZhen extends AppCompatActivity {
 
         }
     };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,8 +109,6 @@ public class RenGongWenZhen extends AppCompatActivity {
 
                 if(person.equals("-1")){//如果是-1的话代表到你了，发出提示窗口
                     Log.d("chat0","0102");
-
-
                     final Dialog dialog = new AlertDialog.Builder(RenGongWenZhen.this).setTitle("选择")
                             .setCancelable(false)
                             //.setView(mShutDownTextView)

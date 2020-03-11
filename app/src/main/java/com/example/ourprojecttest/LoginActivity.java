@@ -220,13 +220,13 @@ public class LoginActivity extends AppCompatActivity {
                         String url;
                         //如果是学生登录
                         if(radioButton_stu.isChecked()){
-                           // url=getResources().getString(R.string.ipAdrress)+"IM/servlet/Login?no=" + name + "&pwd=" + pass;
-                            url=getResources().getString(R.string.ipAdrress)+"IM/servlet/Login?no=12345&pwd=12345";
+                            url=getResources().getString(R.string.ipAdrress)+"IM/servlet/Login?no=" + name + "&pwd=" + pass;
+
                             Log.d("login",url);
                         }
                         else{//如果是医生登录
-                            //url=getResources().getString(R.string.ipAdrress)+"IM/servlet/Login_Doc?no="+name+"&pwd="+pass;
-                            url=getResources().getString(R.string.ipAdrress)+"IM/servlet/Login_Doc?no=11111&pwd=11111";
+                            url=getResources().getString(R.string.ipAdrress)+"IM/servlet/Login_Doc?no="+name+"&pwd="+pass;
+
                             Log.d("login",url);
                         }
                         //  Log.d("dengluURL",url);
@@ -259,10 +259,10 @@ public class LoginActivity extends AppCompatActivity {
 
             if(code.equals("0")){
                 if(radioButton_stu.isChecked()){
-//                    method.saveFileData("ID",userName.getText().toString().trim(),LoginActivity.this);
-//                    method.saveFileData("Passworld",passWord.getText().toString().trim(),LoginActivity.this);
-                    method.saveFileData("ID","12345",LoginActivity.this);
-                    method.saveFileData("Passworld","12345",LoginActivity.this);
+                    method.saveFileData("ID",userName.getText().toString().trim(),LoginActivity.this);
+                    method.saveFileData("Passworld",passWord.getText().toString().trim(),LoginActivity.this);
+//                    method.saveFileData("ID","12345",LoginActivity.this);
+//                    method.saveFileData("Passworld","12345",LoginActivity.this);
 
                 }
                 else{
@@ -340,8 +340,6 @@ public class LoginActivity extends AppCompatActivity {
                 method.saveFileData("DocSex","医生暂未设置性别",LoginActivity.this);
             }
 
-
-
             //将医生的科室保存到本地
             if(jsonObject.has("Doc_Offices")){
                 method.saveFileData("DocOffices",jsonObject.getString("Doc_Offices"),LoginActivity.this);
@@ -417,9 +415,6 @@ public class LoginActivity extends AppCompatActivity {
         try{
             JSONArray jsonArray=new JSONArray(jsonData);
             JSONObject jsonObject=jsonArray.getJSONObject(1);
-
-
-
             //将医生的上班时间保存到本地
             if(jsonObject.has("Work_Time")){
                 method.saveFileData("WorkTime",jsonObject.getString("Work_Time"),LoginActivity.this);
@@ -494,12 +489,10 @@ public class LoginActivity extends AppCompatActivity {
             if(jsonObject.has("Stu_Icon")){
                 //将学生头像的url保存到本地，后续聊天的时候学生会将自己的头像url发送给医生
                 method.saveFileData("StuIconUrl",jsonObject.getString("Stu_Icon"),LoginActivity.this);
-
                 pictureStore.setFlag(true);
                 byte[] as=method.bitmap2Bytes(method.drawableToBitamp(loadImageFromNetwork(jsonObject.getString("Stu_Icon"))));
                 pictureStore.setPicture(as);
                 method.saveObj2SDCard("Icon",pictureStore);
-
                 pictureStore=( PictureStore)method.readObjFromSDCard("Icon");
 
             }

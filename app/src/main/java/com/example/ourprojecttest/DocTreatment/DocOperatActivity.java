@@ -66,7 +66,6 @@ public class DocOperatActivity extends AppCompatActivity {
     CountDownTimer cdt;
     private String flag = "";
     String stuID = null;
-
     private Handler handler=new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -90,8 +89,6 @@ public class DocOperatActivity extends AppCompatActivity {
 
         }
     };
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,7 +102,6 @@ public class DocOperatActivity extends AppCompatActivity {
         getApplicationContext().registerReceiver(localReceiver,intentFilter);
         Log.d("目的","监听学生人数开始");
     }
-
 
     //从服务器获取当前在线学生的信息
     private void getData(){
@@ -187,7 +183,6 @@ public class DocOperatActivity extends AppCompatActivity {
             } else{
 
             }
-
         }
         refresh=findViewById(R.id.swipeRefresh);
         //设置下拉刷新的的更新事件
@@ -207,10 +202,6 @@ public class DocOperatActivity extends AppCompatActivity {
         mRecycler.setAdapter(adapter);
         //联网获取数据
         getData();
-
-
-
-
         cdt = new CountDownTimer(10000,1000) {
             int i = 10;
             @Override
@@ -224,7 +215,6 @@ public class DocOperatActivity extends AppCompatActivity {
                 }
             }
         };
-
         access.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -237,10 +227,6 @@ public class DocOperatActivity extends AppCompatActivity {
         });
 
     }
-    private Bitmap Rfile2Bitmap(){
-        return BitmapFactory.decodeResource(getResources(),R.drawable.person);
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
