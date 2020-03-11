@@ -13,9 +13,6 @@ public class OrderListBean {
     public void setOrderPrice(String orderPrice) {
         this.orderPrice = orderPrice;
     }
-
-
-
     public ArrayList<ContentInfoBean> getDrugInfoBeans() {
         return drugInfoBeans;
     }
@@ -23,7 +20,6 @@ public class OrderListBean {
     public void setDrugInfoBeans(ArrayList<ContentInfoBean> drugInfoBeans) {
         this.drugInfoBeans = drugInfoBeans;
     }
-
     public String getOrderTime() {
         return orderTime;
     }
@@ -31,8 +27,5 @@ public class OrderListBean {
     public void setOrderTime(String orderTime) {
         this.orderTime = orderTime;
     }
-
-
-
 
 }

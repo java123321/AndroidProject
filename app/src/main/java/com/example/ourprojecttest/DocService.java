@@ -69,11 +69,6 @@ public class DocService extends Service {
             }    //如果是查看排队人数的信息
             else{
                 switch (intent.getStringExtra("msg")){
-                    case "View":
-                        //startForeground(1,getNotification(CHANNEL_ID,"正在接收通知"));
-                        send();
-                        Log.d("候诊服务", "服务收到查看人数广播通知");
-                    break;
                     //医生上线的消息
                     case "Online":
                         retreatmentConnect();
@@ -87,11 +82,8 @@ public class DocService extends Service {
                         break;
                     case "exit":
                         listener.socket.close(1000, "正常关闭");
-
                 }
-
         }
-
         }
     }
 

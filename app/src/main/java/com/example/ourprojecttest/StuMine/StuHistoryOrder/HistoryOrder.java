@@ -14,6 +14,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -30,7 +31,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OptionalDataException;
+import java.io.StreamCorruptedException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -68,6 +77,7 @@ public class HistoryOrder extends AppCompatActivity {
                     adapter.setList(NeedToReceiveHelper.getDataAfterHandle( orderList));
                     adapter.notifyDataSetChanged();
                     refresh.setRefreshing(false);
+                    writeOrderListIntoSDcard("stuHistoryOrder",orderList);
                     break;
                 }
                 case FAULT:{
@@ -213,8 +223,83 @@ public class HistoryOrder extends AppCompatActivity {
         LinearLayoutManager manager=new LinearLayoutManager(HistoryOrder.this);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
+        //如果本地缓存订单数据不为空，则先显示出来
+        ArrayList<OrderListBean> orderList=readOrderListFromSdCard("stuHistoryOrder");
+        if(orderList!=null){
+            adapter.setList(NeedToReceiveHelper.getDataAfterHandle(orderList));
+            adapter.notifyDataSetChanged();
+        }
         getData();
         Log.d("history","000");
     }
 
+    /**
+     * 该方法用于将订单对象数组集合写入sd卡
+     *
+     * @param fileName 文件名
+     * @param list     集合
+     * @return true 保存成功
+     */
+    public boolean writeOrderListIntoSDcard(String fileName, ArrayList<OrderListBean> list) {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            File sdCardDir = Environment.getExternalStorageDirectory();//获取sd卡目录
+            File sdFile = new File(sdCardDir, fileName);
+            try {
+                FileOutputStream fos = new FileOutputStream(sdFile);
+                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                oos.writeObject(list);//写入
+                fos.close();
+                oos.close();
+                return true;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                return false;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 读取sd卡中的订单数组对象
+     *
+     * @param fileName 文件名
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public ArrayList<OrderListBean> readOrderListFromSdCard(String fileName) {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {  //检测sd卡是否存在
+            ArrayList<OrderListBean> list;
+            File sdCardDir = Environment.getExternalStorageDirectory();
+            File sdFile = new File(sdCardDir, fileName);
+            try {
+                FileInputStream fis = new FileInputStream(sdFile);
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                list = (ArrayList<OrderListBean>) ois.readObject();
+                fis.close();
+                ois.close();
+                return list;
+            } catch (StreamCorruptedException e) {
+                e.printStackTrace();
+                return null;
+            } catch (OptionalDataException e) {
+                e.printStackTrace();
+                return null;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                return null;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
 }

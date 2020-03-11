@@ -11,16 +11,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
 import com.example.ourprojecttest.AuthResult;
@@ -29,20 +27,22 @@ import com.example.ourprojecttest.ImmersiveStatusbar;
 import com.example.ourprojecttest.OrderInfoUtil2_0;
 import com.example.ourprojecttest.PayResult;
 import com.example.ourprojecttest.R;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OptionalDataException;
+import java.io.StreamCorruptedException;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Map;
-
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -105,6 +105,8 @@ public class NeedToPay extends AppCompatActivity {
                     adapter.setList(NeedToPayHelper.getDataAfterHandle(orderList));
                     adapter.notifyDataSetChanged();
                     refresh.setRefreshing(false);
+                    //将订单数组对象保存到本地
+                    writeOrderListIntoSDcard("stuNeedToPayOrder",orderList);
                     break;
                 }
                 case SDK_PAY_FLAG: {
@@ -289,6 +291,12 @@ public class NeedToPay extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         adapter=new NeedToPayAdapter(NeedToPay.this);
         recyclerView.setAdapter(adapter);
+        ArrayList<OrderListBean> orderList=readOrderListFromSdCard("stuNeedToPayOrder");
+        //如果本地缓存订单数据不为空，则先显示出来
+        if(orderList!=null){
+            adapter.setList(NeedToPayHelper.getDataAfterHandle(orderList));
+            adapter.notifyDataSetChanged();
+        }
         getData();//获取待付款订单
     }
 
@@ -347,4 +355,76 @@ public class NeedToPay extends AppCompatActivity {
                 .setOnDismissListener(onDismiss)
                 .show();
     }
+
+
+    /**
+     * 该方法用于将订单对象数组集合写入sd卡
+     *
+     * @param fileName 文件名
+     * @param list     集合
+     * @return true 保存成功
+     */
+    public boolean writeOrderListIntoSDcard(String fileName, ArrayList<OrderListBean> list) {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            File sdCardDir = Environment.getExternalStorageDirectory();//获取sd卡目录
+            File sdFile = new File(sdCardDir, fileName);
+            try {
+                FileOutputStream fos = new FileOutputStream(sdFile);
+                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                oos.writeObject(list);//写入
+                fos.close();
+                oos.close();
+                return true;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                return false;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 读取sd卡中的订单数组对象
+     *
+     * @param fileName 文件名
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public ArrayList<OrderListBean> readOrderListFromSdCard(String fileName) {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {  //检测sd卡是否存在
+            ArrayList<OrderListBean> list;
+            File sdCardDir = Environment.getExternalStorageDirectory();
+            File sdFile = new File(sdCardDir, fileName);
+            try {
+                FileInputStream fis = new FileInputStream(sdFile);
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                list = (ArrayList<OrderListBean>) ois.readObject();
+                fis.close();
+                ois.close();
+                return list;
+            } catch (StreamCorruptedException e) {
+                e.printStackTrace();
+                return null;
+            } catch (OptionalDataException e) {
+                e.printStackTrace();
+                return null;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                return null;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
 }

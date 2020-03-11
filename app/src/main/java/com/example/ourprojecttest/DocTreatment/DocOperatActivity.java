@@ -77,8 +77,6 @@ public class DocOperatActivity extends AppCompatActivity {
             }
 
         }
-
-        view=findViewById(R.id.view);
         access=findViewById(R.id.access);
         mRecycler=findViewById(R.id.docDisplayStu);
         LinearLayoutManager layoutManager=new LinearLayoutManager(this);
@@ -86,21 +84,6 @@ public class DocOperatActivity extends AppCompatActivity {
         adapter = new DisplayStuAdapter(DocOperatActivity.this);
         mRecycler.setAdapter(adapter);
         //联网获取数据
-
-
-        //查看学生排队人数
-        view.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                //给服务器发送查看队列的广播
-                intentToService.putExtra("msg","View");//改了
-                sendBroadcast(intentToService);
-                Log.d("线程信息","："+Thread.currentThread().getId()+"   " +
-                        "查看挂号人数");
-
-            }
-        });
-
         cdt = new CountDownTimer(10000,1000) {
             int i = 10;
             @Override

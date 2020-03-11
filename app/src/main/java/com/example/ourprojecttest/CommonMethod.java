@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.example.ourprojecttest.DocTreatment.PrescribeBean;
 import com.example.ourprojecttest.StuMine.ShoppingCart.ShoppingCartBean;
+import com.example.ourprojecttest.StuMine.StuNeedToPay.OrderListBean;
 
 import org.jetbrains.annotations.NotNull;
 
