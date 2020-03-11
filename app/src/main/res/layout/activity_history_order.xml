@@ -14,6 +14,10 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"/>
 
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    android:id="@+id/refresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/historyOrderRecyclerView"
         android:layout_width="match_parent"
@@ -21,5 +25,6 @@
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
         android:layout_height="match_parent"/>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>

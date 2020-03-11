@@ -10,7 +10,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/style_bottom">
-
+<TextView
+    android:text="订单总价:￥12.01"
+    android:id="@+id/orderPrice"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"/>
         <Button
             android:id="@+id/deleteOrderHistory"
             android:layout_width="90dp"

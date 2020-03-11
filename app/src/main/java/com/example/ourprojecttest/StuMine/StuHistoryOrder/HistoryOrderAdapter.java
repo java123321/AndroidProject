@@ -1,6 +1,7 @@
 package com.example.ourprojecttest.StuMine.StuHistoryOrder;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +14,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ourprojecttest.StuMine.StuNeedToPay.ContentInfoBean;
 import com.example.ourprojecttest.StuMine.StuNeedToPay.HeadInfoBean;
+import com.example.ourprojecttest.StuMine.StuNeedToPay.FooterInfoBean;
 import com.example.ourprojecttest.R;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class HistoryOrderAdapter extends RecyclerView.Adapter <RecyclerView.ViewHolder> {
+    Intent intentToHistoryOrder=new Intent("com.example.ourprojecttest.HISTORY_ORDER");
     private final int ITEM_HEADER=1,ITEM_CONTENT=2,ITEM_FOOTER=3;
     Context mContext;
-    private ArrayList<Object> dataList;
+    private ArrayList<Object> dataList=new ArrayList<>();
 
     public void setContext(Context context){
         mContext=context;
@@ -32,7 +38,6 @@ public class HistoryOrderAdapter extends RecyclerView.Adapter <RecyclerView.View
     //头部布局持有者类
     class HeadViewHolder extends RecyclerView.ViewHolder{
         TextView orderTime;
-
         public HeadViewHolder(@NonNull View itemView) {
             super(itemView);
             orderTime=itemView.findViewById(R.id.orderTime);
@@ -57,10 +62,11 @@ public class HistoryOrderAdapter extends RecyclerView.Adapter <RecyclerView.View
     //脚部布局持有者类
     class FootViewHolder extends RecyclerView.ViewHolder {
         Button deleteOrder;
-
+        TextView orderPrice;
         public FootViewHolder(@NonNull View itemView) {
             super(itemView);
             deleteOrder=itemView.findViewById(R.id.deleteOrderHistory);
+            orderPrice=itemView.findViewById(R.id.orderPrice);
         }
 
     }
@@ -115,17 +121,22 @@ public class HistoryOrderAdapter extends RecyclerView.Adapter <RecyclerView.View
         else if(type==ITEM_HEADER){
             HeadViewHolder headViewHolder=(HeadViewHolder)holder;
             HeadInfoBean bean=(HeadInfoBean)dataList.get(position);
-            headViewHolder.orderTime.setText("订单时间:"+bean.getOrderTime());
 
+            Date date=new Date();
+            date.setTime(Long.valueOf(bean.getOrderTime()));
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            headViewHolder.orderTime.setText("订单时间:"+format.format(date));
         }
         else{//绑定脚部信息
             FootViewHolder footViewHolder=(FootViewHolder)holder;
-
+            final FooterInfoBean bean=(FooterInfoBean)dataList.get(position);
+            footViewHolder.orderPrice.setText("订单总价:￥"+bean.getOrderPrice());
             //删除订单的点击事件
             footViewHolder.deleteOrder.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                intentToHistoryOrder.putExtra("delete",bean.getOrderId());
+                mContext.sendBroadcast(intentToHistoryOrder);
                 }
             });
         }

@@ -79,7 +79,6 @@ public class NeedToPay extends AppCompatActivity {
                orderId=intent.getStringExtra("orderId");
                payV2(intent.getStringExtra("price"));
            }
-
         }
     }
 

@@ -49,10 +49,14 @@ public class NeedToPost extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what){
                 case HAVE_ORDER:{
-                    Toast.makeText(NeedToPost.this, "获取订单成功", Toast.LENGTH_SHORT).show();
+                    ArrayList<OrderListBean> orderList=(ArrayList<OrderListBean>)msg.obj;
+                    adapter.setList(NeedToReceiveHelper.getDataAfterHandle(orderList));
+                    adapter.notifyDataSetChanged();
+                    refresh.setRefreshing(false);
                     break;
                 }
                 case NO_ORDER:{
+                    refresh.setRefreshing(false);
                     Toast.makeText(NeedToPost.this, "暂无代发货订单", Toast.LENGTH_SHORT).show();
                     break;
                 }
@@ -130,9 +134,9 @@ public class NeedToPost extends AppCompatActivity {
                         drugDataList.add(drugData);//将药品添加到药品列表里
                     }
                 }
-//                msg.what=SUCCESS;
-//                msg.obj=orderList;
-//                mHandler.sendMessage(msg);
+                msg.what=HAVE_ORDER;
+                msg.obj=orderList;
+                handler.sendMessage(msg);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -142,12 +146,6 @@ public class NeedToPost extends AppCompatActivity {
     private void initView(){
         id=method.getFileData("ID",this);
         refresh=findViewById(R.id.refresh);
-
-        recyclerView=findViewById(R.id.needToPost);
-        adapter=new   NeedToPostAdapter();
-        adapter.setContext(NeedToPost.this);
-        LinearLayoutManager manager=new LinearLayoutManager(NeedToPost.this);
-        recyclerView.setLayoutManager(manager);
         //设置下拉刷新过去数据
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -155,35 +153,14 @@ public class NeedToPost extends AppCompatActivity {
                 getData();
             }
         });
-        //创建模拟订单数据
-        ArrayList<OrderListBean> orderListBeans=new ArrayList<>();
-        OrderListBean bean=new OrderListBean();
-        bean.setOrderTime("1222/12/22");
+        recyclerView=findViewById(R.id.needToPost);
+        adapter=new  NeedToPostAdapter();
+        adapter.setContext(NeedToPost.this);
+        LinearLayoutManager manager=new LinearLayoutManager(NeedToPost.this);
+        recyclerView.setLayoutManager(manager);
 
-        ArrayList<ContentInfoBean> dataList=new ArrayList<>();
-        ContentInfoBean data=new ContentInfoBean();
-        data.setDrugAmount("25");
-        data.setDrugName("999感冒灵");
-        data.setDrugUnite("12");
-        dataList.add(data);
-        dataList.add(data);
-        dataList.add(data);
-        bean.setDrugInfoBeans(dataList);
-        orderListBeans.add(bean);
-
-        bean=new OrderListBean();
-        bean.setOrderTime("2222/12/22");
-        data=new ContentInfoBean();
-        data.setDrugAmount("25");
-        data.setDrugName("999感冒灵");
-        data.setDrugUnite("12");
-        dataList=new ArrayList<>();
-        dataList.add(data);
-        dataList.add(data);
-        bean.setDrugInfoBeans(dataList);
-        orderListBeans.add(bean);
-        adapter.setList(NeedToReceiveHelper.getDataAfterHandle(orderListBeans));
         recyclerView.setAdapter(adapter);
+        getData();
     }
 
 }

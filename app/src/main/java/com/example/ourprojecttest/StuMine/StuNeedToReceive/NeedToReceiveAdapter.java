@@ -1,6 +1,7 @@
 package com.example.ourprojecttest.StuMine.StuNeedToReceive;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -12,24 +13,29 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ourprojecttest.StuMine.StuNeedToPay.ContentInfoBean;
 import com.example.ourprojecttest.StuMine.StuNeedToPay.HeadInfoBean;
+import com.example.ourprojecttest.StuMine.StuNeedToPay.FooterInfoBean;
 import com.example.ourprojecttest.R;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class NeedToReceiveAdapter extends RecyclerView.Adapter <RecyclerView.ViewHolder> {
+    Intent intentToReceiveOrder=new Intent("com.example.ourprojecttest.RECEIVE_ORDER");
     private final int ITEM_HEADER=1,ITEM_CONTENT=2,ITEM_FOOTER=3;
     Context mContext;
-    private ArrayList<Object> dataList;
+    private ArrayList<Object> dataList=new ArrayList<>();
 
 
  public void setContext(Context context){
      mContext=context;
  }
 
+
     public void setList(ArrayList<Object> list){
         dataList=list;
     }
-
 
     //头部布局持有者类
     class HeadViewHolder extends RecyclerView.ViewHolder{
@@ -59,12 +65,10 @@ public class NeedToReceiveAdapter extends RecyclerView.Adapter <RecyclerView.Vie
     //脚部布局持有者类
     class FootViewHolder extends RecyclerView.ViewHolder {
         Button confirmReceive;
-
         public FootViewHolder(@NonNull View itemView) {
             super(itemView);
             confirmReceive=itemView.findViewById(R.id.confirmReceive);
         }
-
     }
 
         @Override
@@ -79,7 +83,6 @@ public class NeedToReceiveAdapter extends RecyclerView.Adapter <RecyclerView.Vie
             else {
                 return ITEM_FOOTER;
             }
-
         }
 
 
@@ -105,6 +108,7 @@ public class NeedToReceiveAdapter extends RecyclerView.Adapter <RecyclerView.Vie
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             int type=getItemViewType(position);
+
             //绑定药品内容
             if (type==ITEM_CONTENT){
                 ContentViewHolder contentViewHolder=(ContentViewHolder)holder;
@@ -117,16 +121,20 @@ public class NeedToReceiveAdapter extends RecyclerView.Adapter <RecyclerView.Vie
             else if(type==ITEM_HEADER){
                 HeadViewHolder headViewHolder=(HeadViewHolder)holder;
                 HeadInfoBean bean=(HeadInfoBean)dataList.get(position);
-                headViewHolder.orderTime.setText("订单时间:"+bean.getOrderTime());
-
+                Date date=new Date();
+                date.setTime(Long.valueOf(bean.getOrderTime()));
+                DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                headViewHolder.orderTime.setText("订单时间:"+format.format(date));
             }
             else{//绑定脚部信息
                 FootViewHolder footViewHolder=(FootViewHolder)holder;
-
+                final FooterInfoBean bean=(FooterInfoBean) dataList.get(position);
                 //确认收货的点击事件
                 footViewHolder.confirmReceive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                    intentToReceiveOrder.putExtra("receive",bean.getOrderId());
+                    mContext.sendBroadcast(intentToReceiveOrder);
 
                     }
                 });
@@ -138,6 +146,5 @@ public class NeedToReceiveAdapter extends RecyclerView.Adapter <RecyclerView.Vie
         public int getItemCount() {
             return dataList.size();
         }
-
 
 }

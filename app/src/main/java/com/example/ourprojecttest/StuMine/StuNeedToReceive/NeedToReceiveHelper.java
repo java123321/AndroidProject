@@ -24,6 +24,8 @@ public class NeedToReceiveHelper {
                 dataList.add(contentList.get(i));
             }
             FooterInfoBean footerInfoBean=new FooterInfoBean();
+            footerInfoBean.setOrderId(orderListBean.getOrderTime());
+            footerInfoBean.setOrderPrice(orderListBean.getOrderPrice());
             dataList.add(footerInfoBean);
         }
 

@@ -13,12 +13,15 @@ import com.example.ourprojecttest.R;
 import com.example.ourprojecttest.StuMine.StuNeedToPay.ContentInfoBean;
 import com.example.ourprojecttest.StuMine.StuNeedToPay.HeadInfoBean;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class NeedToPostAdapter extends RecyclerView.Adapter <RecyclerView.ViewHolder> {
     private final int ITEM_HEADER=1,ITEM_CONTENT=2,ITEM_FOOTER=3;
     Context mContext;
-    private ArrayList<Object> dataList;
+    private ArrayList<Object> dataList=new ArrayList<>();
 
     public void setContext(Context context){
         mContext=context;
@@ -109,7 +112,10 @@ public class NeedToPostAdapter extends RecyclerView.Adapter <RecyclerView.ViewHo
         else if(type==ITEM_HEADER){
             HeadViewHolder headViewHolder=(HeadViewHolder)holder;
             HeadInfoBean bean=(HeadInfoBean)dataList.get(position);
-            headViewHolder.orderTime.setText("订单时间:"+bean.getOrderTime());
+            Date date=new Date();
+            date.setTime(Long.valueOf(bean.getOrderTime()));
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            headViewHolder.orderTime.setText("订单时间:"+format.format(date));
         }
         else{//绑定订单尾部
 
