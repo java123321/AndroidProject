@@ -171,13 +171,12 @@ public class DocService extends Service {
             }else if (info.indexOf("向您发送了接诊邀请")!=-1){
                 stuId = info.substring(0,info.indexOf("向"));
                 Log.d("学生Id",stuId);
-
                 //发送通知
                 startForeground(1,getNotification(CHANNEL_ID,stuId+"向你发送问诊"));
-
                 //将候诊学生广播出去
-//                intent.putExtra("stuId",stuId);
-//                sendBroadcast(intent);
+                intent.putExtra("Dialog","true");
+                sendBroadcast(intent);
+                intent.removeExtra("Dialog");
 
             }
         }

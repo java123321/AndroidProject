@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,6 +15,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -35,6 +37,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Timer;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -55,6 +58,7 @@ public class RenGongWenZhen extends AppCompatActivity {
     private Button guaHao;
     private TextView text;
     private DisplayDocAdapter adapter;
+    private TextView mShutDownTextView;
     private RecyclerView mRecycler;
     private ArrayList<DisplayDocBean> lists=new ArrayList<>();
     private SwipeRefreshLayout refresh;
@@ -106,9 +110,11 @@ public class RenGongWenZhen extends AppCompatActivity {
 
                 if(person.equals("-1")){//如果是-1的话代表到你了，发出提示窗口
                     Log.d("chat0","0102");
-                    new  AlertDialog.Builder(RenGongWenZhen.this)
-                            .setTitle("确认" )
-                            .setMessage("点击沟通进入与医生对话界面，点击放弃将取消此次挂号资格！" )
+
+
+                    final Dialog dialog = new AlertDialog.Builder(RenGongWenZhen.this).setTitle("选择")
+                            .setCancelable(false)
+                            //.setView(mShutDownTextView)
                             .setPositiveButton("沟通", new DialogInterface.OnClickListener() {//如果用户点击了确定按钮则进入与医生的聊天界面
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -129,8 +135,25 @@ public class RenGongWenZhen extends AppCompatActivity {
                                     intentToService.putExtra("msg","Deny");
                                     sendBroadcast(intentToService);
                                 }
-                            })
-                            .show();
+                            }).create();
+                            dialog.show();
+
+                            CountDownTimer cdt = new CountDownTimer(10000,1000) {
+                                int i = 10;
+                                @Override
+                                public void onTick(long millisUntilFinished) {
+                                }
+                                @Override
+                                public void onFinish() {
+                                    if (dialog != null){
+                                        dialog.dismiss();
+                                    }
+                                    intentToService.putExtra("msg","Deny");
+                                    sendBroadcast(intentToService);
+
+                                }
+                            };
+                            cdt.start();
                 }
                 else{//否则显示当前排队人数
                     text.setText("当前挂号位次为第"+intent.getStringExtra("persons")+"位");
