@@ -78,6 +78,7 @@ public class HistoryOrder extends AppCompatActivity {
             }
         }
     };
+
     class LocalReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
