@@ -37,22 +37,15 @@
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </LinearLayout>
-<LinearLayout
-    android:orientation="vertical"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
-
     <Button
         android:id="@+id/access"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:text="接入"
-        />
-
-</LinearLayout>
-
-
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:textColor="#F1EEEE"
+        android:textSize="16dp"
+        android:background="@drawable/style_jiesuan"
+        android:text="接              诊" />
 </LinearLayout>
 
 

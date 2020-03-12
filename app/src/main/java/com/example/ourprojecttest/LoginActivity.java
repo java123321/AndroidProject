@@ -62,7 +62,6 @@ public class LoginActivity extends AppCompatActivity {
                             Intent intent=new Intent(LoginActivity.this, DocBottomNavigation.class);
                             startActivity(intent);
                     }
-
                     //隐藏加载圆圈
                     progressBar.setVisibility(View.INVISIBLE);
                     Log.d("sssicon","handler");
@@ -74,9 +73,6 @@ public class LoginActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.INVISIBLE);
                     default:
                         break;
-                case PROGRESS:
-                    progressBar.setVisibility(View.VISIBLE);
-                    break;
             }
         }
     };
@@ -206,27 +202,25 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.d("denglu","chenggong");
+                final String name = userName.getText().toString().trim();
+                final String pass =  passWord.getText().toString().trim();
+                //如果用户名或密码为空的话则取消登录
+                if(name.equals("")||pass.equals("")){
+                    Toast.makeText(LoginActivity.this, "用户名或密码不能为空！", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                progressBar.setVisibility(View.VISIBLE);
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        //发送消息时加载圆圈开始转圈
-                        Message msg = Message.obtain();
-                        msg.what=PROGRESS;
-                        handler.sendMessage(msg);
-                        TextView userName = (findViewById(R.id.user_name));
-                        TextView userPass = findViewById(R.id.user_psw);
-                        String name = userName.getText().toString().trim();
-                        String pass = userPass.getText().toString().trim();
                         String url;
                         //如果是学生登录
                         if(radioButton_stu.isChecked()){
                             url=getResources().getString(R.string.ipAdrress)+"IM/servlet/Login?no=" + name + "&pwd=" + pass;
-
                             Log.d("login",url);
                         }
                         else{//如果是医生登录
                             url=getResources().getString(R.string.ipAdrress)+"IM/servlet/Login_Doc?no="+name+"&pwd="+pass;
-
                             Log.d("login",url);
                         }
                         //  Log.d("dengluURL",url);
