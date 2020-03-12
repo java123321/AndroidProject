@@ -94,7 +94,6 @@ public class GuaHaoService extends Service {
         chatConnet();
         guaHaoConnect();
         }
-
     //挂号连接方法
    private void guaHaoConnect() {
         Request request = new Request.Builder()
@@ -131,7 +130,7 @@ public class GuaHaoService extends Service {
             Log.d("interfaceguahaomessage",text);
             String info=parseJSONWithJSONObject(text);
             //当服务器更新排队人数时:
-            if(info.startsWith("挂号人数")){
+            if(info.startsWith("您当前排队位次为")){
                 String regEx="[^0-9]";
                 Pattern p = Pattern.compile(regEx);
                 Matcher m = p.matcher(info);
