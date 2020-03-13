@@ -10,8 +10,11 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -54,6 +57,7 @@ public class StuDrugStoreFragment extends Fragment {
     Button sousuo;
     EditText inputInspect;
     String selectedMenu="-1";
+    Drawable searchEditDraw,searchEditDraw1;
     TextView quanbu;
     TextView nanke;
     TextView fuke;
@@ -127,17 +131,30 @@ public class StuDrugStoreFragment extends Fragment {
         mRecycler.setVisibility(View.VISIBLE);
         inputInspect=view.findViewById(R.id.stu_yaodian_search_box);
         sousuo=view.findViewById(R.id.stu_yaodian_sousuo);
-        Drawable searchEditDraw = context.getResources().getDrawable(R.drawable.sousou);
+        searchEditDraw = context.getResources().getDrawable(R.drawable.sousou);
         searchEditDraw.setBounds(0, 0, 55, 55);
-        sousuo.setCompoundDrawables(searchEditDraw, null, null, null);
+        inputInspect.setCompoundDrawables(searchEditDraw, null, null, null);
 
         //实现下拉刷新的更新事件
+
+        searchEditDraw = context.getResources().getDrawable(R.drawable.sousou);
+        searchEditDraw1 = context.getResources().getDrawable(R.drawable.chahao);
+        searchEditDraw.setBounds(0, 0, 60, 60);
+        searchEditDraw1.setBounds(0, 0, 70, 70);
+        inputInspect.setCompoundDrawables(searchEditDraw, null, null, null);
+        //实现下拉刷新的更新事件
+
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getData("1",loadNum,selectedMenu,method.conversion(inputInspect.getText().toString().trim()));
+                getData("0",loadNum,selectedMenu,method.conversion(inputInspect.getText().toString().trim()));
             }
         });
+        refreshLayout.setColorSchemeColors(getResources().getColor(R.color.color_bottom));
+        refreshLayout.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.color_progressbar));
+
+
+
         //注册搜索的点击事件
         sousuo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,6 +206,56 @@ public class StuDrugStoreFragment extends Fragment {
                 Log.d("123321","last item is :"+lastVisibleItem);
             }
         });
+        //实现输入框文本清空功能
+        inputInspect.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (inputInspect.getText().toString().length() == 0) {
+                    inputInspect.setCompoundDrawables(searchEditDraw, null, null, null);
+                    inputInspect.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View view, MotionEvent event) {
+                            //获取点击焦点
+                            return false;
+                        }
+                    });
+
+                }
+                else {
+                    inputInspect.setCompoundDrawables(searchEditDraw, null, searchEditDraw1, null);
+                    inputInspect.setOnTouchListener(new View.OnTouchListener() {
+                        Drawable drawable = inputInspect.getCompoundDrawables()[2];
+
+                        @Override
+                        public boolean onTouch(View view, MotionEvent event) {
+                            //获取点击焦点
+                            if (event.getX() > inputInspect.getWidth() - inputInspect.getPaddingRight() - drawable.getIntrinsicWidth()) {
+                                //其他活动无响应
+                                if (event.getAction() != MotionEvent.ACTION_UP)
+                                    return false;
+                                //清空用户名
+                                inputInspect.setText("");
+                            }
+                            return false;
+                        }
+                    });
+                }
+
+            }
+        });
+
     }
 
     class LoadThread extends Thread{
@@ -291,6 +358,8 @@ public class StuDrugStoreFragment extends Fragment {
             }
         }
     }
+
+
     //该方法用于从数据库获取数据,参数分别为要搜索结果的开始，结束，药品类型(-1代表全部)，药品名字
     private void getData(final String start, final String count, final String type, final String name){
         if(clear){
