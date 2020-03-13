@@ -194,11 +194,7 @@ public class StuMineFragment extends Fragment {
             }
         });
         //设置医生头像
-        PictureStore pictureStore1=( PictureStore)method.readObjFromSDCard("DocIcon");
-        if(pictureStore1.getFlag()){
-            byte[] appIcon=pictureStore1.getPicture();
-            img.setImageBitmap(BitmapFactory.decodeByteArray(appIcon,0,appIcon.length));
-        }
+
         TextView no = inflate.findViewById(R.id.no);
         no.setOnClickListener(new View.OnClickListener() {
             @Override

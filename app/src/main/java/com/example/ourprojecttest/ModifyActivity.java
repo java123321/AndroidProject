@@ -1,5 +1,4 @@
 package com.example.ourprojecttest;
-
 import android.Manifest;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -21,6 +20,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.StrictMode;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,7 +41,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -54,8 +53,11 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -86,10 +88,16 @@ public class ModifyActivity extends AppCompatActivity implements View.OnClickLis
     private ModifyAdapter adapter;
     private ImageView i;
     private File file;
-
+    private String Birthday;
+    private String age1;
     private String URL;
     private String urL;
     private CommonMethod commonMethod=new CommonMethod();
+    private Receiver v;
+    private Receiver1 mm;
+    private Receiver2 receiver2;
+    private Receiver3 receiver3;
+    private Receiver4 receiver4;
     Dialog dialog;
     Bitmap b;
     private Bitmap bimap1;
@@ -102,14 +110,18 @@ public class ModifyActivity extends AppCompatActivity implements View.OnClickLis
         IntentFilter sex1 = new IntentFilter();
         IntentFilter weight1 = new IntentFilter();
         IntentFilter height1 = new IntentFilter();
+        IntentFilter bithday1=new IntentFilter();
+        bithday1.addAction("Birth");
         intentFilter.addAction("Name");
         sex1.addAction("Sex");
         weight1.addAction("Weight");
         height1.addAction("Height");
-        Receiver v = new Receiver();
-        Receiver1 mm = new Receiver1();
-        Receiver2 receiver2 = new Receiver2();
-        Receiver3 receiver3 = new Receiver3();
+        v = new Receiver();
+        mm = new Receiver1();
+        receiver2 = new Receiver2();
+        receiver3 = new Receiver3();
+        receiver4=new Receiver4();
+        registerReceiver(receiver4,bithday1);
         registerReceiver(receiver2, height1);
         registerReceiver(v, intentFilter);
         registerReceiver(mm, sex1);
@@ -138,13 +150,16 @@ public class ModifyActivity extends AppCompatActivity implements View.OnClickLis
         String email =commonMethod.getFileData("ID",getBaseContext());
         String sex = commonMethod.getFileData("Sex",getBaseContext());
         String height = commonMethod.getFileData("Height",getBaseContext()) + " 厘米";
-        String age = commonMethod.getFileData("Birthday",getBaseContext());
+        Birthday = commonMethod.getFileData("Birthday",getBaseContext());
+        String [] arrs=new String[3];
+        arrs=Birthday.split("-");
+        age1=getAge(arrs[0],arrs[1],arrs[2]);
         PictureStore pictureStore=( PictureStore)commonMethod.readObjFromSDCard("Icon");
         if(pictureStore.getFlag()){
             byte[] appIcon=pictureStore.getPicture();
             img.setImageBitmap(BitmapFactory.decodeByteArray(appIcon,0,appIcon.length));
         }
-        initTubiao(name, email, sex, height, weight, age);
+        initTubiao(name, email, sex, height, weight, age1);
         adapter = new ModifyAdapter();
         adapter.setList(aa);
         int a = adapter.getItemCount();
@@ -233,21 +248,21 @@ public class ModifyActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     // 图片裁剪
-        private void cropPhoto(Uri uri, boolean fromCapture) {
-            Intent intent = new Intent("com.android.camera.action.CROP"); //打开系统自带的裁剪图片的intent
-            intent.setDataAndType(uri, "image/*");
-            intent.putExtra("crop", "true");
-            // 注意一定要添加该项权限，否则会提示无法裁剪
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+    private void cropPhoto(Uri uri, boolean fromCapture) {
+        Intent intent = new Intent("com.android.camera.action.CROP"); //打开系统自带的裁剪图片的intent
+        intent.setDataAndType(uri, "image/*");
+        intent.putExtra("crop", "true");
+        // 注意一定要添加该项权限，否则会提示无法裁剪
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
-            intent.putExtra("scale", true);
+        intent.putExtra("scale", true);
 
-            // 设置裁剪区域的宽高比例
-            intent.putExtra("aspectX", 1);
-            intent.putExtra("aspectY", 1);
+        // 设置裁剪区域的宽高比例
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
 
-            // 设置裁剪区域的宽度和高度
+        // 设置裁剪区域的宽度和高度
         intent.putExtra("outputX", 200);
         intent.putExtra("outputY", 200);
 
@@ -414,14 +429,27 @@ public class ModifyActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-
+    public class Receiver4 extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Calendar cal = Calendar.getInstance();
+            String mYear = intent.getStringExtra("mYear");
+            String mMonth = intent.getStringExtra("mMonth");
+            String mDay=intent.getStringExtra("mDay");
+            Birthday=mYear+"-"+mMonth+"-"+mDay;
+            String age=getAge(mYear,mMonth,mDay);
+            aa.remove(5);
+            Tubiao n = new Tubiao("年龄",age  , R.drawable.jiantou);
+            aa.add(5, n);
+            adapter.setList(aa);
+            adapter.notifyDataSetChanged();
+            Toast.makeText(ModifyActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
+        }
+    }
     @Override
     protected void onResume() {
         super.onResume();
-
-
     }
-
     private void initTubiao(String name, String email, String sex, String height, String weight, String age) {
         Tubiao name1 = new Tubiao("姓名", name, R.drawable.jiantou);
         aa.add(name1);
@@ -433,8 +461,8 @@ public class ModifyActivity extends AppCompatActivity implements View.OnClickLis
         aa.add(height2);
         Tubiao weight2 = new Tubiao("体重", weight, R.drawable.jiantou);
         aa.add(weight2);
-        Tubiao age1 = new Tubiao("年龄", age, R.drawable.jiantou);
-        aa.add(age1);
+        Tubiao age2 = new Tubiao("年龄",age, R.drawable.jiantou);
+        aa.add(age2);
         Log.d("sss", aa.size() + "");
     }
 
@@ -486,12 +514,16 @@ public class ModifyActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(v);
+        unregisterReceiver(mm);
+        unregisterReceiver(receiver2);
+        unregisterReceiver(receiver3);
+        unregisterReceiver(receiver4);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     file = uri2File(mCutUri);
-  
                     InputStream stream = getContentResolver().openInputStream(mCutUri);
                     Bitmap bitmap = BitmapFactory.decodeStream(stream);
                     stream.close();
@@ -507,30 +539,29 @@ public class ModifyActivity extends AppCompatActivity implements View.OnClickLis
                     e.printStackTrace();http://139.196.103.219:8080/IM/PictureUpload?id=12345&type=Drug_stu"
                     Log.d("sssss","上传失败！");
                 }
-            int i = 1;
-            String ID = commonMethod.getFileData("ID",ModifyActivity.this);
-            Tubiao s = (Tubiao) aa.get(0);
-            String name = str2HexStr(s.getXinxi());
-            commonMethod.saveFileData("Name",s.getXinxi(),getBaseContext());
-            Tubiao s1 = (Tubiao) aa.get(2);
-            String sex = str2HexStr(s1.getXinxi());
-            commonMethod.saveFileData("Sex",s1.getXinxi(),getBaseContext());
-            Tubiao s2 = (Tubiao) aa.get(3);
-            String height1 = s2.getXinxi();
-            String[] arr = height1.split(" ");
-            String height = arr[0];
-            commonMethod.saveFileData("Height",height,getBaseContext());
-            Tubiao s3 = (Tubiao) aa.get(4);
-            String weight1 = s3.getXinxi();                             //将修改后的数据回传给服务器
-            String[] ars = weight1.split(" ");
-            String weight = ars[0];
-            commonMethod.saveFileData("Weight",weight,getBaseContext());
-            Tubiao s4 = (Tubiao) aa.get(5);
-            String birth = s4.getXinxi();
-            commonMethod.saveFileData("Birthday",birth,getBaseContext());
-                        try{
+                int i = 1;
+                String ID = commonMethod.getFileData("ID",ModifyActivity.this);
+                Tubiao s = (Tubiao) aa.get(0);
+                commonMethod.saveFileData("Birthday",Birthday,getBaseContext());
+                String name = str2HexStr(s.getXinxi());
+                commonMethod.saveFileData("Name",s.getXinxi(),getBaseContext());
+                Tubiao s1 = (Tubiao) aa.get(2);
+                String sex = str2HexStr(s1.getXinxi());
+                commonMethod.saveFileData("Sex",s1.getXinxi(),getBaseContext());
+                Tubiao s2 = (Tubiao) aa.get(3);
+                String height1 = s2.getXinxi();
+                String[] arr = height1.split(" ");
+                String height = arr[0];
+                commonMethod.saveFileData("Height",height,getBaseContext());
+                Tubiao s3 = (Tubiao) aa.get(4);
+                String weight1 = s3.getXinxi();                             //将修改后的数据回传给服务器
+                String[] ars = weight1.split(" ");
+                String weight = ars[0];
+                commonMethod.saveFileData("Weight",weight,getBaseContext());
+                try{
                     OkHttpClient client = new OkHttpClient();
-                    Request request = new Request.Builder().url(getResources().getString(R.string.ipAdrress) + "/IM/UpdateInformation?no=" + ID + "&name=" + name + "&sex=" + sex + "&birth=" + birth + "&height=" + height + "&weight=" + weight+"&isStu=true")
+                    Log.d("保存日期",Birthday);
+                    Request request = new Request.Builder().url(getResources().getString(R.string.ipAdrress) + "/IM/UpdateInformation?no=" + ID + "&name=" + name + "&sex=" + sex + "&birth=" + Birthday + "&height=" + height + "&weight=" + weight+"&isStu=true")
                             .build();
                     Response response = client.newCall(request).execute();
                     String responseData = response.body().string();
@@ -538,8 +569,8 @@ public class ModifyActivity extends AppCompatActivity implements View.OnClickLis
                     e.printStackTrace();
                 }
 
-                }
-    }).start();
+            }
+        }).start();
     }
     public static String str2HexStr(String str) {
         char[] chars = "0123456789ABCDEF".toCharArray();
@@ -583,7 +614,27 @@ public class ModifyActivity extends AppCompatActivity implements View.OnClickLis
         options.inSampleSize = 2;
         return BitmapFactory.decodeFile(filePath, options);
     }
-
+    public  String getAge(String year,String month,String day){
+        Calendar cal = Calendar.getInstance();
+        int Year=Integer.parseInt(year);
+        int Month=Integer.parseInt(month);
+        int Day=Integer.parseInt(day);
+        int yearNow = cal.get(Calendar.YEAR);  //当前年份
+        int monthNow = cal.get(Calendar.MONTH);  //当前月份
+        int dayOfMonthNow = cal.get(Calendar.DAY_OF_MONTH);
+        int age = yearNow -Year;   //计算整岁数
+        if (monthNow <=Month ) {
+            if (monthNow == Month) {
+                if (dayOfMonthNow < Day)
+                    age--;//当前日期在生日之前，年龄减一
+            } else {
+                age--;//当前月份在生日之前，年龄减一
+            }
+        }
+        if(age<0)
+            age=0;
+        return Integer.toString(age);
+    }
 }
 
 

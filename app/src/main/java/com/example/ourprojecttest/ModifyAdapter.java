@@ -1,5 +1,6 @@
 package com.example.ourprojecttest;
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -22,6 +24,7 @@ import org.w3c.dom.Text;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 public class ModifyAdapter extends RecyclerView.Adapter<ModifyAdapter.ViewHolder> implements Serializable {
     private List<Tubiao> tubiaos;
@@ -30,6 +33,7 @@ public class ModifyAdapter extends RecyclerView.Adapter<ModifyAdapter.ViewHolder
     private NumPicker numPicker;
     private Numpickerr numpickerr;
     private Dialog dialog;
+    private int mYear,mDay,mMonth,DATE_DIALOG=1;
     String s="男";
     static class ViewHolder extends RecyclerView.ViewHolder {
         View tubiaoView;
@@ -134,6 +138,12 @@ public class ModifyAdapter extends RecyclerView.Adapter<ModifyAdapter.ViewHolder
                         numpickerr.setContext(view.getContext());
                         break;
                     case 5:
+                        final Calendar ca = Calendar.getInstance();
+                        mYear = ca.get(Calendar.YEAR);
+                        mMonth = ca.get(Calendar.MONTH);
+                        mDay = ca.get(Calendar.DAY_OF_MONTH);
+                        new DatePickerDialog(view.getContext(), mdateListener, mYear, mMonth, mDay).show();
+                        break;
 
                 }
             }
@@ -144,4 +154,37 @@ public class ModifyAdapter extends RecyclerView.Adapter<ModifyAdapter.ViewHolder
     public int getItemCount() {
         return tubiaos.size();
     }
+    protected Dialog onCreateDialog(int id,View view) {
+        switch (id) {
+            case 1:
+                return new DatePickerDialog(view.getContext(),mdateListener, mYear, mMonth, mDay);
+        }
+        return null;
+    }
+
+    /**
+     * 设置日期 利用StringBuffer追加
+     */
+    public void display(View view) {
+        Intent intent=new Intent();
+        intent.setAction("Birth");
+
+
+        intent.putExtra("mYear",Integer.toString(mYear));
+        intent.putExtra("mMonth",Integer.toString(mMonth+1));
+        intent.putExtra("mDay",Integer.toString(mDay));
+        view.getContext().sendBroadcast(intent);
+    }
+
+    private DatePickerDialog.OnDateSetListener mdateListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            mYear = year;
+            mMonth = monthOfYear;
+            mDay = dayOfMonth;
+            display(view);
+        }
+    };
+
 }
