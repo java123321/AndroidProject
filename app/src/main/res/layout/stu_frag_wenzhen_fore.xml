@@ -20,15 +20,15 @@
             android:layout_gravity="center">
             <Button
                 android:id="@+id/wenzhen1"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="200dp"
+                android:layout_height="2000dp"
                 android:layout_gravity="center"
                 android:background="@drawable/style_round"
                 android:text="人工问诊"
                 android:textColor="#FFFFFF"
                 android:textSize="16dp" />
 
-            <com.example.ourprojecttest.DiffuseView1
+            <com.example.ourprojecttest.DiffuseView
                 android:id="@+id/diffuseView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -37,8 +37,8 @@
                 app:diffuse_color="#84FFFF"
                 app:diffuse_coreColor="#0FEEEE"
                 app:diffuse_coreImage="@android:drawable/ic_menu_search"
-                app:diffuse_coreRadius="150"
-                app:diffuse_maxWidth="350"
+                app:diffuse_coreRadius="120"
+                app:diffuse_maxWidth="300"
                 app:diffuse_speed="2"
                 app:diffuse_width="4" />
         </FrameLayout>

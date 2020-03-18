@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/stu_yaopin_item_pic"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
         android:src="@drawable/yaopin_pic"
         android:layout_gravity="center"/>
 
@@ -20,7 +20,8 @@
         <TextView
             android:id="@+id/stu_otc_flag"
             android:text="OTC   "
-            android:layout_width="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:gravity="center"/>
 

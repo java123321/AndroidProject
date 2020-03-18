@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import com.example.ourprojecttest.CommonMethod;
-import com.example.ourprojecttest.DiffuseView1;
+import com.example.ourprojecttest.DiffuseView;
 import com.example.ourprojecttest.R;
 
 public class StuDiagnosisFragment extends Fragment {
@@ -27,7 +27,7 @@ public class StuDiagnosisFragment extends Fragment {
         mContext=getContext();
         initView(view);
         LinearLayout l=view.findViewById(R.id.ssss);
-        DiffuseView1 diffuseView1=view.findViewById(R.id.diffuseView1);
+        DiffuseView diffuseView1=view.findViewById(R.id.diffuseView1);
         diffuseView1.start();
         return view;
     }
