@@ -34,7 +34,7 @@
         android:id="@+id/radioButton1"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:buttonTint="#ED5E5555"
+        android:buttonTint="#FD0896F5"
         android:checked="true"
         android:text="男" />
 
@@ -47,7 +47,7 @@
         android:id="@+id/radioButton2"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:buttonTint="#ED5E5555"
+        android:buttonTint="#FD0896F5"
         android:text="女" />
     <View
         android:layout_width="fill_parent"

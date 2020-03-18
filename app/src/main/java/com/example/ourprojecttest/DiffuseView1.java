@@ -44,7 +44,7 @@ public class DiffuseView1 extends View {
         super(context, attrs, defStyleAttr);
         init();
 
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DiffuseView, defStyleAttr, 0);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DiffuseView1, defStyleAttr, 0);
         mColor = a.getColor(R.styleable.DiffuseView_diffuse_color, mColor);
         mCoreColor = a.getColor(R.styleable.DiffuseView_diffuse_coreColor, mCoreColor);
         mCoreRadius = a.getFloat(R.styleable.DiffuseView_diffuse_coreRadius, mCoreRadius);
@@ -89,9 +89,8 @@ public class DiffuseView1 extends View {
             canvas.drawCircle(getWidth() / 2, getHeight() / 2, mCoreRadius + width, mPaint);
 
             if(alpha > 0 && width < mMaxWidth){
-                mAlphas.set(i, alpha - 1 > 0 ? alpha - mDiffuseSpeed : 1);
-                mWidths.set(i, width + 1);
-
+                mAlphas.set(i, alpha - mDiffuseSpeed > 0 ? alpha - mDiffuseSpeed : 1);
+                mWidths.set(i, width + mDiffuseSpeed);
             }
         }
         // 判断当扩散圆扩散到指定宽度时添加新扩散圆

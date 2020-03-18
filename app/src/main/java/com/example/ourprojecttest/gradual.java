@@ -66,7 +66,7 @@ public class gradual extends View {
                             colorStart = Color.rgb(0+animatedValue1,191-animatedValue1, 255);
                             colorEnd = Color.rgb(64+animatedValue1,255-animatedValue1, 255);
                             if (animatedValue1==90){
-                                ValueAnimator animator2=ValueAnimator.ofInt(0,80);
+                                ValueAnimator animator2=ValueAnimator.ofInt(0,70);
                                 animator2.setDuration(500);
                                 animator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                                     @Override
