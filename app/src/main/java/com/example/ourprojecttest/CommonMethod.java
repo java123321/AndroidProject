@@ -46,9 +46,8 @@ public class CommonMethod {
 
 
     /**
-     *
-     * @param mContext  上下文对象
-     * @param serviceName  包名加类名
+     * @param mContext    上下文对象
+     * @param serviceName 包名加类名
      * @return
      */
 
@@ -71,14 +70,13 @@ public class CommonMethod {
     }
 
 
-
     /**
      * 该方法用于上传文件
+     *
      * @param file 要上传的文件对象
      * @param url  需要访问的url地址
-     *
      */
-    public void uploadMultiFile(File file,String url) {
+    public void uploadMultiFile(File file, String url) {
         try {
             String imageType = "multipart/form-data";
             //File file = new File(imgUrl);//imgUrl为图片位置
@@ -106,16 +104,16 @@ public class CommonMethod {
                                                   }
 
             );
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     /**
      * 该方法用来计算购物车里所有选中选项的总价格
      *
-     * @param lists 数组
-     * @param length     数组的长度
+     * @param lists  数组
+     * @param length 数组的长度
      * @return true 保存成功
      */
     public Double calculatePrice(ArrayList<ShoppingCartBean> lists, int length) {
@@ -123,25 +121,23 @@ public class CommonMethod {
         for (int i = 0; i < length; i++) {
             ShoppingCartBean list = lists.get(i);
             if (list.getChecked().equals("true")) {
-                Log.d("method",i+"");
+                Log.d("method", i + "");
                 price += list.getTotalPrice();
-            }
-            else{
-                Log.d("methodnull",i+"");
+            } else {
+                Log.d("methodnull", i + "");
             }
         }
         return price;
     }
 
     /**
-     *该方法用于将对象(非数组)保存到本地
+     * 该方法用于将对象(非数组)保存到本地
      *
      * @param name 保存的文件名
-     * @param obj 要保存的对象
-     *
+     * @param obj  要保存的对象
      * @return true 保存成功
      */
-    public boolean saveObj2SDCard(String name,Object obj) {
+    public boolean saveObj2SDCard(String name, Object obj) {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             File sdCardDir = Environment.getExternalStorageDirectory();//获取SDCard目录
             File sdFile = new File(sdCardDir, name);
@@ -168,9 +164,9 @@ public class CommonMethod {
     }
 
     /**
-     *该方法用于将对象(非数组)取出到本地
+     * 该方法用于将对象(非数组)取出到本地
      *
-     * @param  name 保存的文件名
+     * @param name 保存的文件名
      * @return 保存的对象
      */
     public Object readObjFromSDCard(String name) {
@@ -417,12 +413,11 @@ public class CommonMethod {
     /**
      * 保存数据到本地
      *
-     * @param name 要保存数据的文件名
-     *  @param data 要保存的数据内容，类型为字符串
+     * @param name    要保存数据的文件名
+     * @param data    要保存的数据内容，类型为字符串
      * @param context 上下文
-     *
      */
-    public void saveFileData(String name, String data,Context context) {
+    public void saveFileData(String name, String data, Context context) {
         BufferedWriter writer = null;
         try {
             FileOutputStream out = context.openFileOutput(name, Context.MODE_PRIVATE);//保存的文件名为“data”
@@ -444,25 +439,28 @@ public class CommonMethod {
 
     /**
      * bitmap转化成byte数组
+     *
      * @param bm 需要转换的Bitmap
      * @return
      */
-    public byte[] bitmap2Bytes(Bitmap bm){
+    public byte[] bitmap2Bytes(Bitmap bm) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
         return baos.toByteArray();
     }
+
     /**
      * drawable转化成bitmap的方法
+     *
      * @param drawable 需要转换的Drawable
      */
-    public  Bitmap drawableToBitamp(Drawable drawable) {
+    public Bitmap drawableToBitamp(Drawable drawable) {
         Bitmap bitmap;
         int w = drawable.getIntrinsicWidth();
         int h = drawable.getIntrinsicHeight();
         //System.out.println("Drawable转Bitmap");
         Bitmap.Config config = drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565;
-        bitmap = Bitmap.createBitmap(w,h,config);
+        bitmap = Bitmap.createBitmap(w, h, config);
         //注意，下面三行代码要用到，否在在View或者surfaceview里的canvas.drawBitmap会看不到图
         Canvas canvas = new Canvas(bitmap);
         drawable.setBounds(0, 0, w, h);
@@ -470,38 +468,38 @@ public class CommonMethod {
         return bitmap;
     }
 
-  /**
+    /**
      * 读取本地存储中的数据
      *
      * @param str 需要转换的汉字
      * @return 十六进制
      */
-      public String conversion(String str) {
-      char[] chars = "0123456789ABCDEF".toCharArray();
-      StringBuilder sb = new StringBuilder("");
-      byte[] bs = str.getBytes();
-      int bit;
-      for (int i = 0; i < bs.length; i++) {
-          bit = (bs[i] & 0x0f0) >> 4;
-          sb.append(chars[bit]);
-          bit = bs[i] & 0x0f;
-          sb.append(chars[bit]);
-          // sb.append(' ');
-      }
-      return sb.toString().trim();
-  }
+    public String conversion(String str) {
+        char[] chars = "0123456789ABCDEF".toCharArray();
+        StringBuilder sb = new StringBuilder("");
+        byte[] bs = str.getBytes();
+        int bit;
+        for (int i = 0; i < bs.length; i++) {
+            bit = (bs[i] & 0x0f0) >> 4;
+            sb.append(chars[bit]);
+            bit = bs[i] & 0x0f;
+            sb.append(chars[bit]);
+            // sb.append(' ');
+        }
+        return sb.toString().trim();
+    }
 
 
     /**
      * 读取本地存储中的数据
      *
-     * @param name 要取出的文件名
+     * @param name    要取出的文件名
      * @param context 上下文
      * @return 本地数据
      */
     public String getFileData(String name, Context context) {
         BufferedReader reader = null;
-        StringBuilder result=null;
+        StringBuilder result = null;
         try {                                                    //openFileInput方法需要上下文，若不在活动中需要引入context
             FileInputStream fileInputStream = context.openFileInput(name);
             reader = new BufferedReader(new InputStreamReader(fileInputStream));
@@ -526,6 +524,7 @@ public class CommonMethod {
         }
         return result.toString();
     }
+
     public String str2HexStr(String str) {
         char[] chars = "0123456789ABCDEF".toCharArray();
         StringBuilder sb = new StringBuilder("");
@@ -540,7 +539,7 @@ public class CommonMethod {
         return sb.toString().trim();
     }
 
-        //该方法用来截取Str字符串中strStart和strEnd之间的部分
+    //该方法用来截取Str字符串中strStart和strEnd之间的部分
     public static String subString(String str, String strStart, String strEnd) {
 
         /* 找出指定的2个字符在 该字符串里面的 位置 */

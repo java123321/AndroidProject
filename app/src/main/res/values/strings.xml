@@ -30,6 +30,7 @@
     <string name="Icon">"用户的头像"</string>
     <string name="DocIcon">"医生的头像"</string>
     <string name="DocLicense">"医生的执照"</string>
+    <string name="drugIdSet">"购物车里的药品id集合"</string>
 
 
     <!--以下代表医生端存储在本地的数据信息,调用方法统一为CommonMethod类里的getFileData,存数据为saveFileData-->

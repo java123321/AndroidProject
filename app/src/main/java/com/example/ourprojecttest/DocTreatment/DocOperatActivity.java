@@ -57,15 +57,12 @@ public class DocOperatActivity extends AppCompatActivity {
     private CommonMethod method=new CommonMethod();
     private RecyclerView mRecycler;
     private SwipeRefreshLayout refresh;
-    private Button view;
     private Button access;
     private TextView noStudent;
     private DisplayStuAdapter adapter;
     private ArrayList<DisplayStuBean> lists=new ArrayList<>();
     private ProgressDialog waitingDialog;
     CountDownTimer cdt;
-    private String flag = "";
-    String stuID = null;
     private Handler handler=new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {

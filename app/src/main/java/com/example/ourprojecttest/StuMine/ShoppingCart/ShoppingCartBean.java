@@ -1,14 +1,24 @@
 package com.example.ourprojecttest.StuMine.ShoppingCart;
+
 import java.io.Serializable;
 
-public class ShoppingCartBean implements Serializable{
-   // Drawable drugPicture;
-    String drugName;
-    String drugPrice;
-    byte[] drugPicture;
-    String checked;
-    double totalPrice;
-    String id;
+public class ShoppingCartBean implements Serializable {
+    // Drawable drugPicture;
+    private String drugName;
+    private String drugPrice;
+    private byte[] drugPicture;
+    private String checked;
+    private double totalPrice;
+    private String id;
+    private int drugAmount;
+
+    public int getDrugAmount() {
+        return drugAmount;
+    }
+
+    public void setDrugAmount(int drugAmount) {
+        this.drugAmount = drugAmount;
+    }
 
     public String getId() {
         return id;

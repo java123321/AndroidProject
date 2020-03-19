@@ -45,55 +45,6 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = View.inflate(mContext, R.layout.shopping_cart_recylerview_item, null);
         final ViewHolder holder=new ViewHolder(view);
-        holder.rank=rankBig++;
-        Log.d("cart",holder.rank+"");
-        //绑定药品的选择点击事件
-        holder.drugChoiced.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                if (holder.drugChoiced.getDrawable().getCurrent().getConstantState().equals(mContext.getResources().getDrawable(R.drawable.unchecked).getConstantState())){
-//当image1的src为R.drawable.A时，设置image1的src为R.drawable.B
-                    holder.drugChoiced.setImageResource(R.drawable.checked);
-                    mList.get(holder.rank).setChecked("true");
-                    intent.putExtra("value",String.valueOf(method.calculatePrice(mList,length)));
-                    mContext.sendBroadcast(intent);
-                }else{
-                    //否则设置image1的src为R.drawable.A
-                    holder.drugChoiced.setImageResource(R.drawable.unchecked);
-                    mList.get(holder.rank).setChecked("false");
-                    intent.putExtra("value",String.valueOf(method.calculatePrice(mList,length)));
-                    mContext.sendBroadcast(intent);
-                }
-            }
-        });
-
-        //设置药品的减号事件
-        holder.jianhao.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int num= Integer.valueOf(holder.drugNumber.getText().toString().trim());
-           if(num>1){//最少要购买一件
-               holder.drugNumber.setText(String.valueOf(--num));
-                 mList.get(holder.rank).setTotalPrice(Double.valueOf(holder.drugPrice.getText().toString().trim())*num);
-               intent.putExtra("value",String.valueOf(method.calculatePrice(mList,length)));
-               mContext.sendBroadcast(intent);
-           }
-            }
-        });
-        //设置药品的加号事件
-        holder.jiahao.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int num=Integer.valueOf(holder.drugNumber.getText().toString().trim());
-                holder.drugNumber.setText(String.valueOf(++num));
-                mList.get(holder.rank).setTotalPrice(Double.valueOf(holder.drugPrice.getText().toString().trim())*num);
-                intent.putExtra("value",String.valueOf(method.calculatePrice(mList,length)));
-                mContext.sendBroadcast(intent);
-
-//                Intent intent=new Intent(mContext,ShoppingCartActivity.class);
-//                intent.putExtra("value",String.valueOf(method.calculatePrice(mList,length)));
-            }
-        });
         return holder;
     }
 
@@ -105,7 +56,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ImageView jianhao;
         ImageView jiahao;
         TextView drugNumber;
-        int rank;
+
         public ViewHolder(View itemView){
             super(itemView);
             drugNumber=itemView.findViewById(R.id.stu_shopping_cart_item_num);
@@ -119,19 +70,74 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ShoppingCartBean drug=mList.get(position);
-        ((ViewHolder) holder).drugName.setText(drug.getDrugName());
-        ((ViewHolder) holder).drugPrice.setText(drug.getDrugPrice());
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
+        final ShoppingCartBean drug=mList.get(position);
+        final ViewHolder viewHolder= ((ViewHolder) holder);
+        viewHolder.drugName.setText(drug.getDrugName());
+        viewHolder.drugPrice.setText(drug.getDrugPrice());
         if(drug.getChecked().equals("false")){
-            ((ViewHolder) holder).drugChoiced.setImageResource(R.drawable.unchecked);
+            viewHolder.drugChoiced.setImageResource(R.drawable.unchecked);
         }
         else{
-            ((ViewHolder) holder).drugChoiced.setImageResource(R.drawable.checked);
+            viewHolder.drugChoiced.setImageResource(R.drawable.checked);
         }
         //设置图片
         byte[] appIcon=drug.getDrugPicture();
-        ((ViewHolder) holder).imageView.setImageBitmap(BitmapFactory.decodeByteArray(appIcon,0,appIcon.length));
+        viewHolder.imageView.setImageBitmap(BitmapFactory.decodeByteArray(appIcon,0,appIcon.length));
+        //设置药品的数量
+        viewHolder.drugNumber.setText(String.valueOf(drug.getDrugAmount()));
+
+        //设置药品的减号事件
+        viewHolder.jianhao.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int num= drug.getDrugAmount();
+                if(num>1){//最少要购买一件
+                    viewHolder.drugNumber.setText(String.valueOf(--num));
+                    drug.setDrugAmount(num);
+                    drug.setTotalPrice(Double.valueOf(drug.getDrugPrice())*num);
+                    intent.putExtra("value",String.valueOf(method.calculatePrice(mList,length)));
+                    mContext.sendBroadcast(intent);
+                }
+            }
+        });
+        //设置药品的加号事件
+        viewHolder.jiahao.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int num=drug.getDrugAmount();
+                viewHolder.drugNumber.setText(String.valueOf(++num));
+                drug.setDrugAmount(num);
+                drug.setTotalPrice(Double.valueOf(drug.getDrugPrice())*num);
+                intent.putExtra("value",String.valueOf(method.calculatePrice(mList,length)));
+                mContext.sendBroadcast(intent);
+
+//                Intent intent=new Intent(mContext,ShoppingCartActivity.class);
+//                intent.putExtra("value",String.valueOf(method.calculatePrice(mList,length)));
+            }
+        });
+
+        //绑定药品的选择点击事件
+        viewHolder.drugChoiced.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                if (drug.getChecked().equals("false")){
+//当image1的src为R.drawable.A时，设置image1的src为R.drawable.B
+                    viewHolder.drugChoiced.setImageResource(R.drawable.checked);
+                    drug.setChecked("true");
+                    intent.putExtra("value",String.valueOf(method.calculatePrice(mList,length)));
+                    mContext.sendBroadcast(intent);
+                }else{
+                    //否则设置image1的src为R.drawable.A
+                    viewHolder.drugChoiced.setImageResource(R.drawable.unchecked);
+                    drug.setChecked("false");
+                    intent.putExtra("value",String.valueOf(method.calculatePrice(mList,length)));
+                    mContext.sendBroadcast(intent);
+                }
+            }
+        });
+
+
     }
 
     @Override

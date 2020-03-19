@@ -141,6 +141,7 @@ public class Prescribe extends AppCompatActivity {
         initView();
     }
 
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -177,7 +178,6 @@ public class Prescribe extends AppCompatActivity {
                     public void run() {
                         JSONArray jsonArray=new JSONArray();
                         try {
-
                             JSONObject object=new JSONObject();
                             object.put("stuId",stuId);
                             jsonArray.put(object);

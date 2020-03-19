@@ -18,38 +18,40 @@ import com.example.ourprojecttest.StuMine.ShoppingCart.ShoppingCartBean;
 
 import java.util.ArrayList;
 
-public class PrescribeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    CommonMethod method=new CommonMethod();
-    Intent intent=new Intent("com.example.ourprojecttest.Perscribe");
+public class PrescribeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    CommonMethod method = new CommonMethod();
+    Intent intent = new Intent("com.example.ourprojecttest.Perscribe");
     private Context mContext;
-    private ArrayList<PrescribeBean> mList=new ArrayList<>();
+    private ArrayList<PrescribeBean> mList = new ArrayList<>();
     private int length;
-    private int rankBig=0;
-    public PrescribeAdapter(Context context){
-    mContext=context;
+    private int rankBig = 0;
+
+    public PrescribeAdapter(Context context) {
+        mContext = context;
     }
+
     //设置list
-    public void setList(ArrayList<PrescribeBean> list){
+    public void setList(ArrayList<PrescribeBean> list) {
         mList = list;
-        length=mList.size();
+        length = mList.size();
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-    View view=View.inflate(mContext, R.layout.prescribe_recyler_item,null);
-        final ViewHolder holder=new ViewHolder(view);
-        holder.rank=rankBig++;
-        Log.d("cribe","oncreate");
+        View view = View.inflate(mContext, R.layout.prescribe_recyler_item, null);
+        final ViewHolder holder = new ViewHolder(view);
+        holder.rank = rankBig++;
+        Log.d("cribe", "oncreate");
         //设置药品的减号事件
         holder.jianhao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int num= Integer.valueOf(holder.drugNumber.getText().toString().trim());
-                if(num>1){//最少要购买一件
+                int num = Integer.valueOf(holder.drugNumber.getText().toString().trim());
+                if (num > 1) {//最少要购买一件
                     holder.drugNumber.setText(String.valueOf(--num));
                     mList.get(holder.rank).setDrugAmount(num);
-                    intent.putExtra("sub",holder.singlePrice);
+                    intent.putExtra("sub", holder.singlePrice);
 
                     mContext.sendBroadcast(intent);
                 }
@@ -59,10 +61,10 @@ public class PrescribeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         holder.jiahao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int num=Integer.valueOf(holder.drugNumber.getText().toString().trim());
+                int num = Integer.valueOf(holder.drugNumber.getText().toString().trim());
                 holder.drugNumber.setText(String.valueOf(++num));
                 mList.get(holder.rank).setDrugAmount(num);
-                intent.putExtra("add",holder.singlePrice);
+                intent.putExtra("add", holder.singlePrice);
                 mContext.sendBroadcast(intent);
 
             }
@@ -70,7 +72,7 @@ public class PrescribeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return holder;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         TextView drugPrice;
         String singlePrice;
@@ -79,32 +81,33 @@ public class PrescribeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         ImageView jiahao;
         TextView drugNumber;
         int rank;
-        public ViewHolder(View itemView){
+
+        public ViewHolder(View itemView) {
             super(itemView);
-            drugNumber=itemView.findViewById(R.id.stu_shopping_cart_item_num);
-            jianhao=itemView.findViewById(R.id.stu_shopping_cart_item_jianhao);
-            jiahao=itemView.findViewById(R.id.stu_shopping_cart_item_jiahao);
-            imageView=itemView.findViewById(R.id.stu_shopping_cart_item_picture);
-            drugName=itemView.findViewById(R.id.stu_shopping_cart_item_name);
-            drugPrice=itemView.findViewById(R.id.stu_shopping_cart_item_price);
+            drugNumber = itemView.findViewById(R.id.stu_shopping_cart_item_num);
+            jianhao = itemView.findViewById(R.id.stu_shopping_cart_item_jianhao);
+            jiahao = itemView.findViewById(R.id.stu_shopping_cart_item_jiahao);
+            imageView = itemView.findViewById(R.id.stu_shopping_cart_item_picture);
+            drugName = itemView.findViewById(R.id.stu_shopping_cart_item_name);
+            drugPrice = itemView.findViewById(R.id.stu_shopping_cart_item_price);
         }
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        Log.d("cribe","onbind");
-        PrescribeBean drug=mList.get(position);
+        Log.d("cribe", "onbind");
+        PrescribeBean drug = mList.get(position);
         ((ViewHolder) holder).drugName.setText(drug.getDrugName());
         ((ViewHolder) holder).drugPrice.setText(drug.getDrugPrice());
-        ((ViewHolder) holder).singlePrice=drug.getDrugPrice();
-        Log.d("cribe","price"+drug.getDrugPrice());
+        ((ViewHolder) holder).singlePrice = drug.getDrugPrice();
+        Log.d("cribe", "price" + drug.getDrugPrice());
         //设置图片
         ((ViewHolder) holder).imageView.setImageBitmap(drug.getDrugPicture());
     }
 
     @Override
     public int getItemCount() {
-        Log.d("cribe","listSize:"+mList.size());
+        Log.d("cribe", "listSize:" + mList.size());
         return mList.size();
     }
 }
