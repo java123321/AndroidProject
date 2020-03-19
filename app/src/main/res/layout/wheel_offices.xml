@@ -45,7 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="180dp"
         app:showNum="6"
-        app:textColor="#18B071"
+        app:textColor="#FD0896F5"
         app:offices="12"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="30dp"

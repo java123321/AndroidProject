@@ -167,7 +167,6 @@ public class DrugStoreRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
             DrugInformation info=mList.get(position);
             ((MyViewHolder) holder).mTextView.setText(info.getDrug_Name());
             ((MyViewHolder) holder).imageView.setImageDrawable(info.getDrug_Picture());
-            ((MyViewHolder) holder).drugPrice.setText("￥"+info.getDrug_Price());
            if(mList.get(position).getDrug_OTC().equals("true")){
                ((MyViewHolder) holder).OTCFlag.setText("OTC   ");
                ((MyViewHolder) holder).OTCFlag.setTextColor(Color.GREEN);
@@ -230,7 +229,6 @@ public class DrugStoreRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
             mTextView = itemView.findViewById(R.id.stu_yaopin_item_name);
             imageView= itemView.findViewById(R.id.stu_yaopin_item_pic);
             OTCFlag=itemView.findViewById(R.id.stu_otc_flag);
-            drugPrice=itemView.findViewById(R.id.drugPrice);
         }
     }
 

@@ -49,7 +49,7 @@
             android:layout_width="150dp"
             android:layout_height="260dp"
             app:showNum="6"
-            app:textColor="#18B071"
+            app:textColor="#FD0896F5"
             app:totalNum="200"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="30dp"
@@ -61,7 +61,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             app:showNum="6"
-            app:textColor="#18B071"
+            app:textColor="#FD0896F5"
             app:totalNum2="9" />
     </LinearLayout>
 
