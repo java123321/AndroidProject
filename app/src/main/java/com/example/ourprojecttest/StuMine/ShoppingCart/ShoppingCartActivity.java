@@ -20,10 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.ourprojecttest.CommonMethod;
-import com.example.ourprojecttest.Drug;
 import com.example.ourprojecttest.ImmersiveStatusbar;
 import com.example.ourprojecttest.R;
-import com.google.gson.Gson;
 
 
 import org.json.JSONArray;
@@ -33,10 +31,6 @@ import org.json.JSONObject;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Set;
-
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 
 public class ShoppingCartActivity extends AppCompatActivity {
@@ -50,8 +44,9 @@ public class ShoppingCartActivity extends AppCompatActivity {
     private RecyclerView mRecycler;
     private ShoppingCartAdapter mAdapter;
     private ArrayList<ShoppingCartBean> lists;
-    private LinearLayout quanxuanWrap;
-    private ImageView quanxuan;
+    private LinearLayout selectAllButton;
+    private ImageView selectAll;
+    private boolean selectAllFlag=false;
     private String stuId;
     CommonMethod method = new CommonMethod();
     DecimalFormat df = new DecimalFormat("##0.00");
@@ -105,6 +100,18 @@ public class ShoppingCartActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             update(Double.valueOf(intent.getStringExtra("value")));
+            boolean all=intent.getBooleanExtra("selectAll",false);
+            //如果有全选的消息
+            if(all){
+                selectAll.setImageResource(R.drawable.checked);
+                selectAllFlag=true;
+                Log.d("selectall","true");
+            }
+            else if(selectAllFlag){//如果没有发送全选通知且当前全选选中的时候将它置位未选中
+                selectAll.setImageResource(R.drawable.unchecked);
+                selectAllFlag=false;
+                Log.d("selectall","false");
+            }
         }
     }
 
@@ -120,8 +127,8 @@ public class ShoppingCartActivity extends AppCompatActivity {
         buyNow = findViewById(R.id.stu_shopping_cart_buy_now);
         bianji = findViewById(R.id.stu_shopping_cart_bianji);
         payPrice = findViewById(R.id.stu_shopping_cart_pay_price);
-        quanxuanWrap = findViewById(R.id.stu_shopping_cart_quanxuan_wrap);
-        quanxuan = findViewById(R.id.stu_shopping_cart_quanxuan);
+        selectAllButton = findViewById(R.id.stu_shopping_cart_quanxuan_wrap);
+        selectAll = findViewById(R.id.stu_shopping_cart_quanxuan);
         mRecycler = findViewById(R.id.stu_shopping_cart_recyclerview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecycler.setLayoutManager(layoutManager);
@@ -205,18 +212,19 @@ public class ShoppingCartActivity extends AppCompatActivity {
         });
 
         //设置全选的点击事件
-        quanxuanWrap.setOnClickListener(new View.OnClickListener() {
+        selectAllButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (quanxuan.getDrawable().getCurrent().getConstantState().equals(getResources().getDrawable(R.drawable.unchecked).getConstantState())) {
+                //当全选按钮没有选中的时候
+                if (selectAllFlag==false) {
 //当image1的src为R.drawable.A时，设置image1的src为R.drawable.B
-                    quanxuan.setImageResource(R.drawable.checked);
+                    selectAll.setImageResource(R.drawable.checked);
                     for (ShoppingCartBean list : lists) {
                         list.setChecked("true");
                     }
                 } else {
 //否则设置image1的src为R.drawable.A
-                    quanxuan.setImageResource(R.drawable.unchecked);
+                    selectAll.setImageResource(R.drawable.unchecked);
                     for (ShoppingCartBean list : lists) {
                         list.setChecked("false");
                     }

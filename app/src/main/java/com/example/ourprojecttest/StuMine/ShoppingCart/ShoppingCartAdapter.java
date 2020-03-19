@@ -20,35 +20,37 @@ import java.util.ArrayList;
 
 
 public class ShoppingCartAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    Intent intent=new Intent("com.example.ourprojecttest.UPDATE_DATA");
+    private Intent intent = new Intent("com.example.ourprojecttest.UPDATE_DATA");
     private Context mContext;
     private ArrayList<ShoppingCartBean> mList;
-    private int rankBig=0;
+    private int rankBig = 0;
     private int length;
-    DecimalFormat df = new DecimalFormat("##0.0");
-    CommonMethod method=new CommonMethod();
-    ShoppingCartActivity cartActivity=new ShoppingCartActivity();
+    private DecimalFormat df = new DecimalFormat("##0.0");
+    private CommonMethod method = new CommonMethod();
+    private static int choicedNumber=0;
     public ShoppingCartAdapter(Context context) {
         mContext = context;
     }
 
-    public ArrayList<ShoppingCartBean> getList(){
+    public ArrayList<ShoppingCartBean> getList() {
         return mList;
     }
+
     //设置list
-    public void setList(ArrayList<ShoppingCartBean> list){
+    public void setList(ArrayList<ShoppingCartBean> list) {
         mList = list;
-        length=mList.size();
+        length = mList.size();
     }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = View.inflate(mContext, R.layout.shopping_cart_recylerview_item, null);
-        final ViewHolder holder=new ViewHolder(view);
+        final ViewHolder holder = new ViewHolder(view);
         return holder;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         TextView drugPrice;
         TextView drugName;
@@ -57,33 +59,34 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ImageView jiahao;
         TextView drugNumber;
 
-        public ViewHolder(View itemView){
+        public ViewHolder(View itemView) {
             super(itemView);
-            drugNumber=itemView.findViewById(R.id.stu_shopping_cart_item_num);
-            jianhao=itemView.findViewById(R.id.stu_shopping_cart_item_jianhao);
-            jiahao=itemView.findViewById(R.id.stu_shopping_cart_item_jiahao);
-            imageView=itemView.findViewById(R.id.stu_shopping_cart_item_picture);
-            drugName=itemView.findViewById(R.id.stu_shopping_cart_item_name);
-            drugPrice=itemView.findViewById(R.id.stu_shopping_cart_item_price);
-            drugChoiced=itemView.findViewById(R.id.stu_shopping_cart_item_choiced);
+            drugNumber = itemView.findViewById(R.id.stu_shopping_cart_item_num);
+            jianhao = itemView.findViewById(R.id.stu_shopping_cart_item_jianhao);
+            jiahao = itemView.findViewById(R.id.stu_shopping_cart_item_jiahao);
+            imageView = itemView.findViewById(R.id.stu_shopping_cart_item_picture);
+            drugName = itemView.findViewById(R.id.stu_shopping_cart_item_name);
+            drugPrice = itemView.findViewById(R.id.stu_shopping_cart_item_price);
+            drugChoiced = itemView.findViewById(R.id.stu_shopping_cart_item_choiced);
         }
     }
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
-        final ShoppingCartBean drug=mList.get(position);
-        final ViewHolder viewHolder= ((ViewHolder) holder);
+        final ShoppingCartBean drug = mList.get(position);
+        final ViewHolder viewHolder = ((ViewHolder) holder);
         viewHolder.drugName.setText(drug.getDrugName());
         viewHolder.drugPrice.setText(drug.getDrugPrice());
-        if(drug.getChecked().equals("false")){
+        if (drug.getChecked().equals("false")) {
             viewHolder.drugChoiced.setImageResource(R.drawable.unchecked);
-        }
-        else{
+        } else {
             viewHolder.drugChoiced.setImageResource(R.drawable.checked);
+            //如果是选中的则统计选中的药品数量加1
+            choicedNumber++;
         }
         //设置图片
-        byte[] appIcon=drug.getDrugPicture();
-        viewHolder.imageView.setImageBitmap(BitmapFactory.decodeByteArray(appIcon,0,appIcon.length));
+        byte[] appIcon = drug.getDrugPicture();
+        viewHolder.imageView.setImageBitmap(BitmapFactory.decodeByteArray(appIcon, 0, appIcon.length));
         //设置药品的数量
         viewHolder.drugNumber.setText(String.valueOf(drug.getDrugAmount()));
 
@@ -91,12 +94,12 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         viewHolder.jianhao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int num= drug.getDrugAmount();
-                if(num>1){//最少要购买一件
+                int num = drug.getDrugAmount();
+                if (num > 1) {//最少要购买一件
                     viewHolder.drugNumber.setText(String.valueOf(--num));
                     drug.setDrugAmount(num);
-                    drug.setTotalPrice(Double.valueOf(drug.getDrugPrice())*num);
-                    intent.putExtra("value",String.valueOf(method.calculatePrice(mList,length)));
+                    drug.setTotalPrice(Double.valueOf(drug.getDrugPrice()) * num);
+                    intent.putExtra("value", String.valueOf(method.calculatePrice(mList, length)));
                     mContext.sendBroadcast(intent);
                 }
             }
@@ -105,33 +108,42 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         viewHolder.jiahao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int num=drug.getDrugAmount();
+                int num = drug.getDrugAmount();
                 viewHolder.drugNumber.setText(String.valueOf(++num));
                 drug.setDrugAmount(num);
-                drug.setTotalPrice(Double.valueOf(drug.getDrugPrice())*num);
-                intent.putExtra("value",String.valueOf(method.calculatePrice(mList,length)));
+                drug.setTotalPrice(Double.valueOf(drug.getDrugPrice()) * num);
+                intent.putExtra("value", String.valueOf(method.calculatePrice(mList, length)));
                 mContext.sendBroadcast(intent);
-
-//                Intent intent=new Intent(mContext,ShoppingCartActivity.class);
-//                intent.putExtra("value",String.valueOf(method.calculatePrice(mList,length)));
             }
         });
 
         //绑定药品的选择点击事件
-        viewHolder.drugChoiced.setOnClickListener(new View.OnClickListener(){
+        viewHolder.drugChoiced.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (drug.getChecked().equals("false")){
+                if (drug.getChecked().equals("false")) {
 //当image1的src为R.drawable.A时，设置image1的src为R.drawable.B
                     viewHolder.drugChoiced.setImageResource(R.drawable.checked);
                     drug.setChecked("true");
-                    intent.putExtra("value",String.valueOf(method.calculatePrice(mList,length)));
+                    choicedNumber++;
+                    intent.putExtra("value", String.valueOf(method.calculatePrice(mList, length)));
+                    //如果选中药品的数量等于总共的药品数量，则将全选按钮显示为打钩
+                    if(choicedNumber==mList.size()){
+                        intent.putExtra("selectAll",true);
+                    }
+                    else{
+                        intent.putExtra("selectAll",false);
+                    }
+                    Log.d("selectall","true1");
                     mContext.sendBroadcast(intent);
-                }else{
+                } else {
                     //否则设置image1的src为R.drawable.A
                     viewHolder.drugChoiced.setImageResource(R.drawable.unchecked);
                     drug.setChecked("false");
-                    intent.putExtra("value",String.valueOf(method.calculatePrice(mList,length)));
+                    choicedNumber--;
+                    intent.putExtra("value", String.valueOf(method.calculatePrice(mList, length)));
+                    intent.putExtra("selectAll",false);
+                    Log.d("selectall","false1");
                     mContext.sendBroadcast(intent);
                 }
             }
