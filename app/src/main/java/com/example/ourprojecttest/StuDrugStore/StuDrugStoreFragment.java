@@ -147,7 +147,7 @@ public class StuDrugStoreFragment extends Fragment {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getData("0",loadNum,selectedMenu,method.conversion(inputInspect.getText().toString().trim()));
+                getData("1",loadNum,selectedMenu,method.conversion(inputInspect.getText().toString().trim()));
             }
         });
         refreshLayout.setColorSchemeColors(getResources().getColor(R.color.color_bottom));
