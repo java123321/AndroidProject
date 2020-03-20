@@ -17,8 +17,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.example.ourprojecttest.DocBottomNavigation;
 import com.example.ourprojecttest.R;
 
 import org.json.JSONArray;
@@ -193,7 +191,7 @@ public class Prescribe extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         StringBuffer stringBuffer=new StringBuffer();
-                        stringBuffer.append("order=")
+                        stringBuffer.append("type=notPost&order=")//notPost是学生待付款的订单
                                 .append(jsonArray.toString());
                             Log.d("result","arrayis:"+jsonArray.toString());
                         byte[] data=stringBuffer.toString().getBytes();

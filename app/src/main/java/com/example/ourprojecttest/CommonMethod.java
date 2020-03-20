@@ -109,25 +109,28 @@ public class CommonMethod {
         }
     }
 
-    /**
-     * 该方法用来计算购物车里所有选中选项的总价格
-     *
-     * @param lists  数组
-     * @param length 数组的长度
-     * @return true 保存成功
-     */
-    public Double calculatePrice(ArrayList<ShoppingCartBean> lists, int length) {
-        Double price = 0.0;
+    public Double[] calculatePrice(ArrayList<ShoppingCartBean> lists, int length) {
+        Double[] result=new Double[2];//第一个参数代表价格，第二个参数代表是否全选
+        int selectCount=0;
+        result[0]=0.0;
         for (int i = 0; i < length; i++) {
             ShoppingCartBean list = lists.get(i);
             if (list.getChecked().equals("true")) {
                 Log.d("method", i + "");
-                price += list.getTotalPrice();
+                result[0] += list.getTotalPrice();
+                selectCount++;
             } else {
                 Log.d("methodnull", i + "");
             }
         }
-        return price;
+        //如果全选
+        if(selectCount==length){
+            result[1]=1.0;
+        }
+        else{
+            result[1]=0.0;
+        }
+        return result;
     }
 
     /**

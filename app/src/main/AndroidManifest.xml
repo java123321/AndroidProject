@@ -36,7 +36,7 @@
         <activity android:name=".StuDiagnosis.Chat" />
         <activity android:name=".StuDiagnosis.RenGongWenZhen" />
         <activity android:name=".activity_doc_name" />
-        <activity android:name=".StuBuyDrug" />
+        <activity android:name=".StuDrugStore.StuBuyDrug" />
         <activity android:name=".DocBottomNavigation" />
         <activity android:name=".StuDrugStore.StuDrugDetail" />
         <activity android:name=".FindPass" />

@@ -21,7 +21,6 @@ import com.example.ourprojecttest.CommonMethod;
 import com.example.ourprojecttest.ImmersiveStatusbar;
 import com.example.ourprojecttest.R;
 import com.example.ourprojecttest.StuMine.ShoppingCart.ShoppingCartBean;
-import com.example.ourprojecttest.StuBuyDrug;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -174,8 +173,6 @@ public class StuDrugDetail extends AppCompatActivity {
         rest = findViewById(R.id.stu_yaodian_detail_drug_kucun);
         description = findViewById(R.id.stu_yaodian_detail_description);
         buy = findViewById(R.id.stu_yaodian_buy);
-
-
         //设置图片源头
         Intent intent = getIntent();
         name.setText(intent.getStringExtra("name"));
@@ -185,10 +182,7 @@ public class StuDrugDetail extends AppCompatActivity {
         Flag = intent.getStringExtra("Flag");
         byte[] pic = intent.getByteArrayExtra("picture");
         picture.setImageBitmap(BitmapFactory.decodeByteArray(pic, 0, pic.length));
-
-
     }
-
     /**
      * bitmap转化成byte数组
      *
@@ -200,7 +194,6 @@ public class StuDrugDetail extends AppCompatActivity {
         bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
         return baos.toByteArray();
     }
-
     /**
      * drawable转化成bitmap的方法
      *

@@ -158,7 +158,6 @@ public class NeedToPay extends AppCompatActivity {
         ;
     };
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);//沙箱环境需要的代码
@@ -207,7 +206,7 @@ public class NeedToPay extends AppCompatActivity {
     }
     private void getData(){
         refresh.setRefreshing(true);
-        final String url=getResources().getString(R.string.ipAdrress)+"IM/GetNeedToPayOrder?type=getOrder&id="+id;
+        final String url=getResources().getString(R.string.ipAdrress)+"IM/GetNeedToPayOrder?type=finishPay&id="+id;//finishPay是指学生刚付款款的订单
         Log.d("topay",url);
         new Thread(new Runnable() {
             @Override
@@ -225,7 +224,6 @@ public class NeedToPay extends AppCompatActivity {
                 }
             }
         }).start();
-
     }
 
     private void parseJSON(String data){

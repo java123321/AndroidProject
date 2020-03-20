@@ -98,6 +98,7 @@
 
                 <TextView
                     android:id="@+id/stu_shopping_cart_pay_price"
+                    android:textSize="15dp"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center_vertical"

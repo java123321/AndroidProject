@@ -8,13 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.ourprojecttest.CommonMethod;
 import com.example.ourprojecttest.R;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -23,11 +20,10 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private Intent intent = new Intent("com.example.ourprojecttest.UPDATE_DATA");
     private Context mContext;
     private ArrayList<ShoppingCartBean> mList;
-    private int rankBig = 0;
     private int length;
     private DecimalFormat df = new DecimalFormat("##0.0");
     private CommonMethod method = new CommonMethod();
-    private static int choicedNumber=0;
+
     public ShoppingCartAdapter(Context context) {
         mContext = context;
     }
@@ -81,8 +77,6 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             viewHolder.drugChoiced.setImageResource(R.drawable.unchecked);
         } else {
             viewHolder.drugChoiced.setImageResource(R.drawable.checked);
-            //如果是选中的则统计选中的药品数量加1
-            choicedNumber++;
         }
         //设置图片
         byte[] appIcon = drug.getDrugPicture();
@@ -99,7 +93,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     viewHolder.drugNumber.setText(String.valueOf(--num));
                     drug.setDrugAmount(num);
                     drug.setTotalPrice(Double.valueOf(drug.getDrugPrice()) * num);
-                    intent.putExtra("value", String.valueOf(method.calculatePrice(mList, length)));
+                    intent.putExtra("value", String.valueOf(method.calculatePrice(mList, length)[0]));
                     mContext.sendBroadcast(intent);
                 }
             }
@@ -112,7 +106,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 viewHolder.drugNumber.setText(String.valueOf(++num));
                 drug.setDrugAmount(num);
                 drug.setTotalPrice(Double.valueOf(drug.getDrugPrice()) * num);
-                intent.putExtra("value", String.valueOf(method.calculatePrice(mList, length)));
+                intent.putExtra("value", String.valueOf(method.calculatePrice(mList, length)[0]));
                 mContext.sendBroadcast(intent);
             }
         });
@@ -121,14 +115,14 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         viewHolder.drugChoiced.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (drug.getChecked().equals("false")) {
+                if (drug.getChecked().equals("false")) {//如果是选中
 //当image1的src为R.drawable.A时，设置image1的src为R.drawable.B
                     viewHolder.drugChoiced.setImageResource(R.drawable.checked);
                     drug.setChecked("true");
-                    choicedNumber++;
-                    intent.putExtra("value", String.valueOf(method.calculatePrice(mList, length)));
+                   Double[]info=method.calculatePrice(mList, length);
+                    intent.putExtra("value", String.valueOf(info[0]));
                     //如果选中药品的数量等于总共的药品数量，则将全选按钮显示为打钩
-                    if(choicedNumber==mList.size()){
+                    if(info[1]==1.0){
                         intent.putExtra("selectAll",true);
                     }
                     else{
@@ -136,20 +130,17 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     }
                     Log.d("selectall","true1");
                     mContext.sendBroadcast(intent);
-                } else {
+                } else {//如果是取消选中
                     //否则设置image1的src为R.drawable.A
                     viewHolder.drugChoiced.setImageResource(R.drawable.unchecked);
                     drug.setChecked("false");
-                    choicedNumber--;
-                    intent.putExtra("value", String.valueOf(method.calculatePrice(mList, length)));
+                    intent.putExtra("value", String.valueOf(method.calculatePrice(mList, length)[0]));
                     intent.putExtra("selectAll",false);
                     Log.d("selectall","false1");
                     mContext.sendBroadcast(intent);
                 }
             }
         });
-
-
     }
 
     @Override
