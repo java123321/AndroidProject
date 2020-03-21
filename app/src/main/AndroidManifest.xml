@@ -22,9 +22,9 @@
         android:supportsRtl="true"
         android:theme="@style/Noactionbar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".DocTreatment.DocDrugStore"
-            android:launchMode="singleInstance"
-            />
+        <activity
+            android:name=".DocTreatment.DocDrugStore"
+            android:launchMode="singleInstance" />
         <activity android:name=".DocTreatment.Prescribe" />
         <activity android:name=".StuDiagnosis.OnlineDocDetail" />
         <activity android:name=".StuMessage.DisplayMessageDetail" />
@@ -37,7 +37,9 @@
         <activity android:name=".StuDiagnosis.RenGongWenZhen" />
         <activity android:name=".activity_doc_name" />
         <activity android:name=".StuDrugStore.StuBuyDrug" />
-        <activity android:name=".DocBottomNavigation" />
+        <activity
+            android:name=".DocBottomNavigation"
+            android:launchMode="singleTask" />
         <activity android:name=".StuDrugStore.StuDrugDetail" />
         <activity android:name=".FindPass" />
         <activity android:name=".UpDrugMsgActivity" />
@@ -65,6 +67,7 @@
         <activity
             android:name=".LoginActivity"
             android:launchMode="singleTask" />
+
         <service
             android:name=".GuaHaoService"
             android:enabled="true"
@@ -73,6 +76,7 @@
             android:name=".DocService"
             android:enabled="true"
             android:exported="true" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="url"

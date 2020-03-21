@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -26,6 +27,7 @@
 
         <Button
             android:id="@+id/stu_shopping_cart_bianji"
+            android:paddingTop="10dp"
             android:text="管理"
             android:textSize="18dp"
             android:layout_weight="1"
@@ -35,11 +37,41 @@
             android:textColor="#FFFFFF"
             android:layout_height="wrap_content"/>
     </LinearLayout>
-        <TextView
-            android:layout_marginTop="10dp"
+
+    <LinearLayout
+
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         android:id="@+id/empty"
+        android:paddingTop="100dp"
+        android:layout_gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent">
+
+        <com.example.ourprojecttest.Roundimage
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/shopcart" />
+        <TextView
+            android:layout_marginTop="20dp"
+            android:textSize="20dp"
+            android:text="购物车空空的"
+            android:textColor="#FD0896F5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/addDrug"
+            android:background="#FD0896F5"
+            android:textSize="20dp"
+            android:layout_marginTop="20dp"
+            android:text="去 添 加 药 品"
+            android:layout_width="200dp"
+            android:textColor="#FFFFFF"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+
 
     <LinearLayout
         android:orientation="vertical"

@@ -35,6 +35,7 @@ import com.example.ourprojecttest.ImmersiveStatusbar;
 import com.example.ourprojecttest.OrderInfoUtil2_0;
 import com.example.ourprojecttest.PayResult;
 import com.example.ourprojecttest.R;
+import com.example.ourprojecttest.StuBottomNavigation;
 
 
 import org.json.JSONArray;
@@ -56,11 +57,12 @@ import java.util.Set;
 
 
 public class ShoppingCartActivity extends AppCompatActivity {
+    private Button addDrug;
     private String orderPrice = "0.00";
     private LinearLayout hideCart;
     private LocalReceiver localReceiver;
     private IntentFilter intentFilter;
-    private TextView empty;
+    private LinearLayout empty;
     private Button buyNow;
     private Button bianji;
     private TextView payPrice;
@@ -73,6 +75,8 @@ public class ShoppingCartActivity extends AppCompatActivity {
     private String stuId;
     private CommonMethod method = new CommonMethod();
     private DecimalFormat df = new DecimalFormat("##0.00");
+    private ArrayList<ShoppingCartBean> drugList;
+    private Set<String> set;
     /**
      * 用于支付宝支付业务的入参 app_id。
      */
@@ -91,6 +95,12 @@ public class ShoppingCartActivity extends AppCompatActivity {
             switch (msg.what) {
                 case SUCCESS: {
                     Toast.makeText(ShoppingCartActivity.this, "订单添加成功", Toast.LENGTH_SHORT).show();
+                    //订单上传到服务器之后，将购物车选中的药品删除
+
+                    //将药品删除之后保存到本地
+
+                    method.saveObj2SDCard("drugIdSet", set);
+                    method.writeListIntoSDcard("ShoppingCartList", drugList);
                     break;
                 }
                 case FAULT: {
@@ -197,17 +207,6 @@ public class ShoppingCartActivity extends AppCompatActivity {
         payPrice.setText(builder);
     }
 
-    private static void showAlert(Context ctx, String info, DialogInterface.OnDismissListener onDismiss) {
-        new AlertDialog.Builder(ctx)
-                .setMessage(info)
-                .setPositiveButton("Confirm", null)
-                .setOnDismissListener(onDismiss)
-                .show();
-    }
-
-    private static void showAlert(Context ctx, String info) {
-        showAlert(ctx, info, null);
-    }
 
     /**
      * 支付宝支付业务示例
@@ -216,7 +215,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
         Log.d("amount", amount);
 
         if (TextUtils.isEmpty(APPID) || (TextUtils.isEmpty(RSA2_PRIVATE) && TextUtils.isEmpty(RSA_PRIVATE))) {
-            showAlert(this, "Error: Missing APPID or RSA_PRIVATE in PayDemoActivity.");
+            Toast.makeText(this, "Error: Missing APPID or RSA_PRIVATE in PayDemoActivity.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -265,9 +264,8 @@ public class ShoppingCartActivity extends AppCompatActivity {
             public void run() {
                 try {
                     //先获取购物车中的药品数组
-                    ArrayList<ShoppingCartBean> drugList = mAdapter.getList();
-                    Set<String> set = (Set<String>) method.readObjFromSDCard("drugIdSet");
-
+                    drugList = mAdapter.getList();
+                    set = (Set<String>) method.readObjFromSDCard("drugIdSet");
                     JSONArray jsonArray = new JSONArray();
                     JSONObject object = new JSONObject();
                     object.put("stuId", stuId);
@@ -342,8 +340,9 @@ public class ShoppingCartActivity extends AppCompatActivity {
 
     private void initView() {
         //获取学生的id
-        stuId = method.getFileData("ID",ShoppingCartActivity.this);
+        stuId = method.getFileData("ID", ShoppingCartActivity.this);
         hideCart = findViewById(R.id.stu_shopping_cart_hide_cart);
+        addDrug = findViewById(R.id.addDrug);
         empty = findViewById(R.id.empty);
         buyNow = findViewById(R.id.stu_shopping_cart_buy_now);
         bianji = findViewById(R.id.stu_shopping_cart_bianji);
@@ -378,6 +377,16 @@ public class ShoppingCartActivity extends AppCompatActivity {
                 selectAll.setImageResource(R.drawable.unchecked);
             }
         }
+        //设置添加药品的点击事件
+        addDrug.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ShoppingCartActivity.this, StuBottomNavigation.class);
+                intent.putExtra("from", "shopCart");
+                startActivity(intent);
+                Log.d("drug1", "123");
+            }
+        });
         buyNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -386,21 +395,41 @@ public class ShoppingCartActivity extends AppCompatActivity {
                 if (buyNow.getText().toString().trim().equals("去结算")) {
                     //去付款
                     payV2(orderPrice);
-                } else {//清除商品的点击事件
-                    //先获取购物车中的药品数组
-                    ArrayList<ShoppingCartBean> deleteList = mAdapter.getList();
-                    Set<String> set = (Set<String>) method.readObjFromSDCard("drugIdSet");
-                    for (int i = deleteList.size() - 1; i >= 0; i--) {
-                        ShoppingCartBean bean = deleteList.get(i);
-                        if (bean.getChecked().equals("true")) {
-                            deleteList.remove(i);
-                            set.remove(bean.getId());
+                } else {//清除商品的点击事
+                    //弹出确认框
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ShoppingCartActivity.this);
+                    builder.setTitle("提示");
+                    builder.setMessage("确定要删除选中的药品？");
+                    //如果用户确定要删除
+                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int ii) {
+                            //先获取购物车中的药品数组
+                            ArrayList<ShoppingCartBean> deleteList = mAdapter.getList();
+                            Set<String> set = (Set<String>) method.readObjFromSDCard("drugIdSet");
+
+                            for (int i = deleteList.size() - 1; i >= 0; i--) {
+                                ShoppingCartBean bean = deleteList.get(i);
+                                if (bean.getChecked().equals("true")) {
+                                    deleteList.remove(i);
+                                    set.remove(bean.getId());
+                                }
+                            }
+                            method.writeListIntoSDcard("ShoppingCartList", deleteList);
+                            method.saveObj2SDCard("drugIdSet", set);
+
+                            if (deleteList.size() == 0) {//如果为空，则显示空的界面
+                                hideCart.setVisibility(View.GONE);
+                                empty.setVisibility(View.VISIBLE);
+                            } else {
+                                mAdapter.setList(deleteList);
+                                mAdapter.notifyDataSetChanged();
+                            }
                         }
-                    }
-                    mAdapter.setList(deleteList);
-                    mAdapter.notifyDataSetChanged();
-                    method.writeListIntoSDcard("ShoppingCartList", deleteList);
-                    method.saveObj2SDCard("drugIdSet", set);
+                    });
+                    builder.setNegativeButton("取消", null);
+                    builder.show();
                 }
 
             }
@@ -429,13 +458,13 @@ public class ShoppingCartActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //当全选按钮没有选中的时候
                 if (selectAllFlag == false) {
-                    selectAllFlag=true;
+                    selectAllFlag = true;
                     selectAll.setImageResource(R.drawable.checked);
                     for (ShoppingCartBean list : lists) {
                         list.setChecked("true");
                     }
                 } else {
-                    selectAllFlag=false;
+                    selectAllFlag = false;
                     selectAll.setImageResource(R.drawable.unchecked);
                     for (ShoppingCartBean list : lists) {
                         list.setChecked("false");
