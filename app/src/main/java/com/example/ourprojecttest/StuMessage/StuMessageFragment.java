@@ -58,6 +58,7 @@ public class StuMessageFragment extends Fragment {
         return view;
     }
 private void getData(){
+    lists=method.readMessageRecordListFromSdCard("MessageRecord");
     if(lists==null){
         mRecycler.setVisibility(View.INVISIBLE);
         noRecord.setVisibility(View.VISIBLE);

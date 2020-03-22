@@ -20,6 +20,8 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -57,9 +59,11 @@ import java.util.Set;
 
 
 public class ShoppingCartActivity extends AppCompatActivity {
+    private Display display;
+    // 获取屏幕高度
+    private int height;
     private Button addDrug;
     private String orderPrice = "0.00";
-    private LinearLayout hideCart;
     private LocalReceiver localReceiver;
     private IntentFilter intentFilter;
     private LinearLayout empty;
@@ -180,7 +184,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
     class LocalReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            update(Double.valueOf(intent.getStringExtra("value")));
+            updateDisplayPrice(Double.valueOf(intent.getStringExtra("value")));
             Log.d("selectall", "1");
             boolean all = intent.getBooleanExtra("selectAll", false);
             Log.d("selectall", "2");
@@ -198,7 +202,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
         }
     }
 
-    public void update(Double d) {
+    private void updateDisplayPrice(Double d) {
         orderPrice = df.format(d);
         String str = "合计:￥" + orderPrice;
         SpannableStringBuilder builder = new SpannableStringBuilder(str);
@@ -341,7 +345,9 @@ public class ShoppingCartActivity extends AppCompatActivity {
     private void initView() {
         //获取学生的id
         stuId = method.getFileData("ID", ShoppingCartActivity.this);
-        hideCart = findViewById(R.id.stu_shopping_cart_hide_cart);
+        display = getWindowManager().getDefaultDisplay();
+        // 获取屏幕高度
+        height = display.getHeight();
         addDrug = findViewById(R.id.addDrug);
         empty = findViewById(R.id.empty);
         buyNow = findViewById(R.id.stu_shopping_cart_buy_now);
@@ -358,17 +364,17 @@ public class ShoppingCartActivity extends AppCompatActivity {
         //当购物车内容是空的情况下
         if (lists == null || lists.size() == 0) {
             Log.d("cart", "null");
-            hideCart.setVisibility(View.GONE);
+            mRecycler.setVisibility(View.GONE);
             empty.setVisibility(View.VISIBLE);
         } else {//不为空的情况下
             Log.d("cart", "notnull");
             empty.setVisibility(View.GONE);
-            hideCart.setVisibility(View.VISIBLE);
+            mRecycler.setVisibility(View.VISIBLE);
             mAdapter.setList(lists);
             mAdapter.notifyDataSetChanged();
             //统计药品总价格
             Double[] info = method.calculatePrice(lists, lists.size());
-            update(info[0]);
+            updateDisplayPrice(info[0]);
             //判断是否全选
             if (info[1] == 1.0) {
                 selectAll.setImageResource(R.drawable.checked);
@@ -390,47 +396,55 @@ public class ShoppingCartActivity extends AppCompatActivity {
         buyNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(empty.getVisibility()==View.VISIBLE){//如果当前购物车为空
+                    Toast toast = Toast.makeText(ShoppingCartActivity.this, "当前购物车为空，请先添加药品！", Toast.LENGTH_SHORT);
+                    // 这里给了一个1/4屏幕高度的y轴偏移量
+                    toast.setGravity(Gravity.BOTTOM,0,height/5);
+                    toast.show();
+                }
+                else{
+                    //立即购买的点击事件
+                    if (buyNow.getText().toString().trim().equals("去结算")) {
+                        //去付款
+                        payV2(orderPrice);
+                    } else {//清除商品的点击事
+                        //弹出确认框
 
-                //立即购买的点击事件
-                if (buyNow.getText().toString().trim().equals("去结算")) {
-                    //去付款
-                    payV2(orderPrice);
-                } else {//清除商品的点击事
-                    //弹出确认框
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ShoppingCartActivity.this);
+                        builder.setTitle("提示");
+                        builder.setMessage("确定要删除选中的药品？");
+                        //如果用户确定要删除
+                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int ii) {
+                                //先获取购物车中的药品数组
+                                ArrayList<ShoppingCartBean> deleteList = mAdapter.getList();
+                                Set<String> set = (Set<String>) method.readObjFromSDCard("drugIdSet");
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(ShoppingCartActivity.this);
-                    builder.setTitle("提示");
-                    builder.setMessage("确定要删除选中的药品？");
-                    //如果用户确定要删除
-                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int ii) {
-                            //先获取购物车中的药品数组
-                            ArrayList<ShoppingCartBean> deleteList = mAdapter.getList();
-                            Set<String> set = (Set<String>) method.readObjFromSDCard("drugIdSet");
+                                for (int i = deleteList.size() - 1; i >= 0; i--) {
+                                    ShoppingCartBean bean = deleteList.get(i);
+                                    if (bean.getChecked().equals("true")) {
+                                        deleteList.remove(i);
+                                        set.remove(bean.getId());
+                                    }
+                                }
+                                method.writeListIntoSDcard("ShoppingCartList", deleteList);
+                                method.saveObj2SDCard("drugIdSet", set);
 
-                            for (int i = deleteList.size() - 1; i >= 0; i--) {
-                                ShoppingCartBean bean = deleteList.get(i);
-                                if (bean.getChecked().equals("true")) {
-                                    deleteList.remove(i);
-                                    set.remove(bean.getId());
+                                if (deleteList.size() == 0) {//如果为空，则显示空的界面
+                                    mRecycler.setVisibility(View.GONE);
+                                    empty.setVisibility(View.VISIBLE);
+                                } else {
+                                    mAdapter.setList(deleteList);
+                                    mAdapter.notifyDataSetChanged();
                                 }
                             }
-                            method.writeListIntoSDcard("ShoppingCartList", deleteList);
-                            method.saveObj2SDCard("drugIdSet", set);
-
-                            if (deleteList.size() == 0) {//如果为空，则显示空的界面
-                                hideCart.setVisibility(View.GONE);
-                                empty.setVisibility(View.VISIBLE);
-                            } else {
-                                mAdapter.setList(deleteList);
-                                mAdapter.notifyDataSetChanged();
-                            }
-                        }
-                    });
-                    builder.setNegativeButton("取消", null);
-                    builder.show();
+                        });
+                        builder.setNegativeButton("取消", null);
+                        builder.show();
+                    }
                 }
+
 
             }
         });
@@ -456,23 +470,31 @@ public class ShoppingCartActivity extends AppCompatActivity {
         selectAllButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //当全选按钮没有选中的时候
-                if (selectAllFlag == false) {
-                    selectAllFlag = true;
-                    selectAll.setImageResource(R.drawable.checked);
-                    for (ShoppingCartBean list : lists) {
-                        list.setChecked("true");
-                    }
-                } else {
-                    selectAllFlag = false;
-                    selectAll.setImageResource(R.drawable.unchecked);
-                    for (ShoppingCartBean list : lists) {
-                        list.setChecked("false");
-                    }
+                if(empty.getVisibility()==View.VISIBLE){//如果当前购物车为空
+                    Toast toast = Toast.makeText(ShoppingCartActivity.this, "当前购物车为空，请先添加药品！", Toast.LENGTH_SHORT);
+                    // 这里给了一个1/4屏幕高度的y轴偏移量
+                    toast.setGravity(Gravity.BOTTOM,0,height/5);
+                    toast.show();
                 }
-                mAdapter.setList(lists);
-                mAdapter.notifyDataSetChanged();
-                update(method.calculatePrice(lists, lists.size())[0]);
+                else{//当购物车不为空的情况下
+                    //当全选按钮没有选中的时候
+                    if (selectAllFlag == false) {
+                        selectAllFlag = true;
+                        selectAll.setImageResource(R.drawable.checked);
+                        for (ShoppingCartBean list : lists) {
+                            list.setChecked("true");
+                        }
+                    } else {
+                        selectAllFlag = false;
+                        selectAll.setImageResource(R.drawable.unchecked);
+                        for (ShoppingCartBean list : lists) {
+                            list.setChecked("false");
+                        }
+                    }
+                    mAdapter.setList(lists);
+                    mAdapter.notifyDataSetChanged();
+                    updateDisplayPrice(method.calculatePrice(lists, lists.size())[0]);
+                }
             }
         });
     }

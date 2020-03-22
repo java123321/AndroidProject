@@ -3,26 +3,27 @@ package com.example.ourprojecttest.DocTreatment;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.ourprojecttest.R;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,7 +39,7 @@ import java.util.Set;
 public class Prescribe extends AppCompatActivity {
     private final int SUCCESS=1;
     private final int FAULT=0;
-    Intent intentToDocBottom=new Intent("com.example.ourprojecttest.DocDrugStore");
+    private Intent intentToDocBottom=new Intent("com.example.ourprojecttest.DocDrugStore");
     private ArrayList<PrescribeBean>list=new ArrayList<>();
     private Button prescribe;
     private TextView showPrice;
@@ -51,7 +52,7 @@ public class Prescribe extends AppCompatActivity {
     private Set<String> set=new HashSet<>();
     private DecimalFormat df = new DecimalFormat("##0.00");
     private double totalPrice=0.00;
-
+    private String orderPrice = "0.00";
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -105,15 +106,24 @@ public class Prescribe extends AppCompatActivity {
                 Log.d("pres","pass2");
                 Double sub=Double.valueOf(intent.getStringExtra("sub"));
                 totalPrice-=sub;
-                showPrice.setText("订单总价:￥"+df.format(totalPrice));
+                updateDisplayPrice(totalPrice);
             }
             else{//如果是修改药品数量发过来的增加药品价格
                 Log.d("pres","pass3");
                 Double add=Double.valueOf(intent.getStringExtra("add"));
                 totalPrice+=add;
-                showPrice.setText("订单总价:￥"+df.format(totalPrice));
+                updateDisplayPrice(totalPrice);
             }
         }
+    }
+    //显示订单总价格
+    private void updateDisplayPrice(Double d) {
+        orderPrice = df.format(d);
+        String str = "合计:￥" + orderPrice;
+        SpannableStringBuilder builder = new SpannableStringBuilder(str);
+        ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#FF1493"));
+        builder.setSpan(colorSpan, 3, str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        showPrice.setText(builder);
     }
 
     //当返回到医生返回到开药界面时更新RecyclerView
@@ -123,7 +133,7 @@ public class Prescribe extends AppCompatActivity {
         Log.d("pres","length"+list.size());
         adapter.setList(list);
         adapter.notifyDataSetChanged();
-        showPrice.setText("订单总价:￥"+df.format(totalPrice));
+        updateDisplayPrice(totalPrice);
     }
 
     @Override

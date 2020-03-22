@@ -51,10 +51,10 @@ public class GuaHaoService extends Service {
             String msg;
 
             //如果是聊天信息
-            if(intent.hasExtra("sendMsg")){
-                msg=intent.getStringExtra("sendMsg");
+            if(intent.hasExtra("chatMsg")){
+                msg=intent.getStringExtra("chatMsg");
                 chatListener.socket.send(msg);
-                if(msg.contains("再见！")){
+                if(msg.contains("finishChat")){
                     chatListener.socket.close(1000,"正常关闭");
                 }
             }
