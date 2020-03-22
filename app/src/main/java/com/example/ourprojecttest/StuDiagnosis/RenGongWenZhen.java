@@ -24,9 +24,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ourprojecttest.CommonMethod;
-import com.example.ourprojecttest.GuaHaoService;
-import com.example.ourprojecttest.ImmersiveStatusbar;
+import com.example.ourprojecttest.Utils.CommonMethod;
+import com.example.ourprojecttest.Service.StuService;
+import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 import com.example.ourprojecttest.R;
 
 import org.json.JSONArray;
@@ -37,7 +37,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Timer;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -266,12 +265,12 @@ public class RenGongWenZhen extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //如果服务在运行
-                if(method.isServiceWork(RenGongWenZhen.this,"com.example.ourprojecttest.GuaHaoService")){
+                if(method.isServiceWork(RenGongWenZhen.this,"com.example.ourprojecttest.Service.StuService")){
                     Toast.makeText(RenGongWenZhen.this,"正在挂号，请勿重复点击！",Toast.LENGTH_SHORT).show();
                 }
                 else{
                     //创建一个服务
-                    Intent intentStartService = new Intent(RenGongWenZhen.this, GuaHaoService.class);
+                    Intent intentStartService = new Intent(RenGongWenZhen.this, StuService.class);
                     startService(intentStartService);
                 }
             }
@@ -283,7 +282,7 @@ public class RenGongWenZhen extends AppCompatActivity {
             public void onClick(View view) {
 
                 //如果服务在运行
-                if(method.isServiceWork(RenGongWenZhen.this,"com.example.ourprojecttest.GuaHaoService")){
+                if(method.isServiceWork(RenGongWenZhen.this,"com.example.ourprojecttest.Service.StuService")){
                     //给服务发送取消挂号的广播
                     intentToService.putExtra("msg","ExitGuaHao");
                     sendBroadcast(intentToService);

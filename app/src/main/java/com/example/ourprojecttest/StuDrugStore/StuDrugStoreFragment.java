@@ -26,11 +26,10 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import com.example.ourprojecttest.CommonMethod;
-import com.example.ourprojecttest.DrugInformation;
-import com.example.ourprojecttest.ImmersiveStatusbar;
+import com.example.ourprojecttest.Utils.CommonMethod;
+import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 import com.example.ourprojecttest.R;
-import com.example.ourprojecttest.UpDrugMsgActivity;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

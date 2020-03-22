@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.Random;
+import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 
 public class MailboxActivity extends AppCompatActivity {
 
@@ -21,9 +21,9 @@ public class MailboxActivity extends AppCompatActivity {
         setContentView(R.layout.activity_mailbox);
         ImmersiveStatusbar.getInstance().Immersive(getWindow(),getActionBar());//状态栏透明
 
-        final TextView msg = (TextView) this.findViewById(R.id.msg);
-        Button getmsg = (Button) this.findViewById(R.id.getmsg);
-        Button check = (Button) this.findViewById(R.id.check);
+        final TextView msg = this.findViewById(R.id.msg);
+        Button getmsg = this.findViewById(R.id.getmsg);
+        Button check = this.findViewById(R.id.check);
 
         getmsg.setOnClickListener(new View.OnClickListener() {
             @Override

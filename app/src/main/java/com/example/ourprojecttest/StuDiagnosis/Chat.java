@@ -20,13 +20,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.ourprojecttest.CommonMethod;
+import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.DocTreatment.Prescribe;
-import com.example.ourprojecttest.ImmersiveStatusbar;
-import com.example.ourprojecttest.MessageBean;
-import com.example.ourprojecttest.Msg;
-import com.example.ourprojecttest.MsgAdapter;
-import com.example.ourprojecttest.PictureStore;
+import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
+import com.example.ourprojecttest.Utils.PictureStore;
 import com.example.ourprojecttest.R;
 
 import java.text.SimpleDateFormat;

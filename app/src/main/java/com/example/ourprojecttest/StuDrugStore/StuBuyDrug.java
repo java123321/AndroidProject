@@ -22,11 +22,11 @@ import android.widget.TextView;
 
 import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
-import com.example.ourprojecttest.AuthResult;
-import com.example.ourprojecttest.CommonMethod;
-import com.example.ourprojecttest.ImmersiveStatusbar;
-import com.example.ourprojecttest.OrderInfoUtil2_0;
-import com.example.ourprojecttest.PayResult;
+import com.example.ourprojecttest.AlipayModule.AuthResult;
+import com.example.ourprojecttest.Utils.CommonMethod;
+import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
+import com.example.ourprojecttest.AlipayModule.OrderInfoUtil2_0;
+import com.example.ourprojecttest.AlipayModule.PayResult;
 import com.example.ourprojecttest.R;
 import com.example.ourprojecttest.StuMine.AddressActivity;
 

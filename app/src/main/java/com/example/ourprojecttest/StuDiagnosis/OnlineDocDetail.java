@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.ourprojecttest.R;
-import com.example.ourprojecttest.Roundimage;
+import com.example.ourprojecttest.Utils.Roundimage;
 
 public class OnlineDocDetail extends AppCompatActivity {
     private Roundimage docIcon;

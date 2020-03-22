@@ -10,10 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ourprojecttest.CommonMethod;
+import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.R;
-import com.example.ourprojecttest.Roundimage;
-import com.example.ourprojecttest.StuDiagnosis.DisplayDocBean;
+import com.example.ourprojecttest.Utils.Roundimage;
 
 import java.util.ArrayList;
 

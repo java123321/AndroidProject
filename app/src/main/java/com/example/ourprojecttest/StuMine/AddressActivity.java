@@ -11,8 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.ourprojecttest.CommonMethod;
-import com.example.ourprojecttest.ImmersiveStatusbar;
+import com.example.ourprojecttest.Utils.CommonMethod;
+import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 import com.example.ourprojecttest.R;
 
 import org.json.JSONObject;

@@ -19,19 +19,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.app.Fragment;
 
-import com.example.ourprojecttest.CommonMethod;
-import com.example.ourprojecttest.DocBottomNavigation;
-import com.example.ourprojecttest.MainActivity;
-import com.example.ourprojecttest.ModifyPassword;
+import com.example.ourprojecttest.Utils.CommonMethod;
+import com.example.ourprojecttest.NavigationBar.DocBottomNavigation;
+import com.example.ourprojecttest.StuMine.StuInfomation.StuInformation;
+import com.example.ourprojecttest.WelcomeActivity;
 import com.example.ourprojecttest.StuMine.StuHistoryOrder.HistoryOrder;
-import com.example.ourprojecttest.ImmersiveStatusbar;
-import com.example.ourprojecttest.ModifyActivity;
+import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 import com.example.ourprojecttest.StuMine.StuNeedToPay.NeedToPay;
 import com.example.ourprojecttest.StuMine.StuNeedToPost.NeedToPost;
 import com.example.ourprojecttest.StuMine.StuNeedToReceive.NeedToReceive;
-import com.example.ourprojecttest.PictureStore;
+import com.example.ourprojecttest.Utils.PictureStore;
 import com.example.ourprojecttest.R;
-import com.example.ourprojecttest.Roundimage;
+import com.example.ourprojecttest.Utils.Roundimage;
 import com.example.ourprojecttest.StuMine.ShoppingCart.ShoppingCartActivity;
 
 public class StuMineFragment extends Fragment {
@@ -141,7 +140,7 @@ public class StuMineFragment extends Fragment {
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), ModifyActivity.class);
+                Intent intent = new Intent(getActivity(), StuInformation.class);
                 startActivity(intent);
             }
         });
@@ -188,7 +187,7 @@ public class StuMineFragment extends Fragment {
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(mContext, MainActivity.class);
+                Intent intent=new Intent(mContext, WelcomeActivity.class);
                 startActivity(intent);
                 DocBottomNavigation.activity.finish();
             }

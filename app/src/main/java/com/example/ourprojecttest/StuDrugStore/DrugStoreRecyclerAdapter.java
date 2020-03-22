@@ -14,11 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ourprojecttest.CommonMethod;
-import com.example.ourprojecttest.DrugInformation;
+import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.R;
 import com.example.ourprojecttest.StuMine.ShoppingCart.ShoppingCartBean;
-import com.example.ourprojecttest.UpDrugMsgActivity;
 
 import java.io.File;
 import java.io.FileInputStream;

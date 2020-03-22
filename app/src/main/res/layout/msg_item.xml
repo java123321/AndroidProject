@@ -16,7 +16,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-            <com.example.ourprojecttest.Roundimage
+            <com.example.ourprojecttest.Utils.Roundimage
                 android:id="@+id/chatIconLeft"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -75,7 +75,7 @@
                 android:background="@drawable/style_qipao_right"
                 android:textColor="#FFFFFF" />
         </LinearLayout>
-        <com.example.ourprojecttest.Roundimage
+        <com.example.ourprojecttest.Utils.Roundimage
             android:id="@+id/chatIconRight"
             android:layout_width="40dp"
             android:layout_height="40dp"

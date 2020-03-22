@@ -31,13 +31,13 @@ import android.widget.Toast;
 
 import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
-import com.example.ourprojecttest.AuthResult;
-import com.example.ourprojecttest.CommonMethod;
-import com.example.ourprojecttest.ImmersiveStatusbar;
-import com.example.ourprojecttest.OrderInfoUtil2_0;
-import com.example.ourprojecttest.PayResult;
+import com.example.ourprojecttest.AlipayModule.AuthResult;
+import com.example.ourprojecttest.Utils.CommonMethod;
+import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
+import com.example.ourprojecttest.AlipayModule.OrderInfoUtil2_0;
+import com.example.ourprojecttest.AlipayModule.PayResult;
 import com.example.ourprojecttest.R;
-import com.example.ourprojecttest.StuBottomNavigation;
+import com.example.ourprojecttest.NavigationBar.StuBottomNavigation;
 
 
 import org.json.JSONArray;
@@ -388,7 +388,6 @@ public class ShoppingCartActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ShoppingCartActivity.this, StuBottomNavigation.class);
-                intent.putExtra("from", "shopCart");
                 startActivity(intent);
                 Log.d("drug1", "123");
             }
@@ -409,7 +408,6 @@ public class ShoppingCartActivity extends AppCompatActivity {
                         payV2(orderPrice);
                     } else {//清除商品的点击事
                         //弹出确认框
-
                         AlertDialog.Builder builder = new AlertDialog.Builder(ShoppingCartActivity.this);
                         builder.setTitle("提示");
                         builder.setMessage("确定要删除选中的药品？");

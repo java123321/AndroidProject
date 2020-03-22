@@ -22,13 +22,13 @@
         android:background="#00000000"
         android:orientation="horizontal">
 
-        <com.example.ourprojecttest.Roundimage
+        <com.example.ourprojecttest.Utils.Roundimage
             android:id="@+id/img"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="5dp"
-            android:src="@drawable/doctor"></com.example.ourprojecttest.Roundimage>
+            android:src="@drawable/doctor"></com.example.ourprojecttest.Utils.Roundimage>
 
         <LinearLayout
             android:layout_width="wrap_content"

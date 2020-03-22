@@ -24,16 +24,16 @@ import android.widget.TextView;
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.ourprojecttest.CommonMethod;
-import com.example.ourprojecttest.DocBottomNavigation;
+import com.example.ourprojecttest.Utils.CommonMethod;
+import com.example.ourprojecttest.NavigationBar.DocBottomNavigation;
+import com.example.ourprojecttest.DocMine.DocInformation.DocInformation;
 import com.example.ourprojecttest.DocMine.DocOrderManagement.OrderManagement;
-import com.example.ourprojecttest.ImmersiveStatusbar;
-import com.example.ourprojecttest.MainActivity;
-import com.example.ourprojecttest.ModifyPassword;
-import com.example.ourprojecttest.PictureStore;
+import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
+import com.example.ourprojecttest.WelcomeActivity;
+import com.example.ourprojecttest.StuMine.ModifyPassword;
+import com.example.ourprojecttest.Utils.PictureStore;
 import com.example.ourprojecttest.R;
-import com.example.ourprojecttest.Roundimage;
-import com.example.ourprojecttest.DocInformation;
+import com.example.ourprojecttest.Utils.Roundimage;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -142,7 +142,7 @@ public class DocMineFragment extends Fragment {
             public void onClick(View view) {
 
                 DocBottomNavigation.activity.finish();
-                Intent intent=new Intent(mContext, MainActivity.class);
+                Intent intent=new Intent(mContext, WelcomeActivity.class);
                 startActivity(intent);
 
             }

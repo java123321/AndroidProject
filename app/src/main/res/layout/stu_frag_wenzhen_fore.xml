@@ -28,7 +28,7 @@
                 android:textColor="#FFFFFF"
                 android:textSize="16dp" />
 
-            <com.example.ourprojecttest.DiffuseView
+            <com.example.ourprojecttest.Utils.DiffuseView
                 android:id="@+id/diffuseView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

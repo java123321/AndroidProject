@@ -6,8 +6,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,8 +14,8 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.ourprojecttest.CommonMethod;
-import com.example.ourprojecttest.ImmersiveStatusbar;
+import com.example.ourprojecttest.Utils.CommonMethod;
+import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 import com.example.ourprojecttest.R;
 import com.example.ourprojecttest.StuMine.StuNeedToPay.ContentInfoBean;
 import com.example.ourprojecttest.StuMine.StuNeedToReceive.NeedToReceiveHelper;

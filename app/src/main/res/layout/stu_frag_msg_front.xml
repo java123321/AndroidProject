@@ -6,7 +6,7 @@
 
     <TextView
         android:gravity="center"
-        android:text="消息记录"
+        android:text="问诊记录"
         android:textSize="25dp"
         android:textColor="#FFFFFF"
         android:background="#FD0896F5"

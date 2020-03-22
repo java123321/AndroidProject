@@ -44,7 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <com.example.ourprojecttest.NumPickView
+        <com.example.ourprojecttest.Utils.NumPickView
             android:id="@+id/numPickView"
             android:layout_width="150dp"
             android:layout_height="260dp"
@@ -54,7 +54,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginLeft="30dp"
             android:layout_marginEnd="16dp"/>
-        <com.example.ourprojecttest.NumPickView
+        <com.example.ourprojecttest.Utils.NumPickView
             android:id="@+id/numPickView2"
             android:layout_width="150dp"
             android:layout_height="260dp"

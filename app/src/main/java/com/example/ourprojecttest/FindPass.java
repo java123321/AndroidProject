@@ -10,6 +10,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.ourprojecttest.SendEmail.MyEamil;
+import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
+
 import org.json.JSONObject;
 
 import java.util.regex.Matcher;
@@ -38,8 +42,6 @@ public class FindPass extends AppCompatActivity {
             super.handleMessage(msg);
 
             switch (msg.what) {
-
-
                 //开始验证码倒计时
                 case TIME_COUNT:
                     TimeCount time = new TimeCount(60000, 1000);

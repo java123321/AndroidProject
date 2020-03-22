@@ -23,6 +23,12 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ourprojecttest.NavigationBar.DocBottomNavigation;
+import com.example.ourprojecttest.NavigationBar.StuBottomNavigation;
+import com.example.ourprojecttest.Utils.CommonMethod;
+import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
+import com.example.ourprojecttest.Utils.PictureStore;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -58,7 +64,6 @@ public class LoginActivity extends AppCompatActivity {
                     //如果是学生登录
                     if (radioButton_stu.isChecked()) {
                         Intent intent = new Intent(LoginActivity.this, StuBottomNavigation.class);
-                        intent.putExtra("from","login");
                         startActivity(intent);
                     } else {//如果是医生登录
                         Intent intent = new Intent(LoginActivity.this, DocBottomNavigation.class);

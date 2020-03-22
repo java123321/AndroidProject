@@ -11,8 +11,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
-import com.example.ourprojecttest.CommonMethod;
-import com.example.ourprojecttest.DiffuseView;
+import com.example.ourprojecttest.Utils.CommonMethod;
+import com.example.ourprojecttest.Utils.DiffuseView;
 import com.example.ourprojecttest.R;
 
 public class StuDiagnosisFragment extends Fragment {

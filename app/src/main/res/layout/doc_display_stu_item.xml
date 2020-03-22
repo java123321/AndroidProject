@@ -12,14 +12,14 @@
         android:layout_height="95dp"
         android:background="@drawable/yuanjiao1"
         >
-        <com.example.ourprojecttest.Roundimage
+        <com.example.ourprojecttest.Utils.Roundimage
             android:id="@+id/stuIcon"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
             android:src="@drawable/person">
-        </com.example.ourprojecttest.Roundimage>
+        </com.example.ourprojecttest.Utils.Roundimage>
         <TextView
             android:id="@+id/stuName"
             android:text="李时珍"

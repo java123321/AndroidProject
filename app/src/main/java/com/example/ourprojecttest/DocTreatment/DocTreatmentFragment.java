@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.app.Fragment;
 import android.widget.Button;
 
-import com.example.ourprojecttest.DiffuseView;
-import com.example.ourprojecttest.DocService;
+import com.example.ourprojecttest.Utils.DiffuseView;
+import com.example.ourprojecttest.Service.DocService;
 import com.example.ourprojecttest.R;
 
 

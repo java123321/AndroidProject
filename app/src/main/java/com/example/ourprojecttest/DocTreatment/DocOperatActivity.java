@@ -7,15 +7,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,10 +26,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.example.ourprojecttest.CommonMethod;
+import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.StuDiagnosis.Chat;
-import com.example.ourprojecttest.DocService;
-import com.example.ourprojecttest.ImmersiveStatusbar;
+import com.example.ourprojecttest.Service.DocService;
+import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 import com.example.ourprojecttest.R;
 
 import org.json.JSONArray;

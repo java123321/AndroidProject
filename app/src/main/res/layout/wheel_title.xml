@@ -40,7 +40,7 @@
             android:text="确定"
             android:layout_marginRight="16dp"/>
     </LinearLayout>
-        <com.example.ourprojecttest.NumPickView
+        <com.example.ourprojecttest.Utils.NumPickView
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="180dp"

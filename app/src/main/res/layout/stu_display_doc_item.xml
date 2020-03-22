@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="100dp"
    >
-    <com.example.ourprojecttest.Roundimage
+    <com.example.ourprojecttest.Utils.Roundimage
         android:id="@+id/docIcon"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="10dp"
         android:src="@drawable/person">
-    </com.example.ourprojecttest.Roundimage>
+    </com.example.ourprojecttest.Utils.Roundimage>
     <TextView
         android:id="@+id/docName"
         android:text="李时珍"

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StuMessage.DisplayMessageDetail">
+    tools:context=".StuDiagnoseRecord.DisplayRecordDetail">
     <TextView
         android:gravity="center"
         android:id="@+id/chatName"

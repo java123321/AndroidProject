@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/jiesuan2">
 
-    <com.example.ourprojecttest.Roundimage
+    <com.example.ourprojecttest.Utils.Roundimage
         android:paddingLeft="10dp"
         android:id="@+id/chatIcon"
         android:layout_width="60dp"
@@ -15,7 +15,7 @@
         android:layout_marginLeft="5dp"
         android:layout_weight="1"
         android:src="@drawable/person">
-    </com.example.ourprojecttest.Roundimage>
+    </com.example.ourprojecttest.Utils.Roundimage>
 
     <TextView
         android:id="@+id/chatName"
