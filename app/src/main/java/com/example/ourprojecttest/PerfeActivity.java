@@ -28,7 +28,19 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class PerfeActivity extends AppCompatActivity {
-
+    private String ipAddress;
+    private TextView stuName;
+    private TextView stuHei;
+    private TextView stuWei;
+    private TextView stuBir;
+    private RadioButton radioMen,radioWomen;
+    private Button btnRegister;
+    private Button btn;
+    private TextView dateDisplay;
+    private int mYear, mMonth, mDay;
+    final int DATE_DIALOG = 1;
+    private String userNo;
+    private String userPwd;
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -51,22 +63,12 @@ public class PerfeActivity extends AppCompatActivity {
             }
         }
     };
-    private TextView stuName;
-    private TextView stuHei;
-    private TextView stuWei;
-    private TextView stuBir;
-    private RadioButton radioMen,radioWomen;
-    private Button btnRegister;
-    Button btn;
-    TextView dateDisplay;
-    int mYear, mMonth, mDay;
-    final int DATE_DIALOG = 1;
-    private String userNo;
-    private String userPwd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfe);
+        ipAddress=getResources().getString(R.string.ipAdrress);
         ImmersiveStatusbar.getInstance().Immersive(getWindow(),getActionBar());//状态栏透明
         Intent intent = getIntent();
         userNo = intent.getStringExtra("string_no");
@@ -212,11 +214,11 @@ public class PerfeActivity extends AppCompatActivity {
                     String url = "";
                     if (radioMen.isChecked())
                     {
-                        url = getResources().getString(R.string.ipAdrress)+"IM1/servlet/LoginDataServlet?no="+userNo+"&name="+userName+"&pwd="+userPwd+"&sex=男&birth="+userBir+"&height="+userHei+"&weight="+userWei+"&sno=9999";
+                        url = ipAddress+"IM1/servlet/LoginDataServlet?no="+userNo+"&name="+userName+"&pwd="+userPwd+"&sex=男&birth="+userBir+"&height="+userHei+"&weight="+userWei+"&sno=9999";
                     }
                     else
                     {
-                        url = getResources().getString(R.string.ipAdrress)+"IM1/servlet/LoginDataServlet?no="+userNo+"&name="+userName+"&pwd="+userPwd+"&sex=女&birth="+userBir+"&height="+userHei+"&weight="+userWei+"&sno=9999";
+                        url = ipAddress+"IM1/servlet/LoginDataServlet?no="+userNo+"&name="+userName+"&pwd="+userPwd+"&sex=女&birth="+userBir+"&height="+userHei+"&weight="+userWei+"&sno=9999";
                     }
 
                     OkHttpClient client = new OkHttpClient();

@@ -21,10 +21,15 @@
     android:id="@+id/swipeRefresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <androidx.recyclerview.widget.RecyclerView
+
+    <com.tubb.smrv.SwipeMenuRecyclerView
         android:layout_marginTop="10dp"
         android:id="@+id/stuMsgRecordRecycler"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content">
+
+    </com.tubb.smrv.SwipeMenuRecyclerView>
+
+
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>

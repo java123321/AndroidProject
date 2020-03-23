@@ -1,7 +1,4 @@
 package com.example.ourprojecttest.StuDiagnosis;
-
-import com.example.ourprojecttest.StuDiagnosis.Msg;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 

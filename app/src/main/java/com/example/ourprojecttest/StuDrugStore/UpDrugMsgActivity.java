@@ -71,23 +71,21 @@ import okhttp3.Response;
 import static com.blankj.utilcode.util.UriUtils.uri2File;
 
 public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClickListener{
-
+    private String ipAddress;
     private final int UPPictureFinished=2;
-    public Uri url;
-    public String path ;
-    public static final int TAKE_PHOTO = 1;
-    public static final int CHOOSE_PHOTO = 2;
+    private String path ;
+    private static final int TAKE_PHOTO = 1;
+    private static final int CHOOSE_PHOTO = 2;
     private ImageView picture;
-    private Uri imageUri;
-    public TextView drug_name;
-    public TextView drug_num;
-    public TextView drug_resume;
-    public TextView drug_price;
-    public TextView show;
-    public Button submit;
-    public Spinner kind;
-    public Spinner attribute;
-    public String addOrup;
+    private TextView drug_name;
+    private TextView drug_num;
+    private TextView drug_resume;
+    private TextView drug_price;
+    private TextView show;
+    private Button submit;
+    private Spinner kind;
+    private Spinner attribute;
+    private String addOrup;
     private boolean hasPermission = false;
     private static final int REQUEST_TAKE_PHOTO = 0;// 拍照
     private static final int REQUEST_CROP = 1;// 裁剪
@@ -97,9 +95,9 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
     private Uri mCutUri;// 图片裁剪时返回的uri
     private File imgFile;// 拍照保存的图片文件
     private static final String TAG = "MainActivity";
-    Dialog dialog;
-    String fileName = "test";
-    File file;
+    private Dialog dialog;
+    private String fileName = "test";
+    private File file;
 
     private Handler handler = new Handler() {
         @Override
@@ -129,6 +127,7 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doc_drug_manage);
+        ipAddress=getResources().getString(R.string.ipAdrress);
         ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
         submit =  findViewById(R.id.add);
         kind =  findViewById(R.id.drug_kind);
@@ -186,7 +185,7 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        uploadDrugInfo(file,getResources().getString(R.string.ipAdrress)+"IM/PictureUpload?type=Drug",drug_name_s,drug_price_s,kind_s,describe,drug_num_s,attribute_s);
+                        uploadDrugInfo(file,ipAddress+"IM/PictureUpload?type=Drug",drug_name_s,drug_price_s,kind_s,describe,drug_num_s,attribute_s);
                     }
                 }).start();
             }
@@ -443,7 +442,7 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
                                                       chart = chart+"jpg";
                                                       //上传图片成功并获取图片的地址之后开始上传药品的文本信息
                                                       String url;
-                                                      url=getResources().getString(R.string.ipAdrress)+"IM/"+addOrup+"?name="+drug_name_s+"&price="+drug_price_s+"&type="+kind_s+"&describe="+describe+"&amount="+drug_num_s+"&index="+chart+"&attribute="+attribute_s;
+                                                      url=ipAddress+"IM/"+addOrup+"?name="+drug_name_s+"&price="+drug_price_s+"&type="+kind_s+"&describe="+describe+"&amount="+drug_num_s+"&index="+chart+"&attribute="+attribute_s;
                                                       Log.d("updrugurl",url);
                                                       OkHttpClient client = new OkHttpClient();
                                                       Request request = new Request.Builder()

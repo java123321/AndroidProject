@@ -49,6 +49,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class DocMineFragment extends Fragment {
+    private String ipAddress;
     private SwipeRefreshLayout refresh;
     private Dialog dialog;
     Context mContext;
@@ -61,6 +62,7 @@ public class DocMineFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstansceState) {
         View view = inflater.inflate(R.layout.doc_frag_my, container, false);
         mContext=getContext();
+        ipAddress=getResources().getString(R.string.ipAdrress);
         Activity a = getActivity();
         IntentFilter intentFilter=new IntentFilter();
         intentFilter.addAction("Name");
@@ -180,7 +182,7 @@ public class DocMineFragment extends Fragment {
             public void run() {
                 try {
                     OkHttpClient client = new OkHttpClient();
-                    Request request = new Request.Builder().url(getResources().getString(R.string.ipAdrress) + "IM/GetUserInformation?name="+commonMethod.getFileData("ID",view.getContext()) +"&type=Doc").build();
+                    Request request = new Request.Builder().url(ipAddress + "IM/GetUserInformation?name="+commonMethod.getFileData("ID",view.getContext()) +"&type=Doc").build();
                     Response response = client.newCall(request).execute();
                     String responseData = response.body().string();
                     parseJSONWITHJSNObject(responseData);

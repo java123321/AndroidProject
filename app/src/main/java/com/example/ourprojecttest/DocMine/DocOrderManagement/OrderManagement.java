@@ -37,6 +37,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class OrderManagement extends AppCompatActivity {
+    private String ipAddress;
     private final int DELETE_SUCCESS=6;
     private final int DELETE_FAULT=7;
     private final int HAVE_POST=5;//获取已经发货的标记位
@@ -45,13 +46,13 @@ public class OrderManagement extends AppCompatActivity {
     private final int NO_DATA=1;
     private final int HAVE_DATA=2;
     private SwipeRefreshLayout refresh;
-    LocalReceiver localReceiver;
+    private LocalReceiver localReceiver;
     private IntentFilter intentFilter;
-    RecyclerView recyclerView;
-    OrderManagementAdapter adapter;
-    Button needPost;
-    Button alreadyPost;
-    String type="notPost";
+    private RecyclerView recyclerView;
+    private OrderManagementAdapter adapter;
+    private Button needPost;
+    private Button alreadyPost;
+    private String type="notPost";
 
     private Handler handler =new Handler(){
         @Override
@@ -153,6 +154,7 @@ private void havePost(String orderId,String type){
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_management);
+        ipAddress=getResources().getString(R.string.ipAdrress);
         initView();
         ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
     }
@@ -215,7 +217,7 @@ private void havePost(String orderId,String type){
                         final String imageUrl=object.getString("drugPicture");
                         Log.d("topayimage",imageUrl);
                          try {
-                             drugData.setDrugPicture(Drawable.createFromStream(new URL(imageUrl).openStream(),"image.jpg"));
+                             drugData.setDrugPicture(Drawable.createFromStream(new URL(ipAddress+imageUrl).openStream(),"image.jpg"));
                          } catch (IOException e) {
                              e.printStackTrace();
                          }

@@ -57,6 +57,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class DocInformation extends AppCompatActivity {
+    private String ipAddress;
     private Dialog dialog;
     private CommonMethod method = new CommonMethod();
     private static final String TAG = "DocActivity";
@@ -81,6 +82,7 @@ public class DocInformation extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doc_modify);
+        ipAddress=getResources().getString(R.string.ipAdrress);
         ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
         IntentFilter Name = new IntentFilter();
         IntentFilter Sex = new IntentFilter();
@@ -498,7 +500,7 @@ public class DocInformation extends AppCompatActivity {
                     String sex2 = method.str2HexStr(sex.getText().toString()).toString();
                     String introduce2 = method.str2HexStr(introduce.getText().toString());
                     commonMethod.saveFileData("DocIntroduce", introduce.getText().toString(), getBaseContext());
-                    String url = getResources().getString(R.string.ipAdrress) + "/IM/UpdateInformation?no=" + ID + "&name=" + name2 + "&type=" + type1 + "&offices=" + offices2 + "&state=rest&introduce=" + introduce2 + "&title=" + title2 + "&sex=" + sex2 + "&isStu=false";
+                    String url = ipAddress + "/IM/UpdateInformation?no=" + ID + "&name=" + name2 + "&type=" + type1 + "&offices=" + offices2 + "&state=rest&introduce=" + introduce2 + "&title=" + title2 + "&sex=" + sex2 + "&isStu=false";
                     Log.d("url", url);
                     Request request = new Request.Builder().url(url)
                             .build();
@@ -514,8 +516,8 @@ public class DocInformation extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                method.uploadMultiFile(file1, getResources().getString(R.string.ipAdrress) + "/IM/PictureUpload?id=" + method.getFileData("ID", getBaseContext()) + "&type=Icon_Doc");
-                method.uploadMultiFile(file2, getResources().getString(R.string.ipAdrress) + "/IM/PictureUpload?id=" + method.getFileData("ID", getBaseContext()) + "&type=Icon_License");
+                method.uploadMultiFile(file1, ipAddress + "/IM/PictureUpload?id=" + method.getFileData("ID", getBaseContext()) + "&type=Icon_Doc");
+                method.uploadMultiFile(file2, ipAddress + "/IM/PictureUpload?id=" + method.getFileData("ID", getBaseContext()) + "&type=Icon_License");
             }
         }).start();
 

@@ -37,6 +37,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Prescribe extends AppCompatActivity {
+    private String ipAddress;
     private final int SUCCESS=1;
     private final int FAULT=0;
     private Intent intentToDocBottom=new Intent("com.example.ourprojecttest.DocDrugStore");
@@ -140,6 +141,7 @@ public class Prescribe extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prescribe);
+        ipAddress=getResources().getString(R.string.ipAdrress);
         //开始注册广播监听器
         intentFilter=new IntentFilter();
         intentFilter.addAction("com.example.ourprojecttest.Perscribe");
@@ -206,7 +208,7 @@ public class Prescribe extends AppCompatActivity {
                             Log.d("result","arrayis:"+jsonArray.toString());
                         byte[] data=stringBuffer.toString().getBytes();
 
-                        String strUrl=getResources().getString(R.string.ipAdrress)+"IM/UploadOrder";
+                        String strUrl=ipAddress+"IM/UploadOrder";
                         try {
                             URL url=new URL(strUrl);
                             HttpURLConnection urlConnection=(HttpURLConnection) url.openConnection();

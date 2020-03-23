@@ -46,6 +46,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class HistoryOrder extends AppCompatActivity {
+    private String ipAddress;
     private final int DELETE_SUCCESS=2;
     private final int DELETE_FAULT=3;
     private final int SUCCESS=1;
@@ -57,7 +58,7 @@ public class HistoryOrder extends AppCompatActivity {
     private CommonMethod method=new CommonMethod();
     private LocalReceiver localReceiver;
     private IntentFilter intentFilter;
-    Handler handler=new Handler(){
+    private Handler handler=new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
@@ -94,7 +95,7 @@ public class HistoryOrder extends AppCompatActivity {
         }
     }
     private void delete(String orderId){
-        final String url=getResources().getString(R.string.ipAdrress)+"IM/GetNeedToPayOrder?type=stuDelete&orderId="+orderId;
+        final String url=ipAddress+"IM/GetNeedToPayOrder?type=stuDelete&orderId="+orderId;
         Log.d("finish",url);
         new Thread(new Runnable() {
             @Override
@@ -125,6 +126,7 @@ public class HistoryOrder extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history_order);
+        ipAddress=getResources().getString(R.string.ipAdrress);
         initView();
         ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
 
@@ -166,7 +168,7 @@ public class HistoryOrder extends AppCompatActivity {
                         drugData.setDrugUnite(object.getString("Drug_Price"));
                         final String imageUrl = object.getString("Drug_Index");
                         try {
-                            drugData.setDrugPicture( Drawable.createFromStream(new URL(imageUrl).openStream(), "image.jpg"));
+                            drugData.setDrugPicture( Drawable.createFromStream(new URL(ipAddress+imageUrl).openStream(), "image.jpg"));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -183,7 +185,7 @@ public class HistoryOrder extends AppCompatActivity {
     }
     private void getData(){
         refresh.setRefreshing(true);
-        final String url=getResources().getString(R.string.ipAdrress)+"IM/GetNeedToPayOrder?type=historyOrder&id="+id;
+        final String url=ipAddress+"IM/GetNeedToPayOrder?type=historyOrder&id="+id;
         Log.d("topay",url);
         new Thread(new Runnable() {
             @Override

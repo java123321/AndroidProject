@@ -42,10 +42,11 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class NeedToPost extends AppCompatActivity {
+    private String ipAddress;
     private final int NO_ORDER=0;
     private final int HAVE_ORDER=1;
-    RecyclerView recyclerView;
-    NeedToPostAdapter adapter;
+    private RecyclerView recyclerView;
+    private NeedToPostAdapter adapter;
     private SwipeRefreshLayout refresh;
     private String id;
     private CommonMethod method=new CommonMethod();
@@ -77,13 +78,14 @@ public class NeedToPost extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_need_to_post);
+        ipAddress=getResources().getString(R.string.ipAdrress);
         initView();
         ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
     }
 
     private void getData(){
         refresh.setRefreshing(true);
-        final String url=getResources().getString(R.string.ipAdrress)+"IM/GetNeedToPayOrder?type=stuNotPost&id="+id;
+        final String url=ipAddress+"IM/GetNeedToPayOrder?type=stuNotPost&id="+id;
         Log.d("topay",url);
         new Thread(new Runnable() {
             @Override
@@ -136,7 +138,7 @@ public class NeedToPost extends AppCompatActivity {
                         drugData.setDrugUnite(object.getString("Drug_Price"));
                         final String imageUrl = object.getString("Drug_Index");
                         try {
-                            drugData.setDrugPicture( Drawable.createFromStream(new URL(imageUrl).openStream(), "image.jpg"));
+                            drugData.setDrugPicture( Drawable.createFromStream(new URL(ipAddress+imageUrl).openStream(), "image.jpg"));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

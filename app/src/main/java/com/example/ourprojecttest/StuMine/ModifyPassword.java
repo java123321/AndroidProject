@@ -23,14 +23,14 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class ModifyPassword extends AppCompatActivity {
-    CommonMethod method=new CommonMethod();
-    EditText oldPass;
-    EditText newPass;
-    EditText newPassAgain;
-    Button confirm;
+    private String ipAddress;
+    private CommonMethod method=new CommonMethod();
+    private EditText oldPass;
+    private EditText newPass;
+    private EditText newPassAgain;
+    private Button confirm;
     private final int SUCCESS=1;
     private final int FAILED=0;
-
     private Handler handler=new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -50,6 +50,7 @@ public class ModifyPassword extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modify_password);
+        ipAddress=getResources().getString(R.string.ipAdrress);
         initView();
         ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
     }
@@ -76,7 +77,7 @@ public class ModifyPassword extends AppCompatActivity {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                String url=getResources().getString(R.string.ipAdrress)+"IM/servlet/PasswordModify?no="+method.getFileData("ID", ModifyPassword.this)+"&pwd="+newPass.getText().toString().trim();
+                                String url=ipAddress+"IM/servlet/PasswordModify?no="+method.getFileData("ID", ModifyPassword.this)+"&pwd="+newPass.getText().toString().trim();
                                 OkHttpClient client = new OkHttpClient();
                                 Request request = new Request.Builder()
                                         .url(url)

@@ -24,6 +24,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class FindPass extends AppCompatActivity {
+    private String ipAddress;
     private EditText find_pass_input_new_pass;
     private EditText find_pass_user_name;
     private EditText input_verification_box;
@@ -34,7 +35,7 @@ public class FindPass extends AppCompatActivity {
     private final int ID_NOT_EXIST=1;
     private final int VERIFICATION_CODE_ERROR=2;
     private final int TIME_COUNT=3;
-    int num=-1;
+    private int num=-1;
 
     private Handler handler = new Handler() {
         @Override
@@ -75,6 +76,7 @@ public class FindPass extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_pass);
+        ipAddress=getResources().getString(R.string.ipAdrress);
         ImmersiveStatusbar.getInstance().Immersive(getWindow(),getActionBar());//状态栏透明
         //getSupportActionBar().hide();
         find_pass_user_name=findViewById(R.id.find_pass_user_name);
@@ -97,7 +99,7 @@ public class FindPass extends AppCompatActivity {
                   new Thread(new Runnable() {
                       @Override
                       public void run() {
-                          String url=getResources().getString(R.string.ipAdrress)+"IM/servlet/IsExist_Register?no="+find_pass_user_name.getText().toString().trim();
+                          String url=ipAddress+"IM/servlet/IsExist_Register?no="+find_pass_user_name.getText().toString().trim();
 
                           OkHttpClient client = new OkHttpClient();
                           Request request = new Request.Builder()
@@ -130,7 +132,7 @@ public class FindPass extends AppCompatActivity {
                   new Thread(new Runnable() {
                       @Override
                       public void run() {
-                          String url=getResources().getString(R.string.ipAdrress)+"IM/servlet/PasswordModify?no="+find_pass_user_name.getText().toString().trim()+"&pwd="+find_pass_input_new_pass.getText().toString().trim();
+                          String url=ipAddress+"IM/servlet/PasswordModify?no="+find_pass_user_name.getText().toString().trim()+"&pwd="+find_pass_input_new_pass.getText().toString().trim();
                           OkHttpClient client = new OkHttpClient();
                           Request request = new Request.Builder()
                                   .url(url)

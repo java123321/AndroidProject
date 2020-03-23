@@ -59,12 +59,16 @@ public class StuRecordFragment extends Fragment {
     }
 
     private void getData() {
+
         lists = method.readMessageRecordListFromSdCard("MessageRecord");
+        Log.d("stulist", "is?" + (lists == null));
+
         if (lists == null) {
             mRecycler.setVisibility(View.INVISIBLE);
             noRecord.setVisibility(View.VISIBLE);
             noRecord.setText("暂无消息记录");
         } else {
+            Log.d("stulist", "size?" + lists.size());
             mRecycler.setVisibility(View.VISIBLE);
             noRecord.setVisibility(View.INVISIBLE);
             Log.d("stulist", "iss?" + (lists.size()));

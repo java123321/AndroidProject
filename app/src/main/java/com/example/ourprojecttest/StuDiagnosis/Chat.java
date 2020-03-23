@@ -3,7 +3,6 @@ package com.example.ourprojecttest.StuDiagnosis;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -19,29 +18,25 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.DocTreatment.Prescribe;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 import com.example.ourprojecttest.Utils.PictureStore;
 import com.example.ourprojecttest.R;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class Chat extends AppCompatActivity {
-    String type;//代表是学生登录还是医生登录
-    public static final int TYPE_RECEIVED = 0;
-    public static final int TYPE_SENT = 1;
-
-    Intent intentToStu = new Intent("com.example.ourprojecttest.UPDATE_SERVICE");//将学生的消息传给学生服务
-    Intent intentToDoc = new Intent("com.example.ourprojecttest.DOC_UPDATE_SERVICE");//将医生的消息传给医生服务
-
-    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
-    CommonMethod method = new CommonMethod();
-    MessageBean messageBean = new MessageBean();
-    String time;
+    private String type;//代表是学生登录还是医生登录
+    private static final int TYPE_RECEIVED = 0;
+    private static final int TYPE_SENT = 1;
+    private Intent intentToStu = new Intent("com.example.ourprojecttest.UPDATE_SERVICE");//将学生的消息传给学生服务
+    private Intent intentToDoc = new Intent("com.example.ourprojecttest.DOC_UPDATE_SERVICE");//将医生的消息传给医生服务
+    private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+    private CommonMethod method = new CommonMethod();
+    private MessageBean messageBean = new MessageBean();
+    private String time;
     private ArrayList<Msg> msgList = new ArrayList<>();
     private EditText inputText;
     private Button send;
@@ -50,11 +45,11 @@ public class Chat extends AppCompatActivity {
     private boolean docOnline = true;//标记医生在线
     private RecyclerView msgRecyclerView;
     private MsgAdapter adapter;
-    String stuOrDocId;
+    private String stuOrDocId;
     private ImageView video;
-    TextView chatWindowName;//聊天窗口顶部的名字
-    IntentFilter intentFilter;
-    LocalReceiver localReceiver;
+    private TextView chatWindowName;//聊天窗口顶部的名字
+    private IntentFilter intentFilter;
+    private LocalReceiver localReceiver;
 
     class LocalReceiver extends BroadcastReceiver {
         @Override
@@ -93,13 +88,12 @@ public class Chat extends AppCompatActivity {
                     builder.setNegativeButton("取消", null);
                     builder.show();
                     //将学生标记为下线
-                    stuOnline=false;
+                    stuOnline = false;
                 }
             } else {
                 update(msg, TYPE_RECEIVED);
             }
             Log.d("ReceiveMsg", msg);
-
         }
     }
 
@@ -119,29 +113,35 @@ public class Chat extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        new AlertDialog.Builder(Chat.this)
-                .setTitle("退出")
-                .setMessage("是否结束当前聊天")
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {//如果用户点击了确定按钮则进入与医生的聊天界面
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if (type.equals("Stu")) {//如果是学生登录，则将消息发送给学生服务
-                            intentToStu.putExtra("chatMsg", stuOrDocId + "|finishChat");
-                            sendBroadcast(intentToStu);
-                            Log.d("wee", "1");
-                        } else {//否则发送给医生服务
-                            intentToDoc.putExtra("chatMsg", stuOrDocId + "|finishChat");
-                            sendBroadcast(intentToDoc);
-                            Log.d("wee", "2");
-                        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(Chat.this);
 
-                        Intent intent = new Intent();
-                        setResult(RESULT_OK, intent);
-                        finish();
-                    }
-                })
-                .setNegativeButton("取消", null)
-                .show();
+        builder.setTitle("提示");
+        if (type.equals("Stu")) {
+            builder.setMessage("是否结束此次问诊?");
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    intentToStu.putExtra("chatMsg", stuOrDocId + "|finishChat");
+                    sendBroadcast(intentToStu);
+                    finish();
+                    Log.d("wee", "1");
+                }
+            }).setNegativeButton("取消", null)
+                    .show();
+
+
+        } else {//如果是医生
+            builder.setMessage("是否结束此次接诊?");
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    intentToDoc.putExtra("chatMsg", stuOrDocId + "|finishChat");
+                    sendBroadcast(intentToDoc);
+                    Log.d("wee", "2");
+                }
+            }).setNegativeButton("取消", null)
+                    .show();
+        }
     }
 
     private void initView() {

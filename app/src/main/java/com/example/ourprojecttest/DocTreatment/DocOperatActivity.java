@@ -46,11 +46,12 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class DocOperatActivity extends AppCompatActivity {
+    private String ipAddress;
     private final int SUCCESS=1;
     private final int FAULT=0;
-    Intent intentToService=new Intent("com.example.ourprojecttest.DOC_UPDATE_SERVICE");//改
-    LocalReceiver localReceiver;
-    IntentFilter intentFilter;
+    private Intent intentToService=new Intent("com.example.ourprojecttest.DOC_UPDATE_SERVICE");//改
+    private LocalReceiver localReceiver;
+    private IntentFilter intentFilter;
     private CommonMethod method=new CommonMethod();
     private RecyclerView mRecycler;
     private SwipeRefreshLayout refresh;
@@ -59,7 +60,7 @@ public class DocOperatActivity extends AppCompatActivity {
     private DisplayStuAdapter adapter;
     private ArrayList<DisplayStuBean> lists=new ArrayList<>();
     private ProgressDialog waitingDialog;
-    CountDownTimer cdt;
+    private CountDownTimer cdt;
     private Handler handler=new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -87,6 +88,7 @@ public class DocOperatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doc_operat);
+        ipAddress=getResources().getString(R.string.ipAdrress);
         initView();
         ImmersiveStatusbar.getInstance().Immersive(getWindow(),getActionBar());//状态栏透明
         //开始注册广播监听器，准备接受服务里发送过来的更新挂号信息
@@ -100,7 +102,7 @@ public class DocOperatActivity extends AppCompatActivity {
     //从服务器获取当前在线学生的信息
     private void getData(){
         refresh.setRefreshing(true);
-        final String url=getResources().getString(R.string.ipAdrress)+"IM/GetOnlineStu";
+        final String url=ipAddress+"IM/GetOnlineStu";
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -139,7 +141,7 @@ public class DocOperatActivity extends AppCompatActivity {
                     info.setPhone(jsonObject.getString("Stu_Phone"));
                     info.setAddress(jsonObject.getString("Stu_Address"));
                     //设置学生头像
-                    info.setIcon(method.drawableToBitamp( Drawable.createFromStream(new URL(jsonObject.getString("Stu_Icon")).openStream(),"image.jpg")));
+                    info.setIcon(method.drawableToBitamp( Drawable.createFromStream(new URL(ipAddress+jsonObject.getString("Stu_Icon")).openStream(),"image.jpg")));
 
                     list.add(info);
                 }

@@ -48,7 +48,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class NeedToPay extends AppCompatActivity {
-
+    private String ipAddress;
     private static final int SDK_PAY_FLAG = 1;
     private static final int SDK_AUTH_FLAG = 2;
     private final int SUCCESS=3;
@@ -58,17 +58,17 @@ public class NeedToPay extends AppCompatActivity {
     /**
      * 用于支付宝支付业务的入参 app_id。
      */
-    public static final String APPID = "2016101700706177";
+    private static final String APPID = "2016101700706177";
     private SwipeRefreshLayout refresh;
     private static final String RSA2_PRIVATE = "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDJ1ys/sxQE6Dem09YM4AeabOd04OU2jC+fRTrcZFHNrRdL2FoglSe0G9To5rMsWLUp6yTUWK4aYPRbUUVdzqeYYzcBbg9wzph1aEDM0EvAfL+EMVk2vOXd+ALKCiiMoT5SwC94yU9G+BcuMIywc2kqXZTnaJpKaeGlVm/IUyiePZ31FWP2dMzLh1IYq9OP8udk7Xn/gDvpQz+00IMOugudCxa/F9VvwqRQaUJE8QnxSVSYxsVfobZ1aY2ddt+tUxbirFYaHadfJAwTOK9BrerXULk8S2RQPM7PVJdi8QNxwHssYgZ5oSYQsjGvpJBT/1boJttWkP7vKU++rTWsE/rjAgMBAAECggEAFXggro7i0z7MJJ+lxgrSZDevSvxdBTdWHW/kueql1OXTc4rY01xqM7s+I2PerRnmc0YCzd987WtgspHrefXwV8I96JYHaG1hRCPJuL9zP09Fo88H+U2QedLWoR0BgSvpkC3HHuby2s6q0IvzexVbm1kG7LJwrveiO8785ucJjAM7ZO6rMR7FGoPHn8YMmZL0KLqx9GIKBYqIDK7kaghVY5b+rEpG9DeC8DYNGUBBx1CGBKNvTfj2xaJjzN1BPz4OI8++Z5LI58AbYVXGRfT9WsSfL2mIpxD7RTxuIjwhaLzBQk7l2ex0osplrQOy6BoKEja/bfRawf8Pc86Bo1+e8QKBgQDyCz6fYAZp/WyJT/VMMSS7FlLz6/ixIfrkVJwkbj1jtpe2HoMCkOjIudaTYuxA3fg0qZsD2cY7/OryRZEEGYe2TRCWLIS0G/p67D9erY3Dty7+5xwLIDbBoYMEfk9i3UaUGzrtgvEUvQDrIGl4pid+ftklTU191d+KzokuiOL6yQKBgQDVen2ioEZGjeEfiqAdGy1MAtkmJsXY3kBUWo0gfk56lgx35kjVbEsIu0wD/zzTFHsf0XHmakSgmsBvq3ElaQAZKXY11fotOq3EXYoX7IvaA9GZR8EjeccrGcdQePK52cR9AcvoM4cG421kscYhfdjw0r5a+QDJwwf7HDXlWy9ySwKBgQChWp+njVMZSykUrKoA3e33jl1EYHWMV/OyTTk+DAN+upWOge6iQkn8re5+mH6Yi6DQMpS1T3MYQHW7hmazDfXrsJozEoBwtQoY8e8Yxafw5eg9Y4HNZO87y9jUoQN5C7vmNfTlqtneElVPaW8GT/WaHSPS+yKClZYNKbxHuldeCQKBgCg6gv5ocZXOGsRU3UNe4bRXPRCBcfsiNsEupzWeV6+mIwddMBB37dPhZ7vBF3c3ftRKJcqj7/bL8sOYbSP9m3UiaRJQFmr7ic9dSS6k9t3IpnDaIr1Kr4uhufuiLytyrCJaelBxlVpo9S5qicm5623GaPS/w7RBunlJoaZs/o3tAoGABx7XniHaLOWr1yOd35AZsR7OMVNcAug18wXb2nxWjgaLSZ9C9mxnmvPdFKGaDY48Qeud3HfpJb76J4cx1lXg4seJu8T/P5xAKNf9GgfR26mUyZLeJBqklwLwlABXZj/ZSfrrz7vbCEETPxfgMTvAebnYW5DvkTT0Sk/hR/Zi5cM=";
     private static final String RSA_PRIVATE = "";
     private String id;
-    LocalReceiver localReceiver;
+    private LocalReceiver localReceiver;
     private IntentFilter intentFilter;
     private RecyclerView recyclerView;
     private NeedToPayAdapter adapter;
     private String orderId=null;
-    CommonMethod method=new CommonMethod();
+    private CommonMethod method=new CommonMethod();
 
     class LocalReceiver extends BroadcastReceiver {
         @Override
@@ -163,6 +163,7 @@ public class NeedToPay extends AppCompatActivity {
         EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);//沙箱环境需要的代码
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_need_to_pay);
+        ipAddress=getResources().getString(R.string.ipAdrress);
         initView();
         ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
         intentFilter=new IntentFilter();
@@ -178,7 +179,7 @@ public class NeedToPay extends AppCompatActivity {
     }
 
     private void finishedPay(){
-        final String url=getResources().getString(R.string.ipAdrress)+"IM/GetNeedToPayOrder?type=finishPay&id="+id+"&orderId="+orderId;
+        final String url=ipAddress+"IM/GetNeedToPayOrder?type=finishPay&id="+id+"&orderId="+orderId;
         Log.d("finish",url);
         new Thread(new Runnable() {
             @Override
@@ -206,7 +207,7 @@ public class NeedToPay extends AppCompatActivity {
     }
     private void getData(){
         refresh.setRefreshing(true);
-        final String url=getResources().getString(R.string.ipAdrress)+"IM/GetNeedToPayOrder?type=finishPay&id="+id;//finishPay是指学生刚付款款的订单
+        final String url=ipAddress+"IM/GetNeedToPayOrder?type=finishPay&id="+id;//finishPay是指学生刚付款款的订单
         Log.d("topay",url);
         new Thread(new Runnable() {
             @Override
@@ -258,7 +259,7 @@ public class NeedToPay extends AppCompatActivity {
                         drugData.setDrugUnite(object.getString("Drug_Price"));
                         final String imageUrl = object.getString("Drug_Index");
                         try {
-                            drugData.setDrugPicture( Drawable.createFromStream(new URL(imageUrl).openStream(), "image.jpg"));
+                            drugData.setDrugPicture( Drawable.createFromStream(new URL(ipAddress+imageUrl).openStream(), "image.jpg"));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

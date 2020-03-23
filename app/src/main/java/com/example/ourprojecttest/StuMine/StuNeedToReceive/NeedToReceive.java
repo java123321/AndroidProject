@@ -44,6 +44,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class NeedToReceive extends AppCompatActivity {
+    private String ipAddress;
     private final int RECEIVE_SUCCESS=2;
     private final int RECEIVE_FAILT=3;
     private CommonMethod method=new CommonMethod();
@@ -53,7 +54,7 @@ public class NeedToReceive extends AppCompatActivity {
     private SwipeRefreshLayout refresh;
     private final int NO_ORDER=0;
     private final int HAVE_ORDER=1;
-    LocalReceiver localReceiver;
+    private LocalReceiver localReceiver;
     private IntentFilter intentFilter;
 
     class LocalReceiver extends BroadcastReceiver {
@@ -95,7 +96,7 @@ public class NeedToReceive extends AppCompatActivity {
     };
 
     private void receive(String orderId){
-        final String url=getResources().getString(R.string.ipAdrress)+"IM/GetNeedToPayOrder?type=receive&id="+id+"&orderId="+orderId;
+        final String url=ipAddress+"IM/GetNeedToPayOrder?type=receive&id="+id+"&orderId="+orderId;
         Log.d("finish",url);
         new Thread(new Runnable() {
             @Override
@@ -125,6 +126,7 @@ public class NeedToReceive extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_need_to_receive);
+        ipAddress=getResources().getString(R.string.ipAdrress);
         initView();
         ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
         intentFilter=new IntentFilter();
@@ -134,7 +136,7 @@ public class NeedToReceive extends AppCompatActivity {
     }
     private void getData(){
         refresh.setRefreshing(true);
-        final String url=getResources().getString(R.string.ipAdrress)+"IM/GetNeedToPayOrder?type=stuNeedReceive&id="+id;
+        final String url=ipAddress+"IM/GetNeedToPayOrder?type=stuNeedReceive&id="+id;
         Log.d("topay",url);
         new Thread(new Runnable() {
             @Override
@@ -187,7 +189,7 @@ public class NeedToReceive extends AppCompatActivity {
                         drugData.setDrugUnite(object.getString("Drug_Price"));
                         final String imageUrl = object.getString("Drug_Index");
                         try {
-                            drugData.setDrugPicture( Drawable.createFromStream(new URL(imageUrl).openStream(), "image.jpg"));
+                            drugData.setDrugPicture( Drawable.createFromStream(new URL(ipAddress+imageUrl).openStream(), "image.jpg"));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

@@ -41,47 +41,48 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class StuDrugStoreFragment extends Fragment {
+    private String ipAddress;
     public boolean flag=false;
     private final String loadNum="16";
-    LoadThread load;
-    CommonMethod method=new CommonMethod();
-    Context context;
-    int totalNum;//该变量用于记录每次访问数据库时数据库总共返回了多少条数据
-    int currentNum;//该变量用于记录在下载图片的线程中进行数目的统计，用于标志位的判断
-    int total=0;
-    int last=0;
-    SwipeRefreshLayout refreshLayout;
-    Button addNewDrug;
-    TextView lastColorName;
-    Button sousuo;
-    EditText inputInspect;
-    String selectedMenu="-1";
-    Drawable searchEditDraw,searchEditDraw1;
-    TextView quanbu;
-    TextView nanke;
-    TextView fuke;
-    TextView huxike;
-    TextView xiaohuake;
-    TextView neifenmike;
-    TextView xinxueguanke;
-    TextView miniaoke;
-    TextView xueyeke;
-    TextView fengshigu;
-    TextView erbihouke;
-    TextView yanke;
-    TextView kouqiangke;
-    TextView pifuke;
-    TextView shenjingke;
-    TextView ganranke;
-    TextView baojianshipin;
-    TextView yiliaoqixie;
-    TextView qita;
+    private LoadThread load;
+    private CommonMethod method=new CommonMethod();
+    private Context context;
+    private int totalNum;//该变量用于记录每次访问数据库时数据库总共返回了多少条数据
+    private int currentNum;//该变量用于记录在下载图片的线程中进行数目的统计，用于标志位的判断
+    private int total=0;
+    private int last=0;
+    private SwipeRefreshLayout refreshLayout;
+    private Button addNewDrug;
+    private TextView lastColorName;
+    private Button sousuo;
+    private EditText inputInspect;
+    private String selectedMenu="-1";
+    private Drawable searchEditDraw,searchEditDraw1;
+    private TextView quanbu;
+    private  TextView nanke;
+    private  TextView fuke;
+    private TextView huxike;
+    private TextView xiaohuake;
+    private TextView neifenmike;
+    private TextView xinxueguanke;
+    private TextView miniaoke;
+    private TextView xueyeke;
+    private TextView fengshigu;
+    private TextView erbihouke;
+    private TextView yanke;
+    private TextView kouqiangke;
+    private TextView pifuke;
+    private TextView shenjingke;
+    private TextView ganranke;
+    private TextView baojianshipin;
+    private TextView yiliaoqixie;
+    private TextView qita;
     private RecyclerView mRecycler;
     private DrugStoreRecyclerAdapter mAdapter;
-    GridLayoutManager gridLayoutManager;
-    int lastVisibleItem;
-    boolean isLoading = false;//用来控制进入getdata()的次数
-    boolean clear=true;
+    private GridLayoutManager gridLayoutManager;
+    private int lastVisibleItem;
+    private boolean isLoading = false;//用来控制进入getdata()的次数
+    private boolean clear=true;
 
     Handler handler=new Handler(){
         @Override
@@ -107,6 +108,7 @@ public class StuDrugStoreFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stu_frag_yaodian_fore,container,false);//首先填充整个药店碎片的前段布局1
         context=getContext();
+        ipAddress=getResources().getString(R.string.ipAdrress);
         Activity a=getActivity();
         ImmersiveStatusbar.getInstance().Immersive(a.getWindow(),a.getActionBar());//状态栏透明
         initView(view);
@@ -269,7 +271,7 @@ public class StuDrugStoreFragment extends Fragment {
             String url;
             StringBuilder stringBuilder=new StringBuilder();
             //添加基础字符串
-            stringBuilder.append(getResources().getString(R.string.ipAdrress)+"IM/GetDrugInformation?start="+start+"&count="+count);
+            stringBuilder.append(ipAddress+"IM/GetDrugInformation?start="+start+"&count="+count);
             //添加类别变量
             if(!type.equals("-1")){
                 stringBuilder.append("&type="+type);
@@ -333,7 +335,7 @@ public class StuDrugStoreFragment extends Fragment {
                                 drug_information.setDrug_OTC(jsonObject.getString("Drug_OTC"));
                                 drug_information.setId(jsonObject.getString("Drug_Id"));
                                 final String imageUrl = jsonObject.getString("Drug_Index");
-                                drug_information.setDrug_Picture( Drawable.createFromStream(new URL(imageUrl).openStream(), "image.jpg"));
+                                drug_information.setDrug_Picture( Drawable.createFromStream(new URL(ipAddress+imageUrl).openStream(), "image.jpg"));
                                 if(flag){
                                     Log.d("drugstore","中断--------------------------");
                                     return;

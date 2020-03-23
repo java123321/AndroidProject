@@ -1,9 +1,7 @@
 package com.example.ourprojecttest.DocMine.DocOrderManagement;
 
 import android.util.Log;
-
 import com.example.ourprojecttest.StuMine.StuNeedToPay.ContentInfoBean;
-
 import java.util.ArrayList;
 
 public class NeedToPostHelper {

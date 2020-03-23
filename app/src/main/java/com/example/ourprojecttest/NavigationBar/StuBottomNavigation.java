@@ -114,6 +114,9 @@ public class StuBottomNavigation extends AppCompatActivity {
         bottomNavigationView.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_LABELED);//当menu>3时文字正常显示
         Log.d("mytest", "navi");
         initFragment();
+        //启动学生服务，以便为后续的挂号提供服务
+        Intent intentStartService = new Intent(StuBottomNavigation.this, StuService.class);
+        startService(intentStartService);
     }
     private void switchContent(int choice) {
         switch (choice) {

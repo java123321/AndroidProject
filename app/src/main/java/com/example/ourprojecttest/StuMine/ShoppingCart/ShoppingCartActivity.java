@@ -59,6 +59,7 @@ import java.util.Set;
 
 
 public class ShoppingCartActivity extends AppCompatActivity {
+    private String ipAddress;
     private Display display;
     // 获取屏幕高度
     private int height;
@@ -161,6 +162,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
         EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);//沙箱环境需要的代码
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping_cart);
+        ipAddress=getResources().getString(R.string.ipAdrress);
         initView();
         ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
         //开始注册广播监听器
@@ -291,7 +293,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
                     stringBuffer.append("type=finishPay&order=")//finishPay 代表学生刚刚付完钱
                             .append(jsonArray.toString());
                     byte[] data = stringBuffer.toString().getBytes();
-                    String strUrl = getResources().getString(R.string.ipAdrress) + "IM/UploadOrder";
+                    String strUrl = ipAddress + "IM/UploadOrder";
                     URL url = new URL(strUrl);
                     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                     urlConnection.setConnectTimeout(3000);//设置连接超时时间

@@ -19,6 +19,8 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -46,12 +48,16 @@ import okhttp3.Response;
 
 
 public class RenGongWenZhen extends AppCompatActivity {
+    private String ipAddress;
+    private Display display;
+    // 获取屏幕高度
+    private int height;
     private final int SUCCESS=1;
     private final int FAULT=0;
-    CommonMethod method=new CommonMethod();
-    Intent intentToService=new Intent("com.example.ourprojecttest.UPDATE_SERVICE");
-    LocalReceiver localReceiver;
-    IntentFilter intentFilter;
+    private CommonMethod method=new CommonMethod();
+    private Intent intentToService=new Intent("com.example.ourprojecttest.UPDATE_SERVICE");
+    private LocalReceiver localReceiver;
+    private IntentFilter intentFilter;
     private TextView noDoctor;
     private Button guanbi;
     private Button guaHao;
@@ -89,6 +95,7 @@ public class RenGongWenZhen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ren_gong_wen_zhen);
+        ipAddress=getResources().getString(R.string.ipAdrress);
         initView();
         ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
         //开始注册广播监听器，准备接受服务里发送过来的更新挂号信息
@@ -167,7 +174,7 @@ public class RenGongWenZhen extends AppCompatActivity {
     //从服务器获取当前在线医生的信息
     private void getData(){
         refresh.setRefreshing(true);
-        final String url=getResources().getString(R.string.ipAdrress)+"IM/GetOnlineDoc";
+        final String url=ipAddress+"IM/GetOnlineDoc";
          new Thread(new Runnable() {
         @Override
         public void run() {
@@ -201,9 +208,9 @@ public class RenGongWenZhen extends AppCompatActivity {
                   info.setBrief(jsonObject.getString("Doc_Introduce"));
                   info.setSex(jsonObject.getString("Doc_Sex"));
                   //设置医生头像
-                  info.setIcon(method.drawableToBitamp( Drawable.createFromStream(new URL(jsonObject.getString("Doc_Icon")).openStream(),"image.jpg")));
+                  info.setIcon(method.drawableToBitamp( Drawable.createFromStream(new URL(ipAddress+jsonObject.getString("Doc_Icon")).openStream(),"image.jpg")));
                     //设置医生的执照
-                  info.setLicense(method.drawableToBitamp( Drawable.createFromStream(new URL(jsonObject.getString("Doc_License")).openStream(),"image.jpg")));
+                  info.setLicense(method.drawableToBitamp( Drawable.createFromStream(new URL(ipAddress+jsonObject.getString("Doc_License")).openStream(),"image.jpg")));
                   list.add(info);
               }
               else {//如果当前没有在线医生
@@ -226,6 +233,9 @@ public class RenGongWenZhen extends AppCompatActivity {
     }
 
     private void initView(){
+        display = getWindowManager().getDefaultDisplay();
+        // 获取屏幕高度
+        height = display.getHeight();
         //如果有状态码state代表用户从前台服务跳进来
         Intent intent=getIntent();
         if(intent.hasExtra("state")){
@@ -265,13 +275,16 @@ public class RenGongWenZhen extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //如果服务在运行
-                if(method.isServiceWork(RenGongWenZhen.this,"com.example.ourprojecttest.Service.StuService")){
-                    Toast.makeText(RenGongWenZhen.this,"正在挂号，请勿重复点击！",Toast.LENGTH_SHORT).show();
+                if(StuService.isGuaHao){
+                    Toast toast = Toast.makeText(RenGongWenZhen.this, "正在挂号，请勿重复点击！", Toast.LENGTH_SHORT);
+                    // 这里给了一个1/4屏幕高度的y轴偏移量
+                    toast.setGravity(Gravity.BOTTOM,0,height/5);
+                    toast.show();
                 }
                 else{
-                    //创建一个服务
-                    Intent intentStartService = new Intent(RenGongWenZhen.this, StuService.class);
-                    startService(intentStartService);
+                    //通知服务开启挂号
+                    intentToService.putExtra("msg","StartGuaHao");
+                    sendBroadcast(intentToService);
                 }
             }
         });
@@ -282,14 +295,16 @@ public class RenGongWenZhen extends AppCompatActivity {
             public void onClick(View view) {
 
                 //如果服务在运行
-                if(method.isServiceWork(RenGongWenZhen.this,"com.example.ourprojecttest.Service.StuService")){
+                if(StuService.isGuaHao){
                     //给服务发送取消挂号的广播
                     intentToService.putExtra("msg","ExitGuaHao");
                     sendBroadcast(intentToService);
-                    Toast.makeText(RenGongWenZhen.this,"挂号取消成功！",Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    Toast.makeText(RenGongWenZhen.this,"您暂未开启挂号！",Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(RenGongWenZhen.this, "您暂未开启挂号！", Toast.LENGTH_SHORT);
+                    // 这里给了一个1/4屏幕高度的y轴偏移量
+                    toast.setGravity(Gravity.BOTTOM,0,height/5);
+                    toast.show();
                 }
             }
         });

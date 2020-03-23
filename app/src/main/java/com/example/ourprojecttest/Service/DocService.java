@@ -35,7 +35,7 @@ import okhttp3.WebSocketListener;
 
 
 public class DocService extends Service {
-
+    private String ipAddress;
     private LocalReceiver localReceiver;
     private IntentFilter intentFilter;
     private Intent intentToBeforChat = new Intent("com.example.ourprojecttest.DOC_UPDATE_PERSONS");//该意图是通知DocOperator里医生接诊前的准备服务
@@ -95,6 +95,7 @@ public class DocService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        ipAddress=getResources().getString(R.string.ipAdrress);
         //初始化通知信道服务
         initChannel();
         //开始注册广播监听器，准备接受发送给服务的更新挂号信息
@@ -221,7 +222,7 @@ public class DocService extends Service {
                 String stuPictureUrl = text.substring(position + 5);
                 byte[] stuPicture = null;
                 try {
-                    stuPicture = method.bitmap2Bytes(method.drawableToBitamp(Drawable.createFromStream(new URL(stuPictureUrl).openStream(), "image.jpg")));
+                    stuPicture = method.bitmap2Bytes(method.drawableToBitamp(Drawable.createFromStream(new URL( ipAddress+stuPictureUrl).openStream(), "image.jpg")));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

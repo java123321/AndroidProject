@@ -31,7 +31,20 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class RegisterActivity extends AppCompatActivity {
-    String code="";
+    private String code="";
+    private String ipAddress;
+    private Button btn;
+    private TextView stuNo;
+    private TextView stuPwd;
+    private TextView stuPwd_two;
+    private TextView stuMsg;
+    private Button btnLook;
+    private Button btnRegister;
+    private Button getmsg;
+    private boolean mbDisplayFlg = false;
+    private TimeCount time;
+    private boolean isHide=true;
+    private Drawable drawableEyeOpen,drawableEyeClose;
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -50,25 +63,11 @@ public class RegisterActivity extends AppCompatActivity {
             }
         }
     };
-    Button btn;
-    private TextView stuNo;
-    private TextView stuPwd;
-    private TextView stuPwd_two;
-    private TextView stuMsg;
-    private Button btnLook;
-    private Button btnRegister;
-    private Button getmsg;
-    private boolean mbDisplayFlg = false;
-    private TimeCount time;
-
-
-
-    private boolean isHide=true;
-    Drawable drawableEyeOpen,drawableEyeClose;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        ipAddress=getResources().getString(R.string.ipAdrress);
         ImmersiveStatusbar.getInstance().Immersive(getWindow(),getActionBar());//状态栏透明
         //获取验证码
         time = new TimeCount(60000, 1000);
@@ -335,7 +334,7 @@ public class RegisterActivity extends AppCompatActivity {
                             String userNo = stuNo.getText().toString().trim();
                             String url = "";
 
-                            url = getResources().getString(R.string.ipAdrress)+"IM/servlet/IsExist_Register?no="+userNo;
+                            url = ipAddress+"IM/servlet/IsExist_Register?no="+userNo;
 
 
 

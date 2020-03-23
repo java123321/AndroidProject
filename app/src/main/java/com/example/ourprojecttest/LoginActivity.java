@@ -40,19 +40,17 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class LoginActivity extends AppCompatActivity {
-    Button login;
+    private String ipAddress;
+    private Button login;
     private final int SUCCESS = 0;
     private final int ERROR = -1;
-    private final int PROGRESS = -2;
-    RadioButton radioButton_doc, radioButton_stu;
+    private RadioButton radioButton_doc, radioButton_stu;
     private ProgressBar progressBar;
-    EditText userName, passWord;
+    private EditText userName, passWord;
     private boolean isHide = true;
-    TextView login_forget_pass;
-    Drawable drawableEyeOpen, drawableEyeClose;
-
-
-    CommonMethod method = new CommonMethod();
+    private TextView login_forget_pass;
+    private Drawable drawableEyeOpen, drawableEyeClose;
+    private CommonMethod method = new CommonMethod();
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -65,9 +63,11 @@ public class LoginActivity extends AppCompatActivity {
                     if (radioButton_stu.isChecked()) {
                         Intent intent = new Intent(LoginActivity.this, StuBottomNavigation.class);
                         startActivity(intent);
+                        Log.d("sssicon", "handler、、");
                     } else {//如果是医生登录
                         Intent intent = new Intent(LoginActivity.this, DocBottomNavigation.class);
                         startActivity(intent);
+                        Log.d("sssicon", "handler、、j");
                     }
                     //隐藏加载圆圈
                     progressBar.setVisibility(View.INVISIBLE);
@@ -84,22 +84,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
-
-    //该方法用于将图片的url从网络上下载到本地并转化为drawable的形式
-    private Drawable loadImageFromNetwork(String urladdr) {
-
-// TODO Auto-generated method stub
-
-        Drawable drawable = null;
-
-        try {
-            //judge if has picture locate or not according to filename
-            drawable = Drawable.createFromStream(new URL(urladdr).openStream(), "image.jpg");
-        } catch (IOException e) {
-            Log.d("test", e.getMessage());
-        }
-        return drawable;
-    }
 
 
     //如果用户拒绝权限则无法正常使用app
@@ -132,6 +116,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        ipAddress = getResources().getString(R.string.ipAdrress);
         login_forget_pass = findViewById(R.id.login_forget_pass);
         ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
         //获取radiobutton
@@ -223,10 +208,10 @@ public class LoginActivity extends AppCompatActivity {
                         String url;
                         //如果是学生登录
                         if (radioButton_stu.isChecked()) {
-                            url = getResources().getString(R.string.ipAdrress) + "IM/servlet/Login?no=" + name + "&pwd=" + pass;
+                            url = ipAddress + "IM/servlet/Login?no=" + name + "&pwd=" + pass;
                             Log.d("login", url);
                         } else {//如果是医生登录
-                            url = getResources().getString(R.string.ipAdrress) + "IM/servlet/Login_Doc?no=" + name + "&pwd=" + pass;
+                            url = ipAddress + "IM/servlet/Login_Doc?no=" + name + "&pwd=" + pass;
                             Log.d("login", url);
                         }
                         //  Log.d("dengluURL",url);
@@ -251,6 +236,7 @@ public class LoginActivity extends AppCompatActivity {
 
     //该方法用来解析验证密码是否正确
     private void parseJSONToValidatePassword(String jsonData) {
+        Log.d("denglu", "response:" + jsonData);
         try {
 
             JSONObject jsonObject = new JSONObject(jsonData);
@@ -258,20 +244,14 @@ public class LoginActivity extends AppCompatActivity {
             Message msg = Message.obtain();
 
             if (code.equals("0")) {
-                if (radioButton_stu.isChecked()) {
-                    method.saveFileData("ID", userName.getText().toString().trim(), LoginActivity.this);
-                    method.saveFileData("Passworld", passWord.getText().toString().trim(), LoginActivity.this);
-//                    method.saveFileData("ID","12345",LoginActivity.this);
-//                    method.saveFileData("Passworld","12345",LoginActivity.this);
 
-                } else {
-                    method.saveFileData("ID", "11111", LoginActivity.this);
-                    method.saveFileData("Passworld", "11111", LoginActivity.this);
-                }
+                method.saveFileData("ID", userName.getText().toString().trim(), LoginActivity.this);
+                method.saveFileData("Passworld", passWord.getText().toString().trim(), LoginActivity.this);
                 msg.what = SUCCESS;
                 if (radioButton_stu.isChecked()) {
                     method.saveFileData("Type", "Stu", LoginActivity.this);
                     initStuInformation();
+                    Log.d("denglu", "initfinish");
                 } else {
                     method.saveFileData("Type", "Doc", LoginActivity.this);
                     initDocInformation();
@@ -288,7 +268,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initDocInformation() {
-        String url = getResources().getString(R.string.ipAdrress) + "IM/GetDocInformation?no=" + method.getFileData("ID", LoginActivity.this);
+        String url = ipAddress + "IM/GetDocInformation?no=" + method.getFileData("ID", LoginActivity.this);
         Log.d("dengluurl", url);
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -298,7 +278,7 @@ public class LoginActivity extends AppCompatActivity {
             Response response = client.newCall(request).execute();
 
             String responseData = response.body().string();
-
+            Log.d("denglu", "resdata:" + responseData);
             parseJSONToDoc(responseData);
 
         } catch (Exception e) {
@@ -308,7 +288,7 @@ public class LoginActivity extends AppCompatActivity {
 
     //解析医生的的信息
     private void parseJSONToDoc(String jsonData) {
-        Log.d("loginstu", jsonData);
+        Log.d("denglu", jsonData);
         try {
             JSONArray jsonArray = new JSONArray(jsonData);
             JSONObject jsonObject = jsonArray.getJSONObject(1);
@@ -357,7 +337,8 @@ public class LoginActivity extends AppCompatActivity {
             //如果数据库有医生的头像，就把他存到本地
             if (jsonObject.has("Doc_Icon")) {
                 pictureStore.setFlag(true);
-                byte[] as = method.bitmap2Bytes(method.drawableToBitamp(loadImageFromNetwork(jsonObject.getString("Doc_Icon"))));
+                byte[] as = method.bitmap2Bytes(method.drawableToBitamp(Drawable.createFromStream(new URL(ipAddress + jsonObject.getString("Doc_Icon")).openStream(), "image.jpg")));
+
                 pictureStore.setPicture(as);
                 method.saveObj2SDCard("DocIcon", pictureStore);
             } else {
@@ -371,7 +352,7 @@ public class LoginActivity extends AppCompatActivity {
             }
             if (jsonObject.has("Doc_License")) {
                 pictureStore.setFlag(true);
-                byte[] as = method.bitmap2Bytes(method.drawableToBitamp(loadImageFromNetwork(jsonObject.getString("Doc_License"))));
+                byte[] as = method.bitmap2Bytes(method.drawableToBitamp( Drawable.createFromStream(new URL(ipAddress + jsonObject.getString("Doc_License")).openStream(), "image.jpg")));
                 pictureStore.setPicture(as);
                 method.saveObj2SDCard("DocLicense", pictureStore);
             } else {
@@ -386,7 +367,7 @@ public class LoginActivity extends AppCompatActivity {
 
     //将用户的个人地址信息保存到本地
     private void initStuInformation() {
-        String url = getResources().getString(R.string.ipAdrress) + "IM/GetUserInformation?name=" + method.getFileData("ID", LoginActivity.this) + "&type=" + method.getFileData("Type", LoginActivity.this);
+        String url = ipAddress + "IM/GetUserInformation?name=" + method.getFileData("ID", LoginActivity.this) + "&type=" + method.getFileData("Type", LoginActivity.this);
         Log.d("dengluurl", url);
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -463,26 +444,36 @@ public class LoginActivity extends AppCompatActivity {
             } else {
                 method.saveFileData("Birthday", "用户暂未设置出生年月", LoginActivity.this);
             }
+            Log.d("denglu", "1");
             //将用户的头像保存到本地
             PictureStore pictureStore = (PictureStore) method.readObjFromSDCard("Icon");
             Log.d("nsssico1", "login0" + String.valueOf(pictureStore == null));
             if (pictureStore == null) {
                 pictureStore = new PictureStore();
             }
+            Log.d("denglu", "2");
             if (jsonObject.has("Stu_Icon")) {
+                Log.d("denglu", "6");
                 //将学生头像的url保存到本地，后续聊天的时候学生会将自己的头像url发送给医生
                 method.saveFileData("StuIconUrl", jsonObject.getString("Stu_Icon"), LoginActivity.this);
                 pictureStore.setFlag(true);
-                byte[] as = method.bitmap2Bytes(method.drawableToBitamp(loadImageFromNetwork(jsonObject.getString("Stu_Icon"))));
+                Log.d("denglu", "8");
+                String te = jsonObject.getString("Stu_Icon");
+                Log.d("denglu", te);
+                byte[] as = method.bitmap2Bytes(method.drawableToBitamp(Drawable.createFromStream(new URL(ipAddress + jsonObject.getString("Stu_Icon")).openStream(), "image.jpg")));
+
+                Log.d("denglu", "9");
                 pictureStore.setPicture(as);
                 method.saveObj2SDCard("Icon", pictureStore);
                 pictureStore = (PictureStore) method.readObjFromSDCard("Icon");
-
+                Log.d("denglu", "4");
             } else {
+                Log.d("denglu", "7");
                 pictureStore.setFlag(false);
                 method.saveObj2SDCard("Icon", pictureStore);
+                Log.d("denglu", "5");
             }
-
+            Log.d("denglu", "3");
         } catch (Exception e) {
             e.printStackTrace();
         }

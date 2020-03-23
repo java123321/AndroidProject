@@ -63,7 +63,7 @@ import okhttp3.Response;
  * 适配安卓7.0及以上
  */
 public class StuInformation extends AppCompatActivity implements View.OnClickListener {
-
+    private String ipAddress;
     private static final String TAG = "MainActivity";
     private static final int REQUEST_TAKE_PHOTO = 0;// 拍照
     private static final int REQUEST_CROP = 1;// 裁剪
@@ -89,14 +89,13 @@ public class StuInformation extends AppCompatActivity implements View.OnClickLis
     private Receiver2 receiver2;
     private Receiver3 receiver3;
     private Receiver4 receiver4;
-    Dialog dialog;
-    Bitmap b;
-    private Bitmap bimap1;
-    NumPicker numPicker;
+    private Dialog dialog;
+    private NumPicker numPicker;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modify);
+        ipAddress=getResources().getString(R.string.ipAdrress);
         IntentFilter intentFilter = new IntentFilter();
         IntentFilter sex1 = new IntentFilter();
         IntentFilter weight1 = new IntentFilter();
@@ -456,50 +455,6 @@ public class StuInformation extends AppCompatActivity implements View.OnClickLis
         Log.d("sss", aa.size() + "");
     }
 
-    public void getpicture(final Roundimage Topllay, final String ImgStr) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    final String imgStr = ImgStr;
-                    final Uri u = Uri.parse(imgStr);
-                    InputStream is = (InputStream) new URL(imgStr).getContent();
-                    final Drawable d = Drawable.createFromStream(is, "src");
-                    is.close();
-                    runOnUiThread(new Runnable() {
-                        Roundimage topllay = Topllay;
-
-                        @Override
-                        public void run() {
-                            topllay.setImageURI(u);
-                        }
-                    });
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
-
-    public Bitmap getBitmap(String url) {
-        Bitmap bm = null;
-        try {
-            URL iconUrl = new URL(url);
-            URLConnection conn = iconUrl.openConnection();
-            HttpURLConnection http = (HttpURLConnection) conn;
-            int length = http.getContentLength();
-            conn.connect();
-            // 获得图像的字符流
-            InputStream is = conn.getInputStream();
-            BufferedInputStream bis = new BufferedInputStream(is, length);
-            bm = BitmapFactory.decodeStream(bis);
-            bis.close();
-            is.close();// 关闭流
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return bm;
-    }
 
     @Override
     protected void onDestroy() {
@@ -522,7 +477,7 @@ public class StuInformation extends AppCompatActivity implements View.OnClickLis
                     byte[] as=commonMethod.bitmap2Bytes(bitmap);
                     pictureStore.setPicture(as);
                     commonMethod.saveObj2SDCard("Icon",pictureStore);
-                    commonMethod.uploadMultiFile(file, getResources().getString(R.string.ipAdrress) + "/IM/PictureUpload?id=" + commonMethod.getFileData("ID", getBaseContext()) + "&type=Icon_Stu");
+                    commonMethod.uploadMultiFile(file, ipAddress + "/IM/PictureUpload?id=" + commonMethod.getFileData("ID", getBaseContext()) + "&type=Icon_Stu");
 
                 }
                 catch (Exception e){
@@ -551,7 +506,7 @@ public class StuInformation extends AppCompatActivity implements View.OnClickLis
                 try{
                     OkHttpClient client = new OkHttpClient();
                     Log.d("保存日期",Birthday);
-                    Request request = new Request.Builder().url(getResources().getString(R.string.ipAdrress) + "/IM/UpdateInformation?no=" + ID + "&name=" + name + "&sex=" + sex + "&birth=" + Birthday + "&height=" + height + "&weight=" + weight+"&isStu=true")
+                    Request request = new Request.Builder().url(ipAddress + "/IM/UpdateInformation?no=" + ID + "&name=" + name + "&sex=" + sex + "&birth=" + Birthday + "&height=" + height + "&weight=" + weight+"&isStu=true")
                             .build();
                     Response response = client.newCall(request).execute();
                     String responseData = response.body().string();

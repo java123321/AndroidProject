@@ -47,7 +47,7 @@ dependencies {
     implementation files('libs/additionnal.jar')
     implementation 'com.android.support:appcompat-v7:29'
     implementation 'com.android.support:multidex:1.0.3'
-
+    implementation 'com.tubb.smrv:swipemenu-recyclerview:3.0.2'
     // 支付宝 SDK AAR 包所需的配置
     implementation(name: 'alipaySdk-15.6.8-20191021122514', ext: 'aar')
 }

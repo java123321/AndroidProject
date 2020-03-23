@@ -6,16 +6,15 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.StuDiagnosis.MessageBean;
 import com.example.ourprojecttest.R;
 import com.example.ourprojecttest.Utils.Roundimage;
-
 import java.util.ArrayList;
 public class MsgRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
     private CommonMethod method=new CommonMethod();
@@ -35,11 +34,13 @@ public void setmList(ArrayList<MessageBean> list){
         TextView chatName;
         TextView chatTime;
         LinearLayout messageItem;
+        Button delete;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            delete=itemView.findViewById(R.id.delete_button);
             chatIcon=itemView.findViewById(R.id.chatIcon);
-            chatName=itemView.findViewById(R.id.chatName);
+            chatName=itemView.findViewById(R.id.chatName1);
             chatTime=itemView.findViewById(R.id.chatTime);
             messageItem=itemView.findViewById(R.id.messageItem);
             Log.d("msginit","viewholder");
@@ -48,22 +49,23 @@ public void setmList(ArrayList<MessageBean> list){
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view=View.inflate(mContext,R.layout.msg_record_item,null);
+        View view=View.inflate(mContext,R.layout.swipe_item,null);
         ViewHolder holder=new ViewHolder(view);
         Log.d("msginit","oncreate");
         return holder;
     }
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
        final MessageBean info=mList.get(position);
+       ViewHolder viewHolder=(ViewHolder)holder;
         Log.d("msginit","position"+position);
         byte[] appIcon=info.getIcon();
-        ((ViewHolder) holder).chatIcon.setImageBitmap(BitmapFactory.decodeByteArray(appIcon,0,appIcon.length));
-        ((ViewHolder) holder).chatName.setText(info.getName());
-        ((ViewHolder) holder).chatTime.setText(info.getTime());
+        viewHolder.chatIcon.setImageBitmap(BitmapFactory.decodeByteArray(appIcon,0,appIcon.length));
+        viewHolder.chatName.setText("接诊医生:"+info.getName());
+        viewHolder.chatTime.setText("问诊事件"+info.getTime());
         Log.d("msginit","time"+info.getTime());
         //点击消息项目之后进入聊天窗口
-        ((ViewHolder) holder).messageItem.setOnClickListener(new View.OnClickListener() {
+        viewHolder.messageItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(mContext, DisplayRecordDetail.class);
@@ -73,6 +75,15 @@ public void setmList(ArrayList<MessageBean> list){
                 mContext.startActivity(intent);
             }
         });
+        //设置删除按钮的点击事件
+        viewHolder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mList.remove(position);
+                notifyDataSetChanged();
+            }
+        });
+
     }
 
     @Override

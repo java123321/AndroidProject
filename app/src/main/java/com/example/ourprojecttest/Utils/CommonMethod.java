@@ -45,30 +45,6 @@ import okhttp3.Response;
 public class CommonMethod {
 
 
-    /**
-     * @param mContext    上下文对象
-     * @param serviceName 包名加类名
-     * @return
-     */
-
-    public boolean isServiceWork(Context mContext, String serviceName) {
-        boolean isWork = false;
-        ActivityManager myAM = (ActivityManager) mContext
-                .getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningServiceInfo> myList = myAM.getRunningServices(40);
-        if (myList.size() <= 0) {
-            return false;
-        }
-        for (int i = 0; i < myList.size(); i++) {
-            String mName = myList.get(i).service.getClassName().toString();
-            if (mName.equals(serviceName)) {
-                isWork = true;
-                break;
-            }
-        }
-        return isWork;
-    }
-
 
     /**
      * 该方法用于上传文件

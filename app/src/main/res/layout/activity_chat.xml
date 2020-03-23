@@ -4,31 +4,32 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#d8e0e8">
-    <LinearLayout
-        android:gravity="center"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:orientation="horizontal"
         android:background="#FD0896F5">
         <TextView
+            android:layout_centerInParent="true"
             android:gravity="center"
             android:id="@+id/chatWindowName"
             android:text="华佗"
             android:textSize="18dp"
-            android:layout_marginLeft="190dp"
-            android:layout_marginRight="110dp"
             android:textColor="#FFFFFF"
             android:layout_width="wrap_content"
+
             android:layout_height="wrap_content"/>
 
         <Button
             android:id="@+id/close"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#00000000"
             android:textColor="#FFFFFF"
             android:text="开处方"/>
-    </LinearLayout>
+    </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/msg_recycler_view"

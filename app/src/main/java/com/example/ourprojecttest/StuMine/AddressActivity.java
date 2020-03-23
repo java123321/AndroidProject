@@ -25,7 +25,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class AddressActivity extends AppCompatActivity {
-    CommonMethod method=new CommonMethod();
+    private String ipAddress;
+    private CommonMethod method=new CommonMethod();
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -44,11 +45,12 @@ public class AddressActivity extends AppCompatActivity {
             }
         }
     };
-    public static final int SHOW = 0x00000000;
+    private static final int SHOW = 0x00000000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_address);
+        ipAddress=getResources().getString(R.string.ipAdrress);
         Button compile =  findViewById(R.id.compile);
         ImmersiveStatusbar.getInstance().Immersive(getWindow(),getActionBar());//状态栏透明
         final EditText add_name =  findViewById(R.id.con_name);
@@ -92,7 +94,7 @@ public class AddressActivity extends AppCompatActivity {
                         public void run() {
                             String address16 = conversion(address).trim();
                             String url;
-                            url=getResources().getString(R.string.ipAdrress)+"IM/UpdateAddress?name="+stu_name+"&address="+address16+"&phone="+show_phone;
+                            url=ipAddress+"IM/UpdateAddress?name="+stu_name+"&address="+address16+"&phone="+show_phone;
                             OkHttpClient client = new OkHttpClient();
                             Request request = new Request.Builder()
                                     .url(url)
