@@ -192,8 +192,7 @@ public class StuMineFragment extends Fragment {
                 DocBottomNavigation.activity.finish();
             }
         });
-        //设置医生头像
-        PictureStore pictureStore1=( PictureStore)method.readObjFromSDCard("DocIcon");
+
         TextView no = inflate.findViewById(R.id.no);
         no.setOnClickListener(new View.OnClickListener() {
             @Override
