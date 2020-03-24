@@ -49,7 +49,6 @@ public class DisplayDocAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHo
             docSex=itemView.findViewById(R.id.docSex);
             docIcon=itemView.findViewById(R.id.docIcon);
             docName=itemView.findViewById(R.id.docName);
-            docBrief=itemView.findViewById(R.id.docBriefIntroduction);
             item=itemView.findViewById(R.id.displayDocItem);
         }
     }
@@ -61,7 +60,6 @@ public class DisplayDocAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHo
          final DisplayDocBean info=mList.get(position);
         ((ViewHolder) holder).docIcon.setImageBitmap(info.getIcon());
         ((ViewHolder) holder).docName.setText("姓名:"+info.getName());
-        ((ViewHolder) holder).docBrief.setText("简介:"+info.getBrief());
         ((ViewHolder) holder).docSex.setText("性别:"+info.getSex());
         //设置显示在线医生的点击事件
         ((ViewHolder) holder).item.setOnClickListener(new View.OnClickListener() {
@@ -70,7 +68,6 @@ public class DisplayDocAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHo
                 Intent intent=new Intent(mContext,OnlineDocDetail.class);
                 intent.putExtra("docIcon",method.bitmap2Bytes(info.getIcon()));
                 intent.putExtra("docName",info.getName());
-                intent.putExtra("docBrief",info.getBrief());
                 intent.putExtra("docSex",info.getSex());
                 intent.putExtra("docLicense",method.bitmap2Bytes(info.getLicense()));
                 mContext.startActivity(intent);
