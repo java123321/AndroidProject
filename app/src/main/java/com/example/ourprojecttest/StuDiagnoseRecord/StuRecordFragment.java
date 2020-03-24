@@ -45,6 +45,8 @@ public class StuRecordFragment extends Fragment {
                 refresh.setRefreshing(false);
             }
         });
+        refresh.setColorSchemeColors(getResources().getColor(R.color.color_bottom));
+        refresh.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.color_progressbar));
         mContext = getContext();
         noRecord = view.findViewById(R.id.noRecord);
         noRecord.setText("hello");

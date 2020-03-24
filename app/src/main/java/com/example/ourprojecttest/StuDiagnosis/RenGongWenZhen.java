@@ -256,6 +256,8 @@ public class RenGongWenZhen extends AppCompatActivity {
                 getData();
             }
         });
+        refresh.setColorSchemeColors(getResources().getColor(R.color.color_bottom));
+        refresh.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.color_progressbar));
         noDoctor=findViewById(R.id.noDoctor);
         noDoctor.setText("当前暂无医生在线，请稍后再来！");
         mRecycler=findViewById(R.id.stuDisplayDoc);

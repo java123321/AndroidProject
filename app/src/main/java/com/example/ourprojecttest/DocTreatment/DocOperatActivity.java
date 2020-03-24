@@ -102,6 +102,8 @@ public class DocOperatActivity extends AppCompatActivity {
     //从服务器获取当前在线学生的信息
     private void getData(){
         refresh.setRefreshing(true);
+        refresh.setColorSchemeColors(getResources().getColor(R.color.color_bottom));
+        refresh.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.color_progressbar));
         final String url=ipAddress+"IM/GetOnlineStu";
         new Thread(new Runnable() {
             @Override

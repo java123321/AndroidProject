@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.ourprojecttest.R;
+import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 import com.example.ourprojecttest.Utils.Roundimage;
 
 public class OnlineDocDetail extends AppCompatActivity {
@@ -19,6 +20,7 @@ public class OnlineDocDetail extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_online_doc_detail);
+        ImmersiveStatusbar.getInstance().Immersive(getWindow(),getActionBar());//状态栏透明
         initView();
     }
 
