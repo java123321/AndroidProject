@@ -4,15 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="10dp">
-
     <LinearLayout
         android:orientation="vertical"
         android:id="@+id/left_layout"
         android:layout_gravity="left"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -37,13 +34,9 @@
                     android:background="@drawable/style_qipao_left"
                     android:layout_margin="10dp"
                     android:textColor="#000000"/>
-
             </LinearLayout>
-
         </LinearLayout>
     </LinearLayout>
-
-
 <LinearLayout
     android:orientation="vertical"
     android:layout_gravity="right"
@@ -60,12 +53,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <LinearLayout
-
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
            >
-
             <TextView
                 android:id="@+id/right_msg"
                 android:layout_width="wrap_content"
@@ -84,10 +75,7 @@
             android:layout_weight="1"
             android:src="@drawable/person"/>
     </LinearLayout>
-
 </LinearLayout>
-
-
 </LinearLayout>
 
 
