@@ -30,6 +30,7 @@ public class StuDiagnosisFragment extends Fragment {
         DiffuseView diffuseView1=view.findViewById(R.id.diffuseView1);
         diffuseView1.start();
         return view;
+
     }
 
 

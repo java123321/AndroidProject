@@ -45,6 +45,7 @@ public void setmList(ArrayList<MessageBean> list){
             messageItem=itemView.findViewById(R.id.messageItem);
             Log.d("msginit","viewholder");
         }
+
     }
     @NonNull
     @Override
@@ -53,6 +54,7 @@ public void setmList(ArrayList<MessageBean> list){
         ViewHolder holder=new ViewHolder(view);
         Log.d("msginit","oncreate");
         return holder;
+
     }
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
