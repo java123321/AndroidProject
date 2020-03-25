@@ -53,6 +53,7 @@ public void setmList(ArrayList<MessageBean> list){
         ViewHolder holder=new ViewHolder(view);
         Log.d("msginit","oncreate");
         return holder;
+
     }
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
