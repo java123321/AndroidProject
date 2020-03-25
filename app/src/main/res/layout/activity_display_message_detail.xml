@@ -7,10 +7,13 @@
     android:layout_height="match_parent"
     tools:context=".StuDiagnoseRecord.DisplayRecordDetail">
     <TextView
-        android:gravity="center"
         android:id="@+id/chatName"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="70dp"
+        android:textSize="18dp"
+        android:textColor="#FFFFFF"
+        android:background="#FD0896F5"
+        android:gravity="center" />
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler"
             android:layout_width="match_parent"

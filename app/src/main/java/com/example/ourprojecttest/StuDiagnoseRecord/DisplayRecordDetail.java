@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.StuDiagnosis.Msg;
 import com.example.ourprojecttest.StuDiagnosis.MsgAdapter;
+import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 import com.example.ourprojecttest.Utils.PictureStore;
 import com.example.ourprojecttest.R;
 
@@ -30,6 +31,7 @@ public class DisplayRecordDetail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_message_detail);
         initView();
+        ImmersiveStatusbar.getInstance().Immersive(getWindow(),getActionBar());//状态栏透明
     }
 
     private void initView(){

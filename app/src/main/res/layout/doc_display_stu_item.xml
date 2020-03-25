@@ -6,53 +6,71 @@
     >
 
     <LinearLayout
-        android:gravity="left"
-        android:layout_width="match_parent"
-        android:layout_marginTop="10dp"
+        android:layout_width="450dp"
         android:layout_height="95dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/yuanjiao1"
-        >
+        android:gravity="left">
+
         <com.example.ourprojecttest.Utils.Roundimage
             android:id="@+id/stuIcon"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
-            android:src="@drawable/person">
-        </com.example.ourprojecttest.Utils.Roundimage>
+            android:src="@drawable/person"></com.example.ourprojecttest.Utils.Roundimage>
+
         <TextView
             android:id="@+id/stuName"
-            android:text="李时珍"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="李时珍" />
+
+        <TextView
+            android:id="@+id/stuSex"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="男" />
+
         <TextView
             android:id="@+id/stuAge"
-            android:text="男"
-            android:layout_marginLeft="10dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="男" />
+
         <TextView
             android:id="@+id/stuShengao"
-            android:text="李时珍"
-            android:layout_marginLeft="10dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="李时珍" />
+
         <TextView
-            android:layout_marginLeft="10dp"
             android:id="@+id/stuTizhong"
-            android:text="体重"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <TextView
+            android:layout_weight="1"
             android:layout_marginLeft="10dp"
-            android:id="@+id/docBriefIntroduction"
-            android:text="就是强"
+            android:gravity="right"
+            android:text="体重" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_weight="1"
+            android:gravity="center" />
     </LinearLayout>
 </LinearLayout>

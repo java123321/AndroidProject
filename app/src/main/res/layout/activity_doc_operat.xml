@@ -43,9 +43,9 @@
         android:layout_height="50dp"
         android:layout_gravity="center"
         android:textColor="#F1EEEE"
-        android:textSize="16dp"
+        android:textSize="18dp"
         android:background="@drawable/style_jiesuan"
-        android:text="接              诊" />
+        android:text="接     诊" />
 </LinearLayout>
 
 
