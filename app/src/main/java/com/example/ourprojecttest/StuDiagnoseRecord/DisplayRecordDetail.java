@@ -38,7 +38,6 @@ public class DisplayRecordDetail extends AppCompatActivity {
         Intent intent=getIntent();
         type=method.getFileData("Type",this);
 
-
         mRecycler=findViewById(R.id.recycler);
         title=findViewById(R.id.chatName);
         LinearLayoutManager layoutManager=new LinearLayoutManager(this);

@@ -65,6 +65,7 @@ public class DisplayStuAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHo
         ((ViewHolder) holder).stuName.setText(info.getName());
         ((ViewHolder) holder).stuSex.setText(info.getSex());
         ((ViewHolder) holder).stuAge.setText(age1+" 岁");
+
         ((ViewHolder) holder).stuHeight.setText(info.getHeight()+" cm");
         ((ViewHolder) holder).stuWeight.setText(info.getWeight()+" kg");
 

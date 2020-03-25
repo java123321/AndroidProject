@@ -45,6 +45,7 @@ public void setmList(ArrayList<MessageBean> list){
             messageItem=itemView.findViewById(R.id.messageItem);
             Log.d("msginit","viewholder");
         }
+
     }
     @NonNull
     @Override
