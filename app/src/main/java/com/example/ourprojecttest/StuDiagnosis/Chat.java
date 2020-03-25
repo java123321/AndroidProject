@@ -3,6 +3,7 @@ package com.example.ourprojecttest.StuDiagnosis;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,11 +19,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.DocTreatment.Prescribe;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 import com.example.ourprojecttest.Utils.PictureStore;
 import com.example.ourprojecttest.R;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -129,7 +132,6 @@ public class Chat extends AppCompatActivity {
             }).setNegativeButton("取消", null)
                     .show();
 
-
         } else {//如果是医生
             builder.setMessage("是否结束此次接诊?");
             builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -137,6 +139,7 @@ public class Chat extends AppCompatActivity {
                 public void onClick(DialogInterface dialog, int which) {
                     intentToDoc.putExtra("chatMsg", stuOrDocId + "|finishChat");
                     sendBroadcast(intentToDoc);
+                    finish();
                     Log.d("wee", "2");
                 }
             }).setNegativeButton("取消", null)

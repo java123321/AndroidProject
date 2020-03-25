@@ -62,8 +62,9 @@ public void setmList(ArrayList<MessageBean> list){
         Log.d("msginit","position"+position);
         byte[] appIcon=info.getIcon();
         viewHolder.chatIcon.setImageBitmap(BitmapFactory.decodeByteArray(appIcon,0,appIcon.length));
+        Log.d("msginit","appIcon:"+appIcon.length);
         viewHolder.chatName.setText("接诊医生:"+info.getName());
-        viewHolder.chatTime.setText("问诊事件"+info.getTime());
+        viewHolder.chatTime.setText("问诊时间"+info.getTime());
         Log.d("msginit","time"+info.getTime());
         //点击消息项目之后进入聊天窗口
         viewHolder.messageItem.setOnClickListener(new View.OnClickListener() {

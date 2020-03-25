@@ -8,7 +8,7 @@
 
 <LinearLayout
     android:id="@+id/messageItem"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <com.example.ourprojecttest.Utils.Roundimage
         android:paddingLeft="10dp"
@@ -17,13 +17,12 @@
         android:layout_height="60dp"
         android:layout_gravity="left"
         android:layout_marginLeft="5dp"
-        android:layout_weight="1"
         android:src="@drawable/person">
     </com.example.ourprojecttest.Utils.Roundimage>
 
     <TextView
         android:id="@+id/chatName1"
-        android:layout_width="80dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:paddingLeft="20dp"
@@ -35,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:paddingLeft="200dp"
+        android:paddingLeft="100dp"
         android:text="2019/12/22" />
 </LinearLayout>
 

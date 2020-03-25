@@ -5,13 +5,16 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.IBinder;
+import android.provider.MediaStore;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
@@ -50,6 +53,10 @@ public class StuService extends Service {
     private String CHANNEL_ID = "com.example.ourprojecttest.GuaHao";
     private String CHANNEL_NAME = "GuaHao";
     private String name;
+    private String nameT="channel_name_1";
+    private NotificationManager manager;
+    public static final String id = "channel_1";
+
 
     //当接收到活动发来的挂号通知时进行挂号操作
     class LocalReceiver extends BroadcastReceiver {
@@ -78,7 +85,8 @@ public class StuService extends Service {
                         guaHaoListener.socket.close(1000, null);
                         chatListener.socket.close(1000, null);
                         isGuaHao = false;
-                        startForeground(1, getNotification(CHANNEL_ID, "您已取消挂号！", "取消挂号成功"));
+                        //startForeground(1, getNotification(CHANNEL_ID, "您已取消挂号！", "取消挂号成功"));
+                        sendNotification("取消挂号成功","您已取消挂号");
                         //5秒之后关闭前台服务
                         TimerTask task = new TimerTask() {
                             @Override
@@ -111,8 +119,6 @@ public class StuService extends Service {
         ipAddress = getResources().getString(R.string.ipAdrress);
         Log.d("service123", "start");
         stuId = method.getFileData("ID", StuService.this);
-        //初始化通知信道服务
-        initChannel();
         //开始注册广播监听器，准备接受发送给服务的更新挂号信息
         name = method.getFileData("Name", StuService.this);
         intentFilter = new IntentFilter();
@@ -172,7 +178,8 @@ public class StuService extends Service {
                 //result代表当前的排队人数
                 method.saveFileData("GuaHaoNumber", m.replaceAll("").trim(), StuService.this);
 
-                startForeground(1, getNotification(CHANNEL_ID, info, "挂号成功"));
+                //startForeground(1, getNotification(CHANNEL_ID, info, "挂号成功"));
+                sendNotification("挂号成功",info);
             }//服务器发送到我的通知时
             else if (info.contains("到你啦！")) {
                 //获取医生的id
@@ -195,8 +202,8 @@ public class StuService extends Service {
                 intent.putExtra("docName", docName);
                 Log.d("chat", "docPicture" + (docPicture == null));
                 intent.putExtra("docPicture", docPicture);
-                startForeground(1, getNotification(CHANNEL_ID, docName + "医生即将为您接诊！", "到你了"));
-
+                //startForeground(1, getNotification(CHANNEL_ID, docName + "医生即将为您接诊！", "到你了"));
+                sendNotification("到你了",docName + "医生即将为您接诊！");
                 webSocket.close(1000, "再见");
 
                 sendBroadcast(intent);
@@ -262,7 +269,6 @@ public class StuService extends Service {
         }
     }
 
-
     //解析服务器传来的字符串
     private String parseJSONWithJSONObject(String data) {
         try {
@@ -278,24 +284,6 @@ public class StuService extends Service {
         Log.d("interface", content);
     }
 
-    /**
-     * @param chanelId 信号渠道
-     * @param content  通知内容
-     * @return
-     */
-    private Notification getNotification(String chanelId, String content, String title) {
-
-        Intent intent = new Intent(this, RenGongWenZhen.class);
-        PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, chanelId);
-        builder.setSmallIcon(R.drawable.guahaosuccess)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.guahaosuccess))
-                .setContentIntent(pi)
-                .setContentTitle(title)
-                .setContentText(content);
-        return builder.build();
-    }
 
 
     @Override
@@ -306,17 +294,40 @@ public class StuService extends Service {
         Log.d("service123", "destroy");
     }
 
-    //开启前台服务
-    private void initChannel() {
-        NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.createNotificationChannel(notificationChannel);
-    }
-
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
         return null;
+    }
+
+
+    private void sendNotification(String title,String content){
+        Intent intent = new Intent(this, RenGongWenZhen.class);
+        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        //8.0 以后需要加上channelId 才能正常显示
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            String channelId = "default";
+            String channelName = "默认通知";
+            manager.createNotificationChannel(new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH));
+        }
+
+        //设置TaskStackBuilder
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(RenGongWenZhen.class);
+        stackBuilder.addNextIntent(intent);
+
+        PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Notification notification = new NotificationCompat.Builder(this, "default")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(title)
+                .setContentText(content)
+                .setAutoCancel(true)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setWhen(System.currentTimeMillis())
+                .setContentIntent(pendingIntent)
+                .build();
+        manager.notify(1, notification);
     }
 
 }
