@@ -23,6 +23,7 @@ import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,7 +59,7 @@ public class RenGongWenZhen extends AppCompatActivity {
     private Intent intentToService=new Intent("com.example.ourprojecttest.UPDATE_SERVICE");
     private LocalReceiver localReceiver;
     private IntentFilter intentFilter;
-    private TextView noDoctor;
+    private LinearLayout noDoctor;
     private Button guanbi;
     private Button guaHao;
     private TextView text;
@@ -259,7 +260,6 @@ public class RenGongWenZhen extends AppCompatActivity {
         refresh.setColorSchemeColors(getResources().getColor(R.color.color_bottom));
         refresh.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.color_progressbar));
         noDoctor=findViewById(R.id.noDoctor);
-        noDoctor.setText("当前暂无医生在线，请稍后再来！");
         mRecycler=findViewById(R.id.stuDisplayDoc);
         LinearLayoutManager layoutManager=new LinearLayoutManager(this);
         mRecycler.setLayoutManager(layoutManager);

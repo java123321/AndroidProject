@@ -101,9 +101,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
                 case SUCCESS: {
                     Toast.makeText(ShoppingCartActivity.this, "订单添加成功", Toast.LENGTH_SHORT).show();
                     //订单上传到服务器之后，将购物车选中的药品删除
-
                     //将药品删除之后保存到本地
-
                     method.saveObj2SDCard("drugIdSet", set);
                     method.writeListIntoSDcard("ShoppingCartList", drugList);
                     break;
