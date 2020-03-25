@@ -368,6 +368,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
             Log.d("cart", "null");
             mRecycler.setVisibility(View.GONE);
             empty.setVisibility(View.VISIBLE);
+            updateDisplayPrice(0.0);
         } else {//不为空的情况下
             Log.d("cart", "notnull");
             empty.setVisibility(View.GONE);
