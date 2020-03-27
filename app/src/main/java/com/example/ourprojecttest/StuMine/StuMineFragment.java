@@ -192,7 +192,6 @@ public class StuMineFragment extends Fragment {
                 DocBottomNavigation.activity.finish();
             }
         });
-
         TextView no = inflate.findViewById(R.id.no);
         no.setOnClickListener(new View.OnClickListener() {
             @Override
