@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -19,18 +20,24 @@ import android.os.Handler;
 import android.os.CountDownTimer;
 import android.os.Message;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.example.ourprojecttest.NavigationBar.DocBottomNavigation;
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.StuDiagnosis.Chat;
 import com.example.ourprojecttest.Service.DocService;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 import com.example.ourprojecttest.R;
+import com.example.ourprojecttest.WelcomeActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -236,20 +243,22 @@ public class DocOperatActivity extends AppCompatActivity {
     @Override  //退出接诊活动时弹出提示框
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode==KeyEvent.KEYCODE_BACK){
-            AlertDialog.Builder bdr=new AlertDialog.Builder(this);
-            bdr.setMessage("确定要退出接诊吗?");
+           // AlertDialog.Builder bdr=new AlertDialog.Builder(this);
+          //  bdr.setMessage("确定要退出接诊吗?");
 
-            bdr.setNegativeButton("取消",null);
-            bdr.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+           // bdr.setNegativeButton("取消",null);
+            //bdr.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+             //   @Override
+              //  public void onClick(DialogInterface dialog, int which) {
                     //通知医生服务退出看病
-                    intentToService.putExtra("msg","exit");
-                    sendBroadcast(intentToService);
-                    finish();
-                }
-            });
-            bdr.show();
+               //     intentToService.putExtra("msg","exit");
+              //      sendBroadcast(intentToService);
+              //      finish();
+
+             //   }
+          //  });
+         //   bdr.show();
+            show();
         }
         return false;
     }
@@ -303,5 +312,42 @@ public class DocOperatActivity extends AppCompatActivity {
             }
         }
     }
-
+    public Dialog show(){
+        final Dialog dialog = new Dialog(this,R.style.ActionSheetDialogStyle);        //展示对话框
+        //填充对话框的布局
+        View inflate = LayoutInflater.from(this).inflate(R.layout.layout_tuichuliaotian, null);
+        //初始化控件
+        TextView yes = inflate.findViewById(R.id.yes);
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                intentToService.putExtra("msg","exit");
+                sendBroadcast(intentToService);
+                finish();
+            }
+        });
+        TextView no = inflate.findViewById(R.id.no);
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        //将布局设置给Dialog
+        dialog.setContentView(inflate);
+        //获取当前Activity所在的窗体
+        Window dialogWindow = dialog.getWindow();
+        //设置Dialog从窗体底部弹出
+        dialogWindow.setGravity( Gravity.CENTER);
+        //获得窗体的属性
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        lp.width =800;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialogWindow.setAttributes(lp);
+//       将属性设置给窗体
+        dialog.show();//显示对话框
+        return dialog;
+    }
 }
+
+

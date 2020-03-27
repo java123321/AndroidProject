@@ -21,7 +21,10 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -116,31 +119,31 @@ public class RenGongWenZhen extends AppCompatActivity {
 
                 if(person.equals("-1")){//如果是-1的话代表到你了，发出提示窗口
                     Log.d("chat0","0102");
-                    final Dialog dialog = new AlertDialog.Builder(RenGongWenZhen.this).setTitle("选择")
-                            .setCancelable(false)
-                            //.setView(mShutDownTextView)
-                            .setPositiveButton("沟通", new DialogInterface.OnClickListener() {//如果用户点击了确定按钮则进入与医生的聊天界面
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    //给医生发通知表明学生统一看病
-                                    intentToService.putExtra("msg","Chat");
-                                    sendBroadcast(intentToService);
-                                    //准备跳到聊天界面，并将医生的di放到意图里
-                                    Intent intentToChat=new Intent(RenGongWenZhen.this, Chat.class);
-                                    intentToChat.putExtra("docId",intent.getStringExtra("docId"));
-                                    intentToChat.putExtra("docName",intent.getStringExtra("docName"));
-                                    intentToChat.putExtra("docPicture",intent.getByteArrayExtra("docPicture"));
-                                    startActivity(intentToChat);
-                                }
-                            })
-                            .setNegativeButton("放弃", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    intentToService.putExtra("msg","Deny");
-                                    sendBroadcast(intentToService);
-                                }
-                            }).create();
-                            dialog.show();
+                   // final Dialog dialog = new AlertDialog.Builder(RenGongWenZhen.this).setTitle("选择")
+                   //         .setCancelable(false)
+                   //         //.setView(mShutDownTextView)
+                   //         .setPositiveButton("沟通", new DialogInterface.OnClickListener() {//如果用户点击了确定按钮则进入与医生的聊天界面
+                    //            @Override
+                     //           public void onClick(DialogInterface dialogInterface, int i) {
+                     //               //给医生发通知表明学生统一看病
+                     //               intentToService.putExtra("msg","Chat");
+                     //               sendBroadcast(intentToService);
+                     //               //准备跳到聊天界面，并将医生的di放到意图里
+                       //             Intent intentToChat=new Intent(RenGongWenZhen.this, Chat.class);
+                      //              intentToChat.putExtra("docId",intent.getStringExtra("docId"));
+                      //              intentToChat.putExtra("docName",intent.getStringExtra("docName"));
+                      //              intentToChat.putExtra("docPicture",intent.getByteArrayExtra("docPicture"));
+                      //              startActivity(intentToChat);
+                         //       }
+                       //     })
+                       //     .setNegativeButton("放弃", new DialogInterface.OnClickListener() {
+                       //         @Override
+                        //        public void onClick(DialogInterface dialog, int which) {
+                         //           intentToService.putExtra("msg","Deny");
+                         //           sendBroadcast(intentToService);
+                            //    }
+                           // }).create();
+                          final Dialog dialog=show(intent);
 
                             CountDownTimer cdt = new CountDownTimer(10000,1000) {
                                 int i = 10;
@@ -313,6 +316,47 @@ public class RenGongWenZhen extends AppCompatActivity {
 
     }
 
-
+    public Dialog show(final  Intent intent){
+        final Dialog dialog = new Dialog(this,R.style.ActionSheetDialogStyle);        //展示对话框
+        //填充对话框的布局
+        View inflate = LayoutInflater.from(this).inflate(R.layout.layout_goutong, null);
+        //初始化控件
+        TextView yes = inflate.findViewById(R.id.yes);
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                intentToService.putExtra("msg","Chat");
+                sendBroadcast(intentToService);
+                //准备跳到聊天界面，并将医生的di放到意图里
+                Intent intentToChat=new Intent(RenGongWenZhen.this, Chat.class);
+                intentToChat.putExtra("docId",intent.getStringExtra("docId"));
+                intentToChat.putExtra("docName",intent.getStringExtra("docName"));
+                intentToChat.putExtra("docPicture",intent.getByteArrayExtra("docPicture"));
+                startActivity(intentToChat);
+            }
+        });
+        TextView no = inflate.findViewById(R.id.no);
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                intentToService.putExtra("msg","Deny");
+                sendBroadcast(intentToService);
+            }
+        });
+        //将布局设置给Dialog
+        dialog.setContentView(inflate);
+        //获取当前Activity所在的窗体
+        Window dialogWindow = dialog.getWindow();
+        //设置Dialog从窗体底部弹出
+        dialogWindow.setGravity( Gravity.CENTER);
+        //获得窗体的属性
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        lp.width =800;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialogWindow.setAttributes(lp);
+//       将属性设置给窗体
+        dialog.show();//显示对话框
+        return dialog;
+    }
 
 }
