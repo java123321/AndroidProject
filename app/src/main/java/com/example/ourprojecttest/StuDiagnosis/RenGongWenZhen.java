@@ -344,6 +344,7 @@ public class RenGongWenZhen extends AppCompatActivity {
             }
         });
 
+
         //将布局设置给Dialog
         dialog.setContentView(inflate);
         //获取当前Activity所在的窗体
