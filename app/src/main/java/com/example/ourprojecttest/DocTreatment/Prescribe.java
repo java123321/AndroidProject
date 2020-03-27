@@ -21,6 +21,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.ourprojecttest.R;
+import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -145,6 +147,7 @@ public class Prescribe extends AppCompatActivity {
         //开始注册广播监听器
         intentFilter=new IntentFilter();
         intentFilter.addAction("com.example.ourprojecttest.Perscribe");
+        ImmersiveStatusbar.getInstance().Immersive(getWindow(),getActionBar());//状态栏透明
         localReceiver=new LocalReceiver();
         registerReceiver(localReceiver,intentFilter);
         Log.d("cribe","register");

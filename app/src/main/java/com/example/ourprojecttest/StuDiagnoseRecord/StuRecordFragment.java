@@ -1,5 +1,6 @@
 package com.example.ourprojecttest.StuDiagnoseRecord;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.StuDiagnosis.MessageBean;
 import com.example.ourprojecttest.R;
+import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 
 import java.util.ArrayList;
 
@@ -29,12 +31,14 @@ public class StuRecordFragment extends Fragment {
     private Context mContext = null;
     private SwipeRefreshLayout refresh;
     private LinearLayoutManager layoutManager;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stu_frag_msg_front, container, false);
         Log.d("msginit", "test0");
+        Activity a=getActivity();
+
+        ImmersiveStatusbar.getInstance().Immersive(a.getWindow(),a.getActionBar());//状态栏透明
         //设置下拉刷新的监听事件
         refresh = view.findViewById(R.id.swipeRefresh);
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

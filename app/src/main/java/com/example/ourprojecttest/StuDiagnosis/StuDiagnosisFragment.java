@@ -1,5 +1,6 @@
 package com.example.ourprojecttest.StuDiagnosis;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import androidx.annotation.Nullable;
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.Utils.DiffuseView;
 import com.example.ourprojecttest.R;
+import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 
 public class StuDiagnosisFragment extends Fragment {
         Context mContext;
@@ -28,6 +30,8 @@ public class StuDiagnosisFragment extends Fragment {
         initView(view);
         LinearLayout l=view.findViewById(R.id.ssss);
         DiffuseView diffuseView1=view.findViewById(R.id.diffuseView1);
+        Activity a=getActivity();
+        ImmersiveStatusbar.getInstance().Immersive(a.getWindow(),a.getActionBar());//状态栏透明
         diffuseView1.start();
         return view;
 

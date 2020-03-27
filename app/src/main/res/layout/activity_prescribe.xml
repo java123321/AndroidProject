@@ -9,25 +9,32 @@
         android:layout_height="70dp"
         android:background="#FD0896F5"
         android:orientation="horizontal">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="15dp"
-            android:layout_weight="10"
-            android:gravity="center"
-            android:text="开 处 方"
-            android:textColor="#FFFFFF"
-            android:textSize="25dp" />
 
-        <TextView
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="10"
+                android:gravity="center"
+                android:text="开 处 方"
+                android:textColor="#FFFFFF"
+                android:textSize="25dp" />
+
+            <TextView
             android:id="@+id/addDrug"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
             android:text="添加药品"
+            android:layout_marginTop="25dp"
+                android:gravity="right"
+            android:layout_gravity="center_vertical"
+                android:textSize="16dp"
             android:textColor="#FFFFFF" />
+        </FrameLayout>
     </LinearLayout>
 
 
@@ -37,7 +44,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#525252" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -48,8 +58,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
+            android:textColor="#000000"
             android:text="订单总价:￥23.01"
-            android:textSize="20dp" />
+            android:textSize="15dp" />
 
         <Button
             android:id="@+id/prescribe"
