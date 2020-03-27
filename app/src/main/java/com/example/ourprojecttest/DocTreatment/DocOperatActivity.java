@@ -213,6 +213,7 @@ public class DocOperatActivity extends AppCompatActivity {
                 }
             }
         };
+        //医生点击接诊的点击事件
         access.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

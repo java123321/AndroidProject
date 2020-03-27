@@ -2,6 +2,7 @@ package com.example.ourprojecttest.DocMine.DocOrderManagement;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -138,6 +139,7 @@ public class OrderManagementAdapter extends RecyclerView.Adapter <RecyclerView.V
             FootViewHolder footViewHolder=(FootViewHolder)holder;
             final FooterInfoBean bean=(FooterInfoBean) dataList.get(position);
             Date date=new Date();
+            Log.d("ordermanage","orderTime1:"+bean.getOrderTime());
             date.setTime(Long.valueOf(bean.getOrderTime()));
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             footViewHolder.orderTime.setText("订单时间:"+format.format(date));

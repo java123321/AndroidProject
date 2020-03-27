@@ -25,7 +25,7 @@
                 android:layout_height="2000dp"
                 android:layout_gravity="center"
                 android:background="@drawable/style_round"
-                android:text="人工问诊"
+                android:text="问诊"
                 android:textColor="#FFFFFF"
                 android:textSize="16dp" />
 

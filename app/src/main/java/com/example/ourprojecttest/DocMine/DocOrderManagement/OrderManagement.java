@@ -188,7 +188,9 @@ private void havePost(String orderId,String type){
         Message msg=handler.obtainMessage();
         try{
             JSONArray jsonArray=new JSONArray(data);
-            JSONObject object=new JSONObject();
+            Log.d("ordermanage","data:"+data);
+
+            JSONObject object;
             if(jsonArray.length()==0){
                 msg.what=NO_DATA;
                 handler.sendMessage(msg);
@@ -197,17 +199,17 @@ private void havePost(String orderId,String type){
             for(int i=0;i<jsonArray.length();i++){
                      object=jsonArray.getJSONObject(i);
                      if(object.has("orderTime")){//如果是关于收货地址信息
-                        orderBean.setOrderTime(object.getString("orderTime"));
-                        orderBean.setReceiverName(object.getString("stuName"));
-                        orderBean.setReceiverTelephone(object.getString("stuPhone"));
-                        orderBean.setReceiverAddress(object.getString("stuAddress"));
                         if(i!=0){
                             orderBean.setDrugInfoBeans(drugDataList);//将药品信息的集合添加到订单中
                             drugDataList=new ArrayList<>();
                             orderList.add(orderBean);//将订单加入到订单集合中
                             orderBean=new OrderListBean();//在新建一个订单
                         }
-
+                         orderBean.setOrderTime(object.getString("orderTime"));
+                         Log.d("ordermanage","time2:"+object.getString("orderTime"));
+                         orderBean.setReceiverName(object.getString("stuName"));
+                         orderBean.setReceiverTelephone(object.getString("stuPhone"));
+                         orderBean.setReceiverAddress(object.getString("stuAddress"));
                      }
                      else{//如果是关于药品信息
                         drugData=new ContentInfoBean();
