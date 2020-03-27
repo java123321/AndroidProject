@@ -323,6 +323,7 @@ public class DocOperatActivity extends AppCompatActivity {
             public void onClick(View view) {
                 intentToService.putExtra("msg","exit");
                 sendBroadcast(intentToService);
+
                 finish();
             }
         });
