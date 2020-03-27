@@ -336,6 +336,7 @@ public class DocOperatActivity extends AppCompatActivity {
         //将布局设置给Dialog
         dialog.setContentView(inflate);
         //获取当前Activity所在的窗体
+
         Window dialogWindow = dialog.getWindow();
         //设置Dialog从窗体底部弹出
         dialogWindow.setGravity( Gravity.CENTER);
