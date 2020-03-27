@@ -12,6 +12,7 @@
         android:background="#DDF8F4F4"
         android:gravity="center"
         android:text="拍照"
+
         android:textColor="#141414"
         android:textSize="14sp"
         android:textStyle="bold" />
