@@ -50,4 +50,11 @@ dependencies {
     implementation 'com.tubb.smrv:swipemenu-recyclerview:3.0.2'
     // 支付宝 SDK AAR 包所需的配置
     implementation(name: 'alipaySdk-15.6.8-20191021122514', ext: 'aar')
+
+    //引入webRTC库
+    implementation 'org.webrtc:google-webrtc:1.0.+'
+    //引入socket.io库
+    implementation 'io.socket:socket.io-client:1.0.0'
+    //简单获取权限
+    implementation 'pub.devrel:easypermissions:1.1.3'
 }

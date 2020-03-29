@@ -166,11 +166,10 @@ public class DocService extends Service {
                 Log.d("学生Id", stuId);
                 //发送通知
                 startForeground(1, getNotification(CHANNEL_ID, stuId + "向你发送问诊"));
-                //将候诊学生广播出去
+                //将即将接诊的消息广播给前台，通知弹出等待窗口
                 intentToBeforChat.putExtra("Dialog", "true");
                 sendBroadcast(intentToBeforChat);
                 intentToBeforChat.removeExtra("Dialog");
-
             }
         }
 

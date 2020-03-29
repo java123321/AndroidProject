@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,7 +16,6 @@ import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.CountDownTimer;
 import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
@@ -31,13 +29,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.example.ourprojecttest.NavigationBar.DocBottomNavigation;
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.StuDiagnosis.Chat;
 import com.example.ourprojecttest.Service.DocService;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 import com.example.ourprojecttest.R;
-import com.example.ourprojecttest.WelcomeActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,12 +43,18 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 public class DocOperatActivity extends AppCompatActivity {
+    private TextView mOffTextView;
+    private Handler mOffHandler;
+    private Timer mOffTime;
+    private Dialog mDialog;
     private String ipAddress;
     private final int SUCCESS=1;
     private final int FAULT=0;
@@ -65,9 +67,6 @@ public class DocOperatActivity extends AppCompatActivity {
     private Button access;
     private TextView noStudent;
     private DisplayStuAdapter adapter;
-    private ArrayList<DisplayStuBean> lists=new ArrayList<>();
-    private ProgressDialog waitingDialog;
-    private CountDownTimer cdt;
     private Handler handler=new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -139,7 +138,6 @@ public class DocOperatActivity extends AppCompatActivity {
             JSONArray jsonArray=new JSONArray(data);
             for(int i=0;i<jsonArray.length();i++){
                 JSONObject jsonObject=jsonArray.getJSONObject(i);
-
                 if(!jsonObject.has("#x")){
                     DisplayStuBean info=new  DisplayStuBean();
                     info.setName(jsonObject.getString("Stu_Name"));;
@@ -151,7 +149,6 @@ public class DocOperatActivity extends AppCompatActivity {
                     info.setAddress(jsonObject.getString("Stu_Address"));
                     //设置学生头像
                     info.setIcon(method.drawableToBitamp( Drawable.createFromStream(new URL(ipAddress+jsonObject.getString("Stu_Icon")).openStream(),"image.jpg")));
-
                     list.add(info);
                 }
                 else {//如果当前没有在线学生
@@ -160,12 +157,10 @@ public class DocOperatActivity extends AppCompatActivity {
                     return;
                 }
             }
-
             Log.d("msgwhat","size1"+list.size());
             msg.what=SUCCESS;
             msg.obj=list;
             handler.sendMessage(msg);
-
         } catch (JSONException | MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -174,11 +169,9 @@ public class DocOperatActivity extends AppCompatActivity {
     }
 
     private void initView(){
-
         //创建一个服务
         Intent intentStartService = new Intent(DocOperatActivity.this, DocService.class);
         startService(intentStartService);
-
         //如果有状态码state代表用户从前台服务跳进来
         Intent intent=getIntent();
         if(intent.hasExtra("state")){
@@ -207,25 +200,11 @@ public class DocOperatActivity extends AppCompatActivity {
         mRecycler.setAdapter(adapter);
         //联网获取数据
         getData();
-        cdt = new CountDownTimer(10000,1000) {
-            int i = 10;
-            @Override
-            public void onTick(long millisUntilFinished) {
-            }
-            @Override
-            public void onFinish() {
-                if (waitingDialog != null){
-                    Log.d("dialog","等待消失");
-                    waitingDialog.dismiss();
-                }
-            }
-        };
         //医生点击接诊的点击事件
         access.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //给服务器发送查看队列的广播
-                intentToService.putExtra("msg","Access");//改了
+                intentToService.putExtra("msg","Access");
                 sendBroadcast(intentToService);
                 Log.d("线程信息","："+Thread.currentThread().getId()+"  " +
                         "弹出聊天消息");
@@ -263,6 +242,69 @@ public class DocOperatActivity extends AppCompatActivity {
         return false;
     }
 
+    //学生取消之后弹出确认框
+    private void stuCancelConfirmDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(DocOperatActivity.this);
+        builder.setTitle("提示");
+        builder.setMessage("学生已放弃沟通，是否继续接诊下一位学生?");
+        //医生点击确认后接诊下一个同学
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int ii) {
+                //给服务发通知接诊下一个同学
+                intentToService.putExtra("msg","Access");
+                sendBroadcast(intentToService);
+            }
+        });
+        builder.setNegativeButton("取消", null);
+        builder.show();
+    }
+    //学生等待确认期间，医生端弹出倒计时窗口
+    private void waitStuConfirmDialog(){
+        mOffTextView = new TextView(this);
+        mDialog = new AlertDialog.Builder(this)
+                .setTitle("提示")
+                .setCancelable(false)
+                .setView(mOffTextView) ////
+                .create();
+        mDialog.show();
+        mDialog.setCanceledOnTouchOutside(false);
+
+        mOffHandler = new Handler() {
+            public void handleMessage(Message msg) {
+                if (msg.what > 0) {
+                    ////动态显示倒计时
+                    mOffTextView.setText("正在等待学生确认，确认剩余时间为:"+msg.what+"秒");
+                } else {
+                    ////倒计时结束后关闭计时器
+                    mOffTime.cancel();
+                    //关闭倒计时窗口
+                    mDialog.dismiss();
+                    //弹出学生取消沟通提示窗口
+                    Log.d("docop","dialog13");
+                    stuCancelConfirmDialog();
+                }
+                super.handleMessage(msg);
+            }
+
+        };
+      //倒计时
+        mOffTime = new Timer(true);
+        TimerTask tt = new TimerTask() {
+            int countTime = 10;
+            public void run() {
+                if (countTime > 0) {
+                    countTime--;
+                }
+                Message msg = new Message();
+                msg.what = countTime;
+                mOffHandler.sendMessage(msg);
+            }
+        };
+        mOffTime.schedule(tt, 1000, 1000);
+    }
+
+
     /**
      * 接收服务里传过来的挂号更新信息
      */
@@ -271,14 +313,10 @@ public class DocOperatActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
 
             if (intent.hasExtra("Dialog")){
-                Log.d("学生邀请","开始");
-
-                waitingDialog= new ProgressDialog(DocOperatActivity.this);
-                waitingDialog.setTitle("我是一个等待Dialog");
-                waitingDialog.setMessage("等待中...");
-                waitingDialog.setIndeterminate(true);
-                waitingDialog.setCancelable(false);
-                waitingDialog.show();
+             //医生开始弹出等待倒计时
+                TextView mOffTextView = new TextView(DocOperatActivity.this);
+              //创建对话框
+                waitStuConfirmDialog();
 
             }else {
                 Log.d("docop","received");
@@ -295,12 +333,16 @@ public class DocOperatActivity extends AppCompatActivity {
                     Log.d("docop",validateResult);
                     //如果学生拒绝了和医生沟通
                     if(validateResult.contains("deny")){
-                        Toast.makeText(context, "当前学生:"+validateResult.substring(4)+"放弃了接诊", Toast.LENGTH_SHORT).show();
-                        if (waitingDialog != null){
-                            waitingDialog.dismiss();
-                        }
+                        mOffTime.cancel();
+                        mDialog.dismiss();
+                        //弹出学生拒绝沟通提示框
+                        stuCancelConfirmDialog();
+                        Log.d("docop","dialog13");
                     }
-                    else{//如果学生统一和医生沟通
+                    else{//如果学生同意和医生沟通
+                        //将计时器取消
+                        mOffTime.cancel();
+                        mDialog.dismiss();
                         Log.d("docop","intoChat");
                         Intent intentToChat=new Intent(DocOperatActivity.this, Chat.class);
                         intentToChat.putExtra("stuId",validateResult);
@@ -323,7 +365,6 @@ public class DocOperatActivity extends AppCompatActivity {
             public void onClick(View view) {
                 intentToService.putExtra("msg","exit");
                 sendBroadcast(intentToService);
-
                 finish();
             }
         });
