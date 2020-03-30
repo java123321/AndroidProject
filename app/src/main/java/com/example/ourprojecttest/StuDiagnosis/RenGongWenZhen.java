@@ -43,6 +43,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -52,6 +54,8 @@ import okhttp3.Response;
 
 
 public class RenGongWenZhen extends AppCompatActivity {
+    private Handler mOffHandler;
+    private Timer mOffTime;
     private String ipAddress;
     private Display display;
     // 获取屏幕高度
@@ -118,6 +122,8 @@ public class RenGongWenZhen extends AppCompatActivity {
                 String person = intent.getStringExtra("persons");
 
                 if (person.equals("-1")) {//如果是-1的话代表到你了，发出提示窗口
+                    //将挂号标记置为false
+                    StuService.isGuaHao=false;
                     Log.d("chat0", "0102");
                     // final Dialog dialog = new AlertDialog.Builder(RenGongWenZhen.this).setTitle("选择")
                     //         .setCancelable(false)
@@ -295,15 +301,66 @@ public class RenGongWenZhen extends AppCompatActivity {
 
     }
 
+    //学生取消之后弹出确认框
+    private void stuCancelConfirmDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(RenGongWenZhen.this);
+        builder.setTitle("提示");
+        builder.setMessage("由于您在规定时间内未选择同意与医生沟通，系统已为您默认放弃此次问诊，如需问诊，请重新点击挂号！");
+        //医生点击确认后接诊下一个同学
+        builder.setPositiveButton("确定",null);
+        builder.show();
+    }
+
+    private void stuCountTimeToDeny(TextView countTime, Dialog mDialog) {
+        mOffHandler = new Handler() {
+            public void handleMessage(Message msg) {
+                if (msg.what > 0) {
+                    ////动态显示倒计时
+                    countTime.setText(+msg.what + "秒后默认拒绝！");
+                } else {
+                    ////倒计时结束后关闭计时器
+                    mOffTime.cancel();
+                    //关闭倒计时窗口
+                    mDialog.dismiss();
+                    //弹出学生放弃沟通提示窗口
+                    Log.d("docop", "dialog13");
+                    stuCancelConfirmDialog();
+                }
+                super.handleMessage(msg);
+            }
+
+        };
+        //倒计时
+        mOffTime = new Timer(true);
+        TimerTask tt = new TimerTask() {
+            int countTime = 10;
+
+            public void run() {
+                if (countTime > 0) {
+                    countTime--;
+                }
+                Message msg = new Message();
+                msg.what = countTime;
+                mOffHandler.sendMessage(msg);
+            }
+        };
+        mOffTime.schedule(tt, 0, 1000);
+    }
+
     private Dialog show(final Intent intent) {
         final Dialog dialog = new Dialog(this, R.style.ActionSheetDialogStyle);        //展示对话框
         //填充对话框的布局
         View inflate = LayoutInflater.from(this).inflate(R.layout.layout_goutong, null);
         //初始化控件
+        TextView countTime = inflate.findViewById(R.id.countTime);
+        stuCountTimeToDeny(countTime, dialog);//该方法用于显示倒计时
         TextView yes = inflate.findViewById(R.id.yes);
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //学生点击沟通之后取消计时器
+                mOffTime.cancel();
+                dialog.dismiss();
                 intentToService.putExtra("msg", "Chat");
                 sendBroadcast(intentToService);
                 //准备跳到聊天界面，并将医生的di放到意图里
@@ -318,6 +375,9 @@ public class RenGongWenZhen extends AppCompatActivity {
         no.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //学生点击放弃沟通之后取消计时器
+                mOffTime.cancel();
+                dialog.dismiss();
                 intentToService.putExtra("msg", "Deny");
                 sendBroadcast(intentToService);
             }
@@ -334,7 +394,8 @@ public class RenGongWenZhen extends AppCompatActivity {
         lp.width = 800;
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         dialogWindow.setAttributes(lp);
-//       将属性设置给窗体
+
+
         dialog.show();//显示对话框
         return dialog;
     }

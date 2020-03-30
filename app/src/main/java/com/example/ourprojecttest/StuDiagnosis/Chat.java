@@ -1,9 +1,11 @@
 package com.example.ourprojecttest.StuDiagnosis;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -20,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.ourprojecttest.StuDiagnosis.VideoCommunication.CallActivity;
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.DocTreatment.Prescribe;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
@@ -30,7 +33,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import pub.devrel.easypermissions.EasyPermissions;
+
 public class Chat extends AppCompatActivity {
+    private String[] perms= new String[]{//视频聊天需要的权限
+            Manifest.permission.CAMERA,
+            Manifest.permission.INTERNET,
+            Manifest.permission.RECORD_AUDIO
+    };
     private String type;//代表是学生登录还是医生登录
     private static final int TYPE_RECEIVED = 0;
     private static final int TYPE_SENT = 1;
@@ -203,13 +213,20 @@ public class Chat extends AppCompatActivity {
             adapter = new MsgAdapter(msgList, docPicture, stuPicture);
         }
         Log.d("chatId", stuOrDocId);
-
         msgRecyclerView.setAdapter(adapter);
         video = findViewById(R.id.videoChat);
         //设置视频聊天的点击事件
         video.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //先申请权限
+                if(!EasyPermissions.hasPermissions(Chat.this,perms)){
+                    EasyPermissions.requestPermissions(Chat.this,"Need permissions for camera and audio",0,perms);
+                }
+                else{
+                    Intent intentToVideo=new Intent(Chat.this, CallActivity.class);
+                    startActivity(intentToVideo);
+                }
 
             }
         });
@@ -267,6 +284,11 @@ public class Chat extends AppCompatActivity {
             inputText.setText("");//清空输入框中的内容
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults);
+    }
 
     //当退出聊天界面的时候，将聊天记录保存
     @Override

@@ -4,12 +4,14 @@
 
     <uses-feature android:name="android.hardware.camera2" />
     <uses-feature android:name="android.hardware.camera2.autofocus" />
+
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -22,6 +24,7 @@
         android:supportsRtl="true"
         android:theme="@style/Noactionbar"
         android:usesCleartextTraffic="true">
+        <activity android:name=".StuDiagnosis.VideoCommunication.CallActivity"></activity>
         <activity
             android:name=".DocTreatment.DocDrugStore"
             android:launchMode="singleInstance" />
@@ -37,8 +40,7 @@
         <activity android:name=".StuDiagnosis.RenGongWenZhen" />
         <activity android:name=".DocMine.DocInformation.ModefyDocName" />
         <activity android:name=".StuDrugStore.StuBuyDrug" />
-        <activity
-            android:name=".NavigationBar.DocBottomNavigation" />
+        <activity android:name=".NavigationBar.DocBottomNavigation" />
         <activity android:name=".StuDrugStore.StuDrugDetail" />
         <activity android:name=".FindPass" />
         <activity android:name=".StuDrugStore.UpDrugMsgActivity" />
@@ -51,9 +53,9 @@
         <activity android:name=".StuMine.StuInfomation.ModefyStuName" />
         <activity android:name=".StuMine.ModifyPassword" />
         <activity android:name=".StuMine.ShoppingCart.ShoppingCartActivity" />
-        <activity android:name=".NavigationBar.StuBottomNavigation"
-            android:launchMode="singleTask"
-            />
+        <activity
+            android:name=".NavigationBar.StuBottomNavigation"
+            android:launchMode="singleTask" />
         <activity android:name=".DocMine.DocInformation.DocInformation" />
         <activity
             android:name=".WelcomeActivity"

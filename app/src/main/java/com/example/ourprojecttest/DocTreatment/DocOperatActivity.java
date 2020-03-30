@@ -169,9 +169,6 @@ public class DocOperatActivity extends AppCompatActivity {
     }
 
     private void initView(){
-        //创建一个服务
-        Intent intentStartService = new Intent(DocOperatActivity.this, DocService.class);
-        startService(intentStartService);
         //如果有状态码state代表用户从前台服务跳进来
         Intent intent=getIntent();
         if(intent.hasExtra("state")){

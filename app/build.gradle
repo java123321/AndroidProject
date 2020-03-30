@@ -27,6 +27,10 @@ android {
             proguardFiles 'proguard-project.txt'
         }
     }
+    compileOptions {
+        targetCompatibility = 1.8
+        sourceCompatibility = 1.8
+    }
 }
 
 
@@ -54,7 +58,10 @@ dependencies {
     //引入webRTC库
     implementation 'org.webrtc:google-webrtc:1.0.+'
     //引入socket.io库
-    implementation 'io.socket:socket.io-client:1.0.0'
-    //简单获取权限
+    implementation ('io.socket:socket.io-client:1.0.0') {
+        exclude group: 'org.json', module: 'json'
+    }
+
+    //简单获取权限1
     implementation 'pub.devrel:easypermissions:1.1.3'
 }

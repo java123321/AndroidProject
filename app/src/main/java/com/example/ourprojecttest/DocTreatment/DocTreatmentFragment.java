@@ -25,7 +25,7 @@ public class DocTreatmentFragment extends Fragment {
         Button houzhen=view.findViewById(R.id.jiezhen);
         DiffuseView diffuseView=view.findViewById(R.id.diffuseView);
         diffuseView.start();
-        //创建一个服务
+        //创建一个医生服务
         Intent intentStartService = new Intent(getContext(), DocService.class);
         getContext().startService(intentStartService);
         //注册医生上线的点击事件
