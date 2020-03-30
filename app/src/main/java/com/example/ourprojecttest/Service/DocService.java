@@ -18,6 +18,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import com.example.ourprojecttest.DocTreatment.DocOperatActivity;
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.R;
 import com.example.ourprojecttest.StuDiagnosis.RenGongWenZhen;
@@ -170,9 +171,16 @@ public class DocService extends Service {
                 intentToBeforChat.putExtra("Dialog", "true");
                 sendBroadcast(intentToBeforChat);
                 intentToBeforChat.removeExtra("Dialog");
-            }else if(info.equals("updateStu")){//如果是服务器通知医生更新在线学生
+            }else if(info.startsWith("updateStu")){//如果是服务器通知医生更新在线学生
+                String stuNumber=info.substring(9);
                 intentToBeforChat.putExtra("updateStu","");
                 sendBroadcast(intentToBeforChat);
+                if(stuNumber.equals("0")){//如果当前没有学生排队
+                    startForeground(1, getNotification(CHANNEL_ID,"当前暂无学生排队"));
+                }
+                else{
+                    startForeground(1, getNotification(CHANNEL_ID, "当前有"+info.substring(9)+"位同学正在挂号排队，请注意及时接诊！"));
+                }
                 intentToBeforChat.removeExtra("updateStu");
             }
         }
@@ -290,7 +298,7 @@ public class DocService extends Service {
      */
     private Notification getNotification(String chanelId, String content) {
 
-        Intent intent = new Intent(this, RenGongWenZhen.class);
+        Intent intent = new Intent(this, DocOperatActivity.class);
         PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, chanelId);
