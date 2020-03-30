@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +53,9 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class DocOperatActivity extends AppCompatActivity {
+    private Display display;
+    // 获取屏幕高度
+    private int height;
     private TextView mOffTextView;
     private Handler mOffHandler;
     private Timer mOffTime;
@@ -65,7 +70,7 @@ public class DocOperatActivity extends AppCompatActivity {
     private RecyclerView mRecycler;
     private SwipeRefreshLayout refresh;
     private Button access;
-    private TextView noStudent;
+    private LinearLayout noStudent;
     private DisplayStuAdapter adapter;
     private Handler handler=new Handler(){
         @Override
@@ -169,6 +174,10 @@ public class DocOperatActivity extends AppCompatActivity {
     }
 
     private void initView(){
+        display = getWindowManager().getDefaultDisplay();
+        // 获取屏幕高度
+        height = display.getHeight();
+
         //如果有状态码state代表用户从前台服务跳进来
         Intent intent=getIntent();
         if(intent.hasExtra("state")){
@@ -188,7 +197,6 @@ public class DocOperatActivity extends AppCompatActivity {
             }
         });
         noStudent=findViewById(R.id.noStudent);
-        noStudent.setText("当前暂无学生问诊，请等待！");
         access=findViewById(R.id.access);
         mRecycler=findViewById(R.id.docDisplayStu);
         LinearLayoutManager layoutManager=new LinearLayoutManager(this);
@@ -201,10 +209,18 @@ public class DocOperatActivity extends AppCompatActivity {
         access.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                intentToService.putExtra("msg","Access");
-                sendBroadcast(intentToService);
-                Log.d("线程信息","："+Thread.currentThread().getId()+"  " +
-                        "弹出聊天消息");
+                if(noStudent.getVisibility()==View.VISIBLE){
+                    Toast toast = Toast.makeText(DocOperatActivity.this, "当前暂无学生问诊，请等候！", Toast.LENGTH_SHORT);
+                    // 这里给了一个1/4屏幕高度的y轴偏移量
+                    toast.setGravity(Gravity.BOTTOM,0,height/5);
+                    toast.show();
+                }else{
+                    intentToService.putExtra("msg","Access");
+                    sendBroadcast(intentToService);
+                    Log.d("线程信息","："+Thread.currentThread().getId()+"  " +
+                            "弹出聊天消息");
+                }
+
             }
         });
 

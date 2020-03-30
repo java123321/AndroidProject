@@ -21,10 +21,31 @@
         android:layout_width="match_parent"
         android:layout_weight="1"
         android:layout_height="0dp">
-        <TextView
+        <LinearLayout
             android:id="@+id/noStudent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="#F5F5F5"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingTop="100dp">
+
+            <com.example.ourprojecttest.Utils.Roundimage
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/no_stu" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="当前暂无学生问诊\n请等候！"
+                android:textColor="#FD0896F5"
+                android:textSize="20dp" />
+        </LinearLayout>
+
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefresh"
             android:layout_width="wrap_content"
