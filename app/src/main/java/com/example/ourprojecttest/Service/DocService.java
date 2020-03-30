@@ -170,6 +170,10 @@ public class DocService extends Service {
                 intentToBeforChat.putExtra("Dialog", "true");
                 sendBroadcast(intentToBeforChat);
                 intentToBeforChat.removeExtra("Dialog");
+            }else if(info.equals("updateStu")){//如果是服务器通知医生更新在线学生
+                intentToBeforChat.putExtra("updateStu","");
+                sendBroadcast(intentToBeforChat);
+                intentToBeforChat.removeExtra("updateStu");
             }
         }
 

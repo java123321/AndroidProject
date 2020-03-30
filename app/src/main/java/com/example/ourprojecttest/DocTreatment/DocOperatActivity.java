@@ -308,13 +308,11 @@ public class DocOperatActivity extends AppCompatActivity {
     class LocalReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-
-            if (intent.hasExtra("Dialog")){
-             //医生开始弹出等待倒计时
-                TextView mOffTextView = new TextView(DocOperatActivity.this);
+            if(intent.hasExtra("updateStu")){//如果是更新挂号学生
+            getData();
+            }else if (intent.hasExtra("Dialog")){
               //创建对话框
                 waitStuConfirmDialog();
-
             }else {
                 Log.d("docop","received");
 
