@@ -3,7 +3,6 @@ package com.example.ourprojecttest.StuMine.ShoppingCart;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -28,7 +27,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
 import com.example.ourprojecttest.AlipayModule.AuthResult;
@@ -38,12 +36,9 @@ import com.example.ourprojecttest.AlipayModule.OrderInfoUtil2_0;
 import com.example.ourprojecttest.AlipayModule.PayResult;
 import com.example.ourprojecttest.R;
 import com.example.ourprojecttest.NavigationBar.StuBottomNavigation;
-
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -56,8 +51,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
-
-
 public class ShoppingCartActivity extends AppCompatActivity {
     private String ipAddress;
     private Display display;

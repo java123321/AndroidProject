@@ -43,6 +43,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -52,14 +54,16 @@ import okhttp3.Response;
 
 
 public class RenGongWenZhen extends AppCompatActivity {
+    private Handler mOffHandler;
+    private Timer mOffTime;
     private String ipAddress;
     private Display display;
     // 获取屏幕高度
     private int height;
-    private final int SUCCESS=1;
-    private final int FAULT=0;
-    private CommonMethod method=new CommonMethod();
-    private Intent intentToService=new Intent("com.example.ourprojecttest.UPDATE_SERVICE");
+    private final int SUCCESS = 1;
+    private final int FAULT = 0;
+    private CommonMethod method = new CommonMethod();
+    private Intent intentToService = new Intent("com.example.ourprojecttest.UPDATE_SERVICE");
     private LocalReceiver localReceiver;
     private IntentFilter intentFilter;
     private LinearLayout noDoctor;
@@ -67,20 +71,18 @@ public class RenGongWenZhen extends AppCompatActivity {
     private Button guaHao;
     private TextView text;
     private DisplayDocAdapter adapter;
-    private TextView mShutDownTextView;
     private RecyclerView mRecycler;
-    private ArrayList<DisplayDocBean> lists=new ArrayList<>();
     private SwipeRefreshLayout refresh;
-    private Handler handler=new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
-            Log.d("msgwhat","what:"+msg.what);
+            Log.d("msgwhat", "what:" + msg.what);
             refresh.setRefreshing(false);
-            switch (msg.what){
+            switch (msg.what) {
                 case SUCCESS:
-                    ArrayList<DisplayDocBean>list=(ArrayList<DisplayDocBean>)msg.obj;
-                    Log.d("msgwhat","size"+list.size());
+                    ArrayList<DisplayDocBean> list = (ArrayList<DisplayDocBean>) msg.obj;
+                    Log.d("msgwhat", "size" + list.size());
                     adapter.setList(list);
                     adapter.notifyDataSetChanged();
                     noDoctor.setVisibility(View.GONE);
@@ -95,116 +97,62 @@ public class RenGongWenZhen extends AppCompatActivity {
 
         }
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ren_gong_wen_zhen);
-        ipAddress=getResources().getString(R.string.ipAdrress);
+        ipAddress = getResources().getString(R.string.ipAdrress);
         initView();
         ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
         //开始注册广播监听器，准备接受服务里发送过来的更新挂号信息
-        intentFilter=new IntentFilter();
+        intentFilter = new IntentFilter();
         intentFilter.addAction("com.example.ourprojecttest.UPDATE_PERSONS");
-        localReceiver=new LocalReceiver();
-        registerReceiver(localReceiver,intentFilter);
+        localReceiver = new LocalReceiver();
+        registerReceiver(localReceiver, intentFilter);
     }
+
     /**
      * 接收服务里传过来的挂号更新信息
      */
     class LocalReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, final Intent intent) {
-            if(intent.hasExtra("persons")){
-                String person=intent.getStringExtra("persons");
+            if (intent.hasExtra("persons")) {
+                String person = intent.getStringExtra("persons");
 
-                if(person.equals("-1")){//如果是-1的话代表到你了，发出提示窗口
-                    Log.d("chat0","0102");
-                   // final Dialog dialog = new AlertDialog.Builder(RenGongWenZhen.this).setTitle("选择")
-                   //         .setCancelable(false)
-                   //         //.setView(mShutDownTextView)
-                   //         .setPositiveButton("沟通", new DialogInterface.OnClickListener() {//如果用户点击了确定按钮则进入与医生的聊天界面
+                if (person.equals("-1")) {//如果是-1的话代表到你了，发出提示窗口
+                    //将挂号标记置为false
+                    StuService.isGuaHao=false;
+                    Log.d("chat0", "0102");
+                    // final Dialog dialog = new AlertDialog.Builder(RenGongWenZhen.this).setTitle("选择")
+                    //         .setCancelable(false)
+                    //         //.setView(mShutDownTextView)
+                    //         .setPositiveButton("沟通", new DialogInterface.OnClickListener() {//如果用户点击了确定按钮则进入与医生的聊天界面
                     //            @Override
-                     //           public void onClick(DialogInterface dialogInterface, int i) {
-                     //               //给医生发通知表明学生统一看病
-                     //               intentToService.putExtra("msg","Chat");
-                     //               sendBroadcast(intentToService);
-                     //               //准备跳到聊天界面，并将医生的di放到意图里
-                       //             Intent intentToChat=new Intent(RenGongWenZhen.this, Chat.class);
-                      //              intentToChat.putExtra("docId",intent.getStringExtra("docId"));
-                      //              intentToChat.putExtra("docName",intent.getStringExtra("docName"));
-                      //              intentToChat.putExtra("docPicture",intent.getByteArrayExtra("docPicture"));
-                      //              startActivity(intentToChat);
-                         //       }
-                       //     })
-                       //     .setNegativeButton("放弃", new DialogInterface.OnClickListener() {
-                       //         @Override
-                        //        public void onClick(DialogInterface dialog, int which) {
-                         //           intentToService.putExtra("msg","Deny");
-                         //           sendBroadcast(intentToService);
-                            //    }
-                           // }).create();
+                    //           public void onClick(DialogInterface dialogInterface, int i) {
+                    //               //给医生发通知表明学生统一看病
+                    //               intentToService.putExtra("msg","Chat");
+                    //               sendBroadcast(intentToService);
+                    //               //准备跳到聊天界面，并将医生的di放到意图里
+                    //             Intent intentToChat=new Intent(RenGongWenZhen.this, Chat.class);
+                    //              intentToChat.putExtra("docId",intent.getStringExtra("docId"));
+                    //              intentToChat.putExtra("docName",intent.getStringExtra("docName"));
+                    //              intentToChat.putExtra("docPicture",intent.getByteArrayExtra("docPicture"));
+                    //              startActivity(intentToChat);
+                    //       }
+                    //     })
+                    //     .setNegativeButton("放弃", new DialogInterface.OnClickListener() {
+                    //         @Override
+                    //        public void onClick(DialogInterface dialog, int which) {
+                    //           intentToService.putExtra("msg","Deny");
+                    //           sendBroadcast(intentToService);
+                    //    }
+                    // }).create();
+                    show(intent);
 
-                    final Dialog dialog = new Dialog(RenGongWenZhen.this,R.style.ActionSheetDialogStyle);        //展示对话框
-                    //填充对话框的布局
-                    View inflate = LayoutInflater.from(RenGongWenZhen.this).inflate(R.layout.layout_goutong, null);
-                    //初始化控件
-                    TextView yes = inflate.findViewById(R.id.yes);
-                    yes.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            intentToService.putExtra("msg","Chat");
-                            sendBroadcast(intentToService);
-                            //准备跳到聊天界面，并将医生的di放到意图里
-                            Intent intentToChat=new Intent(RenGongWenZhen.this, Chat.class);
-                            intentToChat.putExtra("docId",intent.getStringExtra("docId"));
-                            intentToChat.putExtra("docName",intent.getStringExtra("docName"));
-                            intentToChat.putExtra("docPicture",intent.getByteArrayExtra("docPicture"));
-                            startActivity(intentToChat);
-                            dialog.dismiss();
-                        }
-                    });
-                    TextView no = inflate.findViewById(R.id.no);
-                    no.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            intentToService.putExtra("msg","Deny");
-                            sendBroadcast(intentToService);
-                        }
-                    });
-
-
-                    //将布局设置给Dialog
-                    dialog.setContentView(inflate);
-                    //获取当前Activity所在的窗体
-                    Window dialogWindow = dialog.getWindow();
-                    //设置Dialog从窗体底部弹出
-                    dialogWindow.setGravity( Gravity.CENTER);
-                    //获得窗体的属性
-                    WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-                    lp.width =800;
-                    lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-                    dialogWindow.setAttributes(lp);
-//       将属性设置给窗体
-                    dialog.show();//显示对话
-                            CountDownTimer cdt = new CountDownTimer(10000,1000) {
-                                int i = 10;
-                                @Override
-                                public void onTick(long millisUntilFinished) {
-                                }
-                                @Override
-                                public void onFinish() {
-                                    if (dialog != null){
-                                        dialog.dismiss();
-                                    }
-                                    intentToService.putExtra("msg","Deny");
-                                    sendBroadcast(intentToService);
-
-                                }
-                            };
-                            cdt.start();
-                }
-                else{//否则显示当前排队人数
-                    text.setText("当前挂号位次为第"+intent.getStringExtra("persons")+"位");
+                } else {//否则显示当前排队人数
+                    text.setText("当前挂号位次为第" + intent.getStringExtra("persons") + "位");
                 }
             }
         }
@@ -213,62 +161,63 @@ public class RenGongWenZhen extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d("wenzhen","onDestroy");
+        Log.d("wenzhen", "onDestroy");
     }
 
     //从服务器获取当前在线医生的信息
-    private void getData(){
+    private void getData() {
         refresh.setRefreshing(true);
-        final String url=ipAddress+"IM/GetOnlineDoc";
-         new Thread(new Runnable() {
-        @Override
-        public void run() {
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .url(url)
-                    .build();
-            try {
-                Response response = client.newCall(request).execute();
-                String responseData = response.body().string();
-                parseJSONToDoc(responseData);
-            } catch (Exception e) {
-                e.printStackTrace();
+        final String url = ipAddress + "IM/GetOnlineDoc";
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url(url)
+                        .build();
+                try {
+                    Response response = client.newCall(request).execute();
+                    String responseData = response.body().string();
+                    parseJSONToDoc(responseData);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-        }
-    }).start();
+        }).start();
     }
-    //解析在线医生信息json
-    private void parseJSONToDoc(String data){
-        Log.d("msgwhat","data"+data);
-        ArrayList<DisplayDocBean> list=new ArrayList<>();
-        Message msg=Message.obtain();
-        try{
-            JSONArray jsonArray=new JSONArray(data);
-          for(int i=0;i<jsonArray.length();i++){
-              JSONObject jsonObject=jsonArray.getJSONObject(i);
 
-              if(!jsonObject.has("#x")){
-                  DisplayDocBean info=new DisplayDocBean();
-                  info.setName(jsonObject.getString("Doc_Name"));;
-                  info.setBrief(jsonObject.getString("Doc_Introduce"));
-                  info.setSex(jsonObject.getString("Doc_Sex"));
-                  //设置医生头像
-                  info.setIcon(method.drawableToBitamp( Drawable.createFromStream(new URL(ipAddress+jsonObject.getString("Doc_Icon")).openStream(),"image.jpg")));
+    //解析在线医生信息json
+    private void parseJSONToDoc(String data) {
+        Log.d("msgwhat", "data" + data);
+        ArrayList<DisplayDocBean> list = new ArrayList<>();
+        Message msg = Message.obtain();
+        try {
+            JSONArray jsonArray = new JSONArray(data);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                if (!jsonObject.has("#x")) {
+                    DisplayDocBean info = new DisplayDocBean();
+                    info.setName(jsonObject.getString("Doc_Name"));
+                    ;
+                    info.setBrief(jsonObject.getString("Doc_Introduce"));
+                    info.setSex(jsonObject.getString("Doc_Sex"));
+                    //设置医生头像
+                    info.setIcon(method.drawableToBitamp(Drawable.createFromStream(new URL(ipAddress + jsonObject.getString("Doc_Icon")).openStream(), "image.jpg")));
                     //设置医生的执照
-                  info.setLicense(method.drawableToBitamp( Drawable.createFromStream(new URL(ipAddress+jsonObject.getString("Doc_License")).openStream(),"image.jpg")));
-                  list.add(info);
-              }
-              else {//如果当前没有在线医生
-                    msg.what=FAULT;
+                    info.setLicense(method.drawableToBitamp(Drawable.createFromStream(new URL(ipAddress + jsonObject.getString("Doc_License")).openStream(), "image.jpg")));
+                    list.add(info);
+                } else {//如果当前没有在线医生
+                    msg.what = FAULT;
                     handler.sendMessage(msg);
                     return;
-              }
-          }
+                }
+            }
 
-          Log.d("msgwhat","size1"+list.size());
-          msg.what=SUCCESS;
-          msg.obj=list;
-          handler.sendMessage(msg);
+            Log.d("msgwhat", "size1" + list.size());
+            msg.what = SUCCESS;
+            msg.obj = list;
+            handler.sendMessage(msg);
 
         } catch (JSONException | MalformedURLException e) {
             e.printStackTrace();
@@ -277,23 +226,22 @@ public class RenGongWenZhen extends AppCompatActivity {
         }
     }
 
-    private void initView(){
+    private void initView() {
         display = getWindowManager().getDefaultDisplay();
         // 获取屏幕高度
         height = display.getHeight();
         //如果有状态码state代表用户从前台服务跳进来
-        Intent intent=getIntent();
-        if(intent.hasExtra("state")){
+        Intent intent = getIntent();
+        if (intent.hasExtra("state")) {
             //如果是-1代表当前是
-          if(intent.getStringExtra("state").equals(-1)){
+            if (intent.getStringExtra("state").equals(-1)) {
 
-          }
-          else{
+            } else {
 
-          }
+            }
 
         }
-        refresh=findViewById(R.id.swipeRefresh);
+        refresh = findViewById(R.id.swipeRefresh);
         //设置下拉刷新的的更新事件
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -303,33 +251,30 @@ public class RenGongWenZhen extends AppCompatActivity {
         });
         refresh.setColorSchemeColors(getResources().getColor(R.color.color_bottom));
         refresh.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.color_progressbar));
-        noDoctor=findViewById(R.id.noDoctor);
-        mRecycler=findViewById(R.id.stuDisplayDoc);
-        LinearLayoutManager layoutManager=new LinearLayoutManager(this);
+        noDoctor = findViewById(R.id.noDoctor);
+        mRecycler = findViewById(R.id.stuDisplayDoc);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecycler.setLayoutManager(layoutManager);
         adapter = new DisplayDocAdapter(RenGongWenZhen.this);
         mRecycler.setAdapter(adapter);
         //联网获取数据
         getData();
-        guanbi=findViewById(R.id.stu_wenzhen_guanbi);
-        guaHao=findViewById(R.id.stu_wenzhen_guahao);
-        text=findViewById(R.id.stuWenZhenDisplayGuaHaoInfo);
-
-
+        guanbi = findViewById(R.id.stu_wenzhen_guanbi);
+        guaHao = findViewById(R.id.stu_wenzhen_guahao);
+        text = findViewById(R.id.stuWenZhenDisplayGuaHaoInfo);
         //设置点击挂号的点击事件
-        guaHao.setOnClickListener(new View.OnClickListener(){
+        guaHao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //如果服务在运行
-                if(StuService.isGuaHao){
+                if (StuService.isGuaHao) {
                     Toast toast = Toast.makeText(RenGongWenZhen.this, "正在挂号，请勿重复点击！", Toast.LENGTH_SHORT);
                     // 这里给了一个1/4屏幕高度的y轴偏移量
-                    toast.setGravity(Gravity.BOTTOM,0,height/5);
+                    toast.setGravity(Gravity.BOTTOM, 0, height / 5);
                     toast.show();
-                }
-                else{
+                } else {
                     //通知服务开启挂号
-                    intentToService.putExtra("msg","StartGuaHao");
+                    intentToService.putExtra("msg", "StartGuaHao");
                     sendBroadcast(intentToService);
                 }
             }
@@ -341,15 +286,14 @@ public class RenGongWenZhen extends AppCompatActivity {
             public void onClick(View view) {
 
                 //如果服务在运行
-                if(StuService.isGuaHao){
+                if (StuService.isGuaHao) {
                     //给服务发送取消挂号的广播
-                    intentToService.putExtra("msg","ExitGuaHao");
+                    intentToService.putExtra("msg", "ExitGuaHao");
                     sendBroadcast(intentToService);
-                }
-                else{
+                } else {
                     Toast toast = Toast.makeText(RenGongWenZhen.this, "您暂未开启挂号！", Toast.LENGTH_SHORT);
                     // 这里给了一个1/4屏幕高度的y轴偏移量
-                    toast.setGravity(Gravity.BOTTOM,0,height/5);
+                    toast.setGravity(Gravity.BOTTOM, 0, height / 5);
                     toast.show();
                 }
             }
@@ -357,22 +301,73 @@ public class RenGongWenZhen extends AppCompatActivity {
 
     }
 
-    public Dialog show(final  Intent intent){
-        final Dialog dialog = new Dialog(this,R.style.ActionSheetDialogStyle);        //展示对话框
+    //学生取消之后弹出确认框
+    private void stuCancelConfirmDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(RenGongWenZhen.this);
+        builder.setTitle("提示");
+        builder.setMessage("由于您在规定时间内未选择同意与医生沟通，系统已为您默认放弃此次问诊，如需问诊，请重新点击挂号！");
+        //医生点击确认后接诊下一个同学
+        builder.setPositiveButton("确定",null);
+        builder.show();
+    }
+
+    private void stuCountTimeToDeny(final TextView countTime, final Dialog mDialog) {
+        mOffHandler = new Handler() {
+            public void handleMessage(Message msg) {
+                if (msg.what > 0) {
+                    ////动态显示倒计时
+                    countTime.setText(+msg.what + "秒后默认拒绝！");
+                } else {
+                    ////倒计时结束后关闭计时器
+                    mOffTime.cancel();
+                    //关闭倒计时窗口
+                    mDialog.dismiss();
+                    //弹出学生放弃沟通提示窗口
+                    Log.d("docop", "dialog13");
+                    stuCancelConfirmDialog();
+                }
+                super.handleMessage(msg);
+            }
+
+        };
+        //倒计时
+        mOffTime = new Timer(true);
+        TimerTask tt = new TimerTask() {
+            int countTime = 10;
+
+            public void run() {
+                if (countTime > 0) {
+                    countTime--;
+                }
+                Message msg = new Message();
+                msg.what = countTime;
+                mOffHandler.sendMessage(msg);
+            }
+        };
+        mOffTime.schedule(tt, 0, 1000);
+    }
+
+    private Dialog show(final Intent intent) {
+        final Dialog dialog = new Dialog(this, R.style.ActionSheetDialogStyle);        //展示对话框
         //填充对话框的布局
         View inflate = LayoutInflater.from(this).inflate(R.layout.layout_goutong, null);
         //初始化控件
+        TextView countTime = inflate.findViewById(R.id.countTime);
+        stuCountTimeToDeny(countTime, dialog);//该方法用于显示倒计时
         TextView yes = inflate.findViewById(R.id.yes);
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                intentToService.putExtra("msg","Chat");
+                //学生点击沟通之后取消计时器
+                mOffTime.cancel();
+                dialog.dismiss();
+                intentToService.putExtra("msg", "Chat");
                 sendBroadcast(intentToService);
                 //准备跳到聊天界面，并将医生的di放到意图里
-                Intent intentToChat=new Intent(RenGongWenZhen.this, Chat.class);
-                intentToChat.putExtra("docId",intent.getStringExtra("docId"));
-                intentToChat.putExtra("docName",intent.getStringExtra("docName"));
-                intentToChat.putExtra("docPicture",intent.getByteArrayExtra("docPicture"));
+                Intent intentToChat = new Intent(RenGongWenZhen.this, Chat.class);
+                intentToChat.putExtra("docId", intent.getStringExtra("docId"));
+                intentToChat.putExtra("docName", intent.getStringExtra("docName"));
+                intentToChat.putExtra("docPicture", intent.getByteArrayExtra("docPicture"));
                 startActivity(intentToChat);
             }
         });
@@ -380,24 +375,27 @@ public class RenGongWenZhen extends AppCompatActivity {
         no.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                intentToService.putExtra("msg","Deny");
+                //学生点击放弃沟通之后取消计时器
+                mOffTime.cancel();
+                dialog.dismiss();
+                intentToService.putExtra("msg", "Deny");
                 sendBroadcast(intentToService);
             }
         });
-
 
         //将布局设置给Dialog
         dialog.setContentView(inflate);
         //获取当前Activity所在的窗体
         Window dialogWindow = dialog.getWindow();
         //设置Dialog从窗体底部弹出
-        dialogWindow.setGravity( Gravity.CENTER);
+        dialogWindow.setGravity(Gravity.CENTER);
         //获得窗体的属性
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-        lp.width =800;
+        lp.width = 800;
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         dialogWindow.setAttributes(lp);
-//       将属性设置给窗体
+
+
         dialog.show();//显示对话框
         return dialog;
     }

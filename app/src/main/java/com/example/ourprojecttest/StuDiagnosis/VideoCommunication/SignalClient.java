@@ -1,11 +1,14 @@
 package com.example.ourprojecttest.StuDiagnosis.VideoCommunication;
 
 import android.util.Log;
+
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
+
 import org.json.JSONObject;
 import java.net.URISyntaxException;
-import io.socket.client.IO;
-import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
+
 
 public class SignalClient {
 
@@ -19,7 +22,6 @@ public class SignalClient {
 
     public interface OnSignalEventListener {
         void onConnected();
-        void onConnecting();
         void onDisconnected();
         void onUserJoined(String roomName, String userID);
         void onUserLeaved(String roomName, String userID);
@@ -62,12 +64,10 @@ public class SignalClient {
     }
 
     public void leaveRoom() {
-
         Log.i(TAG, "leaveRoom: " + mRoomName);
         if (mSocket == null) {
             return;
         }
-
         mSocket.emit("leave", mRoomName);
 //        mSocket.close();
 //        mSocket = null;
@@ -112,16 +112,6 @@ public class SignalClient {
             }
         });
 
-        mSocket.on(Socket.EVENT_CONNECTING, new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                Log.i(TAG, "onConnecting");
-                if (mOnSignalEventListener != null) {
-                    mOnSignalEventListener.onConnecting();
-                }
-            }
-        });
-
         mSocket.on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
@@ -132,17 +122,17 @@ public class SignalClient {
             }
         });
 
-        mSocket.on("joined", args -> {
-            String roomName = (String) args[0];
-            String userId = (String) args[1];
-            Log.d("joined","onUserJoined, room:" + roomName + "uid:" + userId);
-            if (/*!mUserId.equals(userId) &&*/ mOnSignalEventListener != null) {
-                //mOnSignalEventListener.onRemoteUserJoined(userId);
-                mOnSignalEventListener.onUserJoined(roomName, userId);
+        mSocket.on("joined", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                String roomName = (String) args[0];
+                String userId = (String) args[1];
+                Log.d("joined","onUserJoined, room:" + roomName + "uid:" + userId);
+                if (/*!mUserId.equals(userId) &&*/ mOnSignalEventListener != null) {
+                    //mOnSignalEventListener.onRemoteUserJoined(userId);
+                    mOnSignalEventListener.onUserJoined(roomName, userId);
+                }
             }
-            //Log.i(TAG, "onRemoteUserJoined: " + userId);
-
-
         });
 
         mSocket.on("leaved", new Emitter.Listener() {

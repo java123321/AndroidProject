@@ -1,7 +1,9 @@
 package com.example.ourprojecttest.StuDiagnosis.VideoCommunication;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import com.example.ourprojecttest.R;
+import com.example.ourprojecttest.Utils.CommonMethod;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,23 +50,24 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-public class CallActivity extends AppCompatActivity {
+import static org.webrtc.EglBase.create;
 
+public class CallActivity extends AppCompatActivity {
+    private String stuOrDocId;
+    private Intent intentToDoc = new Intent("com.example.ourprojecttest.DOC_UPDATE_SERVICE");//将医生的消息传给医生服务
+    private Intent intentToStu = new Intent("com.example.ourprojecttest.UPDATE_SERVICE");//将学生的消息传给学生服务
+    private CommonMethod method=new CommonMethod();
+    private String type;//代表是学生登录还是医生登录
     private static final int VIDEO_RESOLUTION_WIDTH = 1280;
     private static final int VIDEO_RESOLUTION_HEIGHT = 720;
     private static final int VIDEO_FPS = 30;
-
     private String mState = "init";
-
     private TextView mLogcatView;
-
     private static final String TAG = "CallActivity";
-
     public static final String VIDEO_TRACK_ID = "1";//"ARDAMSv0";
     public static final String AUDIO_TRACK_ID = "2";//"ARDAMSa0";
-
     //用于数据传输
-    private PeerConnection mPeerConnection;
+    private PeerConnection mPeerConnection=null;
     private PeerConnectionFactory mPeerConnectionFactory;
 
     //OpenGL ES
@@ -79,24 +83,36 @@ public class CallActivity extends AppCompatActivity {
     private AudioTrack mAudioTrack;
 
     private VideoCapturer mVideoCapturer;
+    private LocalReceiver localReceiver;
+    private IntentFilter intentFilter;
+
+    class LocalReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_call);
 
+        intentFilter = new IntentFilter();
+        intentFilter.addAction("com.example.ourprojecttest.VIDEO_CHAT");
+        localReceiver = new LocalReceiver();
+        registerReceiver(localReceiver, intentFilter);
+
+        stuOrDocId=getIntent().getStringExtra("stuOrDocId");//首先获取对方聊天人的id
+        type = method.getFileData("Type", CallActivity.this);
         mLogcatView = findViewById(R.id.LogcatView);
-
-        mRootEglBase = EglBase.create();
-
+        mRootEglBase = create();
         mLocalSurfaceView = findViewById(R.id.LocalSurfaceView);
         mRemoteSurfaceView = findViewById(R.id.RemoteSurfaceView);
-
         mLocalSurfaceView.init(mRootEglBase.getEglBaseContext(), null);
         mLocalSurfaceView.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL);
         mLocalSurfaceView.setMirror(true);
         mLocalSurfaceView.setEnableHardwareScaler(false /* enabled */);
-
         mRemoteSurfaceView.init(mRootEglBase.getEglBaseContext(), null);
         mRemoteSurfaceView.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL);
         mRemoteSurfaceView.setMirror(true);
@@ -123,14 +139,50 @@ public class CallActivity extends AppCompatActivity {
         mAudioTrack = mPeerConnectionFactory.createAudioTrack(AUDIO_TRACK_ID, audioSource);
         mAudioTrack.setEnabled(true);
 
-        SignalClient.getInstance().setSignalEventListener(mOnSignalEventListener);
-
+//        SignalClient.getInstance().setSignalEventListener(mOnSignalEventListener);
         //String serverAddr="https://nodejs.zhenyuanhe.top";
-        String serverAddr="http://127.0.0.1:8081/";
-        String roomName="111111";
-        SignalClient.getInstance().joinRoom(serverAddr, roomName);
+//        String serverAddr="http://127.0.0.1:8081/";
+//        String roomName="111111";
+//        SignalClient.getInstance().joinRoom(serverAddr, roomName);
+
+            myFunction();
     }
 
+
+
+    private void myFunction(){
+        if (mPeerConnection == null) {
+            mPeerConnection = createPeerConnection();
+        }
+        MediaConstraints mediaConstraints = new MediaConstraints();
+        mediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveAudio", "true"));
+        mediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true"));
+        mediaConstraints.optional.add(new MediaConstraints.KeyValuePair("DtlsSrtpKeyAgreement", "true"));
+        mPeerConnection.createOffer(new SimpleSdpObserver() {
+            @Override
+            public void onCreateSuccess(SessionDescription sessionDescription) {
+                Log.i(TAG, "Create local offer success: \n" + sessionDescription.description);
+                mPeerConnection.setLocalDescription(new SimpleSdpObserver(), sessionDescription);
+                //JSONObject message = new JSONObject();
+//                try {
+//                    message.put("type", "offer");
+//                    message.put("sdp", sessionDescription.description);
+//                    Log.d("callactivity","offer:"+message.toString());
+
+                    if(type.equals("Stu")){//如果是学生端，则通过学生服务发送信令
+                        intentToStu.putExtra("chatMsg", stuOrDocId + "|offerSdp" + sessionDescription.description);//如果以sdp开头的消息默认是关于视频聊天的sdp协商消息，接收端需判断
+                        sendBroadcast(intentToStu);
+                    }else{//如果是医生端
+                        intentToDoc.putExtra("chatMsg", stuOrDocId + "|offerSdp" + sessionDescription.description);
+                        sendBroadcast(intentToDoc);
+                    }
+                    //SignalClient.getInstance().sendMessage(message);
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+            }
+        }, mediaConstraints);
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -158,6 +210,9 @@ public class CallActivity extends AppCompatActivity {
         PeerConnectionFactory.stopInternalTracingCapture();
         PeerConnectionFactory.shutdownInternalTracer();
         mPeerConnectionFactory.dispose();
+
+        //当推出视频聊天时取消广播监听
+        unregisterReceiver(localReceiver);
     }
 
     public static class SimpleSdpObserver implements SdpObserver {
@@ -196,31 +251,31 @@ public class CallActivity extends AppCompatActivity {
         });
     }
 
-    public void doStartCall() {
-        logcatOnUI("Start Call, Wait ...");
-        if (mPeerConnection == null) {
-            mPeerConnection = createPeerConnection();
-        }
-        MediaConstraints mediaConstraints = new MediaConstraints();
-        mediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveAudio", "true"));
-        mediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true"));
-        mediaConstraints.optional.add(new MediaConstraints.KeyValuePair("DtlsSrtpKeyAgreement", "true"));
-        mPeerConnection.createOffer(new SimpleSdpObserver() {
-            @Override
-            public void onCreateSuccess(SessionDescription sessionDescription) {
-                Log.i(TAG, "Create local offer success: \n" + sessionDescription.description);
-                mPeerConnection.setLocalDescription(new SimpleSdpObserver(), sessionDescription);
-                JSONObject message = new JSONObject();
-                try {
-                    message.put("type", "offer");
-                    message.put("sdp", sessionDescription.description);
-                    SignalClient.getInstance().sendMessage(message);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, mediaConstraints);
-    }
+//    public void doStartCall() {
+//        logcatOnUI("Start Call, Wait ...");
+//        if (mPeerConnection == null) {
+//            mPeerConnection = createPeerConnection();
+//        }
+//        MediaConstraints mediaConstraints = new MediaConstraints();
+//        mediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveAudio", "true"));
+//        mediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true"));
+//        mediaConstraints.optional.add(new MediaConstraints.KeyValuePair("DtlsSrtpKeyAgreement", "true"));
+//        mPeerConnection.createOffer(new SimpleSdpObserver() {
+//            @Override
+//            public void onCreateSuccess(SessionDescription sessionDescription) {
+//                Log.i(TAG, "Create local offer success: \n" + sessionDescription.description);
+//                mPeerConnection.setLocalDescription(new SimpleSdpObserver(), sessionDescription);
+//                JSONObject message = new JSONObject();
+//                try {
+//                    message.put("type", "offer");
+//                    message.put("sdp", sessionDescription.description);
+//                    SignalClient.getInstance().sendMessage(message);
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }, mediaConstraints);
+//    }
 
     public void doLeave() {
         logcatOnUI("Leave room, Wait ...");
@@ -400,11 +455,19 @@ public class CallActivity extends AppCompatActivity {
             try {
                 JSONObject message = new JSONObject();
                 //message.put("userId", RTCSignalClient.getInstance().getUserId());
-                message.put("type", "candidate");
+//                message.put("type", "candidate");
                 message.put("label", iceCandidate.sdpMLineIndex);
                 message.put("id", iceCandidate.sdpMid);
                 message.put("candidate", iceCandidate.sdp);
-                SignalClient.getInstance().sendMessage(message);
+//                SignalClient.getInstance().sendMessage(message);
+                if(type.equals("Stu")){//如果是学生端，则通过学生服务发送信令
+                    intentToStu.putExtra("chatMsg", stuOrDocId + "|candidate" + message.toString());//如果以sdp开头的消息默认是关于视频聊天的sdp协商消息，接收端需判断
+                    sendBroadcast(intentToStu);
+                }else{//如果是医生端
+                    intentToDoc.putExtra("chatMsg", stuOrDocId + "|candidate" + message.toString());
+                    sendBroadcast(intentToDoc);
+                }
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -453,22 +516,15 @@ public class CallActivity extends AppCompatActivity {
     private SignalClient.OnSignalEventListener
             mOnSignalEventListener = new SignalClient.OnSignalEventListener() {
 
+
         @Override
         public void onConnected() {
 
-            logcatOnUI("Signal Server Connected !");
-        }
-
-        @Override
-        public void onConnecting() {
-
-            logcatOnUI("Signal Server Connecting !");
         }
 
         @Override
         public void onDisconnected() {
 
-            logcatOnUI("Signal Server Disconnected!");
         }
 
         @Override
@@ -503,7 +559,7 @@ public class CallActivity extends AppCompatActivity {
 
             mState = "joined_conn";
             //调用call， 进行媒体协商
-            doStartCall();
+//            doStartCall();
         }
 
         @Override

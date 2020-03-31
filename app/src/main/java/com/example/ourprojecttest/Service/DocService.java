@@ -39,6 +39,7 @@ public class DocService extends Service {
     private String ipAddress;
     private LocalReceiver localReceiver;
     private IntentFilter intentFilter;
+    private Intent intentToVideoChat = new Intent("com.example.ourprojecttest.VIDEO_CHAT");//该意图是向聊天活动提供媒体协商信息
     private Intent intentToBeforChat = new Intent("com.example.ourprojecttest.DOC_UPDATE_PERSONS");//该意图是通知DocOperator里医生接诊前的准备服务
     private Intent intentToChat = new Intent("com.example.ourprojecttest.ChatMessage");//该意图是向聊天活动发送聊天消息
     private CommonMethod method = new CommonMethod();
@@ -245,7 +246,12 @@ public class DocService extends Service {
                 intentToBeforChat.putExtra("validate", text);
                 sendBroadcast(intentToBeforChat);
                 Log.d("学生消息3", "deny");
-            } else if (!text.equals("上线成功!")) {//如果学生发送的是正常消息
+            }else if(text.startsWith("offerSdp")||text.startsWith("answerSdp")||text.startsWith("candidate")){
+
+
+            }
+            else if (!text.equals("上线成功!")) {//如果学生发送的是正常消息
+
                 intentToChat.putExtra("ReceiveMsg", text);
                 sendBroadcast(intentToChat);
                 Log.d("学生消息4", "chatmsg");
