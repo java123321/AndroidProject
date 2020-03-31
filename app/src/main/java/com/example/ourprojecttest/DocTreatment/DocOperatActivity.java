@@ -62,6 +62,7 @@ public class DocOperatActivity extends AppCompatActivity {
     private Dialog mDialog;
     private String ipAddress;
     private final int SUCCESS=1;
+    private View x;
     private final int FAULT=0;
     private Intent intentToService=new Intent("com.example.ourprojecttest.DOC_UPDATE_SERVICE");//改
     private LocalReceiver localReceiver;
@@ -92,7 +93,6 @@ public class DocOperatActivity extends AppCompatActivity {
                     mRecycler.setVisibility(View.GONE);
                     break;
             }
-
         }
     };
     @Override
@@ -257,24 +257,44 @@ public class DocOperatActivity extends AppCompatActivity {
 
     //学生取消之后弹出确认框
     private void stuCancelConfirmDialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(DocOperatActivity.this);
-        builder.setTitle("提示");
-        builder.setMessage("学生已放弃沟通，是否继续接诊下一位学生?");
-        //医生点击确认后接诊下一个同学
-        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+        final Dialog dialog = new Dialog(this,R.style.ActionSheetDialogStyle);        //展示对话框
+        //填充对话框的布局
+        View inflate = LayoutInflater.from(this).inflate(R.layout.layout_jixujiezhen, null);
+        //初始化控件
+        TextView yes = inflate.findViewById(R.id.yes);
+        yes.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int ii) {
-                //给服务发通知接诊下一个同学
+            public void onClick(View view) {
                 intentToService.putExtra("msg","Access");
                 sendBroadcast(intentToService);
             }
         });
-        builder.setNegativeButton("取消", null);
-        builder.show();
+        TextView no = inflate.findViewById(R.id.no);
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        //将布局设置给Dialog
+        dialog.setContentView(inflate);
+        //获取当前Activity所在的窗体
+
+        Window dialogWindow = dialog.getWindow();
+        //设置Dialog从窗体底部弹出
+        dialogWindow.setGravity( Gravity.CENTER);
+        //获得窗体的属性
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        lp.width =800;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialogWindow.setAttributes(lp);
+//       将属性设置给窗体
+        dialog.show();//显示对话框
     }
     //学生等待确认期间，医生端弹出倒计时窗口
     private void waitStuConfirmDialog(){
         mOffTextView = new TextView(this);
+        x = LayoutInflater.from(this).inflate(R.layout.layout_doc_jixujiezhen, null);
         mDialog = new AlertDialog.Builder(this)
                 .setTitle("提示")
                 .setCancelable(false)
