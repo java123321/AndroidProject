@@ -59,9 +59,11 @@ public class DocOperatActivity extends AppCompatActivity {
     private TextView mOffTextView;
     private Handler mOffHandler;
     private Timer mOffTime;
-    private Dialog mDialog;
+    private Dialog mDialog,dialog1;
     private String ipAddress;
     private final int SUCCESS=1;
+    private View x;
+    private TextView mn;
     private final int FAULT=0;
     private Intent intentToService=new Intent("com.example.ourprojecttest.DOC_UPDATE_SERVICE");//改
     private LocalReceiver localReceiver;
@@ -92,7 +94,6 @@ public class DocOperatActivity extends AppCompatActivity {
                     mRecycler.setVisibility(View.GONE);
                     break;
             }
-
         }
     };
     @Override
@@ -257,42 +258,68 @@ public class DocOperatActivity extends AppCompatActivity {
 
     //学生取消之后弹出确认框
     private void stuCancelConfirmDialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(DocOperatActivity.this);
-        builder.setTitle("提示");
-        builder.setMessage("学生已放弃沟通，是否继续接诊下一位学生?");
-        //医生点击确认后接诊下一个同学
-        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+        final Dialog dialog = new Dialog(this,R.style.ActionSheetDialogStyle);        //展示对话框
+        //填充对话框的布局
+        View inflate = LayoutInflater.from(this).inflate(R.layout.layout_jixujiezhen, null);
+        //初始化控件
+        TextView yes = inflate.findViewById(R.id.yes);
+        yes.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int ii) {
-                //给服务发通知接诊下一个同学
+            public void onClick(View view) {
                 intentToService.putExtra("msg","Access");
                 sendBroadcast(intentToService);
             }
         });
-        builder.setNegativeButton("取消", null);
-        builder.show();
+        TextView no = inflate.findViewById(R.id.no);
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        //将布局设置给Dialog
+        dialog.setContentView(inflate);
+        //获取当前Activity所在的窗体
+        Window dialogWindow = dialog.getWindow();
+        //设置Dialog从窗体底部弹出
+        dialogWindow.setGravity( Gravity.CENTER);
+        //获得窗体的属性
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        lp.width =800;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialogWindow.setAttributes(lp);
+//       将属性设置给窗体
+        dialog.show();//显示对话框
     }
     //学生等待确认期间，医生端弹出倒计时窗口
-    private void waitStuConfirmDialog(){
-        mOffTextView = new TextView(this);
-        mDialog = new AlertDialog.Builder(this)
-                .setTitle("提示")
-                .setCancelable(false)
-                .setView(mOffTextView) ////
-                .create();
-        mDialog.show();
-        mDialog.setCanceledOnTouchOutside(false);
-
+    private void waitStuConfirmDialog( ){
+        dialog1 = new Dialog(this,R.style.ActionSheetDialogStyle);        //展示对话框
+        //填充对话框的布局
+        View inflate = LayoutInflater.from(this).inflate(R.layout.layout_time, null);
+        TextView mn=inflate.findViewById(R.id.time);
+        //将布局设置给Dialog
+        dialog1.setContentView(inflate);
+        //获取当前Activity所在的窗体
+        Window dialogWindow = dialog1.getWindow();
+        //设置Dialog从窗体底部弹出
+        dialogWindow.setGravity( Gravity.CENTER);
+        //获得窗体的属性
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        lp.width =800;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialogWindow.setAttributes(lp);
+//       将属性设置给窗体
+        dialog1.show();//显示对话框
         mOffHandler = new Handler() {
             public void handleMessage(Message msg) {
                 if (msg.what > 0) {
                     ////动态显示倒计时
-                    mOffTextView.setText("正在等待学生确认，确认剩余时间为:"+msg.what+"秒");
+                    mn.setText("正在等待学生确认，确认剩余时间为:"+msg.what+"秒");
                 } else {
                     ////倒计时结束后关闭计时器
                     mOffTime.cancel();
                     //关闭倒计时窗口
-                    mDialog.dismiss();
+                    dialog1.dismiss();
                     //弹出学生取消沟通提示窗口
                     Log.d("docop","dialog13");
                     stuCancelConfirmDialog();
@@ -345,7 +372,7 @@ public class DocOperatActivity extends AppCompatActivity {
                     //如果学生拒绝了和医生沟通
                     if(validateResult.contains("deny")){
                         mOffTime.cancel();
-                        mDialog.dismiss();
+                        dialog1.dismiss();
                         //弹出学生拒绝沟通提示框
                         stuCancelConfirmDialog();
                         Log.d("docop","dialog13");
@@ -353,7 +380,7 @@ public class DocOperatActivity extends AppCompatActivity {
                     else{//如果学生同意和医生沟通
                         //将计时器取消
                         mOffTime.cancel();
-                        mDialog.dismiss();
+                        dialog1.dismiss();
                         Log.d("docop","intoChat");
                         Intent intentToChat=new Intent(DocOperatActivity.this, Chat.class);
                         intentToChat.putExtra("stuId",validateResult);

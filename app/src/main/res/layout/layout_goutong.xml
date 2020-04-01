@@ -24,16 +24,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#FD0896F5"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:gravity="center"
-                android:text="同意医生为您接诊吗？"
-                android:textSize="14dp" />
+
             <TextView
                 android:id="@+id/countTime"
+                android:gravity="center"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="45dp"/>
         </LinearLayout>
 
 

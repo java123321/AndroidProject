@@ -310,13 +310,12 @@ public class RenGongWenZhen extends AppCompatActivity {
         builder.setPositiveButton("确定",null);
         builder.show();
     }
-
     private void stuCountTimeToDeny(final TextView countTime, final Dialog mDialog) {
         mOffHandler = new Handler() {
             public void handleMessage(Message msg) {
                 if (msg.what > 0) {
                     ////动态显示倒计时
-                    countTime.setText(+msg.what + "秒后默认拒绝！");
+                    countTime.setText("同意医生的接诊请求吗？"+msg.what + "秒后默认拒绝！");
                 } else {
                     ////倒计时结束后关闭计时器
                     mOffTime.cancel();

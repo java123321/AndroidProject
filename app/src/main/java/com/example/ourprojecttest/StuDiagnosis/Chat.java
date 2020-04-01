@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,7 +17,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -71,51 +76,104 @@ public class Chat extends AppCompatActivity {
             if (msg.equals("finishChat")) {//如果对方点击返回键退出了聊天
                 if (type.equals("Stu")) {//如果当前用户是学生登录
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(Chat.this);
-                    builder.setTitle("提示");
-                    builder.setMessage("当前医生已离开聊天页面，您是否离开当前页面？");
+                   // AlertDialog.Builder builder = new AlertDialog.Builder(Chat.this);
+                   // builder.setTitle("提示");
+                   // builder.setMessage("当前医生已离开聊天页面，您是否离开当前页面？");
                     //如果用户确定要删除
-                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                   // builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    //    @Override
+                    //    public void onClick(DialogInterface dialogInterface, int ii) {
+                    //        finish();
+                    //    }
+                    //});
+                    //builder.setNegativeButton("取消", null);
+                    //builder.show();
+                    //将医生标记为下线
+                    final Dialog dialog = new Dialog(Chat.this,R.style.ActionSheetDialogStyle);        //展示对话框
+                    //填充对话框的布局
+                    View inflate = LayoutInflater.from(Chat.this).inflate(R.layout.layout_student_tuichu, null);
+                    //初始化控件
+                    TextView yes = inflate.findViewById(R.id.yes);
+                    yes.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialogInterface, int ii) {
+                        public void onClick(View view) {
                             finish();
                         }
                     });
-                    builder.setNegativeButton("取消", null);
-                    builder.show();
-                    //将医生标记为下线
-                    docOnline = false;
-                } else {//如果当前用户是医生登录
-                    AlertDialog.Builder builder = new AlertDialog.Builder(Chat.this);
-                    builder.setTitle("提示");
-                    builder.setMessage("当前学生已离开聊天页面，您是否需要为其开处方？");
-                    //如果用户确定要删除
-                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    TextView no = inflate.findViewById(R.id.no);
+                    no.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialogInterface, int ii) {
+                        public void onClick(View view) {
+                            dialog.dismiss();
+                        }
+                    });
+                    //将布局设置给Dialog
+                    dialog.setContentView(inflate);
+                    //获取当前Activity所在的窗体
+
+                    Window dialogWindow = dialog.getWindow();
+                    //设置Dialog从窗体底部弹出
+                    dialogWindow.setGravity( Gravity.CENTER);
+                    //获得窗体的属性
+                    WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+                    lp.width =800;
+                    lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                    dialogWindow.setAttributes(lp);
+//       将属性设置给窗体
+                    dialog.show();//显示对话框
+                    docOnline = false;
+
+                } else {//如果当前用户是医生登录
+                 //   AlertDialog.Builder builder = new AlertDialog.Builder(Chat.this);
+                 //   builder.setTitle("提示");
+                 //   builder.setMessage("当前学生已离开聊天页面，您是否需要为其开处方？");
+                    //如果用户确定要删除
+                 //   builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                 //       @Override
+                 //       public void onClick(DialogInterface dialogInterface, int ii) {
+                 //           Intent intent = new Intent(Chat.this, Prescribe.class);
+                 //           intent.putExtra("stuId", stuOrDocId);
+                 //           startActivity(intent);
+                 //       }
+                 //   });
+                 //   builder.setNegativeButton("取消", null);
+                 //   builder.show();
+                    //将学生标记为下线
+                    final Dialog dialog = new Dialog(Chat.this,R.style.ActionSheetDialogStyle);        //展示对话框
+                    //填充对话框的布局
+                    View inflate = LayoutInflater.from(Chat.this).inflate(R.layout.layout_doc_chufang, null);
+                    //初始化控件
+                    TextView yes = inflate.findViewById(R.id.yes);
+                    yes.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
                             Intent intent = new Intent(Chat.this, Prescribe.class);
                             intent.putExtra("stuId", stuOrDocId);
                             startActivity(intent);
+                            dialog.dismiss();
                         }
                     });
-                    //如果医生点击取消之后弹出是否离开聊天界面的通知
-                    builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    TextView no = inflate.findViewById(R.id.no);
+                    no.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(Chat.this);
-                            builder.setTitle("提示");
-                            builder.setMessage("是否离开当前聊天界面?");
-                            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int ii) {
-                                  finish();
-                                }
-                            });
-                            builder.setNegativeButton("取消",null);
+                        public void onClick(View view) {
+                            dialog.dismiss();
                         }
                     });
-                    builder.show();
-                    //将学生标记为下线
+                    //将布局设置给Dialog
+                    dialog.setContentView(inflate);
+                    //获取当前Activity所在的窗体
+
+                    Window dialogWindow = dialog.getWindow();
+                    //设置Dialog从窗体底部弹出
+                    dialogWindow.setGravity( Gravity.CENTER);
+                    //获得窗体的属性
+                    WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+                    lp.width =800;
+                    lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                    dialogWindow.setAttributes(lp);
+//       将属性设置给窗体
+                    dialog.show();//显示对话框
                     stuOnline = false;
                 }
             } else {
@@ -144,39 +202,98 @@ public class Chat extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(Chat.this);
 
         builder.setTitle("提示");
-        if (type.equals("Stu")) {//如果是学生端
-            //只有当医生还在聊天界面的时候才会弹出确认框
-            if (docOnline) {
-                builder.setMessage("是否结束此次问诊?");
-                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        intentToStu.putExtra("chatMsg", stuOrDocId + "|finishChat");
-                        sendBroadcast(intentToStu);
-                        finish();
-                        Log.d("wee", "1");
-                    }
-                }).setNegativeButton("取消", null)
-                        .show();
-            }
-
-
+        if (type.equals("Stu")) {
+            //builder.setMessage("是否结束此次问诊?");
+            //builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+              //  @Override
+              //  public void onClick(DialogInterface dialog, int which) {
+                //    intentToStu.putExtra("chatMsg", stuOrDocId + "|finishChat");
+                  //  sendBroadcast(intentToStu);
+                  //  finish();
+                  //  Log.d("wee", "1");
+             //   }
+          //  }).setNegativeButton("取消", null)
+          //          .show();
+            final Dialog dialog = new Dialog(this,R.style.ActionSheetDialogStyle);        //展示对话框
+            //填充对话框的布局
+            View inflate = LayoutInflater.from(this).inflate(R.layout.layout_tuichujiezhen, null);
+            //初始化控件
+            TextView yes = inflate.findViewById(R.id.yes);
+            yes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    intentToStu.putExtra("chatMsg", stuOrDocId + "|finishChat");
+                    sendBroadcast(intentToStu);
+                    finish();
+                    Log.d("wee", "1");
+                }
+            });
+            TextView no = inflate.findViewById(R.id.no);
+            no.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+            //将布局设置给Dialog
+            dialog.setContentView(inflate);
+            //获取当前Activity所在的窗体
+            Window dialogWindow = dialog.getWindow();
+            //设置Dialog从窗体底部弹出
+            dialogWindow.setGravity( Gravity.CENTER);
+            //获得窗体的属性
+            WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+            lp.width =800;
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            dialogWindow.setAttributes(lp);
+//       将属性设置给窗体
+            dialog.show();//显示对话框
         } else {//如果是医生
-            //只有当学生还在聊天界面的时候才会弹出确认框
-            if(stuOnline){
-                builder.setMessage("是否结束此次接诊?");
-                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        intentToDoc.putExtra("chatMsg", stuOrDocId + "|finishChat");
-                        sendBroadcast(intentToDoc);
-                        finish();
-                        Log.d("wee", "2");
-                    }
-                }).setNegativeButton("取消", null)
-                        .show();
-            }
-
+            //builder.setMessage("是否结束此次接诊?");
+            //builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+              //  @Override
+               // public void onClick(DialogInterface dialog, int which) {
+               //     intentToDoc.putExtra("chatMsg", stuOrDocId + "|finishChat");
+               //     sendBroadcast(intentToDoc);
+               //     finish();
+               //     Log.d("wee", "2");
+               // }
+            //}).setNegativeButton("取消", null)
+             //       .show();
+            final Dialog dialog = new Dialog(this,R.style.ActionSheetDialogStyle);        //展示对话框
+            //填充对话框的布局
+            View inflate = LayoutInflater.from(this).inflate(R.layout.layout_tuichujiezhen1, null);
+            //初始化控件
+            TextView yes = inflate.findViewById(R.id.yes);
+            yes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    intentToDoc.putExtra("chatMsg", stuOrDocId + "|finishChat");
+                    sendBroadcast(intentToDoc);
+                    finish();
+                    Log.d("wee", "2");
+                }
+            });
+            TextView no = inflate.findViewById(R.id.no);
+            no.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+            //将布局设置给Dialog
+            dialog.setContentView(inflate);
+            //获取当前Activity所在的窗体
+            Window dialogWindow = dialog.getWindow();
+            //设置Dialog从窗体底部弹出
+            dialogWindow.setGravity( Gravity.CENTER);
+            //获得窗体的属性
+            WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+            lp.width =800;
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            dialogWindow.setAttributes(lp);
+//       将属性设置给窗体
+            dialog.show();//显示对话框
         }
     }
 
@@ -248,7 +365,6 @@ public class Chat extends AppCompatActivity {
                 }
                 else{
                     Intent intentToVideo=new Intent(Chat.this, CallActivity.class);
-                    intent.putExtra("stuOrDocId",stuOrDocId);
                     startActivity(intentToVideo);
                 }
 
