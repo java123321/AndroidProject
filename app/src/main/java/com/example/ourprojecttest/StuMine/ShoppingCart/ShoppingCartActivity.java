@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -21,7 +22,10 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -402,38 +406,90 @@ public class ShoppingCartActivity extends AppCompatActivity {
                         payV2(orderPrice);
                     } else {//清除商品的点击事
                         //弹出确认框
-                        AlertDialog.Builder builder = new AlertDialog.Builder(ShoppingCartActivity.this);
-                        builder.setTitle("提示");
-                        builder.setMessage("确定要删除选中的药品？");
+                        // AlertDialog.Builder builder = new AlertDialog.Builder(ShoppingCartActivity.this);
+                       // builder.setTitle("提示");
+                       // builder.setMessage("确定要删除选中的药品？");
                         //如果用户确定要删除
-                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int ii) {
+                       // builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        //    @Override
+                         //   public void onClick(DialogInterface dialogInterface, int ii) {
                                 //先获取购物车中的药品数组
+                         //       ArrayList<ShoppingCartBean> deleteList = mAdapter.getList();
+                         //       Set<String> set = (Set<String>) method.readObjFromSDCard("drugIdSet");
+
+                         //       for (int i = deleteList.size() - 1; i >= 0; i--) {
+                         //           ShoppingCartBean bean = deleteList.get(i);
+                          //          if (bean.getChecked().equals("true")) {
+                           //             deleteList.remove(i);
+                           //             set.remove(bean.getId());
+                           //         }
+                          //      }
+                          //      method.writeListIntoSDcard("ShoppingCartList", deleteList);
+                             //   method.saveObj2SDCard("drugIdSet", set);
+
+                           //     if (deleteList.size() == 0) {//如果为空，则显示空的界面
+                           //         mRecycler.setVisibility(View.GONE);
+                           //         empty.setVisibility(View.VISIBLE);
+                           //     } else {
+                            //        mAdapter.setList(deleteList);
+                           //         mAdapter.notifyDataSetChanged();
+                          //      }
+                          //  }
+                      //  });
+                    //    builder.setNegativeButton("取消", null);
+                   //     builder.show();
+                        final Dialog dialog = new Dialog(ShoppingCartActivity.this,R.style.ActionSheetDialogStyle);        //展示对话框
+                        //填充对话框的布局
+                        View inflate = LayoutInflater.from(ShoppingCartActivity.this).inflate(R.layout.layout_shanchucar, null);
+                        //初始化控件
+                        TextView yes = inflate.findViewById(R.id.yes);
+                        yes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
                                 ArrayList<ShoppingCartBean> deleteList = mAdapter.getList();
-                                Set<String> set = (Set<String>) method.readObjFromSDCard("drugIdSet");
+                                       Set<String> set = (Set<String>) method.readObjFromSDCard("drugIdSet");
 
-                                for (int i = deleteList.size() - 1; i >= 0; i--) {
-                                    ShoppingCartBean bean = deleteList.get(i);
-                                    if (bean.getChecked().equals("true")) {
-                                        deleteList.remove(i);
-                                        set.remove(bean.getId());
-                                    }
-                                }
-                                method.writeListIntoSDcard("ShoppingCartList", deleteList);
-                                method.saveObj2SDCard("drugIdSet", set);
+                                       for (int i = deleteList.size() - 1; i >= 0; i--) {
+                                           ShoppingCartBean bean = deleteList.get(i);
+                                          if (bean.getChecked().equals("true")) {
+                                             deleteList.remove(i);
+                                             set.remove(bean.getId());
+                                         }
+                                      }
+                                      method.writeListIntoSDcard("ShoppingCartList", deleteList);
+                                      method.saveObj2SDCard("drugIdSet", set);
 
-                                if (deleteList.size() == 0) {//如果为空，则显示空的界面
-                                    mRecycler.setVisibility(View.GONE);
-                                    empty.setVisibility(View.VISIBLE);
-                                } else {
-                                    mAdapter.setList(deleteList);
-                                    mAdapter.notifyDataSetChanged();
-                                }
+                                     if (deleteList.size() == 0) {//如果为空，则显示空的界面
+                                         mRecycler.setVisibility(View.GONE);
+                                         empty.setVisibility(View.VISIBLE);
+                                     } else {
+                                     mAdapter.setList(deleteList);
+                                     mAdapter.notifyDataSetChanged();
+                                  }
+                                     dialog.dismiss();
                             }
                         });
-                        builder.setNegativeButton("取消", null);
-                        builder.show();
+                        TextView no = inflate.findViewById(R.id.no);
+                        no.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                dialog.dismiss();
+                            }
+                        });
+                        //将布局设置给Dialog
+                        dialog.setContentView(inflate);
+                        //获取当前Activity所在的窗体
+
+                        Window dialogWindow = dialog.getWindow();
+                        //设置Dialog从窗体底部弹出
+                        dialogWindow.setGravity( Gravity.CENTER);
+                        //获得窗体的属性
+                        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+                        lp.width =800;
+                        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                        dialogWindow.setAttributes(lp);
+//       将属性设置给窗体
+                        dialog.show();//显示对话框
                     }
                 }
 

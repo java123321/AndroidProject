@@ -134,7 +134,7 @@
                 android:layout_weight="2"
                 android:gravity="center"
                 android:text="合计:￥ 0.0"
-                android:textColor="#000000"
+                android:textColor="#1B1818"
                 android:textSize="15dp" />
             <!--显示购买按钮Configuration 'compile' is obsolete and has been replaced with 'implementation' and 'api'.	-->
             <Button
