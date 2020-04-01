@@ -93,7 +93,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="#525252" />
+            android:background="#525251" />
         <!--显示全选的图片和汉字-->
         <LinearLayout
             android:layout_width="match_parent"
