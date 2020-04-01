@@ -476,6 +476,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
                                 dialog.dismiss();
                             }
                         });
+
                         //将布局设置给Dialog
                         dialog.setContentView(inflate);
                         //获取当前Activity所在的窗体
