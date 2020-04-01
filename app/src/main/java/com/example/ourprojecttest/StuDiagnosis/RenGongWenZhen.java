@@ -303,12 +303,29 @@ public class RenGongWenZhen extends AppCompatActivity {
 
     //学生取消之后弹出确认框
     private void stuCancelConfirmDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(RenGongWenZhen.this);
-        builder.setTitle("提示");
-        builder.setMessage("由于您在规定时间内未选择同意与医生沟通，系统已为您默认放弃此次问诊，如需问诊，请重新点击挂号！");
-        //医生点击确认后接诊下一个同学
-        builder.setPositiveButton("确定",null);
-        builder.show();
+        final Dialog dialog = new Dialog(this, R.style.ActionSheetDialogStyle);        //展示对话框
+        //填充对话框的布局
+        View inflate = LayoutInflater.from(this).inflate(R.layout.layout_tishi, null);
+        //初始化控件
+        TextView yes = inflate.findViewById(R.id.yes);
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+              dialog.dismiss();
+            }
+        });
+        //将布局设置给Dialog
+        dialog.setContentView(inflate);
+        //获取当前Activity所在的窗体
+        Window dialogWindow = dialog.getWindow();
+        //设置Dialog从窗体底部弹出
+        dialogWindow.setGravity(Gravity.CENTER);
+        //获得窗体的属性
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        lp.width = 800;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialogWindow.setAttributes(lp);
+        dialog.show();//显示对话框
     }
     private void stuCountTimeToDeny(final TextView countTime, final Dialog mDialog) {
         mOffHandler = new Handler() {

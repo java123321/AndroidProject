@@ -13,7 +13,7 @@
                 android:textSize="18dp"
                 android:layout_gravity="center_vertical"
                 android:gravity="center"
-                android:background="#FD0896F5"
+                android:background="@drawable/style_dialog1"
                 android:textColor="#FFFFFF "
                 android:text="等待接受">
             </TextView>

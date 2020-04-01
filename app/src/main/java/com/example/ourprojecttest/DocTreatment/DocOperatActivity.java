@@ -268,6 +268,7 @@ public class DocOperatActivity extends AppCompatActivity {
             public void onClick(View view) {
                 intentToService.putExtra("msg","Access");
                 sendBroadcast(intentToService);
+                dialog.dismiss();
             }
         });
         TextView no = inflate.findViewById(R.id.no);

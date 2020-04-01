@@ -262,7 +262,7 @@ public class Chat extends AppCompatActivity {
              //       .show();
             final Dialog dialog = new Dialog(this,R.style.ActionSheetDialogStyle);        //展示对话框
             //填充对话框的布局
-            View inflate = LayoutInflater.from(this).inflate(R.layout.layout_tuichujiezhen1, null);
+            View inflate = LayoutInflater.from(this).inflate(R.layout.layout_tuichuliaotian, null);
             //初始化控件
             TextView yes = inflate.findViewById(R.id.yes);
             yes.setOnClickListener(new View.OnClickListener() {
