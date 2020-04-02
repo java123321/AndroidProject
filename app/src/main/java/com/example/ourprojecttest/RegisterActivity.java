@@ -215,6 +215,7 @@ public class RegisterActivity extends AppCompatActivity {
                   show(R.layout.layout_tishi_email,s);
                   flag=false;
                 }
+
                 else if (!checkPwd(userPwd)&&flag){
                    // new AlertDialog.Builder(RegisterActivity.this).setTitle("错误").setMessage("密码长度为6到16位").setNegativeButton("确定",null).show();
                     flag = false;
