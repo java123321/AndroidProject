@@ -453,7 +453,6 @@ public class Chat extends AppCompatActivity {
 
                     @Override
                     public void onFinish() {
-
                         if(type.equals("invite")){//受邀请端
                             Intent intent=new Intent(Chat.this,VideoChat.class);
                             intent.putExtra("type","invite");//invite代表当前用户为被邀请视频聊天
