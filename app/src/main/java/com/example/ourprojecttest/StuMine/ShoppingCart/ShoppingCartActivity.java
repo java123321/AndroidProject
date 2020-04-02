@@ -59,7 +59,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
     private String ipAddress;
     private Display display;
     // 获取屏幕高度
-    private int height;
+    private int toastHeight;
     private Button addDrug;
     private String orderPrice = "0.00";
     private LocalReceiver localReceiver;
@@ -96,7 +96,10 @@ public class ShoppingCartActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case SUCCESS: {
-                    Toast.makeText(ShoppingCartActivity.this, "订单添加成功", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(ShoppingCartActivity.this, "订单添加成功！", Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                    toast.show();
+
                     //订单上传到服务器之后，将购物车选中的药品删除
                     //将药品删除之后保存到本地
                     method.saveObj2SDCard("drugIdSet", set);
@@ -104,7 +107,9 @@ public class ShoppingCartActivity extends AppCompatActivity {
                     break;
                 }
                 case FAULT: {
-                    Toast.makeText(ShoppingCartActivity.this, "订单添加失败", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(ShoppingCartActivity.this, "订单添加失败！", Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                    toast.show();
                     break;
                 }
                 case SDK_PAY_FLAG: {
@@ -136,10 +141,15 @@ public class ShoppingCartActivity extends AppCompatActivity {
                     if (TextUtils.equals(resultStatus, "9000") && TextUtils.equals(authResult.getResultCode(), "200")) {
                         // 获取alipay_open_id，调支付时作为参数extern_token 的value
                         // 传入，则支付账户为该授权账户
-                        Toast.makeText(ShoppingCartActivity.this, "授权成功", Toast.LENGTH_SHORT).show();
+
+                        Toast toast = Toast.makeText(ShoppingCartActivity.this, "授权成功！", Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                        toast.show();
                     } else {
                         // 其他状态值则为授权失败
-                        Toast.makeText(ShoppingCartActivity.this, "授权失败", Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(ShoppingCartActivity.this, "授权失败！", Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                        toast.show();
                     }
                     break;
                 }
@@ -217,6 +227,8 @@ public class ShoppingCartActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(APPID) || (TextUtils.isEmpty(RSA2_PRIVATE) && TextUtils.isEmpty(RSA_PRIVATE))) {
             Toast.makeText(this, "Error: Missing APPID or RSA_PRIVATE in PayDemoActivity.", Toast.LENGTH_SHORT).show();
+
+
             return;
         }
 
@@ -344,7 +356,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
         stuId = method.getFileData("ID", ShoppingCartActivity.this);
         display = getWindowManager().getDefaultDisplay();
         // 获取屏幕高度
-        height = display.getHeight();
+        toastHeight = display.getHeight();
         addDrug = findViewById(R.id.addDrug);
         empty = findViewById(R.id.empty);
         buyNow = findViewById(R.id.stu_shopping_cart_buy_now);
@@ -396,7 +408,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
                 if(empty.getVisibility()==View.VISIBLE){//如果当前购物车为空
                     Toast toast = Toast.makeText(ShoppingCartActivity.this, "当前购物车为空，请先添加药品！", Toast.LENGTH_SHORT);
                     // 这里给了一个1/4屏幕高度的y轴偏移量
-                    toast.setGravity(Gravity.BOTTOM,0,height/5);
+                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
                     toast.show();
                 }
                 else{
@@ -521,8 +533,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(empty.getVisibility()==View.VISIBLE){//如果当前购物车为空
                     Toast toast = Toast.makeText(ShoppingCartActivity.this, "当前购物车为空，请先添加药品！", Toast.LENGTH_SHORT);
-                    // 这里给了一个1/4屏幕高度的y轴偏移量
-                    toast.setGravity(Gravity.BOTTOM,0,height/5);
+                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
                     toast.show();
                 }
                 else{//当购物车不为空的情况下

@@ -17,6 +17,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,8 +27,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.example.ourprojecttest.StuDiagnosis.VideoCommunication.CallActivity;
+import android.widget.Toast;
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.DocTreatment.Prescribe;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
@@ -37,15 +37,16 @@ import com.example.ourprojecttest.R;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-import pub.devrel.easypermissions.EasyPermissions;
+import me.weyye.hipermission.HiPermission;
+import me.weyye.hipermission.PermissionCallback;
+import me.weyye.hipermission.PermissionItem;
 
 public class Chat extends AppCompatActivity {
-    private String[] perms= new String[]{//视频聊天需要的权限
-            Manifest.permission.CAMERA,
-            Manifest.permission.INTERNET,
-            Manifest.permission.RECORD_AUDIO
-    };
+    private Display display;
+    // 获取屏幕高度
+    private int toastHeight;
     private String type;//代表是学生登录还是医生登录
     private static final int TYPE_RECEIVED = 0;
     private static final int TYPE_SENT = 1;
@@ -73,6 +74,7 @@ public class Chat extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String msg = intent.getStringExtra("ReceiveMsg");
+            Log.d("receiveChatmsg",msg);
             if (msg.equals("finishChat")) {//如果对方点击返回键退出了聊天
                 if (type.equals("Stu")) {//如果当前用户是学生登录
 
@@ -176,7 +178,37 @@ public class Chat extends AppCompatActivity {
                     dialog.show();//显示对话框
                     stuOnline = false;
                 }
-            } else {
+            } else if(msg.equals("callVideo")){//如果收到对方发送的视频聊天邀请，则弹出提示
+                AlertDialog.Builder builder = new AlertDialog.Builder(Chat.this);
+                builder.setTitle("提示");
+                builder.setMessage("对方邀请您开启视频通话！");
+                builder.setPositiveButton("同意", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent=new Intent(Chat.this,VideoChat.class);
+                        intent.putExtra("type","invite");//invite代表当前用户为被邀请视频聊天
+                        intent.putExtra("stuOrDocId",stuOrDocId);
+                        startActivity(intent);
+                    }
+                });
+                builder.setNegativeButton("拒绝", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(type.equals("Stu")){
+                            intentToStu.putExtra("chatMsg", stuOrDocId + "|denyVideoChat");//代表对方拒绝了视频聊天
+                            sendBroadcast(intentToStu);
+                            intentToStu.removeExtra("chatMsg");
+                        }else{
+                            intentToDoc.putExtra("chatMsg", stuOrDocId + "|denyVideoChat");
+                            sendBroadcast(intentToDoc);
+                            intentToDoc.removeExtra("chatMsg");
+                        }
+
+                    }
+                });
+                builder.show();
+
+            }else{
                 update(msg, TYPE_RECEIVED);
             }
             Log.d("ReceiveMsg", msg);
@@ -199,9 +231,7 @@ public class Chat extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(Chat.this);
 
-        builder.setTitle("提示");
         if (type.equals("Stu")) {
             //builder.setMessage("是否结束此次问诊?");
             //builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -224,6 +254,7 @@ public class Chat extends AppCompatActivity {
                 public void onClick(View view) {
                     intentToStu.putExtra("chatMsg", stuOrDocId + "|finishChat");
                     sendBroadcast(intentToStu);
+                    intentToStu.removeExtra("chatMsg");
                     finish();
                     Log.d("wee", "1");
                 }
@@ -270,6 +301,7 @@ public class Chat extends AppCompatActivity {
                 public void onClick(View view) {
                     intentToDoc.putExtra("chatMsg", stuOrDocId + "|finishChat");
                     sendBroadcast(intentToDoc);
+                    intentToDoc.removeExtra("chatMsg");
                     finish();
                     Log.d("wee", "2");
                 }
@@ -359,15 +391,8 @@ public class Chat extends AppCompatActivity {
         video.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //先申请权限
-                if(!EasyPermissions.hasPermissions(Chat.this,perms)){
-                    EasyPermissions.requestPermissions(Chat.this,"Need permissions for camera and audio",0,perms);
-                }
-                else{
-                    Intent intentToVideo=new Intent(Chat.this, CallActivity.class);
-                    startActivity(intentToVideo);
-                }
-
+              //在开启音视频通话之前先检查权限
+                AskPermission();
             }
         });
         send.setOnClickListener(
@@ -382,6 +407,7 @@ public class Chat extends AppCompatActivity {
                                 if (docOnline) {//如果医生在线
                                     intentToStu.putExtra("chatMsg", stuOrDocId + "|" + content);
                                     sendBroadcast(intentToStu);
+                                    intentToStu.removeExtra("chatMsg");
                                 } else {
                                     update("医生已离开，如需问诊请重新挂号", TYPE_RECEIVED);
                                 }
@@ -390,6 +416,7 @@ public class Chat extends AppCompatActivity {
                                 if (stuOnline) {//如果学生在线
                                     intentToDoc.putExtra("chatMsg", stuOrDocId + "|" + content);
                                     sendBroadcast(intentToDoc);
+                                    intentToDoc.removeExtra("chatMsg");
                                 } else {
                                     update("当前接诊学生已离开，如需为其开处方请点击右上角的开处方按钮！", TYPE_RECEIVED);
                                 }
@@ -405,11 +432,48 @@ public class Chat extends AppCompatActivity {
             public void onClick(View view) {
                 intentToStu.putExtra("chatMsg", stuOrDocId + "|再见！");
                 sendBroadcast(intentToStu);
+                intentToStu.removeExtra("chatMsg");
                 Intent intent = new Intent(Chat.this, Prescribe.class);
                 intent.putExtra("stuId", stuOrDocId);
                 startActivity(intent);
             }
         });
+    }
+    private void AskPermission() {
+        List<PermissionItem> permissionItems = new ArrayList<PermissionItem>();
+        permissionItems.add(new PermissionItem(Manifest.permission.CAMERA, "相机", R.drawable.permission_ic_camera));
+        permissionItems.add(new PermissionItem(Manifest.permission.WRITE_EXTERNAL_STORAGE, "存储卡", R.drawable.permission_ic_storage));
+        permissionItems.add(new PermissionItem(Manifest.permission.RECORD_AUDIO, "录音", R.drawable.permission_ic_micro_phone));
+        permissionItems.add(new PermissionItem(Manifest.permission.READ_PHONE_STATE, "手机", R.drawable.permission_ic_phone));
+        HiPermission.create(this).permissions(permissionItems)
+                .checkMutiPermission(new PermissionCallback() {
+                    @Override
+                    public void onClose() {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        //如果用户同意申请权限,则跳到视频聊天活动
+                        Intent intent =new Intent(Chat.this,VideoChat.class);
+                        //添加标记为，call为主叫方
+                        intent.putExtra("type","call");
+                        intent.putExtra("stuOrDocId",stuOrDocId);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onDeny(String permission, int position) {
+                        Toast toast = Toast.makeText(Chat.this, "您已拒绝开启相关权限！", Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                        toast.show();
+                    }
+
+                    @Override
+                    public void onGuarantee(String permission, int position) {
+
+                    }
+                });
     }
 
     //该方法用于将消息更新显示到RecyclerView里
@@ -424,11 +488,6 @@ public class Chat extends AppCompatActivity {
             inputText.setText("");//清空输入框中的内容
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults);
-    }
 
     //当退出聊天界面的时候，将聊天记录保存
     @Override

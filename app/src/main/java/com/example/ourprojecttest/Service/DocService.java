@@ -121,7 +121,6 @@ public class DocService extends Service {
         client.dispatcher().executorService().shutdown();
         Log.d("链接状态", "发送完查看人数请求");
     }
-
     //聊天连接方法
     private void chatConnet() {
         String url = getResources().getString(R.string.ipAdrressSocket) + "IM/message/" + method.getFileData("ID", DocService.this);
@@ -225,8 +224,13 @@ public class DocService extends Service {
             Log.d("学生消息0", text);
             text = parseJSONWithJSONObject(text);
             Log.d("学生消息1", text);
-            //如果学生发送的是沟通
-            if (text.contains("chat")) {
+
+             if(text.startsWith("IceInfo")||text.startsWith("SdpInfo")||text.equals("denyVideoChat")){//如果是和视频聊天有关的协商信息，则发送给视频活动
+                intentToVideoChat.putExtra("videoInfo",text);
+                sendBroadcast(intentToVideoChat);
+                Log.d("docservice","videoInfo:"+text);
+
+            }else if (text.startsWith("chat")) { //如果学生发送的是沟通
                 intentToBeforChat.putExtra("validate", stuId);
                 intentToBeforChat.putExtra("stuName", method.subString(text, "学生名字为", "学生头像为"));
                 //获取学生的头像
@@ -242,15 +246,11 @@ public class DocService extends Service {
                 intentToBeforChat.putExtra("stuPicture", stuPicture);
                 sendBroadcast(intentToBeforChat);
                 Log.d("学生消息2", "chat");
-            } else if (text.contains("deny")) {//如果学生发送的是拒绝
+            } else if (text.startsWith("deny")) {//如果学生发送的是拒绝
                 intentToBeforChat.putExtra("validate", text);
                 sendBroadcast(intentToBeforChat);
                 Log.d("学生消息3", "deny");
-            }else if(text.startsWith("offerSdp")||text.startsWith("answerSdp")||text.startsWith("candidate")){
-
-
-            }
-            else if (!text.equals("上线成功!")) {//如果学生发送的是正常消息
+            } else if (!text.equals("上线成功!")) {//如果学生发送的是正常消息
 
                 intentToChat.putExtra("ReceiveMsg", text);
                 sendBroadcast(intentToChat);
@@ -327,6 +327,7 @@ public class DocService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
+        //注销广播
+        unregisterReceiver(localReceiver);
     }
 }

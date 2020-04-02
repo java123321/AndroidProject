@@ -342,7 +342,7 @@ public class DocOperatActivity extends AppCompatActivity {
                 mOffHandler.sendMessage(msg);
             }
         };
-        mOffTime.schedule(tt, 1000, 1000);
+        mOffTime.schedule(tt, 0, 1000);
     }
 
 

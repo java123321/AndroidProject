@@ -24,7 +24,7 @@
         android:supportsRtl="true"
         android:theme="@style/Noactionbar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".StuDiagnosis.VideoCommunication.CallActivity"></activity>
+        <activity android:name=".StuDiagnosis.VideoChat"></activity>
         <activity
             android:name=".DocTreatment.DocDrugStore"
             android:launchMode="singleInstance" />
