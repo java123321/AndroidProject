@@ -11,7 +11,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.RadioButton;
@@ -48,16 +52,22 @@ public class PerfeActivity extends AppCompatActivity {
 
             switch (msg.what) {
                 case 0:
-                    new AlertDialog.Builder(PerfeActivity.this).setTitle("跳转").setMessage("注册成功,准备好登陆了吗？").setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            Intent intent = new Intent(PerfeActivity.this,MailboxActivity.class);
-                            startActivity(intent);
-                        }
-                    }).setNegativeButton("取消",null).show();
+                   // new AlertDialog.Builder(PerfeActivity.this).setTitle("跳转").setMessage("注册成功,准备好登陆了吗？").setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                   //     @Override
+                   //     public void onClick(DialogInterface dialogInterface, int i) {
+                   //         Intent intent = new Intent(PerfeActivity.this,MailboxActivity.class);
+                   //         startActivity(intent);
+                   //     }
+                   // }).setNegativeButton("取消",null).show();
+                    String s="注册成功，准备好登录了吗？";
+                    Intent intent = new Intent(PerfeActivity.this,MailboxActivity.class);
+                    show(R.layout.layout_tishi_email,s,intent);
                     break;
                 case -1:
-                    new AlertDialog.Builder(PerfeActivity.this).setTitle("错误").setMessage("邮箱已被使用").setNegativeButton("确定",null).show();
+
+                    String s1="邮箱已被使用";
+                    show(R.layout.layout_tishi_email,s1);
+                    //new AlertDialog.Builder(PerfeActivity.this).setTitle("错误").setMessage("邮箱已被使用").setNegativeButton("确定",null).show();
                 default:
                     break;
             }
@@ -114,20 +124,28 @@ public class PerfeActivity extends AppCompatActivity {
 
                 boolean flag = true;
                 if (!radioWomen.isChecked()&&!radioMen.isChecked()){
-                    new AlertDialog.Builder(PerfeActivity.this).setTitle("错误").setMessage("请选择性别").setNegativeButton("确定",null).show();
+                   // new AlertDialog.Builder(PerfeActivity.this).setTitle("错误").setMessage("请选择性别").setNegativeButton("确定",null).show();
                     flag = false;
+                    String s="请选择性别";
+                    show(R.layout.layout_tishi_email,s);
                 }
                 else if (TextUtils.isEmpty(userName)||TextUtils.isEmpty(userBir)||TextUtils.isEmpty(userHei)||TextUtils.isEmpty(userWei)){
-                    new AlertDialog.Builder(PerfeActivity.this).setTitle("错误").setMessage("值不能为空").setNegativeButton("确定",null).show();
+                    //new AlertDialog.Builder(PerfeActivity.this).setTitle("错误").setMessage("值不能为空").setNegativeButton("确定",null).show();
                     flag = false;
+                    String s="值不能为空";
+                    show(R.layout.layout_tishi_email,s);
                 }
                 else if (!checkHei(userHei)&&flag){
-                    new AlertDialog.Builder(PerfeActivity.this).setTitle("错误").setMessage("请合理输入身高").setNegativeButton("确定",null).show();
+                    //new AlertDialog.Builder(PerfeActivity.this).setTitle("错误").setMessage("请合理输入身高").setNegativeButton("确定",null).show();
                     flag = false;
+                    String s="请输入合理身高";
+                    show(R.layout.layout_tishi_email,s);
                 }
                 else if (!checkWei(userWei)&&flag){
-                    new AlertDialog.Builder(PerfeActivity.this).setTitle("错误").setMessage("请输入合理体重").setNegativeButton("确定",null).show();
+                   // new AlertDialog.Builder(PerfeActivity.this).setTitle("错误").setMessage("请输入合理体重").setNegativeButton("确定",null).show();
                     flag = false;
+                    String s="请输入合理体重";
+                    show(R.layout.layout_tishi_email,s);
                 }
                 else if (flag)
                 {
@@ -254,5 +272,64 @@ public class PerfeActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+    public void show(int x,String s){
+    final Dialog dialog = new Dialog(PerfeActivity.this,R.style.ActionSheetDialogStyle);        //展示对话框
+    //填充对话框的布局
+    View inflate = LayoutInflater.from(PerfeActivity.this).inflate(x, null);
+    TextView describe=inflate.findViewById(R.id.describe);
+    describe.setText(s);
+    TextView yes = inflate.findViewById(R.id.yes);
+    yes.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            dialog.dismiss();
+        }
+    });
+    dialog.setContentView(inflate);
+
+    Window dialogWindow = dialog.getWindow();
+    //设置Dialog从窗体底部弹出
+    dialogWindow.setGravity( Gravity.CENTER);
+    //获得窗体的属性
+    WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+    lp.width =800;
+    lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+    dialogWindow.setAttributes(lp);
+    dialog.show();
+}
+    public void show(int x,String s,Intent intent){
+        final Dialog dialog = new Dialog(PerfeActivity.this,R.style.ActionSheetDialogStyle);        //展示对话框
+        //填充对话框的布局
+        View inflate = LayoutInflater.from(PerfeActivity.this).inflate(x, null);
+        TextView describe=inflate.findViewById(R.id.describe);
+        describe.setText(s);
+        TextView yes = inflate.findViewById(R.id.yes);
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+        TextView no = inflate.findViewById(R.id.no);
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setContentView(inflate);
+
+        Window dialogWindow = dialog.getWindow();
+        //设置Dialog从窗体底部弹出
+        dialogWindow.setGravity( Gravity.CENTER);
+        //获得窗体的属性
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        lp.width =800;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialogWindow.setAttributes(lp);
+        dialog.show();
+    }
 
 }
+

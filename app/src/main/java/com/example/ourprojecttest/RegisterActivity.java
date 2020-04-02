@@ -1,8 +1,11 @@
 package com.example.ourprojecttest;
+import java.util.ArrayList;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -16,12 +19,18 @@ import android.os.Message;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.ourprojecttest.SendEmail.MyEamil;
+import com.example.ourprojecttest.StuMine.ShoppingCart.ShoppingCartActivity;
+import com.example.ourprojecttest.StuMine.ShoppingCart.ShoppingCartBean;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 
 import org.json.JSONObject;
@@ -57,7 +66,11 @@ public class RegisterActivity extends AppCompatActivity {
 
                     break;
                 case -1:
-                    new AlertDialog.Builder(RegisterActivity.this).setTitle("错误").setMessage("邮箱已被使用").setNegativeButton("确定",null).show();
+                    new AlertDialog.Builder(RegisterActivity.this)
+                            .setTitle("错误")
+                            .setMessage("邮箱已被使用")
+                            .setNegativeButton("确定",null)
+                            .show();
                 default:
                     break;
             }
@@ -196,38 +209,71 @@ public class RegisterActivity extends AppCompatActivity {
 
                 boolean flag = true;
                 if (!checkNo(userNo)&&flag){
-                    new AlertDialog.Builder(RegisterActivity.this).setTitle("错误").setMessage("请输入正确邮箱").setNegativeButton("确定",null).show();
-                    flag = false;
+                   // new AlertDialog.Builder(RegisterActivity.this).setTitle("错误").setMessage("请输入正确邮箱").setNegativeButton("确定",null).show();
+                   // flag = false;
+                    String s="请输入正确邮箱";
+                  show(R.layout.layout_tishi_email,s);
+                  flag=false;
                 }
                 else if (!checkPwd(userPwd)&&flag){
-                    new AlertDialog.Builder(RegisterActivity.this).setTitle("错误").setMessage("密码长度为6到16位").setNegativeButton("确定",null).show();
+                   // new AlertDialog.Builder(RegisterActivity.this).setTitle("错误").setMessage("密码长度为6到16位").setNegativeButton("确定",null).show();
                     flag = false;
+                    String s="密码长度6到16位";
+                    show(R.layout.layout_tishi_email,s);
                 }
                 else if (!checkPwd_repitition(userPwd,userPwd_two)&&flag){
-                    new AlertDialog.Builder(RegisterActivity.this).setTitle("错误").setMessage("两次密码不一致").setNegativeButton("确定",null).show();
+                    //new AlertDialog.Builder(RegisterActivity.this).setTitle("错误").setMessage("两次密码不一致").setNegativeButton("确定",null).show();
                     flag = false;
+                    String s="两次密码不一致";
+                    show(R.layout.layout_tishi_email,s);
                 }
                 else if (!checkCode(userMsg)&&flag)
                 {
-                    new AlertDialog.Builder(RegisterActivity.this).setTitle("错误").setMessage("验证码错误").setNegativeButton("确定",null).show();
+                    //new AlertDialog.Builder(RegisterActivity.this).setTitle("错误").setMessage("验证码错误").setNegativeButton("确定",null).show();
                     flag = false;
+                    String s="验证码错误";
+                    show(R.layout.layout_tishi_email,s);
                 }
                 else if (flag)
                 {
-                    //interData();
-                    new AlertDialog.Builder(RegisterActivity.this).setTitle("跳转").setMessage("请继续完善您的信息").setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    final Dialog dialog = new Dialog(RegisterActivity.this,R.style.ActionSheetDialogStyle);        //展示对话框
+                    //填充对话框的布局
+                    View inflate = LayoutInflater.from(RegisterActivity.this).inflate(R.layout.layout_jixuwanshan, null);
+                    //初始化控件
+                    TextView yes = inflate.findViewById(R.id.yes);
+                    yes.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
+                        public void onClick(View view) {
                             Intent intent = new Intent(RegisterActivity.this,PerfeActivity.class);
                             intent.putExtra("string_no",userNo);
                             intent.putExtra("string_pwd",userPwd);
                             startActivity(intent);
+                            dialog.dismiss();
                         }
-                    }).setNegativeButton("取消",null).show();
+                    });
+                    TextView no = inflate.findViewById(R.id.no);
+                    no.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    //将布局设置给Dialog
+                    dialog.setContentView(inflate);
+                    //获取当前Activity所在的窗体
+
+                    Window dialogWindow = dialog.getWindow();
+                    //设置Dialog从窗体底部弹出
+                    dialogWindow.setGravity( Gravity.CENTER);
+                    //获得窗体的属性
+                    WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+                    lp.width =800;
+                    lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                    dialogWindow.setAttributes(lp);
+//       将属性设置给窗体
+                    dialog.show();//显示对话框
                 }
-
-
-
             }
         });
     }
@@ -247,9 +293,11 @@ public class RegisterActivity extends AppCompatActivity {
 
             }).start();
         }
-        else
-            new AlertDialog.Builder(RegisterActivity.this).setTitle("错误").setMessage("邮箱格式错误").setNegativeButton("确定",null).show();
-
+        else{
+           // new AlertDialog.Builder(RegisterActivity.this).setTitle("错误").setMessage("邮箱格式错误").setNegativeButton("确定",null).show();
+            String s="邮箱格式不正确";
+            show(R.layout.layout_tishi_email,s);
+        }
     }
     //验证验证码是否一致
     private boolean checkCode(String userCode)
@@ -372,10 +420,35 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
+public void show(int x,String s){
+    final Dialog dialog = new Dialog(RegisterActivity.this,R.style.ActionSheetDialogStyle);        //展示对话框
+    //填充对话框的布局
+    View inflate = LayoutInflater.from(RegisterActivity.this).inflate(x, null);
+    TextView describe=inflate.findViewById(R.id.describe);
+    describe.setText(s);
+    TextView yes = inflate.findViewById(R.id.yes);
+    yes.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            dialog.dismiss();
+        }
+    });
+    dialog.setContentView(inflate);
 
-
-
-
-
+    Window dialogWindow = dialog.getWindow();
+    //设置Dialog从窗体底部弹出
+    dialogWindow.setGravity( Gravity.CENTER);
+    //获得窗体的属性
+    WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+    lp.width =800;
+    lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+    dialogWindow.setAttributes(lp);
+    dialog.show();
+}
 
 }
+
+
+
+
+
