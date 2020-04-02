@@ -304,6 +304,7 @@ public class VideoChat extends AppCompatActivity implements View.OnClickListener
             Log.d("observerinfo:", "onSignalingChange" + signalingState.toString());
         }
 
+
         @Override
         public void onIceConnectionChange(PeerConnection.IceConnectionState iceConnectionState) {
             Log.d("observerinfo:", "onIceConnectionChange:" + iceConnectionState.toString());
@@ -315,7 +316,17 @@ public class VideoChat extends AppCompatActivity implements View.OnClickListener
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(VideoChat.this, "已断开连接!", Toast.LENGTH_SHORT).show();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(VideoChat.this);
+                        builder.setTitle("提示");
+                        builder.setMessage("对方已退出视频聊天！");
+                        //用户点击确定之后销毁视频聊天界面
+                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        });
+                        builder.show();
                     }
                 });
             }
@@ -396,8 +407,6 @@ public class VideoChat extends AppCompatActivity implements View.OnClickListener
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
-//            chatListener.socket.send("SdpInfo" + jsonObject.toString());
             Log.d("sendsdp", jsonObject.toString());
             sendMessageToServer(stuOrDocId+"|SdpInfo"+jsonObject.toString());
         }
@@ -521,14 +530,29 @@ public class VideoChat extends AppCompatActivity implements View.OnClickListener
             mAudioTrack.dispose();
         }
         super.onDestroy();
-
-
         unregisterReceiver(localReceiver);
+
+        Log.d("videodestroy",type);
     }
     //监听音量键控制视频通话音量
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:{//点击返回键是进行确认
+                AlertDialog.Builder builder = new AlertDialog.Builder(VideoChat.this);
+                builder.setTitle("提示");
+                builder.setMessage("是否退出视频通话！");
+                //用户点击确定之后销毁视频聊天界面
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                });
+                builder.setNegativeButton("取消",null);
+                builder.show();
+                return true;
+            }
             case KeyEvent.KEYCODE_VOLUME_UP:
                 mAudioManager.adjustStreamVolume(AudioManager.STREAM_VOICE_CALL, AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
                 return true;
@@ -586,4 +610,9 @@ public class VideoChat extends AppCompatActivity implements View.OnClickListener
             chartTools.setVisibility(View.VISIBLE);
         }
     }
+
+
+
+
+
 }

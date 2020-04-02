@@ -185,10 +185,9 @@ public class Chat extends AppCompatActivity {
                 builder.setPositiveButton("同意", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent intent=new Intent(Chat.this,VideoChat.class);
-                        intent.putExtra("type","invite");//invite代表当前用户为被邀请视频聊天
-                        intent.putExtra("stuOrDocId",stuOrDocId);
-                        startActivity(intent);
+                        AskPermission("invite");
+
+
                     }
                 });
                 builder.setNegativeButton("拒绝", new DialogInterface.OnClickListener() {
@@ -392,7 +391,7 @@ public class Chat extends AppCompatActivity {
             @Override
             public void onClick(View v) {
               //在开启音视频通话之前先检查权限
-                AskPermission();
+                AskPermission("call");
             }
         });
         send.setOnClickListener(
@@ -439,7 +438,7 @@ public class Chat extends AppCompatActivity {
             }
         });
     }
-    private void AskPermission() {
+    private void AskPermission(String type) {
         List<PermissionItem> permissionItems = new ArrayList<PermissionItem>();
         permissionItems.add(new PermissionItem(Manifest.permission.CAMERA, "相机", R.drawable.permission_ic_camera));
         permissionItems.add(new PermissionItem(Manifest.permission.WRITE_EXTERNAL_STORAGE, "存储卡", R.drawable.permission_ic_storage));
@@ -454,12 +453,23 @@ public class Chat extends AppCompatActivity {
 
                     @Override
                     public void onFinish() {
-                        //如果用户同意申请权限,则跳到视频聊天活动
-                        Intent intent =new Intent(Chat.this,VideoChat.class);
-                        //添加标记为，call为主叫方
-                        intent.putExtra("type","call");
-                        intent.putExtra("stuOrDocId",stuOrDocId);
-                        startActivity(intent);
+
+                        if(type.equals("invite")){//受邀请端
+                            Intent intent=new Intent(Chat.this,VideoChat.class);
+                            intent.putExtra("type","invite");//invite代表当前用户为被邀请视频聊天
+                            intent.putExtra("stuOrDocId",stuOrDocId);
+                            startActivity(intent);
+                        }else{//主叫端
+                            //如果用户同意申请权限,则跳到视频聊天活动
+                            Intent intent =new Intent(Chat.this,VideoChat.class);
+                            //添加标记为，call为主叫方
+                            intent.putExtra("type","call");
+                            intent.putExtra("stuOrDocId",stuOrDocId);
+                            startActivity(intent);
+                        }
+
+
+
                     }
 
                     @Override
