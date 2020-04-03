@@ -39,6 +39,7 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 
 public class StuService extends Service {
+    private Intent intentToVideoChat = new Intent("com.example.ourprojecttest.VIDEO_CHAT");//该意图是向聊天活动提供媒体协商信息
     private String ipAddress;
     public static boolean isGuaHao = false;//该变量用来标记是否正在挂号，true为挂号，false为不在挂号
     private String stuId;
@@ -245,8 +246,15 @@ public class StuService extends Service {
         public void onMessage(WebSocket webSocket, String text) {
             Log.d("interfacechat", "123" + text);
             text = parseJSONWithJSONObject(text);
-            intentToChat.putExtra("ReceiveMsg", text);
-            sendBroadcast(intentToChat);
+            if(text.startsWith("IceInfo")||text.startsWith("SdpInfo")||text.equals("denyVideoChat")){//如果是和视频聊天有关的协商信息，则发送给视频聊天活动
+                intentToVideoChat.putExtra("videoInfo",text);
+                sendBroadcast(intentToVideoChat);
+                Log.d("docservice","videoInfo:"+text);
+            }else{
+                intentToChat.putExtra("ReceiveMsg", text);
+                sendBroadcast(intentToChat);
+            }
+
         }
 
         @Override

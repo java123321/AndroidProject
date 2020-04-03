@@ -56,11 +56,7 @@ dependencies {
     implementation(name: 'alipaySdk-15.6.8-20191021122514', ext: 'aar')
 
     //引入webRTC库
-    implementation 'org.webrtc:google-webrtc:1.0.+'
-    //引入socket.io库
-    implementation 'com.github.nkzawa:socket.io-client:0.6.0'
-
-    //简单获取权限1
-    implementation 'pub.devrel:easypermissions:1.1.3'
-
+    implementation 'org.webrtc:google-webrtc:1.0.20723'
+    //处理权限
+    implementation 'me.weyye.hipermission:library:1.0.7'
 }
