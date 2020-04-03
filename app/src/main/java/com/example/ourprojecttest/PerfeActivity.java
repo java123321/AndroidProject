@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +52,7 @@ public class PerfeActivity extends AppCompatActivity {
             super.handleMessage(msg);
 
             switch (msg.what) {
+
                 case 0:
                    // new AlertDialog.Builder(PerfeActivity.this).setTitle("跳转").setMessage("注册成功,准备好登陆了吗？").setPositiveButton("确定", new DialogInterface.OnClickListener() {
                    //     @Override
@@ -60,8 +62,9 @@ public class PerfeActivity extends AppCompatActivity {
                    //     }
                    // }).setNegativeButton("取消",null).show();
                     String s="注册成功，准备好登录了吗？";
-                    Intent intent = new Intent(PerfeActivity.this,MailboxActivity.class);
+                    Intent intent = new Intent(PerfeActivity.this,LoginActivity.class);
                     show(R.layout.layout_tishi_email,s,intent);
+                    Log.d("registerresult","success");
                     break;
                 case -1:
 
@@ -86,8 +89,8 @@ public class PerfeActivity extends AppCompatActivity {
         userNo = intent.getStringExtra("string_no");
         userPwd = intent.getStringExtra("string_pwd");
 
-        btn = (Button) findViewById(R.id.dateChoose);
-        dateDisplay = (TextView) findViewById(R.id.dateDisplay);
+        btn = findViewById(R.id.dateChoose);
+        dateDisplay = findViewById(R.id.dateDisplay);
 
         btn.setOnClickListener(new View.OnClickListener() {
 
@@ -106,13 +109,13 @@ public class PerfeActivity extends AppCompatActivity {
     }
     //初始化数据
     private void initView(){
-        stuName = (TextView) findViewById(R.id.stuName);
-        stuHei = (TextView) findViewById(R.id.stuHei);
-        stuWei = (TextView) findViewById(R.id.stuWei);
-        stuBir = (TextView) findViewById(R.id.dateDisplay);
-        btnRegister = (Button) findViewById(R.id.stuReg);
-        radioMen = (RadioButton) findViewById(R.id.radioMen);
-        radioWomen = (RadioButton) findViewById(R.id.radioWomen);
+        stuName =findViewById(R.id.stuName);
+        stuHei = findViewById(R.id.stuHei);
+        stuWei =  findViewById(R.id.stuWei);
+        stuBir = findViewById(R.id.dateDisplay);
+        btnRegister = findViewById(R.id.stuReg);
+        radioMen =  findViewById(R.id.radioMen);
+        radioWomen =  findViewById(R.id.radioWomen);
     }
     //初始化方法
     private void initListener(){
@@ -127,25 +130,21 @@ public class PerfeActivity extends AppCompatActivity {
                 boolean flag = true;
                 if (!radioWomen.isChecked()&&!radioMen.isChecked()){
                    // new AlertDialog.Builder(PerfeActivity.this).setTitle("错误").setMessage("请选择性别").setNegativeButton("确定",null).show();
-                    flag = false;
                     String s="请选择性别";
                     show(R.layout.layout_tishi_email,s);
                 }
                 else if (TextUtils.isEmpty(userName)||TextUtils.isEmpty(userBir)||TextUtils.isEmpty(userHei)||TextUtils.isEmpty(userWei)){
                     //new AlertDialog.Builder(PerfeActivity.this).setTitle("错误").setMessage("值不能为空").setNegativeButton("确定",null).show();
-                    flag = false;
                     String s="值不能为空";
                     show(R.layout.layout_tishi_email,s);
                 }
                 else if (!checkHei(userHei)&&flag){
                     //new AlertDialog.Builder(PerfeActivity.this).setTitle("错误").setMessage("请合理输入身高").setNegativeButton("确定",null).show();
-                    flag = false;
                     String s="请输入合理身高";
                     show(R.layout.layout_tishi_email,s);
                 }
                 else if (!checkWei(userWei)&&flag){
                    // new AlertDialog.Builder(PerfeActivity.this).setTitle("错误").setMessage("请输入合理体重").setNegativeButton("确定",null).show();
-                    flag = false;
                     String s="请输入合理体重";
                     show(R.layout.layout_tishi_email,s);
                 }
@@ -234,11 +233,11 @@ public class PerfeActivity extends AppCompatActivity {
                     String url = "";
                     if (radioMen.isChecked())
                     {
-                        url = ipAddress+"IM1/servlet/LoginDataServlet?no="+userNo+"&name="+userName+"&pwd="+userPwd+"&sex=男&birth="+userBir+"&height="+userHei+"&weight="+userWei+"&sno=9999";
+                        url = ipAddress+"IM/servlet/LoginDataServlet?no="+userNo+"&name="+userName+"&pwd="+userPwd+"&sex=男&birth="+userBir+"&height="+userHei+"&weight="+userWei+"&sno=9999";
                     }
                     else
                     {
-                        url = ipAddress+"IM1/servlet/LoginDataServlet?no="+userNo+"&name="+userName+"&pwd="+userPwd+"&sex=女&birth="+userBir+"&height="+userHei+"&weight="+userWei+"&sno=9999";
+                        url = ipAddress+"IM/servlet/LoginDataServlet?no="+userNo+"&name="+userName+"&pwd="+userPwd+"&sex=女&birth="+userBir+"&height="+userHei+"&weight="+userWei+"&sno=9999";
                     }
 
                     OkHttpClient client = new OkHttpClient();
@@ -254,12 +253,13 @@ public class PerfeActivity extends AppCompatActivity {
         }).start();
     }
     private void parseJSONWithJSONObject(String jsonData){
+        Log.d("registerInfo",jsonData);
         try{
             JSONObject jsonObject=new JSONObject(jsonData);
-            String code=jsonObject.getString("code");
+            int code=jsonObject.getInt("code");
             Message msg = Message.obtain();
 
-            if (code.equals("0"))
+            if (code==0)
             {
                 msg.what = 0 ;
             }

@@ -47,10 +47,8 @@ public class RegisterActivity extends AppCompatActivity {
     private TextView stuPwd;
     private TextView stuPwd_two;
     private TextView stuMsg;
-    private Button btnLook;
     private Button btnRegister;
     private Button getmsg;
-    private boolean mbDisplayFlg = false;
     private TimeCount time;
     private boolean isHide=true;
     private Drawable drawableEyeOpen,drawableEyeClose;
@@ -63,7 +61,6 @@ public class RegisterActivity extends AppCompatActivity {
                 case 0:
                     sendCode();
                     //60秒倒计时
-
                     break;
                 case -1:
                     new AlertDialog.Builder(RegisterActivity.this)
