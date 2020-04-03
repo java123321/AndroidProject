@@ -5,8 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,9 +22,15 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.ourprojecttest.StuMine.NumPicker;
+import com.example.ourprojecttest.StuMine.StuInfomation.Numpickerr;
+import com.example.ourprojecttest.StuMine.StuInfomation.StuInformation;
+import com.example.ourprojecttest.StuMine.Tubiao;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 
 import org.json.JSONObject;
@@ -42,6 +51,7 @@ public class PerfeActivity extends AppCompatActivity {
     private Button btnRegister;
     private Button btn;
     private TextView dateDisplay;
+    private LinearLayout wei,hei;
     private int mYear, mMonth, mDay;
     final int DATE_DIALOG = 1;
     private String userNo;
@@ -86,6 +96,16 @@ public class PerfeActivity extends AppCompatActivity {
         ipAddress=getResources().getString(R.string.ipAdrress);
         ImmersiveStatusbar.getInstance().Immersive(getWindow(),getActionBar());//状态栏透明
         Intent intent = getIntent();
+        //注册身高广播
+        Receiver1 receiver1=new Receiver1();
+        IntentFilter hei=new IntentFilter();
+        hei.addAction("Height");
+        registerReceiver(receiver1,hei);
+        //注册体重广播
+        Receiver2 receiver2=new Receiver2();
+        IntentFilter wei=new IntentFilter();
+        wei.addAction("Weight");
+        registerReceiver(receiver2,wei);
         userNo = intent.getStringExtra("string_no");
         userPwd = intent.getStringExtra("string_pwd");
 
@@ -114,6 +134,8 @@ public class PerfeActivity extends AppCompatActivity {
         stuWei =  findViewById(R.id.stuWei);
         stuBir = findViewById(R.id.dateDisplay);
         btnRegister = findViewById(R.id.stuReg);
+        wei=findViewById(R.id.wei);
+        hei=findViewById(R.id.hei);
         radioMen =  findViewById(R.id.radioMen);
         radioWomen =  findViewById(R.id.radioWomen);
     }
@@ -138,16 +160,6 @@ public class PerfeActivity extends AppCompatActivity {
                     String s="值不能为空";
                     show(R.layout.layout_tishi_email,s);
                 }
-                else if (!checkHei(userHei)&&flag){
-                    //new AlertDialog.Builder(PerfeActivity.this).setTitle("错误").setMessage("请合理输入身高").setNegativeButton("确定",null).show();
-                    String s="请输入合理身高";
-                    show(R.layout.layout_tishi_email,s);
-                }
-                else if (!checkWei(userWei)&&flag){
-                   // new AlertDialog.Builder(PerfeActivity.this).setTitle("错误").setMessage("请输入合理体重").setNegativeButton("确定",null).show();
-                    String s="请输入合理体重";
-                    show(R.layout.layout_tishi_email,s);
-                }
                 else if (flag)
                 {
                     //
@@ -158,6 +170,24 @@ public class PerfeActivity extends AppCompatActivity {
 
             }
         });
+        stuWei.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Numpickerr numpickerr=new Numpickerr(PerfeActivity.this);
+                numpickerr.show();
+                numpickerr.setContext(PerfeActivity.this);
+            }
+        });
+
+        stuHei.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NumPicker numPicker=new NumPicker(PerfeActivity.this);
+                numPicker.show();
+                numPicker.setContext(PerfeActivity.this);
+            }
+        });
+
     }
     @Override
     protected Dialog onCreateDialog(int id) {
@@ -227,8 +257,10 @@ public class PerfeActivity extends AppCompatActivity {
             public void run() {
                 try {
                     String userName = stuName.getText().toString().trim();
-                    String userHei = stuHei.getText().toString().trim();
-                    String userWei = stuWei.getText().toString().trim();
+                    String UserHei[] = (stuHei.getText().toString().trim()).split("");
+                    String userHei=UserHei[0];
+                    String UserWei[] = (stuWei.getText().toString().trim()).split("");
+                    String userWei=UserWei[0];
                     String userBir = stuBir.getText().toString().trim();
                     String url = "";
                     if (radioMen.isChecked())
@@ -333,5 +365,22 @@ public class PerfeActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    public class Receiver1 extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String s = intent.getStringExtra("Height");
+            stuHei.setText(s);
+            Toast.makeText(PerfeActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public class Receiver2 extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String s = intent.getStringExtra("Weight");
+            stuWei.setText(s);
+            Toast.makeText(PerfeActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
 

@@ -48,7 +48,8 @@
         <activity android:name=".StuDrugStore.StuDrugDetail" />
         <activity android:name=".FindPass" />
         <activity android:name=".StuDrugStore.UpDrugMsgActivity" />
-        <activity android:name=".PerfeActivity" />
+        <activity android:name=".PerfeActivity" >
+        </activity>
         <activity android:name=".StuMine.AddressActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MailboxActivity" />

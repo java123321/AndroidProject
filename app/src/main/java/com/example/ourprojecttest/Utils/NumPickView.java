@@ -280,7 +280,6 @@ public class NumPickView extends View {
 
     }
 
-
     /**
      * distanceY > 0: 向下
      * distanceY < 0: 向上

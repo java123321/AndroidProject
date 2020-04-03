@@ -31,10 +31,10 @@ public class Numpickerr {
     private NumPicker.onComfirmClickListener mComfirmListener;
     private int currentSelecedNum,currentSelecedNum1;
     private List<String> L1,L2;
-    void setContext(Context a){
+    public void setContext(Context a){
         mcontext=a;
     }
-    Numpickerr(Activity activity) {
+    public Numpickerr(Activity activity) {
         mActivity = activity;
         initDialog();
 

@@ -63,11 +63,9 @@ public class RegisterActivity extends AppCompatActivity {
                     //60秒倒计时
                     break;
                 case -1:
-                    new AlertDialog.Builder(RegisterActivity.this)
-                            .setTitle("错误")
-                            .setMessage("邮箱已被使用")
-                            .setNegativeButton("确定",null)
-                            .show();
+                    // new AlertDialog.Builder(RegisterActivity.this).setTitle("错误").setMessage("邮箱已被使用").setNegativeButton("确定",null).show();
+                    String s="邮箱已被使用";
+                    show(R.layout.layout_tishi_email,s);
                 default:
                     break;
             }
