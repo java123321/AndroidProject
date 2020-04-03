@@ -4,21 +4,23 @@
     android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="180dp"
+        android:layout_height="150dp"
         android:orientation="vertical"
         android:background="@drawable/style_dialog_yuanjiao">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-<ImageView
-    android:layout_marginTop="5dp"
-    android:layout_width="60dp"
-    android:layout_height="60dp"
-    android:layout_gravity="center"
-    android:layout_marginBottom="5dp"
-    android:background="@drawable/tishi1">
-</ImageView>
+
+            <TextView
+                android:id="@+id/jianjie"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:text="退出视频"
+                android:textColor="#141414"
+                android:textSize="18dp" />
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -28,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:gravity="center"
-                android:text="请输入正确邮箱"
+                android:text="您确定要退出视频童话吗？"
                 android:textSize="14dp" />
         </LinearLayout>
 
@@ -48,8 +50,24 @@
                 android:background="@drawable/style_color_yuanjiao"
                 android:gravity="center"
                 android:text="确定"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="40dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="5dp"
+                android:textColor="#FFFFFF"
+                android:textSize="15dp" />
+
+
+
+            <TextView
+                android:id="@+id/no"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/style_color_yuanjiao"
+                android:text="取消"
                 android:textColor="#FFFFFF"
                 android:textSize="15dp" />
         </LinearLayout>

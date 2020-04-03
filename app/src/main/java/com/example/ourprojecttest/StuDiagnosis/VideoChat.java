@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,12 +13,16 @@ import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ourprojecttest.PerfeActivity;
 import com.example.ourprojecttest.R;
 import com.example.ourprojecttest.Utils.CommonMethod;
 
@@ -86,17 +91,19 @@ public class VideoChat extends AppCompatActivity implements View.OnClickListener
             String videoInfo=intent.getStringExtra("videoInfo");
             Log.d("videoreceive",videoInfo);
             if(videoInfo.equals("denyVideoChat")){//如果对方拒绝视频聊天，给出提示
-                AlertDialog.Builder builder = new AlertDialog.Builder(VideoChat.this);
-                builder.setTitle("提示");
-                builder.setMessage("对方拒绝了您的视频聊天！");
-                //用户点击确定之后销毁视频聊天界面
-                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                });
-                builder.show();
+              //  AlertDialog.Builder builder = new AlertDialog.Builder(VideoChat.this);
+              //  builder.setTitle("提示");
+              //  builder.setMessage("对方拒绝了您的视频聊天！");
+              //  //用户点击确定之后销毁视频聊天界面
+              //  builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+              //      @Override
+              //      public void onClick(DialogInterface dialog, int which) {
+              //          finish();
+              //      }
+              //  });
+              //  builder.show();
+                String s="对方拒绝了您的视频聊天";
+                show(R.layout.layout_tishi_email,s);
             }else if (videoInfo.startsWith("IceInfo")) {
                 JSONObject jsonObject = null;
                 try {
@@ -316,17 +323,19 @@ public class VideoChat extends AppCompatActivity implements View.OnClickListener
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(VideoChat.this);
-                        builder.setTitle("提示");
-                        builder.setMessage("对方已退出视频聊天！");
+                       //AlertDialog.Builder builder = new AlertDialog.Builder(VideoChat.this);
+                       // builder.setTitle("提示");
+                       // builder.setMessage("对方已退出视频聊天！");
                         //用户点击确定之后销毁视频聊天界面
-                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                finish();
-                            }
-                        });
-                        builder.show();
+                       // builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                       //     @Override
+                        //    public void onClick(DialogInterface dialog, int which) {
+                         //       finish();
+                         //   }
+                       // });
+                       // builder.show();
+                        String s="对方已退出视频聊天";
+                        show(R.layout.layout_tishi_email,s);
                     }
                 });
             }
@@ -539,19 +548,20 @@ public class VideoChat extends AppCompatActivity implements View.OnClickListener
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:{//点击返回键是进行确认
-                AlertDialog.Builder builder = new AlertDialog.Builder(VideoChat.this);
-                builder.setTitle("提示");
-                builder.setMessage("是否退出视频通话！");
+                //AlertDialog.Builder builder = new AlertDialog.Builder(VideoChat.this);
+                //builder.setTitle("提示");
+                //builder.setMessage("是否退出视频通话！");
                 //用户点击确定之后销毁视频聊天界面
-                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                });
-                builder.setNegativeButton("取消",null);
-                builder.show();
-                return true;
+                //builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                //    @Override
+                //    public void onClick(DialogInterface dialog, int which) {
+                //        finish();
+                //    }
+                //});
+                //builder.setNegativeButton("取消",null);
+                //builder.show();
+                //return true;
+                tuichuvideo();
             }
             case KeyEvent.KEYCODE_VOLUME_UP:
                 mAudioManager.adjustStreamVolume(AudioManager.STREAM_VOICE_CALL, AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
@@ -613,6 +623,66 @@ public class VideoChat extends AppCompatActivity implements View.OnClickListener
 
 
 
+    public void show(int x,String s1){
+        final Dialog dialog = new Dialog(VideoChat.this,R.style.ActionSheetDialogStyle);        //展示对话框
+        //填充对话框的布局
+        View inflate = LayoutInflater.from(VideoChat.this).inflate(x, null);
+        TextView describe=inflate.findViewById(R.id.describe);
+       // TextView jianjie=inflate.findViewById(R.id.jianjie);
+        describe.setText(s1);
+        //jianjie.setText(s2);
+        TextView yes = inflate.findViewById(R.id.yes);
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               finish();
+            }
+        });
 
+        dialog.setContentView(inflate);
+        Window dialogWindow = dialog.getWindow();
+        //设置Dialog从窗体底部弹出
+        dialogWindow.setGravity( Gravity.CENTER);
+        //获得窗体的属性
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        lp.width =800;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialogWindow.setAttributes(lp);
+        dialog.show();
+    }
+
+    private void tuichuvideo(){
+        final Dialog dialog = new Dialog(this,R.style.ActionSheetDialogStyle);        //展示对话框
+        //填充对话框的布局
+        View inflate = LayoutInflater.from(this).inflate(R.layout.layout_tuichuvideno, null);
+        //初始化控件
+        TextView yes = inflate.findViewById(R.id.yes);
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        TextView no = inflate.findViewById(R.id.no);
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        //将布局设置给Dialog
+        dialog.setContentView(inflate);
+        //获取当前Activity所在的窗体
+        Window dialogWindow = dialog.getWindow();
+        //设置Dialog从窗体底部弹出
+        dialogWindow.setGravity( Gravity.CENTER);
+        //获得窗体的属性
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        lp.width =800;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialogWindow.setAttributes(lp);
+//       将属性设置给窗体
+        dialog.show();//显示对话框
+    }
 
 }

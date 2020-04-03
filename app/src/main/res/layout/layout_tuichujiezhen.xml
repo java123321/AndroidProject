@@ -13,6 +13,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/jianjie"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_gravity="center_vertical"
@@ -25,6 +26,7 @@
                 android:layout_height="1dp"
                 android:background="#FD0896F5"/>
             <TextView
+                android:id="@+id/describe"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:gravity="center"

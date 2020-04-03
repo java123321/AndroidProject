@@ -397,7 +397,7 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 }).start();
             }
-            private void parseJSONWithJSONObject(String jsonData){
+            private void parseJSONWithJSONObject(String jsonData ){
                 try{
                     JSONObject jsonObject=new JSONObject(jsonData);
                     String code=jsonObject.getString("code");

@@ -179,34 +179,74 @@ public class Chat extends AppCompatActivity {
                     stuOnline = false;
                 }
             } else if(msg.equals("callVideo")){//如果收到对方发送的视频聊天邀请，则弹出提示
-                AlertDialog.Builder builder = new AlertDialog.Builder(Chat.this);
-                builder.setTitle("提示");
-                builder.setMessage("对方邀请您开启视频通话！");
-                builder.setPositiveButton("同意", new DialogInterface.OnClickListener() {
+                //AlertDialog.Builder builder = new AlertDialog.Builder(Chat.this);
+                //builder.setTitle("提示");
+                ///builder.setMessage("对方邀请您开启视频通话！");
+               /// builder.setPositiveButton("同意", new DialogInterface.OnClickListener() {
+                //    @Override
+                //    public void onClick(DialogInterface dialog, int which) {
+                //        AskPermission("invite");
+
+
+                //    }
+                //});
+                //builder.setNegativeButton("拒绝", new DialogInterface.OnClickListener() {
+                //    @Override
+                 //   public void onClick(DialogInterface dialog, int which) {
+                 //       if(type.equals("Stu")){
+                 //           intentToStu.putExtra("chatMsg", stuOrDocId + "|denyVideoChat");//代表对方拒绝了视频聊天
+                 //           sendBroadcast(intentToStu);
+                 //           intentToStu.removeExtra("chatMsg");
+                 //       }else{
+                 //           intentToDoc.putExtra("chatMsg", stuOrDocId + "|denyVideoChat");
+                 //           sendBroadcast(intentToDoc);
+                 //           intentToDoc.removeExtra("chatMsg");
+                 //       }
+                 //
+                 //   }
+                //});
+               // builder.show();
+                final Dialog dialog = new Dialog(Chat.this,R.style.ActionSheetDialogStyle);        //展示对话框
+                //填充对话框的布局
+                View inflate = LayoutInflater.from(Chat.this).inflate(R.layout.layout_kaiqishipin, null);
+                //初始化控件
+                TextView yes = inflate.findViewById(R.id.yes);
+                yes.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(View view) {
                         AskPermission("invite");
-
-
+                        dialog.dismiss();
                     }
                 });
-                builder.setNegativeButton("拒绝", new DialogInterface.OnClickListener() {
+                TextView no = inflate.findViewById(R.id.no);
+                no.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if(type.equals("Stu")){
-                            intentToStu.putExtra("chatMsg", stuOrDocId + "|denyVideoChat");//代表对方拒绝了视频聊天
-                            sendBroadcast(intentToStu);
-                            intentToStu.removeExtra("chatMsg");
-                        }else{
-                            intentToDoc.putExtra("chatMsg", stuOrDocId + "|denyVideoChat");
-                            sendBroadcast(intentToDoc);
-                            intentToDoc.removeExtra("chatMsg");
-                        }
-
-                    }
+                    public void onClick(View view) {
+                if(type.equals("Stu")){
+                    intentToStu.putExtra("chatMsg", stuOrDocId + "|denyVideoChat");//代表对方拒绝了视频聊天
+                    sendBroadcast(intentToStu);
+                    intentToStu.removeExtra("chatMsg");
+                }else{
+                    intentToDoc.putExtra("chatMsg", stuOrDocId + "|denyVideoChat");
+                    sendBroadcast(intentToDoc);
+                    intentToDoc.removeExtra("chatMsg");
+                }
+                dialog.dismiss();
+            }
                 });
-                builder.show();
-
+                //将布局设置给Dialog
+                dialog.setContentView(inflate);
+                //获取当前Activity所在的窗体
+                Window dialogWindow = dialog.getWindow();
+                //设置Dialog从窗体底部弹出
+                dialogWindow.setGravity( Gravity.CENTER);
+                //获得窗体的属性
+                WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+                lp.width =800;
+                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                dialogWindow.setAttributes(lp);
+//       将属性设置给窗体
+                dialog.show();//显示对话框
             }else{
                 update(msg, TYPE_RECEIVED);
             }
