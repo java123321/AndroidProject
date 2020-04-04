@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.app.Fragment;
 
+import com.example.ourprojecttest.NavigationBar.StuBottomNavigation;
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.NavigationBar.DocBottomNavigation;
 import com.example.ourprojecttest.StuMine.StuInfomation.StuInformation;
@@ -189,7 +190,7 @@ public class StuMineFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent=new Intent(mContext, WelcomeActivity.class);
                 startActivity(intent);
-                DocBottomNavigation.activity.finish();
+                StuBottomNavigation.activity.finish();
             }
         });
         TextView no = inflate.findViewById(R.id.no);

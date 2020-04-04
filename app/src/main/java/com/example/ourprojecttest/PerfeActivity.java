@@ -72,11 +72,11 @@ public class PerfeActivity extends AppCompatActivity {
                    // }).setNegativeButton("取消",null).show();
                     String s="注册成功，准备好登录了吗？";
                     Intent intent = new Intent(PerfeActivity.this,LoginActivity.class);
+                    Log.d("registerresult","success1");
                     show(R.layout.layout_tishi_email,s,intent);
                     Log.d("registerresult","success");
                     break;
                 case -1:
-
                     String s1="邮箱已被使用";
                     show(R.layout.layout_tishi_email,s1);
                     //new AlertDialog.Builder(PerfeActivity.this).setTitle("错误").setMessage("邮箱已被使用").setNegativeButton("确定",null).show();
@@ -212,40 +212,7 @@ public class PerfeActivity extends AppCompatActivity {
             display();
         }
     };
-    //检验身高
-    private boolean checkHei(String hei){
-        try {
-            if (Integer.parseInt(hei)<=300&&Integer.parseInt(hei)>=100)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
 
-        }catch (NumberFormatException e){
-            //new AlertDialog.Builder(RegisterActivity.this).setTitle("错误").setMessage("请输入数字").setNegativeButton("确定",null).show();
-            return false;
-        }
-
-    }
-    //检验体重
-    private boolean checkWei(String wei){
-        try {
-            if (Integer.parseInt(wei)<=150&&Integer.parseInt(wei)>=30)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }catch (NumberFormatException e){
-            return false;
-        }
-
-    }
     //向数据库中插入数据
     private void interData(){
         new Thread(new Runnable() {

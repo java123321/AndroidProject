@@ -19,6 +19,8 @@ import android.provider.Settings;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -45,6 +47,9 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class LoginActivity extends AppCompatActivity {
+    private Display display;
+    // 获取屏幕高度
+    private int toastHeight;
     private String ipAddress;
     private Button login;
     private final int SUCCESS = 0;
@@ -81,7 +86,10 @@ public class LoginActivity extends AppCompatActivity {
                     finish();
                     break;
                 case ERROR:
-                    Toast.makeText(LoginActivity.this, "账号或密码错误", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(LoginActivity.this, "账号或密码错误！", Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                    toast.show();
+
                     progressBar.setVisibility(View.INVISIBLE);
                 default:
                     break;
@@ -123,6 +131,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        display = getWindowManager().getDefaultDisplay();
+        // 获取屏幕高度
+        toastHeight = display.getHeight();
         ipAddress = getResources().getString(R.string.ipAdrress);
         login_forget_pass = findViewById(R.id.login_forget_pass);
         ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
@@ -205,7 +216,10 @@ public class LoginActivity extends AppCompatActivity {
                 final String pass = passWord.getText().toString().trim();
                 //如果用户名或密码为空的话则取消登录
                 if (name.equals("") || pass.equals("")) {
-                    Toast.makeText(LoginActivity.this, "用户名或密码不能为空！", Toast.LENGTH_SHORT).show();
+
+                    Toast toast = Toast.makeText(LoginActivity.this, "用户名或密码不能为空！", Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                    toast.show();
                     return;
                 }
                 progressBar.setVisibility(View.VISIBLE);

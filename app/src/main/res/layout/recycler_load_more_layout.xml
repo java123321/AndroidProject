@@ -6,10 +6,11 @@
     android:gravity="center"
     >
         <TextView
+            android:textColor="#FD0896F5"
             android:id="@+id/foot_view_item_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
-            android:text="加载中..." />
+            android:text="已加载全部药品！" />
 
 </LinearLayout>
