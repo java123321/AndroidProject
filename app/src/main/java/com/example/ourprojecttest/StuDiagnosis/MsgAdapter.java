@@ -67,7 +67,10 @@ public  class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
         {
             //如果是收到的消息则显示左边的布局,将右边的布局隐藏掉
             holder.leftLayout.setVisibility(View.VISIBLE);
-            holder.iconLeft.setImageBitmap(left);
+            if(left!=null){
+                holder.iconLeft.setImageBitmap(left);
+            }
+
             holder.rightLayout.setVisibility(View.GONE);
             holder.leftMsg.setText(msg.getContent());
         }

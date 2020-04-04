@@ -75,7 +75,7 @@ public class StuMineFragment extends Fragment {
     }
 
     private void initView(){
-        LinearLayout linearLayout =  view.findViewById(R.id.xinxi);
+        LinearLayout info =  view.findViewById(R.id.xinxi);
         LinearLayout address=view.findViewById(R.id.address);
         img=view.findViewById(R.id.roundViw);
         Name=view.findViewById(R.id.name);
@@ -149,7 +149,7 @@ public class StuMineFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        linearLayout.setOnClickListener(new View.OnClickListener() {
+        info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), StuInformation.class);

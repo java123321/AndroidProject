@@ -71,21 +71,15 @@
             android:layout_marginTop="10dp"
             android:layout_height="0.5dp"
             android:background="#525252"/>
-        <TextView
-            android:gravity="center"
-
-            android:text="当前排队状况"
-            android:background="#FFFFFF"
-            android:textColor="#FD0896F5"
-            android:textSize="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"/>
 
         <TextView
             android:id="@+id/stuWenZhenDisplayGuaHaoInfo"
             android:layout_width="match_parent"
             android:layout_gravity="center_vertical"
             android:gravity="center"
+            android:textSize="16dp"
+            android:textColor="#FD0896F5"
+            android:text="当前排队位次: 暂无位次信息"
             android:background="#FFFFFF"
             android:layout_height="40dp" />
 

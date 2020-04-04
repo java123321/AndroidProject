@@ -192,17 +192,20 @@ public class StuService extends Service {
                 String docPictureUrl = info.substring(position + 5);
                 byte[] docPicture = null;
                 try {
-                    docPicture = method.bitmap2Bytes(method.drawableToBitamp(Drawable.createFromStream(new URL(ipAddress + docPictureUrl).openStream(), "image.jpg")));
+                    if(docPictureUrl==null||docPictureUrl.equals("")){//如果数据库没有用户头像，则设置null
+                        intent.removeExtra("docPicture");
+                    }else{//如果有数据则获取头像
+                        docPicture = method.bitmap2Bytes(method.drawableToBitamp(Drawable.createFromStream(new URL(ipAddress + docPictureUrl).openStream(), "image.jpg")));
+                        intent.putExtra("docPicture", docPicture);
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
                 //将到你的通知发送个活动
                 intent.putExtra("persons", "-1");
                 intent.putExtra("docId", docId);
                 intent.putExtra("docName", docName);
                 Log.d("chat", "docPicture" + (docPicture == null));
-                intent.putExtra("docPicture", docPicture);
                 //startForeground(1, getNotification(CHANNEL_ID, docName + "医生即将为您接诊！", "到你了"));
                 sendNotification("到你了",docName + "医生即将为您接诊！");
                 webSocket.close(1000, "再见");

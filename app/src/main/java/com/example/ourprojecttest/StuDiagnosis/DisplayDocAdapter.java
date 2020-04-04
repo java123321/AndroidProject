@@ -56,13 +56,13 @@ public class DisplayDocAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
          final DisplayDocBean info=mList.get(position);
-        ((ViewHolder) holder).docIcon.setImageBitmap(info.getIcon());
-        ((ViewHolder) holder).docName.setText("姓名:"+info.getName());
-        ((ViewHolder) holder).docSex.setText("性别:"+info.getSex());
+         ViewHolder viewHolder=((ViewHolder) holder);
+        viewHolder.docIcon.setImageBitmap(info.getIcon());
+        viewHolder.docName.setText("姓名:"+info.getName());
+        viewHolder.docSex.setText("性别:"+info.getSex());
         //设置显示在线医生的点击事件
-        ((ViewHolder) holder).item.setOnClickListener(new View.OnClickListener() {
+        viewHolder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(mContext,OnlineDocDetail.class);

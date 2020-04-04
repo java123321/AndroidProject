@@ -58,17 +58,18 @@ public class DisplayStuAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         DisplayStuBean info=mList.get(position);
-        String [] arrs=new String[3];
+        String [] arrs;
         arrs=(info.getBirthday()).split("-");
         String age1=String.valueOf(getAge(arrs[0],arrs[1],arrs[2]));
-        ((ViewHolder) holder).stuIcon.setImageBitmap(info.getIcon());
-        ((ViewHolder) holder).stuName.setText(info.getName());
-        ((ViewHolder) holder).stuSex.setText(info.getSex());
-        ((ViewHolder) holder).stuAge.setText(age1+" 岁");
-
-        ((ViewHolder) holder).stuHeight.setText(info.getHeight()+" cm");
-        ((ViewHolder) holder).stuWeight.setText(info.getWeight()+" kg");
-
+        ViewHolder viewHolder= ((ViewHolder) holder);
+        if(info.getIcon()!=null){
+            viewHolder.stuIcon.setImageBitmap(info.getIcon());
+        }
+        viewHolder.stuName.setText(info.getName());
+        viewHolder.stuSex.setText(info.getSex());
+        viewHolder.stuAge.setText(age1+" 岁");
+        viewHolder.stuHeight.setText(info.getHeight()+" cm");
+        viewHolder.stuWeight.setText(info.getWeight()+" kg");
     }
 
     @Override

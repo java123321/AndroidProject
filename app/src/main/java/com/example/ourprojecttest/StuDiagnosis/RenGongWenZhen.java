@@ -6,16 +6,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -69,7 +66,7 @@ public class RenGongWenZhen extends AppCompatActivity {
     private LinearLayout noDoctor;
     private Button guanbi;
     private Button guaHao;
-    private TextView text;
+    private TextView displayStuRank;
     private DisplayDocAdapter adapter;
     private RecyclerView mRecycler;
     private SwipeRefreshLayout refresh;
@@ -91,7 +88,6 @@ public class RenGongWenZhen extends AppCompatActivity {
                 case FAULT:
                     noDoctor.setVisibility(View.VISIBLE);
                     mRecycler.setVisibility(View.GONE);
-
                     break;
             }
 
@@ -120,39 +116,10 @@ public class RenGongWenZhen extends AppCompatActivity {
         public void onReceive(Context context, final Intent intent) {
             if (intent.hasExtra("persons")) {
                 String person = intent.getStringExtra("persons");
-
                 if (person.equals("-1")) {//如果是-1的话代表到你了，发出提示窗口
-                    //将挂号标记置为false
-                    StuService.isGuaHao=false;
-                    Log.d("chat0", "0102");
-                    // final Dialog dialog = new AlertDialog.Builder(RenGongWenZhen.this).setTitle("选择")
-                    //         .setCancelable(false)
-                    //         //.setView(mShutDownTextView)
-                    //         .setPositiveButton("沟通", new DialogInterface.OnClickListener() {//如果用户点击了确定按钮则进入与医生的聊天界面
-                    //            @Override
-                    //           public void onClick(DialogInterface dialogInterface, int i) {
-                    //               //给医生发通知表明学生统一看病
-                    //               intentToService.putExtra("msg","Chat");
-                    //               sendBroadcast(intentToService);
-                    //               //准备跳到聊天界面，并将医生的di放到意图里
-                    //             Intent intentToChat=new Intent(RenGongWenZhen.this, Chat.class);
-                    //              intentToChat.putExtra("docId",intent.getStringExtra("docId"));
-                    //              intentToChat.putExtra("docName",intent.getStringExtra("docName"));
-                    //              intentToChat.putExtra("docPicture",intent.getByteArrayExtra("docPicture"));
-                    //              startActivity(intentToChat);
-                    //       }
-                    //     })
-                    //     .setNegativeButton("放弃", new DialogInterface.OnClickListener() {
-                    //         @Override
-                    //        public void onClick(DialogInterface dialog, int which) {
-                    //           intentToService.putExtra("msg","Deny");
-                    //           sendBroadcast(intentToService);
-                    //    }
-                    // }).create();
                     show(intent);
-
                 } else {//否则显示当前排队人数
-                    text.setText("当前挂号位次为第" + intent.getStringExtra("persons") + "位");
+                    displayStuRank.setText("当前排队位次: " + intent.getStringExtra("persons") + "位");
                 }
             }
         }
@@ -166,6 +133,7 @@ public class RenGongWenZhen extends AppCompatActivity {
 
     //从服务器获取当前在线医生的信息
     private void getData() {
+        Log.d("msgwhat","startgetdata");
         refresh.setRefreshing(true);
         final String url = ipAddress + "IM/GetOnlineDoc";
         new Thread(new Runnable() {
@@ -261,7 +229,7 @@ public class RenGongWenZhen extends AppCompatActivity {
         getData();
         guanbi = findViewById(R.id.stu_wenzhen_guanbi);
         guaHao = findViewById(R.id.stu_wenzhen_guahao);
-        text = findViewById(R.id.stuWenZhenDisplayGuaHaoInfo);
+        displayStuRank = findViewById(R.id.stuWenZhenDisplayGuaHaoInfo);
         //设置点击挂号的点击事件
         guaHao.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -290,6 +258,7 @@ public class RenGongWenZhen extends AppCompatActivity {
                     //给服务发送取消挂号的广播
                     intentToService.putExtra("msg", "ExitGuaHao");
                     sendBroadcast(intentToService);
+                    displayStuRank.setText("当前排队位次: 暂无位次信息");
                 } else {
                     Toast toast = Toast.makeText(RenGongWenZhen.this, "您暂未开启挂号！", Toast.LENGTH_SHORT);
                     // 这里给了一个1/4屏幕高度的y轴偏移量
@@ -311,7 +280,7 @@ public class RenGongWenZhen extends AppCompatActivity {
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              dialog.dismiss();
+                dialog.dismiss();
             }
         });
         //将布局设置给Dialog
@@ -327,12 +296,13 @@ public class RenGongWenZhen extends AppCompatActivity {
         dialogWindow.setAttributes(lp);
         dialog.show();//显示对话框
     }
+
     private void stuCountTimeToDeny(final TextView countTime, final Dialog mDialog) {
         mOffHandler = new Handler() {
             public void handleMessage(Message msg) {
                 if (msg.what > 0) {
                     ////动态显示倒计时
-                    countTime.setText("同意医生的接诊请求吗？"+msg.what + "秒后默认拒绝！");
+                    countTime.setText("同意医生的接诊请求吗？" + msg.what + "秒后默认拒绝！");
                 } else {
                     ////倒计时结束后关闭计时器
                     mOffTime.cancel();
@@ -383,7 +353,12 @@ public class RenGongWenZhen extends AppCompatActivity {
                 Intent intentToChat = new Intent(RenGongWenZhen.this, Chat.class);
                 intentToChat.putExtra("docId", intent.getStringExtra("docId"));
                 intentToChat.putExtra("docName", intent.getStringExtra("docName"));
-                intentToChat.putExtra("docPicture", intent.getByteArrayExtra("docPicture"));
+                //对医生的头像进行判断是否有无
+                if (intent.hasExtra("docPicture")) {
+                    intentToChat.putExtra("docPicture", intent.getByteArrayExtra("docPicture"));
+                } else {
+                    intentToChat.removeExtra("docPicture");
+                }
                 startActivity(intentToChat);
             }
         });
@@ -410,8 +385,6 @@ public class RenGongWenZhen extends AppCompatActivity {
         lp.width = 800;
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         dialogWindow.setAttributes(lp);
-
-
         dialog.show();//显示对话框
         return dialog;
     }

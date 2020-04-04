@@ -238,12 +238,18 @@ public class DocService extends Service {
                 String stuPictureUrl = text.substring(position + 5);
                 byte[] stuPicture = null;
                 try {
-                    stuPicture = method.bitmap2Bytes(method.drawableToBitamp(Drawable.createFromStream(new URL( ipAddress+stuPictureUrl).openStream(), "image.jpg")));
+                    if(stuPictureUrl==null||stuPictureUrl.equals("")){//如果学生头像为空
+                        intentToBeforChat.removeExtra("stuPicture");
+                    }else{
+                        stuPicture = method.bitmap2Bytes(method.drawableToBitamp(Drawable.createFromStream(new URL( ipAddress+stuPictureUrl).openStream(), "image.jpg")));
+                        intentToBeforChat.putExtra("stuPicture", stuPicture);
+                    }
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 Log.d("chat", "stuPicture" + (stuPicture == null));
-                intentToBeforChat.putExtra("stuPicture", stuPicture);
+
                 sendBroadcast(intentToBeforChat);
                 Log.d("学生消息2", "chat");
             } else if (text.startsWith("deny")) {//如果学生发送的是拒绝

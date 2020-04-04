@@ -22,7 +22,7 @@
             android:layout_height="60dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
-            android:src="@drawable/person">
+            android:src="@drawable/yonghu2">
         </com.example.ourprojecttest.Utils.Roundimage>
         <TextView
             android:id="@+id/docName"

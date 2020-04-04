@@ -389,8 +389,14 @@ public class Chat extends AppCompatActivity {
             messageBean.setName(stuName);
             chatWindowName.setText(stuName + "同学");
             //获取学生头像
-            byte[] stuIcon = intent.getByteArrayExtra("stuPicture");
-            messageBean.setIcon(stuIcon);
+            byte[] stuIcon=null;
+            if(intent.hasExtra("stuPicture")){
+                stuIcon = intent.getByteArrayExtra("stuPicture");
+                messageBean.setIcon(stuIcon);
+            }else{
+                messageBean.setIcon(null);
+            }
+
             Log.d("chat", "stuIcon" + (stuIcon == null));
             Bitmap stuPicture = BitmapFactory.decodeByteArray(stuIcon, 0, stuIcon.length);
             //获取医生的头像
@@ -410,8 +416,13 @@ public class Chat extends AppCompatActivity {
             messageBean.setName(docName);
             chatWindowName.setText(docName + "医生");
             //获取医生的头像
-            byte[] docIcon = intent.getByteArrayExtra("docPicture");
-            messageBean.setIcon(docIcon);
+            byte[] docIcon=null;
+            if(intent.hasExtra("docPicture")){
+                docIcon = intent.getByteArrayExtra("docPicture");
+                messageBean.setIcon(docIcon);
+            }else{
+                messageBean.setIcon(null);
+            }
             Log.d("chat", "docIcon" + (docIcon == null));
             Bitmap docPicture = BitmapFactory.decodeByteArray(docIcon, 0, docIcon.length);
             //获取学生的头像

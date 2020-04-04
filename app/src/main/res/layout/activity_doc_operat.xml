@@ -59,6 +59,17 @@
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/displayStuNumber"
+        android:layout_width="match_parent"
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
+        android:textSize="16dp"
+        android:textColor="#FD0896F5"
+        android:text="当前学生挂号人数: 0人"
+        android:background="#FFFFFF"
+        android:layout_height="40dp" />
     <Button
         android:id="@+id/access"
         android:layout_width="match_parent"
