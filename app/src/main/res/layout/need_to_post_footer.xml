@@ -7,34 +7,32 @@
 
 <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:layout_height="60dp"
+    android:orientation="horizontal"
     android:background="@drawable/style_bottom">
 
 
     <TextView
         android:id="@+id/orderTime"
     android:text="订单时间:1212/12/12"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+    android:layout_width="200dp"
+        android:layout_gravity="center_vertical"
+    android:layout_height="25dp"
         android:textColor="#000000"
     android:textSize="16dp" />
-
     <Button
         android:id="@+id/alreadyPostDoc"
         android:text="已发货"
-        android:layout_gravity="right"
+        android:layout_gravity="center_vertical"
         android:background="@drawable/style_post"
         android:layout_width="80dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="330dp"
+        android:layout_marginLeft="120dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
         android:layout_height="40dp"/>
 
 </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="30dp"/>
-
 </LinearLayout>
