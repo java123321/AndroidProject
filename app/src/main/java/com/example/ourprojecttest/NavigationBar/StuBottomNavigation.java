@@ -25,7 +25,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 public class StuBottomNavigation extends AppCompatActivity {
-    private static Activity activity;
+    public static Activity activity;
     private CommonMethod method = new CommonMethod();
     private StuDrugStoreFragment yaodian_frag = null;
     private StuMineFragment wode_frag = null;

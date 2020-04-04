@@ -52,7 +52,6 @@
         </activity>
         <activity android:name=".StuMine.AddressActivity" />
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".MailboxActivity" />
         <activity android:name=".DocTreatment.DocOperatActivity" />
         <activity android:name=".StuMine.StuInfomation.StuInformation" />
         <activity android:name=".StuMine.StuInfomation.ModefyStuName" />

@@ -142,11 +142,9 @@ public class DocMineFragment extends Fragment {
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                DocBottomNavigation.activity.finish();
                 Intent intent=new Intent(mContext, WelcomeActivity.class);
                 startActivity(intent);
-
+                DocBottomNavigation.activity.finish();
             }
         });
 

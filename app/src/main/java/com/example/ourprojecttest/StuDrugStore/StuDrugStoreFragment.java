@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -41,6 +42,10 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class StuDrugStoreFragment extends Fragment {
+    //正在加载更多
+    static final int LOADING_MORE = 1;
+    //没有更多
+    static final int NO_MORE = 2;
     private String ipAddress;
     public boolean flag=false;
     private final String loadNum="16";
@@ -83,16 +88,31 @@ public class StuDrugStoreFragment extends Fragment {
     private int lastVisibleItem;
     private boolean isLoading = false;//用来控制进入getdata()的次数
     private boolean clear=true;
+    private LinearLayout empty;
 
     Handler handler=new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
             List<DrugInformation> list=(List<DrugInformation>)msg.obj;
-            //如果清空list
-            if(clear){
-                mAdapter.setList(list);
+
+
+            if(clear){//如果通过更改检索条件检索的结果，则清空原有数组
+
+                if(list.size()==0){//如果没有药品，则显示空界面
+                    empty.setVisibility(View.VISIBLE);
+                    mRecycler.setVisibility(View.GONE);
+                }else{
+                    empty.setVisibility(View.GONE);
+                    mRecycler.setVisibility(View.VISIBLE);
+                    mAdapter.setList(list);
+                    if(last<total){
+                        mAdapter.changeState(LOADING_MORE);
+                    }else{
+                        mAdapter.changeState(NO_MORE);
+                    }
+                }
             }
-            else{
+            else{//如果是通话下滑加载的数据，调用add方法
                 mAdapter.addList(list);
             }
             mAdapter.notifyDataSetChanged();
@@ -122,6 +142,8 @@ public class StuDrugStoreFragment extends Fragment {
 
     //初始化RecyclerView布局
     private void initView(View view) {
+        empty=view.findViewById(R.id.empty);
+        empty.setVisibility(View.GONE);
         refreshLayout=view.findViewById(R.id.dropDownToRefresh);
         mRecycler = view.findViewById(R.id.stu_yaodian_recycler);//获取RecyclerView的滚动布局2
         gridLayoutManager=new GridLayoutManager(getActivity(),2);
@@ -216,8 +238,6 @@ public class StuDrugStoreFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-
 
             }
 
@@ -422,13 +442,13 @@ public class StuDrugStoreFragment extends Fragment {
          yiliaoqixie=view.findViewById(R.id.yiliaoqixie);
         qita=view.findViewById(R.id.qita);
         lastColorName=quanbu;
-        lastColorName.setBackgroundColor(Color.parseColor("#00BFFF"));
+        lastColorName.setTextColor(Color.parseColor("#FD0896F5"));
         quanbu.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 selectedMenu="-1";
-                lastColorName.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                quanbu.setBackgroundColor(Color.parseColor("#00BFFF"));
+                lastColorName.setTextColor(Color.parseColor("#000000"));
+                quanbu.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName=quanbu;
                 Log.d("yaodian","test");
                 getData("1",loadNum,"-1","");
@@ -438,8 +458,8 @@ public class StuDrugStoreFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 selectedMenu="1";
-                lastColorName.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                nanke.setBackgroundColor(Color.parseColor("#FD0896F5"));
+                lastColorName.setTextColor(Color.parseColor("#000000"));
+                nanke.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName=nanke;
                 getData("1",loadNum,"1","");
             }
@@ -448,8 +468,8 @@ public class StuDrugStoreFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 selectedMenu="2";
-                lastColorName.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                fuke.setBackgroundColor(Color.parseColor("#00BFFF"));
+                lastColorName.setTextColor(Color.parseColor("#000000"));
+                fuke.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName=fuke;
                 getData("1",loadNum,"2","");
             }
@@ -459,8 +479,8 @@ public class StuDrugStoreFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 selectedMenu="3";
-                lastColorName.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                huxike.setBackgroundColor(Color.parseColor("#00BFFF"));
+                lastColorName.setTextColor(Color.parseColor("#000000"));
+                huxike.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName=huxike;
                 getData("1",loadNum,"3","");
             }
@@ -470,8 +490,8 @@ public class StuDrugStoreFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 selectedMenu="4";
-                lastColorName.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                xiaohuake.setBackgroundColor(Color.parseColor("#00BFFF"));
+                lastColorName.setTextColor(Color.parseColor("#000000"));
+                xiaohuake.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName=xiaohuake;
                 getData("1",loadNum,"4","");
             }
@@ -480,8 +500,8 @@ public class StuDrugStoreFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 selectedMenu="5";
-                lastColorName.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                neifenmike.setBackgroundColor(Color.parseColor("#00BFFF"));
+                lastColorName.setTextColor(Color.parseColor("#000000"));
+                neifenmike.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName=neifenmike;
                 getData("1",loadNum,"5","");
             }
@@ -490,8 +510,8 @@ public class StuDrugStoreFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 selectedMenu="6";
-                lastColorName.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                xinxueguanke.setBackgroundColor(Color.parseColor("#00BFFF"));
+                lastColorName.setTextColor(Color.parseColor("#000000"));
+                xinxueguanke.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName=xinxueguanke;
                 getData("1",loadNum,"6","");
             }
@@ -500,8 +520,8 @@ public class StuDrugStoreFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 selectedMenu="7";
-                lastColorName.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                miniaoke.setBackgroundColor(Color.parseColor("#00BFFF"));
+                lastColorName.setTextColor(Color.parseColor("#000000"));
+                miniaoke.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName=miniaoke;
                 getData("1",loadNum,"7","");
             }
@@ -510,8 +530,8 @@ public class StuDrugStoreFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 selectedMenu="8";
-                lastColorName.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                xueyeke.setBackgroundColor(Color.parseColor("#00BFFF"));
+                lastColorName.setTextColor(Color.parseColor("#000000"));
+                xueyeke.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName=xueyeke;
                 getData("1",loadNum,"8","");
             }
@@ -520,8 +540,8 @@ public class StuDrugStoreFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 selectedMenu="9";
-                lastColorName.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                fengshigu.setBackgroundColor(Color.parseColor("#00BFFF"));
+                lastColorName.setTextColor(Color.parseColor("#000000"));
+                fengshigu.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName=fengshigu;
                 getData("1",loadNum,"9","");
             }
@@ -530,8 +550,8 @@ public class StuDrugStoreFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 selectedMenu="10";
-                lastColorName.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                erbihouke.setBackgroundColor(Color.parseColor("#00BFFF"));
+                lastColorName.setTextColor(Color.parseColor("#000000"));
+                erbihouke.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName=erbihouke;
                 getData("1",loadNum,"10","");
             }
@@ -540,8 +560,8 @@ public class StuDrugStoreFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 selectedMenu="11";
-                lastColorName.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                yanke.setBackgroundColor(Color.parseColor("#00BFFF"));
+                lastColorName.setTextColor(Color.parseColor("#000000"));
+                yanke.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName=yanke;
                 getData("1",loadNum,"11","");
             }
@@ -550,8 +570,8 @@ public class StuDrugStoreFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 selectedMenu="12";
-                lastColorName.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                kouqiangke.setBackgroundColor(Color.parseColor("#00BFFF"));
+                lastColorName.setTextColor(Color.parseColor("#000000"));
+                kouqiangke.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName=kouqiangke;
                 getData("1",loadNum,"12","");
             }
@@ -560,8 +580,8 @@ public class StuDrugStoreFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 selectedMenu="13";
-                lastColorName.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                pifuke.setBackgroundColor(Color.parseColor("#00BFFF"));
+                lastColorName.setTextColor(Color.parseColor("#000000"));
+                pifuke.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName=pifuke;
                 getData("1",loadNum,"13","");
             }
@@ -570,8 +590,8 @@ public class StuDrugStoreFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 selectedMenu="14";
-                lastColorName.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                shenjingke.setBackgroundColor(Color.parseColor("#00BFFF"));
+                lastColorName.setTextColor(Color.parseColor("#000000"));
+                shenjingke.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName=shenjingke;
                 getData("1",loadNum,"14","");
             }
@@ -580,8 +600,8 @@ public class StuDrugStoreFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 selectedMenu="15";
-                lastColorName.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                ganranke.setBackgroundColor(Color.parseColor("#00BFFF"));
+                lastColorName.setTextColor(Color.parseColor("#000000"));
+                ganranke.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName=ganranke;
                 getData("1",loadNum,"15","");
             }
@@ -590,8 +610,8 @@ public class StuDrugStoreFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 selectedMenu="16";
-                lastColorName.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                baojianshipin.setBackgroundColor(Color.parseColor("#00BFFF"));
+                lastColorName.setTextColor(Color.parseColor("#000000"));
+                baojianshipin.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName=baojianshipin;
                 getData("1",loadNum,"16","");
             }
@@ -600,8 +620,8 @@ public class StuDrugStoreFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 selectedMenu="17";
-                lastColorName.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                yiliaoqixie.setBackgroundColor(Color.parseColor("#00BFFF"));
+                lastColorName.setTextColor(Color.parseColor("#000000"));
+                yiliaoqixie.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName=yiliaoqixie;
                 getData("1",loadNum,"17","");
             }
@@ -610,8 +630,8 @@ public class StuDrugStoreFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 selectedMenu="100";
-                lastColorName.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                qita.setBackgroundColor(Color.parseColor("#00BFFF"));
+                lastColorName.setTextColor(Color.parseColor("#000000"));
+                qita.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName=qita;
                 getData("1",loadNum,"100","");
             }
