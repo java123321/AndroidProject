@@ -122,6 +122,7 @@ public class NeedToReceive extends AppCompatActivity {
             }
         }).start();
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

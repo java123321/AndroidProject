@@ -11,6 +11,7 @@
         android:layout_height="70dp"
         android:textSize="25dp"
         android:text="问诊"
+
         android:textColor="#FFFFFF"
         android:background="#FD0896F5"
         android:gravity="center" />

@@ -265,6 +265,7 @@ public class NeedToPay extends AppCompatActivity {
                         }
                         drugDataList.add(drugData);//将药品添加到药品列表里
                     }
+
                 }
                 msg.what=SUCCESS;
                 msg.obj=orderList;

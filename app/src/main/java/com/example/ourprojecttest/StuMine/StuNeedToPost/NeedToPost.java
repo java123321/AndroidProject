@@ -83,6 +83,7 @@ public class NeedToPost extends AppCompatActivity {
         ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
     }
 
+
     private void getData(){
         refresh.setRefreshing(true);
         refresh.setColorSchemeColors(getResources().getColor(R.color.color_bottom));
