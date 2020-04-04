@@ -68,7 +68,6 @@ public class StuBottomNavigation extends AppCompatActivity {
                 Intent intent = new Intent(StuBottomNavigation.this, StuService.class);
                 stopService(intent);
                 finish();
-                System.exit(0);
             }
             return true;
         }
@@ -98,6 +97,11 @@ public class StuBottomNavigation extends AppCompatActivity {
         }
     };
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("stubottom121","ondestroy");
+    }
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -109,6 +113,7 @@ public class StuBottomNavigation extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        
         activity = this;
         super.onCreate(savedInstanceState);
         Log.d("drug1", "124");

@@ -104,7 +104,6 @@ public class DocBottomNavigation extends AppCompatActivity {
                 Intent intent=new Intent(DocBottomNavigation.this,DocService.class);
                 stopService(intent);
                 finish();
-                System.exit(0);
             }
             return true;
         }

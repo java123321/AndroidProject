@@ -69,6 +69,10 @@ public class WelcomeActivity extends Activity implements OnPageChangeListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (!isTaskRoot()) {
+            finish();
+            return;
+        }
         super.onCreate(savedInstanceState);
         main = WelcomeActivity.this;
         if (!isTaskRoot()) {

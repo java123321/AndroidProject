@@ -35,8 +35,11 @@ import com.example.ourprojecttest.Utils.Roundimage;
 import com.example.ourprojecttest.StuMine.ShoppingCart.ShoppingCartActivity;
 
 public class StuMineFragment extends Fragment {
-    Context mContext;
-    CommonMethod method=new CommonMethod();
+    private  Receiver1 receiver1;
+    private  Receiver receiver;
+    private Activity a;
+    private Context mContext;
+    private CommonMethod method=new CommonMethod();
     private Roundimage img;
     private TextView Name,Email;
     private LinearLayout fukuan;
@@ -49,13 +52,13 @@ public class StuMineFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstansceState) {
         view = inflater.inflate(R.layout.stu_frag_my, container, false);
         mContext=getContext();
-        Activity a=getActivity();
+        a=getActivity();
         IntentFilter setName=new IntentFilter();
         IntentFilter setPicture=new IntentFilter();
         setPicture.addAction("Picture");
         setName.addAction("Name");
-        Receiver1 receiver1=new Receiver1();
-        Receiver receiver=new Receiver();
+        receiver1=new Receiver1();
+        receiver=new Receiver();
         a.registerReceiver(receiver1,setPicture);
         a.registerReceiver(receiver, setName);
         ImmersiveStatusbar.getInstance().Immersive(a.getWindow(),a.getActionBar());//状态栏透明
@@ -63,6 +66,14 @@ public class StuMineFragment extends Fragment {
         initView();
         return view;
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        a.unregisterReceiver(receiver);
+        a.unregisterReceiver(receiver1);
+    }
+
     private void initView(){
         LinearLayout linearLayout =  view.findViewById(R.id.xinxi);
         LinearLayout address=view.findViewById(R.id.address);
@@ -163,6 +174,8 @@ public class StuMineFragment extends Fragment {
             }
         });
     }
+
+
 
     public class Receiver extends BroadcastReceiver {
         @Override
