@@ -6,6 +6,8 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +26,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class FindPass extends AppCompatActivity {
+    private Display display;
+    private int toastHeight;
     private String ipAddress;
     private EditText find_pass_input_new_pass;
     private EditText find_pass_user_name;
@@ -50,19 +54,33 @@ public class FindPass extends AppCompatActivity {
                     break;
                     //验证码错误
                 case VERIFICATION_CODE_ERROR:
-                    Toast.makeText(FindPass.this,"验证码错误，修改失败!",Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(FindPass.this, "验证码错误，修改失败!", Toast.LENGTH_SHORT);
+                    // 这里给了一个1/4屏幕高度的y轴偏移量
+                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                    toast.show();
                     break;
                     //当前用户账号不存在
                 case ID_NOT_EXIST:
-                    Toast.makeText(FindPass.this, "当前用户不存在，请注册！", Toast.LENGTH_SHORT).show();
+                    toast = Toast.makeText(FindPass.this, "当前用户不存在，请注册！", Toast.LENGTH_SHORT);
+                    // 这里给了一个1/4屏幕高度的y轴偏移量
+                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                    toast.show();
                     break;
                     //密码修改成功
                 case MODIFY_SUCCESS:
-                    Toast.makeText(FindPass.this, "密码修改成功，请重新登录！", Toast.LENGTH_SHORT).show();
+
+                    toast = Toast.makeText(FindPass.this, "密码修改成功，请重新登录！", Toast.LENGTH_SHORT);
+                    // 这里给了一个1/4屏幕高度的y轴偏移量
+                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                    toast.show();
                     break;
                     //密码修改失败(可能网络不好等原因修改失败，极少出现)
                 case MODIFY_FAILED:
-                    Toast.makeText(FindPass.this,"密码修改失败",Toast.LENGTH_SHORT).show();
+
+                    toast = Toast.makeText(FindPass.this, "密码修改失败！", Toast.LENGTH_SHORT);
+                    // 这里给了一个1/4屏幕高度的y轴偏移量
+                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                    toast.show();
                     break;
                 default:
                     break;
@@ -78,7 +96,8 @@ public class FindPass extends AppCompatActivity {
         setContentView(R.layout.activity_find_pass);
         ipAddress=getResources().getString(R.string.ipAdrress);
         ImmersiveStatusbar.getInstance().Immersive(getWindow(),getActionBar());//状态栏透明
-        //getSupportActionBar().hide();
+        display = getWindowManager().getDefaultDisplay();
+        toastHeight = display.getHeight();
         find_pass_user_name=findViewById(R.id.find_pass_user_name);
         get_verification_code=findViewById(R.id.get_verification_code);
         find_pass_confirm=findViewById(R.id.find_pass_confirm);

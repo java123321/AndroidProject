@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +43,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class PerfeActivity extends AppCompatActivity {
+    private Display display;
+    private int toastHeight;
     private String ipAddress;
     private TextView stuName;
     private TextView stuHei;
@@ -93,6 +96,8 @@ public class PerfeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfe);
         ipAddress=getResources().getString(R.string.ipAdrress);
+        display = getWindowManager().getDefaultDisplay();
+        toastHeight = display.getHeight();
         ImmersiveStatusbar.getInstance().Immersive(getWindow(),getActionBar());//状态栏透明
         Intent intent = getIntent();
         //注册身高广播
@@ -326,7 +331,11 @@ public class PerfeActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             String s = intent.getStringExtra("Height");
             stuHei.setText(s);
-            Toast.makeText(PerfeActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
+
+            Toast toast = Toast.makeText(PerfeActivity.this, "保存成功！", Toast.LENGTH_SHORT);
+            // 这里给了一个1/4屏幕高度的y轴偏移量
+            toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+            toast.show();
         }
     }
 
@@ -335,7 +344,10 @@ public class PerfeActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             String s = intent.getStringExtra("Weight");
             stuWei.setText(s);
-            Toast.makeText(PerfeActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
+            Toast toast = Toast.makeText(PerfeActivity.this, "保存成功！", Toast.LENGTH_SHORT);
+            // 这里给了一个1/4屏幕高度的y轴偏移量
+            toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+            toast.show();
         }
     }
 }

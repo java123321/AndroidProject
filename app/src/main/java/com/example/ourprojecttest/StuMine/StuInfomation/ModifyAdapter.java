@@ -3,6 +3,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,8 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
 public class ModifyAdapter extends RecyclerView.Adapter<ModifyAdapter.ViewHolder> implements Serializable {
+    private Display display;
+    private int toastHeight;
     private List<Tubiao> tubiaos;
     private NumPicker numPicker;
     private Numpickerr numpickerr;

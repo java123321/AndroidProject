@@ -12,6 +12,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -26,6 +28,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomnavigation.LabelVisibilityMode;
 
 public class DocBottomNavigation extends AppCompatActivity {
+    private Display display;
+    private int toastHeight;
     private BottomNavigationView bottomNavigationView;
     public static Activity activity;
     private StuDrugStoreFragment yaodian_frag = null;
@@ -68,10 +72,17 @@ public class DocBottomNavigation extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
         String msg=intent.getStringExtra("msg");
         if(msg.equals("success")){
-            Toast.makeText(DocBottomNavigation.this, "药品添加成功！", Toast.LENGTH_SHORT).show();
+
+            Toast toast = Toast.makeText(DocBottomNavigation.this, "药品添加成功！", Toast.LENGTH_SHORT);
+            // 这里给了一个1/4屏幕高度的y轴偏移量
+            toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+            toast.show();
         }
         else{
-            Toast.makeText(DocBottomNavigation.this, "此药品已添加！", Toast.LENGTH_SHORT).show();
+            Toast toast = Toast.makeText(DocBottomNavigation.this, "此药品已添加！", Toast.LENGTH_SHORT);
+            // 这里给了一个1/4屏幕高度的y轴偏移量
+            toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+            toast.show();
         }
         }
     }
@@ -83,7 +94,11 @@ public class DocBottomNavigation extends AppCompatActivity {
             long backPressed = System.currentTimeMillis();
             if (backPressed - lastBackPressed > QUIT_INTERVAL) {
                 lastBackPressed = backPressed;
-                Toast.makeText(this,"再按一次退出",Toast.LENGTH_LONG).show();
+
+                Toast toast = Toast.makeText(DocBottomNavigation.this, "再按一次退出！", Toast.LENGTH_SHORT);
+                // 这里给了一个1/4屏幕高度的y轴偏移量
+                toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                toast.show();
 
             } else {
                 Intent intent=new Intent(DocBottomNavigation.this,DocService.class);
@@ -100,6 +115,9 @@ public class DocBottomNavigation extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doc_bott_navi);
+        display = getWindowManager().getDefaultDisplay();
+        toastHeight = display.getHeight();
+
         activity=this;
         //当用户登录成功之后销毁欢迎界面
         Log.d("bottom","0");

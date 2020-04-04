@@ -272,6 +272,7 @@ private void havePost(String orderId,String type){
             type="notPost";
         needPost.setBackgroundColor(Color.parseColor("#00BFFF"));
         alreadyPost.setBackgroundColor(Color.parseColor("#FFFFFF"));
+            getData("notPost");//获取代发货订单
         }
     });
 

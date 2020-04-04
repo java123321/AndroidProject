@@ -20,11 +20,16 @@ import androidx.annotation.NonNull;
 
 import android.app.FragmentManager;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 public class StuBottomNavigation extends AppCompatActivity {
+
+    private Display display;
+    private int toastHeight;
     public static Activity activity;
     private CommonMethod method = new CommonMethod();
     private StuDrugStoreFragment yaodian_frag = null;
@@ -55,8 +60,10 @@ public class StuBottomNavigation extends AppCompatActivity {
             long backPressed = System.currentTimeMillis();
             if (backPressed - lastBackPressed > QUIT_INTERVAL) {
                 lastBackPressed = backPressed;
-                Toast.makeText(this, "再按一次退出", Toast.LENGTH_LONG).show();
-
+                Toast toast = Toast.makeText(StuBottomNavigation.this, "再按一次退出！", Toast.LENGTH_SHORT);
+                // 这里给了一个1/4屏幕高度的y轴偏移量
+                toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                toast.show();
             } else {
                 Intent intent = new Intent(StuBottomNavigation.this, StuService.class);
                 stopService(intent);
@@ -108,6 +115,9 @@ public class StuBottomNavigation extends AppCompatActivity {
         Intent intent=getIntent();
         Log.d("drug1", "124"+intent.getStringExtra("from"));
         setContentView(R.layout.activity_stu_bott_navi);
+        display = getWindowManager().getDefaultDisplay();
+        toastHeight = display.getHeight();
+
         bottomNavigationView = findViewById(R.id.stu_bott_view);
         bottomNavigationView.setSelectedItemId(bottomNavigationView.getMenu().getItem(0).getItemId());
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);

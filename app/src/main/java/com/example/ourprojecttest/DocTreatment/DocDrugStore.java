@@ -10,12 +10,16 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.widget.Toast;
 
 import com.example.ourprojecttest.R;
 import com.example.ourprojecttest.StuDrugStore.StuDrugStoreFragment;
 
 public class DocDrugStore extends AppCompatActivity {
+    private Display display;
+    private int toastHeight;
     private StuDrugStoreFragment drugStore;
     private LocalReceiver localReceiver;
     private IntentFilter intentFilter;
@@ -24,10 +28,16 @@ public class DocDrugStore extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             String msg=intent.getStringExtra("msg");
             if(msg.equals("success")){
-                Toast.makeText(DocDrugStore.this, "药品添加成功！", Toast.LENGTH_SHORT).show();
+                Toast toast = Toast.makeText(DocDrugStore.this, "药品添加成功！", Toast.LENGTH_SHORT);
+                // 这里给了一个1/4屏幕高度的y轴偏移量
+                toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                toast.show();
             }
             else{
-                Toast.makeText(DocDrugStore.this, "此药品已添加！", Toast.LENGTH_SHORT).show();
+                Toast toast = Toast.makeText(DocDrugStore.this, "此药品已添加！", Toast.LENGTH_SHORT);
+                // 这里给了一个1/4屏幕高度的y轴偏移量
+                toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                toast.show();
             }
         }
     }
@@ -36,6 +46,8 @@ public class DocDrugStore extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doc_drug_store);
+        display = getWindowManager().getDefaultDisplay();
+        toastHeight = display.getHeight();
         intentFilter=new IntentFilter();
         intentFilter.addAction("com.example.ourprojecttest.DocDrugStore");
         localReceiver=new LocalReceiver();

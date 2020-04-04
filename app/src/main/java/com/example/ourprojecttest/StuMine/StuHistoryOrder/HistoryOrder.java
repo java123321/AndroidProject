@@ -16,6 +16,8 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.widget.Toast;
 
 import com.example.ourprojecttest.Utils.CommonMethod;
@@ -46,6 +48,9 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class HistoryOrder extends AppCompatActivity {
+
+    private Display display;
+    private int toastHeight;
     private String ipAddress;
     private final int DELETE_SUCCESS=2;
     private final int DELETE_FAULT=3;
@@ -64,11 +69,19 @@ public class HistoryOrder extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what){
                 case DELETE_SUCCESS:{
-                    Toast.makeText(HistoryOrder.this, "订单删除成功", Toast.LENGTH_SHORT).show();
+
+                    Toast toast = Toast.makeText(HistoryOrder.this, "订单删除成功！", Toast.LENGTH_SHORT);
+                    // 这里给了一个1/4屏幕高度的y轴偏移量
+                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                    toast.show();
                     break;
                 }
                 case DELETE_FAULT:{
-                    Toast.makeText(HistoryOrder.this, "订单删除失败", Toast.LENGTH_SHORT).show();
+
+                    Toast toast = Toast.makeText(HistoryOrder.this, "订单删除失败！", Toast.LENGTH_SHORT);
+                    // 这里给了一个1/4屏幕高度的y轴偏移量
+                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                    toast.show();
                     break;
                 }
                 case SUCCESS:{
@@ -80,7 +93,11 @@ public class HistoryOrder extends AppCompatActivity {
                     break;
                 }
                 case FAULT:{
-                    Toast.makeText(HistoryOrder.this, "暂无历史订单", Toast.LENGTH_SHORT).show();
+
+                    Toast toast = Toast.makeText(HistoryOrder.this, "暂无历史订单！", Toast.LENGTH_SHORT);
+                    // 这里给了一个1/4屏幕高度的y轴偏移量
+                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                    toast.show();
                     refresh.setRefreshing(false);
                     break;
                 }
@@ -207,6 +224,8 @@ public class HistoryOrder extends AppCompatActivity {
     }
 
     private void initView(){
+        display = getWindowManager().getDefaultDisplay();
+        toastHeight = display.getHeight();
         id=method.getFileData("ID",this);
         Log.d("history","111");
         refresh=findViewById(R.id.refresh);

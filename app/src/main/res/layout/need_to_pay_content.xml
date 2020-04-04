@@ -40,7 +40,7 @@
             android:layout_marginRight="5dp"
             android:gravity="center_vertical"
             android:text="￥ 68.45"
-            android:textColor="#000000"
+            android:textColor="#FF0000"
             android:textSize="16dp" />
         <TextView
             android:id="@+id/drugAmount"
