@@ -26,6 +26,7 @@ import android.os.Message;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,6 +72,9 @@ import okhttp3.Response;
 import static com.blankj.utilcode.util.UriUtils.uri2File;
 
 public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClickListener{
+
+    private Display display;
+    private int toastHeight;
     private String ipAddress;
     private final int UPPictureFinished=2;
     private String path ;
@@ -129,6 +133,9 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.doc_drug_manage);
         ipAddress=getResources().getString(R.string.ipAdrress);
         ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
+
+        display = getWindowManager().getDefaultDisplay();
+        toastHeight = display.getHeight();
         submit =  findViewById(R.id.add);
         kind =  findViewById(R.id.drug_kind);
         attribute = findViewById(R.id.drug_attribyte);
@@ -331,7 +338,10 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
         }
 
         intent.putExtra(MediaStore.EXTRA_OUTPUT, mCutUri);
-        Toast.makeText(this, "剪裁图片", Toast.LENGTH_SHORT).show();
+        Toast toast = Toast.makeText(UpDrugMsgActivity.this, "剪裁图片！", Toast.LENGTH_SHORT);
+        // 这里给了一个1/4屏幕高度的y轴偏移量
+        toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+        toast.show();
         // 以广播方式刷新系统相册，以便能够在相册中找到刚刚所拍摄和裁剪的照片
         Intent intentBc = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         intentBc.setData(uri);
@@ -488,7 +498,11 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
                 if (grandResults.length>0 && grandResults[0] == PackageManager.PERMISSION_GRANTED){
                     openAlbum();
                 } else {
-                    Toast.makeText(this,"you denied the permission",Toast.LENGTH_SHORT).show();
+
+                    Toast toast = Toast.makeText(UpDrugMsgActivity.this, "you denied the permission！", Toast.LENGTH_SHORT);
+                    // 这里给了一个1/4屏幕高度的y轴偏移量
+                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                    toast.show();
                 }
                 break;
             default:
@@ -589,7 +603,11 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
             path = imagePath;
             picture.setImageBitmap(bitmap);
         }else {
-            Toast.makeText(this,"filed to get image",Toast.LENGTH_SHORT).show();
+
+            Toast toast = Toast.makeText(UpDrugMsgActivity.this, "filed to get image！", Toast.LENGTH_SHORT);
+            // 这里给了一个1/4屏幕高度的y轴偏移量
+            toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+            toast.show();
         }
     }
 

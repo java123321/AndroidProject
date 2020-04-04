@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,6 +58,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class DocInformation extends AppCompatActivity {
+    private Display display;
+    private int toastHeight;
     private String ipAddress;
     private Dialog dialog;
     private CommonMethod method = new CommonMethod();
@@ -100,6 +103,8 @@ public class DocInformation extends AppCompatActivity {
         registerReceiver(receiver2, Title);
         registerReceiver(receiver1, Sex);
         registerReceiver(receiver, Name);
+        display = getWindowManager().getDefaultDisplay();
+        toastHeight = display.getHeight();
         name = findViewById(R.id.name);
         img = findViewById(R.id.picture);
         sex = findViewById(R.id.sex);
@@ -282,7 +287,9 @@ public class DocInformation extends AppCompatActivity {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 hasPermission = true;
             } else {
-                Toast.makeText(this, "权限授予失败！", Toast.LENGTH_SHORT).show();
+                Toast toast = Toast.makeText(DocInformation.this, "权限授予失败！", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                toast.show();
                 hasPermission = false;
             }
         }
@@ -356,7 +363,11 @@ public class DocInformation extends AppCompatActivity {
 
         }
         intent.putExtra(MediaStore.EXTRA_OUTPUT, mCutUri);
-        Toast.makeText(this, "剪裁图片", Toast.LENGTH_SHORT).show();
+        Toast toast = Toast.makeText(DocInformation.this, "剪裁图片！", Toast.LENGTH_SHORT);
+        // 这里给了一个1/4屏幕高度的y轴偏移量
+        toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+        toast.show();
+
         // 以广播方式刷新系统相册，以便能够在相册中找到刚刚所拍摄和裁剪的照片
         Intent intentBc = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         intentBc.setData(uri);
@@ -457,7 +468,9 @@ public class DocInformation extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             String s = intent.getStringExtra("Sex");
             sex.setText(s);
-            Toast.makeText(DocInformation.this, "保存成功", Toast.LENGTH_SHORT).show();
+            Toast toast = Toast.makeText(DocInformation.this, "保存成功！", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+            toast.show();
         }
     }
 
@@ -466,7 +479,9 @@ public class DocInformation extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             String s = intent.getStringExtra("Title");
             title.setText(s);
-            Toast.makeText(DocInformation.this, "保存成功", Toast.LENGTH_SHORT).show();
+            Toast toast = Toast.makeText(DocInformation.this, "保存成功！", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+            toast.show();
         }
     }
 
@@ -475,7 +490,9 @@ public class DocInformation extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             String s = intent.getStringExtra("Offices");
             offices.setText(s);
-            Toast.makeText(DocInformation.this, "保存成功", Toast.LENGTH_SHORT).show();
+            Toast toast = Toast.makeText(DocInformation.this, "保存成功！", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+            toast.show();
         }
     }
 

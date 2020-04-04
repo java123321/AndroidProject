@@ -18,6 +18,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.widget.Toast;
 import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
@@ -48,6 +50,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class NeedToPay extends AppCompatActivity {
+    private Display display;
+    private int toastHeight;
     private String ipAddress;
     private static final int SDK_PAY_FLAG = 1;
     private static final int SDK_AUTH_FLAG = 2;
@@ -88,15 +92,27 @@ public class NeedToPay extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case UPDATE_SUCCESS:{
-                    Toast.makeText(NeedToPay.this, "付款成功", Toast.LENGTH_SHORT).show();
+
+                    Toast toast = Toast.makeText(NeedToPay.this, "付款成功！", Toast.LENGTH_SHORT);
+                    // 这里给了一个1/4屏幕高度的y轴偏移量
+                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                    toast.show();
                     break;
                 }
                 case UPDATE_FAULT:{
-                    Toast.makeText(NeedToPay.this, "付款失败", Toast.LENGTH_SHORT).show();
+
+                    Toast toast = Toast.makeText(NeedToPay.this, "付款失败！", Toast.LENGTH_SHORT);
+                    // 这里给了一个1/4屏幕高度的y轴偏移量
+                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                    toast.show();
                     break;
                 }
                 case FAULT:{
-                    Toast.makeText(NeedToPay.this, "暂无待付款订单", Toast.LENGTH_SHORT).show();
+
+                    Toast toast = Toast.makeText(NeedToPay.this, "暂无待付款订单！", Toast.LENGTH_SHORT);
+                    // 这里给了一个1/4屏幕高度的y轴偏移量
+                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                    toast.show();
                     refresh.setRefreshing(false);
                     break;
                 }
@@ -276,6 +292,9 @@ public class NeedToPay extends AppCompatActivity {
         }
     }
     private void initView(){
+        display = getWindowManager().getDefaultDisplay();
+        toastHeight = display.getHeight();
+
         id=method.getFileData("ID",this);
         refresh=findViewById(R.id.dropDownToRefresh);
         //设置下拉刷新过去数据

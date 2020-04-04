@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.view.Display;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -18,6 +20,8 @@ import com.example.ourprojecttest.StuMine.StuInfomation.ModifyAdapter;
 import com.example.ourprojecttest.R;
 
 public class ModefyDocName extends AppCompatActivity {
+    private Display display;
+    private int toastHeight;
     private EditText xingming;
     private ImageView back;
     private ModifyAdapter adapter;
@@ -27,6 +31,8 @@ public class ModefyDocName extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ImmersiveStatusbar.getInstance().Immersive(getWindow(),getActionBar());//状态栏透明
         setContentView(R.layout.activity_doc_name);
+        display = getWindowManager().getDefaultDisplay();
+        toastHeight = display.getHeight();
         baocun=findViewById(R.id.baocun);
         xingming= findViewById(R.id.xingming);
         baocun.setOnClickListener(new View.OnClickListener() {
@@ -36,7 +42,11 @@ public class ModefyDocName extends AppCompatActivity {
                 Intent intent=new Intent();
                 intent.setAction("Name");
                 intent.putExtra("name",s);
-                Toast.makeText(ModefyDocName.this, "保存成功！", Toast.LENGTH_SHORT).show();
+
+                Toast toast = Toast.makeText(ModefyDocName.this, "保存成功！", Toast.LENGTH_SHORT);
+                // 这里给了一个1/4屏幕高度的y轴偏移量
+                toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                toast.show();
                 sendBroadcast(intent);
             }
         });

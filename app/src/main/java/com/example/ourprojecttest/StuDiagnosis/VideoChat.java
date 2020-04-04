@@ -13,6 +13,7 @@ import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,6 +58,8 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 
 public class VideoChat extends AppCompatActivity implements View.OnClickListener {
+    private Display display;
+    private int toastHeight;
     private CommonMethod method=new CommonMethod();
     private String type;//代表是学生登录还是医生登录
     private Intent intentToDoc = new Intent("com.example.ourprojecttest.DOC_UPDATE_SERVICE");//将医生的消息传给医生服务
@@ -263,6 +266,9 @@ public class VideoChat extends AppCompatActivity implements View.OnClickListener
     }
 
     private void initview() {
+
+        display = getWindowManager().getDefaultDisplay();
+        toastHeight = display.getHeight();
         type = method.getFileData("Type", VideoChat.this);
         chartTools = findViewById(R.id.charttools_layout);
         switcCamera = findViewById(R.id.switch_camera_tv);
@@ -604,10 +610,18 @@ public class VideoChat extends AppCompatActivity implements View.OnClickListener
             case R.id.loundspeaker_tv:
                 if (mAudioManager.isSpeakerphoneOn()) {
                     mAudioManager.setSpeakerphoneOn(false);
-                    Toast.makeText(this, "扬声器已关闭", Toast.LENGTH_SHORT).show();
+
+                    Toast toast = Toast.makeText(VideoChat.this, "扬声器已关闭！", Toast.LENGTH_SHORT);
+                    // 这里给了一个1/4屏幕高度的y轴偏移量
+                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                    toast.show();
                 } else {
                     mAudioManager.setSpeakerphoneOn(true);
-                    Toast.makeText(this, "扬声器已打开", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(VideoChat.this, "扬声器已打开！", Toast.LENGTH_SHORT);
+                    // 这里给了一个1/4屏幕高度的y轴偏移量
+                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                    toast.show();
+
                 }
                 break;
         }

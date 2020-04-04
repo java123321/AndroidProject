@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +45,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class PerfeActivity extends AppCompatActivity {
+    private Display display;
+    private int toastHeight;
     private String ipAddress;
     private TextView stuName;
     private TextView stuHei;
@@ -65,13 +68,6 @@ public class PerfeActivity extends AppCompatActivity {
             switch (msg.what) {
 
                 case 0:
-                   // new AlertDialog.Builder(PerfeActivity.this).setTitle("跳转").setMessage("注册成功,准备好登陆了吗？").setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                   //     @Override
-                   //     public void onClick(DialogInterface dialogInterface, int i) {
-                   //         Intent intent = new Intent(PerfeActivity.this,MailboxActivity.class);
-                   //         startActivity(intent);
-                   //     }
-                   // }).setNegativeButton("取消",null).show();
                     String s="注册成功，准备好登录了吗？";
                     Intent intent = new Intent(PerfeActivity.this,LoginActivity.class);
                     show(R.layout.layout_tishi_email,s,intent,R.drawable.zcsuccess);
@@ -94,6 +90,8 @@ public class PerfeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfe);
         ipAddress=getResources().getString(R.string.ipAdrress);
+        display = getWindowManager().getDefaultDisplay();
+        toastHeight = display.getHeight();
         ImmersiveStatusbar.getInstance().Immersive(getWindow(),getActionBar());//状态栏透明
         Intent intent = getIntent();
         //注册身高广播
@@ -213,40 +211,7 @@ public class PerfeActivity extends AppCompatActivity {
             display();
         }
     };
-    //检验身高
-    private boolean checkHei(String hei){
-        try {
-            if (Integer.parseInt(hei)<=300&&Integer.parseInt(hei)>=100)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
 
-        }catch (NumberFormatException e){
-            //new AlertDialog.Builder(RegisterActivity.this).setTitle("错误").setMessage("请输入数字").setNegativeButton("确定",null).show();
-            return false;
-        }
-
-    }
-    //检验体重
-    private boolean checkWei(String wei){
-        try {
-            if (Integer.parseInt(wei)<=150&&Integer.parseInt(wei)>=30)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }catch (NumberFormatException e){
-            return false;
-        }
-
-    }
     //向数据库中插入数据
     private void interData(){
         new Thread(new Runnable() {
@@ -342,6 +307,8 @@ public class PerfeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 startActivity(intent);
                 dialog.dismiss();
+                RegisterActivity.activity.finish();//销毁登录活动
+                finish();//销毁完善信息活动
             }
         });
         dialog.setContentView(inflate);
@@ -362,7 +329,6 @@ public class PerfeActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             String s = intent.getStringExtra("Height");
             stuHei.setText(s);
-            Toast.makeText(PerfeActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -371,7 +337,7 @@ public class PerfeActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             String s = intent.getStringExtra("Weight");
             stuWei.setText(s);
-            Toast.makeText(PerfeActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
+
         }
     }
 }

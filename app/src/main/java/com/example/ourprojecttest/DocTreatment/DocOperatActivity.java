@@ -315,7 +315,7 @@ public class DocOperatActivity extends AppCompatActivity {
             public void handleMessage(Message msg) {
                 if (msg.what > 0) {
                     ////动态显示倒计时
-                    mn.setText("正在等待学生确认，确认剩余时间为:"+msg.what+"秒");
+                    mn.setText("正在等待学生确认\n确认剩余时间为:"+msg.what+"秒");
                 } else {
                     ////倒计时结束后关闭计时器
                     mOffTime.cancel();

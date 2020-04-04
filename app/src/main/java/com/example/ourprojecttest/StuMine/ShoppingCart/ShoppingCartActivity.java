@@ -58,7 +58,6 @@ import java.util.Set;
 public class ShoppingCartActivity extends AppCompatActivity {
     private String ipAddress;
     private Display display;
-    // 获取屏幕高度
     private int toastHeight;
     private Button addDrug;
     private String orderPrice = "0.00";

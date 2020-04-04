@@ -17,6 +17,7 @@ import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,6 +64,8 @@ import okhttp3.Response;
  * 适配安卓7.0及以上
  */
 public class StuInformation extends AppCompatActivity implements View.OnClickListener {
+    private Display display;
+    private int toastHeight;
     private String ipAddress;
     private static final String TAG = "MainActivity";
     private static final int REQUEST_TAKE_PHOTO = 0;// 拍照
@@ -77,7 +80,6 @@ public class StuInformation extends AppCompatActivity implements View.OnClickLis
     private File imgFile;// 拍照保存的图片文件
     private List<Tubiao> aa = new ArrayList<>();
     private ModifyAdapter adapter;
-    private ImageView i;
     private File file;
     private String Birthday;
     private String age1;
@@ -96,6 +98,8 @@ public class StuInformation extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modify);
         ipAddress=getResources().getString(R.string.ipAdrress);
+        display = getWindowManager().getDefaultDisplay();
+        toastHeight = display.getHeight();
         IntentFilter intentFilter = new IntentFilter();
         IntentFilter sex1 = new IntentFilter();
         IntentFilter weight1 = new IntentFilter();
@@ -171,7 +175,11 @@ public class StuInformation extends AppCompatActivity implements View.OnClickLis
                 }
                 break;
             case R.id.quding:
-                Toast.makeText(StuInformation.this, "jjdf", Toast.LENGTH_SHORT);
+
+                Toast toast = Toast.makeText(StuInformation.this, "jjdf！", Toast.LENGTH_SHORT);
+                // 这里给了一个1/4屏幕高度的y轴偏移量
+                toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                toast.show();
             default:
                 break;
         }
@@ -203,7 +211,11 @@ public class StuInformation extends AppCompatActivity implements View.OnClickLis
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 hasPermission = true;
             } else {
-                Toast.makeText(this, "权限授予失败！", Toast.LENGTH_SHORT).show();
+
+                Toast toast = Toast.makeText(StuInformation.this, "权限授予失败！", Toast.LENGTH_SHORT);
+                // 这里给了一个1/4屏幕高度的y轴偏移量
+                toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                toast.show();
                 hasPermission = false;
             }
         }
@@ -278,7 +290,12 @@ public class StuInformation extends AppCompatActivity implements View.OnClickLis
         }
 
         intent.putExtra(MediaStore.EXTRA_OUTPUT, mCutUri);
-        Toast.makeText(this, "剪裁图片", Toast.LENGTH_SHORT).show();
+
+        Toast toast = Toast.makeText(StuInformation.this, "剪裁图片！", Toast.LENGTH_SHORT);
+        // 这里给了一个1/4屏幕高度的y轴偏移量
+        toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+        toast.show();
+
         // 以广播方式刷新系统相册，以便能够在相册中找到刚刚所拍摄和裁剪的照片
         Intent intentBc = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         intentBc.setData(uri);
@@ -306,7 +323,11 @@ public class StuInformation extends AppCompatActivity implements View.OnClickLis
                         intent.putExtra("Picture",mCutUri.toString());
                         intent.setAction("Picture");
                         sendBroadcast(intent);
-                        Toast.makeText(StuInformation.this, "头像更改成功", Toast.LENGTH_SHORT).show();
+
+                        Toast toast = Toast.makeText(StuInformation.this, "头像更改成功！", Toast.LENGTH_SHORT);
+                        // 这里给了一个1/4屏幕高度的y轴偏移量
+                        toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                        toast.show();
                         dialog.dismiss();
                     }
                     catch (Exception e){
@@ -374,7 +395,11 @@ public class StuInformation extends AppCompatActivity implements View.OnClickLis
             aa.add(0, n);
             adapter.setList(aa);
             adapter.notifyDataSetChanged();
-            Toast.makeText(StuInformation.this, "保存成功", Toast.LENGTH_SHORT).show();
+
+            Toast toast = Toast.makeText(StuInformation.this, "保存成功！", Toast.LENGTH_SHORT);
+            // 这里给了一个1/4屏幕高度的y轴偏移量
+            toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+            toast.show();
         }
     }
 
@@ -388,7 +413,12 @@ public class StuInformation extends AppCompatActivity implements View.OnClickLis
             aa.add(2, n);
             adapter.setList(aa);
             adapter.notifyDataSetChanged();
-            Toast.makeText(StuInformation.this, "保存成功", Toast.LENGTH_SHORT).show();
+
+            Toast toast = Toast.makeText(StuInformation.this, "保存成功！", Toast.LENGTH_SHORT);
+            // 这里给了一个1/4屏幕高度的y轴偏移量
+            toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+            toast.show();
+
         }
     }
 
@@ -401,7 +431,11 @@ public class StuInformation extends AppCompatActivity implements View.OnClickLis
             aa.add(3, n);
             adapter.setList(aa);
             adapter.notifyDataSetChanged();
-            Toast.makeText(StuInformation.this, "保存成功", Toast.LENGTH_SHORT).show();
+
+            Toast toast = Toast.makeText(StuInformation.this, "保存成功！", Toast.LENGTH_SHORT);
+            // 这里给了一个1/4屏幕高度的y轴偏移量
+            toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+            toast.show();
         }
     }
 
@@ -414,7 +448,11 @@ public class StuInformation extends AppCompatActivity implements View.OnClickLis
             aa.add(4, n);
             adapter.setList(aa);
             adapter.notifyDataSetChanged();
-            Toast.makeText(StuInformation.this, "保存成功", Toast.LENGTH_SHORT).show();
+
+            Toast toast = Toast.makeText(StuInformation.this, "保存成功！", Toast.LENGTH_SHORT);
+            // 这里给了一个1/4屏幕高度的y轴偏移量
+            toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+            toast.show();
         }
     }
 
@@ -432,7 +470,11 @@ public class StuInformation extends AppCompatActivity implements View.OnClickLis
             aa.add(5, n);
             adapter.setList(aa);
             adapter.notifyDataSetChanged();
-            Toast.makeText(StuInformation.this, "保存成功", Toast.LENGTH_SHORT).show();
+
+            Toast toast = Toast.makeText(StuInformation.this, "保存成功！", Toast.LENGTH_SHORT);
+            // 这里给了一个1/4屏幕高度的y轴偏移量
+            toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+            toast.show();
         }
     }
     @Override

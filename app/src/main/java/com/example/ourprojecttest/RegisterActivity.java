@@ -4,6 +4,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -40,6 +41,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class RegisterActivity extends AppCompatActivity {
+    public static Activity activity;
     private String code="";
     private String ipAddress;
     private Button btn;
@@ -75,6 +77,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        activity=this;
         ipAddress=getResources().getString(R.string.ipAdrress);
         ImmersiveStatusbar.getInstance().Immersive(getWindow(),getActionBar());//状态栏透明
         //获取验证码

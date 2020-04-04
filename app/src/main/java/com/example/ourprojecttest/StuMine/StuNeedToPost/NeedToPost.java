@@ -12,6 +12,8 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.widget.Toast;
 
 import com.example.ourprojecttest.Utils.CommonMethod;
@@ -42,6 +44,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class NeedToPost extends AppCompatActivity {
+    private Display display;
+    private int toastHeight;
     private String ipAddress;
     private final int NO_ORDER=0;
     private final int HAVE_ORDER=1;
@@ -67,7 +71,10 @@ public class NeedToPost extends AppCompatActivity {
                 }
                 case NO_ORDER:{
                     refresh.setRefreshing(false);
-                    Toast.makeText(NeedToPost.this, "暂无代发货订单", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(NeedToPost.this, "暂无代发货订单！", Toast.LENGTH_SHORT);
+                    // 这里给了一个1/4屏幕高度的y轴偏移量
+                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                    toast.show();
                     break;
                 }
             }
@@ -158,6 +165,8 @@ public class NeedToPost extends AppCompatActivity {
     }
 
     private void initView(){
+        display = getWindowManager().getDefaultDisplay();
+        toastHeight = display.getHeight();
         id=method.getFileData("ID",this);
         refresh=findViewById(R.id.refresh);
         //设置下拉刷新过去数据

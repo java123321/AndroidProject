@@ -11,6 +11,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -35,6 +37,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class StuDrugDetail extends AppCompatActivity {
+    private Display display;
+    private int toastHeight;
     CommonMethod method = new CommonMethod();
     private ImageView picture;
     private TextView name;
@@ -56,7 +60,10 @@ public class StuDrugDetail extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (!Flag.equals("true")) {
-                    Toast.makeText(StuDrugDetail.this, "此药品为处方药，不可私自加入购物车!", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(StuDrugDetail.this, "此药品为处方药，不可私自加入购物车!", Toast.LENGTH_SHORT);
+                    // 这里给了一个1/4屏幕高度的y轴偏移量
+                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                    toast.show();
                 } else {
                     //将药品信息放入到对象中
                     Intent intent = getIntent();
@@ -75,7 +82,10 @@ public class StuDrugDetail extends AppCompatActivity {
                     }
                     String drugId = shoppingCartBean.getId();
                     if (drugIdSet.contains(drugId)) {//如果已经包含该药品，则弹出提示
-                        Toast.makeText(StuDrugDetail.this, "该药品已经在购物车中，请勿重复添加！", Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(StuDrugDetail.this, "该药品已经在购物车中，请勿重复添加！", Toast.LENGTH_SHORT);
+                        // 这里给了一个1/4屏幕高度的y轴偏移量
+                        toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                        toast.show();
                     } else {//如果该药品还没有加入过，则将其加入
                         drugIdSet.add(drugId);
                         method.saveObj2SDCard("drugIdSet", drugIdSet);
@@ -96,7 +106,10 @@ public class StuDrugDetail extends AppCompatActivity {
                         Log.d("stusave", "flag" + flag);
 
                         //当用户添加到购物车成功时给出提示
-                        Toast.makeText(StuDrugDetail.this, "添加成功，在购物车等亲！", Toast.LENGTH_SHORT).show();
+                        Toast toast = Toast.makeText(StuDrugDetail.this, "添加成功，在购物车等亲！", Toast.LENGTH_SHORT);
+                        // 这里给了一个1/4屏幕高度的y轴偏移量
+                        toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                        toast.show();
                     }
 
                 }
@@ -109,7 +122,10 @@ public class StuDrugDetail extends AppCompatActivity {
                 Log.d("bu110", "0" + Flag);
                 //如果是处方药则弹出提示不让购买
                 if (!Flag.equals("true")) {
-                    Toast.makeText(StuDrugDetail.this, "此药品为处方药，不可私自购买!", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(StuDrugDetail.this, "此药品为处方药，不可私自购买!", Toast.LENGTH_SHORT);
+                    // 这里给了一个1/4屏幕高度的y轴偏移量
+                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                    toast.show();
                 } else {
                     Intent intent = new Intent(StuDrugDetail.this, StuBuyDrug.class);
                     intent.putExtra("description", description.getText().toString());
@@ -165,6 +181,8 @@ public class StuDrugDetail extends AppCompatActivity {
     }
 
     private void initView() {
+        display = getWindowManager().getDefaultDisplay();
+        toastHeight = display.getHeight();
         //实例化控件
         addToCart = findViewById(R.id.stu_yaodian_add_shopping_car);
         picture = findViewById(R.id.stu_yaodian_detail_pic);

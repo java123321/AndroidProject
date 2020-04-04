@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +25,9 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class ModifyPassword extends AppCompatActivity {
+
+    private Display display;
+    private int toastHeight;
     private String ipAddress;
     private CommonMethod method=new CommonMethod();
     private EditText oldPass;
@@ -37,10 +42,16 @@ public class ModifyPassword extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what){
                 case SUCCESS:
-                    Toast.makeText(ModifyPassword.this, "密码修改成功，下次请使用新密码登录！", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(ModifyPassword.this, "密码修改成功，下次请使用新密码登录！", Toast.LENGTH_SHORT);
+                    // 这里给了一个1/4屏幕高度的y轴偏移量
+                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                    toast.show();
                     break;
                 case FAILED:
-                    Toast.makeText(ModifyPassword.this, "修改失败，请稍后再试！", Toast.LENGTH_SHORT).show();
+                    toast = Toast.makeText(ModifyPassword.this, "修改失败，请稍后再试！", Toast.LENGTH_SHORT);
+                    // 这里给了一个1/4屏幕高度的y轴偏移量
+                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                    toast.show();
             }
         }
     };
@@ -57,6 +68,8 @@ public class ModifyPassword extends AppCompatActivity {
 
 
     private void initView(){
+        display = getWindowManager().getDefaultDisplay();
+        toastHeight = display.getHeight();
         oldPass=findViewById(R.id.stu_modify_old_pass);
         newPass=findViewById(R.id.stu_modify_new_pass);
         newPassAgain=findViewById(R.id.stu_modify_new_pass_again);
@@ -93,11 +106,20 @@ public class ModifyPassword extends AppCompatActivity {
                         }).start();
                     }
                     else{//如果两次新密码输入不一致的话
-                        Toast.makeText(ModifyPassword.this, "两次新密码输入不一致，请重新您输入！", Toast.LENGTH_SHORT).show();
+
+
+                        Toast toast = Toast.makeText(ModifyPassword.this, "两次新密码输入不一致，请重新您输入！", Toast.LENGTH_SHORT);
+                        // 这里给了一个1/4屏幕高度的y轴偏移量
+                        toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                        toast.show();
                     }
                 }
                 else{//如果旧密码输入错误
-                    Toast.makeText(ModifyPassword.this, "旧密码错误，密码修改失败！", Toast.LENGTH_SHORT).show();
+
+                    Toast toast = Toast.makeText(ModifyPassword.this, "旧密码错误，密码修改失败！", Toast.LENGTH_SHORT);
+                    // 这里给了一个1/4屏幕高度的y轴偏移量
+                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                    toast.show();
                 }
             }
         });

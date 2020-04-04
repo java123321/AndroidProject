@@ -8,10 +8,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -34,7 +38,7 @@ import java.text.DecimalFormat;
 import java.util.Map;
 
 public class StuBuyDrug extends AppCompatActivity {
-
+    private String orderPrice = "0.00";
     private static final int SDK_PAY_FLAG = 1;
     private static final int SDK_AUTH_FLAG = 2;
     /**
@@ -43,10 +47,8 @@ public class StuBuyDrug extends AppCompatActivity {
     private static final String APPID = "2016101700706177";
     private static final String RSA2_PRIVATE = "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDJ1ys/sxQE6Dem09YM4AeabOd04OU2jC+fRTrcZFHNrRdL2FoglSe0G9To5rMsWLUp6yTUWK4aYPRbUUVdzqeYYzcBbg9wzph1aEDM0EvAfL+EMVk2vOXd+ALKCiiMoT5SwC94yU9G+BcuMIywc2kqXZTnaJpKaeGlVm/IUyiePZ31FWP2dMzLh1IYq9OP8udk7Xn/gDvpQz+00IMOugudCxa/F9VvwqRQaUJE8QnxSVSYxsVfobZ1aY2ddt+tUxbirFYaHadfJAwTOK9BrerXULk8S2RQPM7PVJdi8QNxwHssYgZ5oSYQsjGvpJBT/1boJttWkP7vKU++rTWsE/rjAgMBAAECggEAFXggro7i0z7MJJ+lxgrSZDevSvxdBTdWHW/kueql1OXTc4rY01xqM7s+I2PerRnmc0YCzd987WtgspHrefXwV8I96JYHaG1hRCPJuL9zP09Fo88H+U2QedLWoR0BgSvpkC3HHuby2s6q0IvzexVbm1kG7LJwrveiO8785ucJjAM7ZO6rMR7FGoPHn8YMmZL0KLqx9GIKBYqIDK7kaghVY5b+rEpG9DeC8DYNGUBBx1CGBKNvTfj2xaJjzN1BPz4OI8++Z5LI58AbYVXGRfT9WsSfL2mIpxD7RTxuIjwhaLzBQk7l2ex0osplrQOy6BoKEja/bfRawf8Pc86Bo1+e8QKBgQDyCz6fYAZp/WyJT/VMMSS7FlLz6/ixIfrkVJwkbj1jtpe2HoMCkOjIudaTYuxA3fg0qZsD2cY7/OryRZEEGYe2TRCWLIS0G/p67D9erY3Dty7+5xwLIDbBoYMEfk9i3UaUGzrtgvEUvQDrIGl4pid+ftklTU191d+KzokuiOL6yQKBgQDVen2ioEZGjeEfiqAdGy1MAtkmJsXY3kBUWo0gfk56lgx35kjVbEsIu0wD/zzTFHsf0XHmakSgmsBvq3ElaQAZKXY11fotOq3EXYoX7IvaA9GZR8EjeccrGcdQePK52cR9AcvoM4cG421kscYhfdjw0r5a+QDJwwf7HDXlWy9ySwKBgQChWp+njVMZSykUrKoA3e33jl1EYHWMV/OyTTk+DAN+upWOge6iQkn8re5+mH6Yi6DQMpS1T3MYQHW7hmazDfXrsJozEoBwtQoY8e8Yxafw5eg9Y4HNZO87y9jUoQN5C7vmNfTlqtneElVPaW8GT/WaHSPS+yKClZYNKbxHuldeCQKBgCg6gv5ocZXOGsRU3UNe4bRXPRCBcfsiNsEupzWeV6+mIwddMBB37dPhZ7vBF3c3ftRKJcqj7/bL8sOYbSP9m3UiaRJQFmr7ic9dSS6k9t3IpnDaIr1Kr4uhufuiLytyrCJaelBxlVpo9S5qicm5623GaPS/w7RBunlJoaZs/o3tAoGABx7XniHaLOWr1yOd35AZsR7OMVNcAug18wXb2nxWjgaLSZ9C9mxnmvPdFKGaDY48Qeud3HfpJb76J4cx1lXg4seJu8T/P5xAKNf9GgfR26mUyZLeJBqklwLwlABXZj/ZSfrrz7vbCEETPxfgMTvAebnYW5DvkTT0Sk/hR/Zi5cM=";
     private static final String RSA_PRIVATE = "";
-
     CommonMethod method = new CommonMethod();
     Button buy;
-
     private TextView yaoPinName;    //用于在商品详情里显示药品的名字
     private TextView displayPrice;  //用于显示药品单价,不随个数变化而变化，显示在上部页面详情里的单价
     private View weixin;
@@ -63,7 +65,7 @@ public class StuBuyDrug extends AppCompatActivity {
     private LinearLayout addressChange;
     private boolean AliPayFlag = true;
     double unitePrice;
-    DecimalFormat df = new DecimalFormat("##0.0");
+    DecimalFormat df = new DecimalFormat("##0.00");
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -115,6 +117,14 @@ public class StuBuyDrug extends AppCompatActivity {
         ;
     };
 
+    private void updateDisplayPrice(String orderprice) {
+        String str = "合计:￥" + orderPrice;
+        SpannableStringBuilder builder = new SpannableStringBuilder(str);
+        ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#FF1493"));
+        builder.setSpan(colorSpan, 3, str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        priceShow.setText(builder);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);//沙箱环境需要的代码
@@ -129,7 +139,7 @@ public class StuBuyDrug extends AppCompatActivity {
                 int number = Integer.valueOf(yaoPinNumber.getText().toString().trim());
                 if (number > 1) {
                     number--;
-                    priceShow.setText("实付款:" + df.format(unitePrice * number));
+                    updateDisplayPrice(df.format(unitePrice * number));
                     yaoPinNumber.setText(String.valueOf(number));
                 }
 
@@ -142,7 +152,7 @@ public class StuBuyDrug extends AppCompatActivity {
             public void onClick(View view) {
                 int number = Integer.valueOf(yaoPinNumber.getText().toString().trim());
                 number++;
-                priceShow.setText("实付款:" + String.valueOf(df.format(unitePrice * number)));
+                updateDisplayPrice(df.format(unitePrice * number));
                 yaoPinNumber.setText(String.valueOf(number));
             }
         });
@@ -264,17 +274,14 @@ public class StuBuyDrug extends AppCompatActivity {
         yaoPinName = findViewById(R.id.stuName);
         stuDiscribe = findViewById(R.id.stuDiscribe);
         displayPrice = findViewById(R.id.stuPrcie);
-
+        Intent intent=getIntent();
         //显示药品图片
         byte[] appIcon = getIntent().getByteArrayExtra("picture");
         displayDrugPicture.setImageBitmap(BitmapFactory.decodeByteArray(appIcon, 0, appIcon.length));
         //设置药品价格
-        priceShow.setText("实付款:" + getIntent().getStringExtra("price"));
-
+        updateDisplayPrice(intent.getStringExtra("price"));
 
         unitePrice = Double.parseDouble(getIntent().getStringExtra("price"));
-
-        Intent intent = getIntent();
 
         //用于显示药品价格
         displayPrice.setText("￥ " + df.format(unitePrice));
