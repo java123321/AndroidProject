@@ -43,7 +43,7 @@
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:text="令狐聪"
-                android:textSize="18dp" />
+                 />
 
 
             <TextView
