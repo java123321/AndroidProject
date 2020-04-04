@@ -30,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:gravity="center"
-                android:text="您确定要退出视频童话吗？"
+                android:text="您确定要退出视频通话吗？"
                 android:textSize="14dp" />
         </LinearLayout>
 

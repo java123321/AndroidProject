@@ -85,6 +85,8 @@ public class NeedToPost extends AppCompatActivity {
 
     private void getData(){
         refresh.setRefreshing(true);
+        refresh.setColorSchemeColors(getResources().getColor(R.color.color_bottom));
+        refresh.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.color_progressbar));
         final String url=ipAddress+"IM/GetNeedToPayOrder?type=stuNotPost&id="+id;
         Log.d("topay",url);
         new Thread(new Runnable() {

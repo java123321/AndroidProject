@@ -284,6 +284,8 @@ public class NeedToPay extends AppCompatActivity {
                 getData();
             }
         });
+        refresh.setColorSchemeColors(getResources().getColor(R.color.color_bottom));
+        refresh.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.color_progressbar));
         recyclerView=findViewById(R.id.displayOrder);
         LinearLayoutManager layoutManager=new LinearLayoutManager(this);
         layoutManager.setAutoMeasureEnabled(true);
