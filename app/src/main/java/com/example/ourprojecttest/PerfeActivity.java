@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,6 +23,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -72,11 +74,10 @@ public class PerfeActivity extends AppCompatActivity {
                    // }).setNegativeButton("取消",null).show();
                     String s="注册成功，准备好登录了吗？";
                     Intent intent = new Intent(PerfeActivity.this,LoginActivity.class);
-                    show(R.layout.layout_tishi_email,s,intent);
+                    show(R.layout.layout_tishi_email,s,intent,R.drawable.zcsuccess);
                     Log.d("registerresult","success");
                     break;
                 case -1:
-
                     String s1="邮箱已被使用";
                     show(R.layout.layout_tishi_email,s1);
                     //new AlertDialog.Builder(PerfeActivity.this).setTitle("错误").setMessage("邮箱已被使用").setNegativeButton("确定",null).show();
@@ -86,8 +87,6 @@ public class PerfeActivity extends AppCompatActivity {
 
         }
     };
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -253,9 +252,9 @@ public class PerfeActivity extends AppCompatActivity {
             public void run() {
                 try {
                     String userName = stuName.getText().toString().trim();
-                    String UserHei[] = (stuHei.getText().toString().trim()).split("");
+                    String UserHei[] = (stuHei.getText().toString().trim()).split(" ");
                     String userHei=UserHei[0];
-                    String UserWei[] = (stuWei.getText().toString().trim()).split("");
+                    String UserWei[] = (stuWei.getText().toString().trim()).split(" ");
                     String userWei=UserWei[0];
                     String userBir = stuBir.getText().toString().trim();
                     String url = "";
@@ -327,13 +326,15 @@ public class PerfeActivity extends AppCompatActivity {
     dialogWindow.setAttributes(lp);
     dialog.show();
 }
-    public void show(int x,String s,Intent intent){
+    public void show(int x,String s,Intent intent,int y){
         final Dialog dialog = new Dialog(PerfeActivity.this,R.style.ActionSheetDialogStyle);        //展示对话框
         //填充对话框的布局
         View inflate = LayoutInflater.from(PerfeActivity.this).inflate(x, null);
         TextView describe=inflate.findViewById(R.id.describe);
         describe.setText(s);
         TextView yes = inflate.findViewById(R.id.yes);
+        ImageView p=inflate.findViewById(R.id.picture);
+        p.setImageDrawable(getResources().getDrawable(y));
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
