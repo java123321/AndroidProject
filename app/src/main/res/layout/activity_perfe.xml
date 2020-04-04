@@ -43,10 +43,7 @@
             android:id="@+id/textView10"
             android:layout_width="match_parent"
             android:layout_height="20dp" />
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/wei">
+
         <EditText
             android:id="@+id/stuWei"
             android:layout_width="match_parent"
@@ -59,15 +56,12 @@
             android:focusable="false"
             android:textCursorDrawable="@null"
             android:textSize="14sp" />
-    </LinearLayout>
+
         <TextView
             android:id="@+id/textView6"
             android:layout_width="match_parent"
             android:layout_height="20dp" />
-<LinearLayout
-    android:id="@+id/hei"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+
         <EditText
             android:id="@+id/stuHei"
             android:layout_width="match_parent"
@@ -80,35 +74,22 @@
             android:focusable="false"
             android:textCursorDrawable="@null"
             android:textSize="14sp" />
-</LinearLayout>
         <TextView
             android:id="@+id/textView7"
             android:layout_width="match_parent"
             android:layout_height="20dp" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
             <EditText
                 android:id="@+id/dateDisplay"
-                android:layout_width="230dp"
+                android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginLeft="35dp"
+                android:layout_marginRight="35dp"
                 android:background="@drawable/edit_selector"
                 android:focusable="false"
                 android:hint="出生年月"
                 android:textCursorDrawable="@null"
                 android:textSize="14sp" />
-            <Button
-                android:id="@+id/dateChoose"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginRight="35dp"
-                android:background="@drawable/btn2"
-                android:text="选择日期"
-                android:textColor="#FA0A0A0A"
-                android:textSize="14sp" />
-        </LinearLayout>
+
         <TextView
             android:id="@+id/textView9"
             android:layout_width="match_parent"

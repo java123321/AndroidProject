@@ -18,7 +18,7 @@
                 android:layout_height="45dp"
                 android:layout_gravity="center_vertical"
                 android:gravity="center"
-                android:text="退出聊天"
+                android:text="完善信息"
                 android:textColor="#141414"
                 android:textSize="18dp" />
             <View

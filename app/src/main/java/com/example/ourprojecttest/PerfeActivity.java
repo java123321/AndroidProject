@@ -49,9 +49,8 @@ public class PerfeActivity extends AppCompatActivity {
     private TextView stuBir;
     private RadioButton radioMen,radioWomen;
     private Button btnRegister;
-    private Button btn;
     private TextView dateDisplay;
-    private LinearLayout wei,hei;
+    private LinearLayout wei,hei,btn;
     private int mYear, mMonth, mDay;
     final int DATE_DIALOG = 1;
     private String userNo;
@@ -109,10 +108,9 @@ public class PerfeActivity extends AppCompatActivity {
         userNo = intent.getStringExtra("string_no");
         userPwd = intent.getStringExtra("string_pwd");
 
-        btn = findViewById(R.id.dateChoose);
         dateDisplay = findViewById(R.id.dateDisplay);
 
-        btn.setOnClickListener(new View.OnClickListener() {
+        dateDisplay.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -134,8 +132,6 @@ public class PerfeActivity extends AppCompatActivity {
         stuWei =  findViewById(R.id.stuWei);
         stuBir = findViewById(R.id.dateDisplay);
         btnRegister = findViewById(R.id.stuReg);
-        wei=findViewById(R.id.wei);
-        hei=findViewById(R.id.hei);
         radioMen =  findViewById(R.id.radioMen);
         radioWomen =  findViewById(R.id.radioWomen);
     }
@@ -342,13 +338,6 @@ public class PerfeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(intent);
-                dialog.dismiss();
-            }
-        });
-        TextView no = inflate.findViewById(R.id.no);
-        no.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
                 dialog.dismiss();
             }
         });

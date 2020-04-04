@@ -380,11 +380,7 @@ public class RegisterActivity extends AppCompatActivity {
                         try {
                             String userNo = stuNo.getText().toString().trim();
                             String url = "";
-
                             url = ipAddress+"IM/servlet/IsExist_Register?no="+userNo;
-
-
-
                             OkHttpClient client = new OkHttpClient();
                             Request request = new Request.Builder().url(url).build();
                             Response response = client.newCall(request).execute();
