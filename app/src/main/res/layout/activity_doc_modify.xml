@@ -36,6 +36,7 @@
                 android:layout_gravity="center_vertical">
             </TextView>
 
+
             <com.example.ourprojecttest.Utils.Roundimage
                 android:id="@+id/picture"
                 android:layout_width="50dp"
