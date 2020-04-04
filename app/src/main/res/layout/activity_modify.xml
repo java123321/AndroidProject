@@ -41,8 +41,9 @@
             android:id="@+id/roundViw"
             android:layout_width="60dp"
             android:layout_height="60dp"
+
             android:layout_weight="1"
-            android:src="@drawable/blue"
+            android:src="@drawable/yonghu1"
             android:layout_gravity="center_vertical">
         </com.example.ourprojecttest.Utils.Roundimage>
 

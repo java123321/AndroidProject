@@ -12,6 +12,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 <ImageView
+    android:id="@+id/picture"
     android:layout_marginTop="5dp"
     android:layout_width="60dp"
     android:layout_height="60dp"

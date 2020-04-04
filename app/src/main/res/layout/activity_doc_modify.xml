@@ -36,14 +36,14 @@
                 android:layout_gravity="center_vertical">
             </TextView>
 
+
             <com.example.ourprojecttest.Utils.Roundimage
                 android:id="@+id/picture"
                 android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_height="51dp"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:src="@drawable/doctor">
-            </com.example.ourprojecttest.Utils.Roundimage>
+                android:src="@drawable/yonghu1"></com.example.ourprojecttest.Utils.Roundimage>
 
             <ImageView
                 android:layout_width="11dp"

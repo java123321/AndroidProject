@@ -57,6 +57,7 @@ public class DocMineFragment extends Fragment {
     private TextView name,offices,status;
     private Roundimage img;
     private LinearLayout exit;
+
     private LinearLayout modefyPassword;
     private LinearLayout orderManage;
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstansceState) {

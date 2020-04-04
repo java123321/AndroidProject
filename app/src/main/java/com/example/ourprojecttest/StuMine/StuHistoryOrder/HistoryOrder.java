@@ -221,6 +221,7 @@ public class HistoryOrder extends AppCompatActivity {
             }
         }).start();
 
+
     }
 
     private void initView(){
@@ -236,6 +237,8 @@ public class HistoryOrder extends AppCompatActivity {
                 getData();
             }
         });
+        refresh.setColorSchemeColors(getResources().getColor(R.color.color_bottom));
+        refresh.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.color_progressbar));
         recyclerView=findViewById(R.id.historyOrderRecyclerView);
         adapter=new HistoryOrderAdapter();
         adapter.setContext(HistoryOrder.this);

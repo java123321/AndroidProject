@@ -25,10 +25,11 @@
         <com.example.ourprojecttest.Utils.Roundimage
             android:id="@+id/img"
             android:layout_width="70dp"
+
             android:layout_height="70dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="5dp"
-            android:src="@drawable/doctor"></com.example.ourprojecttest.Utils.Roundimage>
+            android:src="@drawable/yonghu1"></com.example.ourprojecttest.Utils.Roundimage>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -42,7 +43,7 @@
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:text="令狐聪"
-                android:textSize="18dp" />
+                 />
 
 
             <TextView

@@ -1,44 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+android:orientation="vertical" android:layout_width="match_parent"
+android:layout_height="match_parent">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="180dp"
+    android:orientation="vertical"
+    android:background="@drawable/style_dialog_yuanjiao">
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/style_dialog_yuanjiao">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:textSize="18dp"
-            android:layout_gravity="center_vertical"
-            android:gravity="center"
-            android:background="@drawable/style_dialog1"
-            android:textColor="#FFFFFF "
-            android:text="接受失败">
-        </TextView>
-        <TextView
-            android:id="@+id/time"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/style_dialog_yuanjiao"
-            android:text="由于您在规定时间内未选择同意与医生沟通，系统已为您默认放弃此次问诊，如需问诊，请重新点击挂号！"
-            android:gravity="center_vertical"
-            android:textSize="14dp" />
-
-        <Button
-            android:id="@+id/yes"
+        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/picture"
             android:layout_marginTop="5dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/tishi1">
+        </ImageView>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#FD0896F5"/>
+        <TextView
+            android:id="@+id/describe"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:gravity="center"
+            android:text="由于您在规定时间内未选择同意与医生沟通，系统已为您默认放弃此次问诊，如需问诊，请重新点击挂号"
+            android:textSize="12dp" />
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/yes"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:layout_marginRight="5dp"
-            android:text="确定"
-            android:textColor="#FFFFFF"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
             android:background="@drawable/style_color_yuanjiao"
-            android:layout_gravity="right">
-
-        </Button>
-
+            android:gravity="center"
+            android:text="确定"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:textColor="#FFFFFF"
+            android:textSize="15dp" />
     </LinearLayout>
+</LinearLayout>
 </LinearLayout>

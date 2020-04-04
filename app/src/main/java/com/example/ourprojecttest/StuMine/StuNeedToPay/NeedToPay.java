@@ -281,6 +281,7 @@ public class NeedToPay extends AppCompatActivity {
                         }
                         drugDataList.add(drugData);//将药品添加到药品列表里
                     }
+
                 }
                 msg.what=SUCCESS;
                 msg.obj=orderList;
@@ -303,6 +304,8 @@ public class NeedToPay extends AppCompatActivity {
                 getData();
             }
         });
+        refresh.setColorSchemeColors(getResources().getColor(R.color.color_bottom));
+        refresh.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.color_progressbar));
         recyclerView=findViewById(R.id.displayOrder);
         LinearLayoutManager layoutManager=new LinearLayoutManager(this);
         layoutManager.setAutoMeasureEnabled(true);
