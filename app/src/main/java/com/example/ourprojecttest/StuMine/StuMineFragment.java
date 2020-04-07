@@ -202,8 +202,8 @@ public class StuMineFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent(mContext, WelcomeActivity.class);
-                startActivity(intent);
-                StuBottomNavigation.activity.finish();
+                mContext.startActivity(intent);
+
             }
         });
         TextView no = inflate.findViewById(R.id.no);

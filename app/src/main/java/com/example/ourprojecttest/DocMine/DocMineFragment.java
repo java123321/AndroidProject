@@ -144,8 +144,7 @@ public class DocMineFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent(mContext, WelcomeActivity.class);
-                startActivity(intent);
-                DocBottomNavigation.activity.finish();
+                mContext.startActivity(intent);
             }
         });
 
