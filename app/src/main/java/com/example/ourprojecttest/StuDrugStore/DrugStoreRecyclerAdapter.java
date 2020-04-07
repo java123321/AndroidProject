@@ -25,44 +25,43 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.OptionalDataException;
 import java.io.StreamCorruptedException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DrugStoreRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    Intent intentToPrescribe = new Intent("com.example.ourprojecttest.Perscribe");
-    CommonMethod method = new CommonMethod();
-    StuDrugStoreFragment fragment;
-    String type;
-    int num = 1;
+    private Intent intentToPrescribe = new Intent("com.example.ourprojecttest.Perscribe");
+    private CommonMethod method = new CommonMethod();
+    private StuDrugStoreFragment fragment;
+    private String type;
+    private int num = 1;
     private Context mContext;
-
     private List<DrugInformation> mList = new ArrayList<>();
     //普通布局的type
-    static final int TYPE_ITEM = 0;
+    private static final int TYPE_ITEM = 0;
     //脚布局
-    static final int TYPE_FOOTER = 1;
+    private static final int TYPE_FOOTER = 1;
     //  //上拉加载更多
 //  static final int PULL_LOAD_MORE = 0;
     //正在加载更多
-    static final int LOADING_MORE = 1;
+    private static final int LOADING_MORE = 1;
     //没有更多
-    static final int NO_MORE = 2;
+    private static final int NO_MORE = 2;
     //脚布局当前的状态,默认为还有更多
-    int footer_state = 1;
-
+    private int footer_state = 1;
+    public void setList(List<DrugInformation> list) {
+        mList = list;
+    }
+    public void addList(List<DrugInformation> list) {
+        mList.addAll(list);
+    }
     public DrugStoreRecyclerAdapter(Context context, StuDrugStoreFragment fragment) {
         mContext = context;
         this.type = method.getFileData("Type", mContext);
         this.fragment = fragment;
     }
 
-    public void setList(List<DrugInformation> list) {
-        mList = list;
-    }
 
-    public void addList(List<DrugInformation> list) {
-        mList.addAll(list);
-    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

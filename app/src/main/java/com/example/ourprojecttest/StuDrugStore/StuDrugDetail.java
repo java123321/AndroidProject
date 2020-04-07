@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.OptionalDataException;
 import java.io.StreamCorruptedException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,7 +40,7 @@ import java.util.Set;
 public class StuDrugDetail extends AppCompatActivity {
     private Display display;
     private int toastHeight;
-    CommonMethod method = new CommonMethod();
+    private CommonMethod method = new CommonMethod();
     private ImageView picture;
     private TextView name;
     private TextView price;
@@ -48,7 +49,6 @@ public class StuDrugDetail extends AppCompatActivity {
     private Button buy;
     private Button addToCart;
     private String Flag;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

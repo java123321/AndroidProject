@@ -65,7 +65,7 @@ public class StuBuyDrug extends AppCompatActivity {
     private LinearLayout addressChange;
     private boolean AliPayFlag = true;
     double unitePrice;
-    DecimalFormat df = new DecimalFormat("##0.00");
+    private DecimalFormat df = new DecimalFormat("##0.00");
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -117,7 +117,7 @@ public class StuBuyDrug extends AppCompatActivity {
         ;
     };
 
-    private void updateDisplayPrice(String orderprice) {
+    private void updateDisplayPrice(String orderPrice) {
         String str = "合计:￥" + orderPrice;
         SpannableStringBuilder builder = new SpannableStringBuilder(str);
         ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#FF1493"));
@@ -153,6 +153,7 @@ public class StuBuyDrug extends AppCompatActivity {
                 int number = Integer.valueOf(yaoPinNumber.getText().toString().trim());
                 number++;
                 updateDisplayPrice(df.format(unitePrice * number));
+                Log.d("stubuydrug",df.format(unitePrice*number));
                 yaoPinNumber.setText(String.valueOf(number));
             }
         });
@@ -274,23 +275,21 @@ public class StuBuyDrug extends AppCompatActivity {
         yaoPinName = findViewById(R.id.stuName);
         stuDiscribe = findViewById(R.id.stuDiscribe);
         displayPrice = findViewById(R.id.stuPrcie);
+
         Intent intent=getIntent();
         //显示药品图片
-        byte[] appIcon = getIntent().getByteArrayExtra("picture");
+        byte[] appIcon = intent.getByteArrayExtra("picture");
         displayDrugPicture.setImageBitmap(BitmapFactory.decodeByteArray(appIcon, 0, appIcon.length));
-        //设置药品价格
-        updateDisplayPrice(intent.getStringExtra("price"));
 
-        unitePrice = Double.parseDouble(getIntent().getStringExtra("price"));
-
-        //用于显示药品价格
+        unitePrice = Double.parseDouble(intent.getStringExtra("price"));
+        //用于显示药品单价
         displayPrice.setText("￥ " + df.format(unitePrice));
+        //设置药品价格
+        updateDisplayPrice(df.format(unitePrice));
+        Log.d("stubuydrug",df.format(unitePrice));
         //设置药品名字
         yaoPinName.setText(intent.getStringExtra("name"));
-
-
         stuDiscribe.setText(intent.getStringExtra("description"));
-
         //设置用户的收货地址
         String add = method.getFileData("Address", StuBuyDrug.this);
         Log.d("buyyaopin---", add);
@@ -303,7 +302,6 @@ public class StuBuyDrug extends AppCompatActivity {
         addressChange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Intent intent = new Intent(StuBuyDrug.this, AddressActivity.class);
                 startActivity(intent);
             }

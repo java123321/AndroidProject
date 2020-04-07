@@ -35,6 +35,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -89,8 +90,8 @@ public class StuDrugStoreFragment extends Fragment {
     private boolean isLoading = false;//用来控制进入getdata()的次数
     private boolean clear=true;
     private LinearLayout empty;
-
-    Handler handler=new Handler(){
+    private DecimalFormat df = new DecimalFormat("##0.00");
+    private Handler handler=new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
             List<DrugInformation> list=(List<DrugInformation>)msg.obj;
@@ -308,6 +309,7 @@ public class StuDrugStoreFragment extends Fragment {
             try {
                 Response response = client.newCall(request).execute();
                 String responseData = response.body().string();
+                Log.d("drugstore","response:"+responseData);
                 //-------------------------解析-↓---------------------------//
                 try {
                     //获取后面的药品数组
@@ -350,7 +352,7 @@ public class StuDrugStoreFragment extends Fragment {
                                 drug_information.setDrug_Describe(jsonObject.getString("Drug_Describe"));
                                 drug_information.setDrug_Amount(jsonObject.getString("Drug_Amount"));
                                 drug_information.setDrug_Name(jsonObject.getString("Drug_Name"));
-                                drug_information.setDrug_Price(jsonObject.getString("Drug_Price"));
+                                drug_information.setDrug_Price(df.format(Double.valueOf(jsonObject.getString("Drug_Price"))));
                                 drug_information.setDrug_Type(jsonObject.getString("Drug_Type"));
                                 drug_information.setDrug_OTC(jsonObject.getString("Drug_OTC"));
                                 drug_information.setId(jsonObject.getString("Drug_Id"));
