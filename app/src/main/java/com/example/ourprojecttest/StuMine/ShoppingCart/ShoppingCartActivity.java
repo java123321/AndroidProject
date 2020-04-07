@@ -124,10 +124,18 @@ public class ShoppingCartActivity extends AppCompatActivity {
                     if (TextUtils.equals(resultStatus, "9000")) {
                         //用户支付成功之后，开始将订单上传到数据库
                         uploadOrder();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ShoppingCartActivity.this);
+                        builder.setTitle("提示");
+                        builder.setMessage("支付成功！");
+                        builder.setPositiveButton("确定", null);
+                        builder.show();
                         Log.d("msp", "2");
                     } else {
-
-                        Log.d("msp", "3");
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ShoppingCartActivity.this);
+                        builder.setTitle("提示");
+                        builder.setMessage("支付失败！");
+                        builder.setPositiveButton("确定", null);
+                        builder.show();
                     }
                     break;
                 }
@@ -223,11 +231,8 @@ public class ShoppingCartActivity extends AppCompatActivity {
      */
     public void payV2(String amount) {
         Log.d("amount", amount);
-
         if (TextUtils.isEmpty(APPID) || (TextUtils.isEmpty(RSA2_PRIVATE) && TextUtils.isEmpty(RSA_PRIVATE))) {
             Toast.makeText(this, "Error: Missing APPID or RSA_PRIVATE in PayDemoActivity.", Toast.LENGTH_SHORT).show();
-
-
             return;
         }
 

@@ -140,10 +140,20 @@ public class NeedToPay extends AppCompatActivity {
 
                         Log.d("payment","succ");
                         finishedPay();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(NeedToPay.this);
+                        builder.setTitle("提示");
+                        builder.setMessage("支付成功！");
+                        builder.setPositiveButton("确定", null);
+                        builder.show();
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                        showAlert(NeedToPay.this, "Payment failed:" + payResult);
+//                        showAlert(NeedToPay.this, "Payment failed:" + payResult);
                         Log.d("payment","false");
+                        AlertDialog.Builder builder = new AlertDialog.Builder(NeedToPay.this);
+                        builder.setTitle("提示");
+                        builder.setMessage("支付失败！");
+                        builder.setPositiveButton("确定", null);
+                        builder.show();
                     }
                     break;
                 }
@@ -157,11 +167,16 @@ public class NeedToPay extends AppCompatActivity {
                     if (TextUtils.equals(resultStatus, "9000") && TextUtils.equals(authResult.getResultCode(), "200")) {
                         // 获取alipay_open_id，调支付时作为参数extern_token 的value
                         // 传入，则支付账户为该授权账户
-                        showAlert(NeedToPay.this, "Authentication success:" + authResult);
-
+                        //showAlert(NeedToPay.this, "Authentication success:" + authResult);
+                        Toast toast = Toast.makeText(NeedToPay.this, "授权成功！", Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                        toast.show();
                     } else {
                         // 其他状态值则为授权失败
-                        showAlert(NeedToPay.this, "Authentication failed:" + authResult);
+                        //showAlert(NeedToPay.this, "Authentication failed:" + authResult);
+                        Toast toast = Toast.makeText(NeedToPay.this, "授权失败！", Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                        toast.show();
 
                     }
                     break;
