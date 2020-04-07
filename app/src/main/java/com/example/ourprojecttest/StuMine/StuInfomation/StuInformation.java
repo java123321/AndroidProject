@@ -42,10 +42,13 @@ import com.example.ourprojecttest.StuMine.NumPicker;
 import com.example.ourprojecttest.StuMine.Tubiao;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
@@ -497,7 +500,52 @@ public class StuInformation extends AppCompatActivity implements View.OnClickLis
         Log.d("sss", aa.size() + "");
     }
 
+    private void uploadInfo(String ID,String name,String sex,String Birthday,String height,String weight){
 
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append("no=")//notPost是学生待付款的订单
+                .append(ID+"&name=")
+                .append(name+"&sex=")
+                .append(sex+"&birth=")
+                .append(Birthday+"&height=")
+                .append(height+"&weight=")
+                .append(weight+"&isStu=true");
+        byte[] data = stringBuffer.toString().getBytes();
+        String strUrl = ipAddress + "IM/UpdateInformation";
+        try {
+            URL url = new URL(strUrl);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setConnectTimeout(3000);//设置连接超时时间
+            urlConnection.setDoInput(true);//设置输入流采用字节流
+            urlConnection.setDoOutput(true);//设置输出采用字节流
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setUseCaches(false);//使用post方式不能使用缓存
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");//设置meta参数
+            urlConnection.setRequestProperty("Content-Length", String.valueOf(data.length));
+            urlConnection.setRequestProperty("Charset", "utf-8");
+            //获得输出流，向服务器写入数据
+            OutputStream outputStream = urlConnection.getOutputStream();
+            outputStream.write(data);
+            int response = urlConnection.getResponseCode();//获得服务器的响应码
+            if (response == HttpURLConnection.HTTP_OK) {
+                InputStream inputStream = urlConnection.getInputStream();
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                byte[] result = new byte[1024];
+                int len = 0;
+                while ((len = inputStream.read(result)) != -1) {
+                    byteArrayOutputStream.write(result, 0, len);
+                }
+                String resultData = new String(byteArrayOutputStream.toByteArray()).trim();
+            } else {
+
+            }
+            Log.d("result", "312");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -526,52 +574,38 @@ public class StuInformation extends AppCompatActivity implements View.OnClickLis
                     e.printStackTrace();http://139.196.103.219:8080/IM/PictureUpload?id=12345&type=Drug_stu"
                     Log.d("sssss","上传失败！");
                 }
-                int i = 1;
                 String ID = commonMethod.getFileData("ID", StuInformation.this);
-                Tubiao s = (Tubiao) aa.get(0);
+                Tubiao s =  aa.get(0);
                 commonMethod.saveFileData("Birthday",Birthday,getBaseContext());
-                String name = str2HexStr(s.getXinxi());
+                String name = s.getXinxi();
                 commonMethod.saveFileData("Name",s.getXinxi(),getBaseContext());
-                Tubiao s1 = (Tubiao) aa.get(2);
-                String sex = str2HexStr(s1.getXinxi());
+                Tubiao s1 =  aa.get(2);
+                String sex = s1.getXinxi();
                 commonMethod.saveFileData("Sex",s1.getXinxi(),getBaseContext());
-                Tubiao s2 = (Tubiao) aa.get(3);
+                Tubiao s2 =  aa.get(3);
                 String height1 = s2.getXinxi();
                 String[] arr = height1.split(" ");
                 String height = arr[0];
                 commonMethod.saveFileData("Height",height,getBaseContext());
-                Tubiao s3 = (Tubiao) aa.get(4);
+                Tubiao s3 =  aa.get(4);
                 String weight1 = s3.getXinxi();                             //将修改后的数据回传给服务器
                 String[] ars = weight1.split(" ");
                 String weight = ars[0];
                 commonMethod.saveFileData("Weight",weight,getBaseContext());
                 try{
-                    OkHttpClient client = new OkHttpClient();
-                    Log.d("保存日期",Birthday);
-                    Request request = new Request.Builder().url(ipAddress + "/IM/UpdateInformation?no=" + ID + "&name=" + name + "&sex=" + sex + "&birth=" + Birthday + "&height=" + height + "&weight=" + weight+"&isStu=true")
-                            .build();
-                    Response response = client.newCall(request).execute();
-                    String responseData = response.body().string();
+//                    OkHttpClient client = new OkHttpClient();
+//                    Log.d("保存日期",Birthday);
+//                    Request request = new Request.Builder().url(ipAddress + "/IM/UpdateInformation?no=" + ID + "&name=" + name + "&sex=" + sex + "&birth=" + Birthday + "&height=" + height + "&weight=" + weight+"&isStu=true")
+//                            .build();
+//                    Response response = client.newCall(request).execute();
+//                    String responseData = response.body().string();
+                    uploadInfo(ID,name,sex,Birthday,height,weight);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
             }
         }).start();
-    }
-    public static String str2HexStr(String str) {
-        char[] chars = "0123456789ABCDEF".toCharArray();
-        StringBuilder sb = new StringBuilder("");
-        byte[] bs = str.getBytes();
-        int bit;
-        for (int i = 0; i < bs.length; i++) {
-            bit = (bs[i] & 0x0f0) >> 4;
-            sb.append(chars[bit]);
-            bit = bs[i] & 0x0f;
-            sb.append(chars[bit]);
-            // sb.append(' ');
-        }
-        return sb.toString().trim();
     }
     private File uri2File(Uri uri) {
         String img_path;

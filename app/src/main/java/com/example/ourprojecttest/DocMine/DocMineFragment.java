@@ -49,21 +49,16 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class DocMineFragment extends Fragment {
-    private String ipAddress;
-    private SwipeRefreshLayout refresh;
-    private Dialog dialog;
     Context mContext;
     private CommonMethod commonMethod=new CommonMethod();
     private TextView name,offices,status;
     private Roundimage img;
     private LinearLayout exit;
-
     private LinearLayout modefyPassword;
     private LinearLayout orderManage;
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstansceState) {
         View view = inflater.inflate(R.layout.doc_frag_my, container, false);
         mContext=getContext();
-        ipAddress=getResources().getString(R.string.ipAdrress);
         Activity a = getActivity();
         IntentFilter intentFilter=new IntentFilter();
         intentFilter.addAction("Name");
@@ -101,8 +96,7 @@ public class DocMineFragment extends Fragment {
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog=show();
-
+               show();
             }
         });
         modefyPassword=view.findViewById(R.id.docModefyAddress);
@@ -111,7 +105,7 @@ public class DocMineFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(mContext, ModifyPassword.class);
-                startActivity(intent);
+                mContext.startActivity(intent);
             }
         });
         ImmersiveStatusbar.getInstance().Immersive(a.getWindow(), a.getActionBar());//状态栏透明
@@ -120,7 +114,7 @@ public class DocMineFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent(view.getContext(), DocInformation.class);
-                startActivity(intent);
+                mContext.startActivity(intent);
             }
         });
         orderManage = view.findViewById(R.id.docOrderManage);
@@ -128,7 +122,7 @@ public class DocMineFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent(view.getContext(), OrderManagement.class);
-                startActivity(intent);
+                mContext.startActivity(intent);
             }
         });
         return  view;
@@ -173,66 +167,6 @@ public class DocMineFragment extends Fragment {
         return dialog;
     }
 
-    private void sendRequestWrithOkHttp(final  View view) {
-        new Thread(new Runnable() {
-            int i = 1;
-            @Override
-            public void run() {
-                try {
-                    OkHttpClient client = new OkHttpClient();
-                    Request request = new Request.Builder().url(ipAddress + "IM/GetUserInformation?name="+commonMethod.getFileData("ID",view.getContext()) +"&type=Doc").build();
-                    Response response = client.newCall(request).execute();
-                    String responseData = response.body().string();
-                    parseJSONWITHJSNObject(responseData);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
-    private void parseJSONWITHJSNObject(String jsonData) {
-        try {
-            JSONArray jsonArray = new JSONArray(jsonData);
-            for (int i = 1; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                String name1 = jsonObject.getString("Doc_Name").toString();
-                name.setText(name1);
-                String offices1 = jsonObject.getString("Doc_Offices");
-                offices.setText(offices1);
-                String titles = jsonObject.getString("Doc_Title");
-                status.setText(titles);
-                String uri=jsonObject.getString("Doc_Icon");
-                Log.d("ss",uri);
-                Bitmap bitmap=getBitmap(uri);
-                img.setImageBitmap(bitmap);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public Bitmap getBitmap(String url) {
-        Bitmap bm = null;
-        try {
-            java.net.URL iconUrl = new URL(url);
-            URLConnection conn = iconUrl.openConnection();
-            HttpURLConnection http = (HttpURLConnection) conn;
-            Log.d("ssss","完成！");
-            int length = http.getContentLength();
-            conn.connect();
-            // 获得图像的字符流
-            InputStream is = conn.getInputStream();
-            BufferedInputStream bis = new BufferedInputStream(is, length);
-            bm = BitmapFactory.decodeStream(bis);
-            bis.close();
-            is.close();// 关闭流
-        }
-        catch (Exception e) {
-            Log.d("ssss","未完成！");
-            e.printStackTrace();
-        }
-        return bm;
-    }
 
     public class Receiver extends BroadcastReceiver {
         @Override

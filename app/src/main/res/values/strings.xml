@@ -11,7 +11,6 @@
 <!--   <string name="ipAdrress">"http://192.168.1.56:8080/"</string>-->
 <!--    <string name="ipAdrressSocket">"ws://192.168.1.56:8080/"</string>-->
 
-
     <!--以下代表学生端存储在本地的数据信息,调用方法统一为CommonMethod类里的getFileData,存数据为saveFileData-->
     <string name="ID">"用户的id"</string>
     <string name="Address">"用户的收获地址"</string>

@@ -252,7 +252,6 @@ public class RenGongWenZhen extends AppCompatActivity {
         guanbi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 //如果服务在运行
                 if (StuService.isGuaHao) {
                     //给服务发送取消挂号的广播

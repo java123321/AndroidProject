@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Display;
@@ -42,9 +43,13 @@ import com.example.ourprojecttest.R;
 import com.example.ourprojecttest.Utils.Roundimage;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
@@ -58,6 +63,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class DocInformation extends AppCompatActivity {
+    private CommonMethod commonMethod=new CommonMethod();
     private Display display;
     private int toastHeight;
     private String ipAddress;
@@ -163,7 +169,7 @@ public class DocInformation extends AppCompatActivity {
                 num.setContext((DocInformation.this));
             }
         });
-        LinearLayout xingbie = (LinearLayout) findViewById(R.id.xingbie);
+        LinearLayout xingbie = findViewById(R.id.xingbie);
         xingbie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -303,7 +309,6 @@ public class DocInformation extends AppCompatActivity {
         // 创建一个文件夹
         String path = Environment.getExternalStorageDirectory() + "/take_photo";
         File file = new File(path);
-
         if (!file.exists()) {
             file.mkdirs();
         }
@@ -322,7 +327,6 @@ public class DocInformation extends AppCompatActivity {
         intent.putExtra("return-data", false);
         startActivityForResult(intent, REQUEST_TAKE_PHOTO);
     }
-
     // 图片裁剪
     private void cropPhoto(Uri uri, boolean fromCapture) {
         Intent intent = new Intent("com.android.camera.action.CROP"); //打开系统自带的裁剪图片的intent
@@ -332,9 +336,7 @@ public class DocInformation extends AppCompatActivity {
         // 注意一定要添加该项权限，否则会提示无法裁剪
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-
         intent.putExtra("scale", true);
-
         // 设置裁剪区域的宽高比例
         intent.putExtra("aspectX", 1);
         intent.putExtra("aspectY", 1);
@@ -458,7 +460,6 @@ public class DocInformation extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String s = intent.getStringExtra("name");
-            ;
             name.setText(s);
         }
     }
@@ -496,9 +497,60 @@ public class DocInformation extends AppCompatActivity {
         }
     }
 
+
+    private void uploadInfo(String ID,String name2,String type1,String offices2,String introduce2,String title2,String sex2){
+
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append("no=")//notPost是学生待付款的订单
+                .append(ID+"&name=")
+                .append(name2+"&type=")
+                .append(type1+"&offices=")
+                .append(offices2+"&state=rest&introduce=")
+                .append(introduce2+"&title=")
+                .append(title2+"&sex=")
+                .append(sex2+"&isStu=false");
+
+        byte[] data = stringBuffer.toString().getBytes();
+
+        String strUrl = ipAddress + "IM/UpdateInformation";
+        try {
+            URL url = new URL(strUrl);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setConnectTimeout(3000);//设置连接超时时间
+            urlConnection.setDoInput(true);//设置输入流采用字节流
+            urlConnection.setDoOutput(true);//设置输出采用字节流
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setUseCaches(false);//使用post方式不能使用缓存
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");//设置meta参数
+            urlConnection.setRequestProperty("Content-Length", String.valueOf(data.length));
+            urlConnection.setRequestProperty("Charset", "utf-8");
+            //获得输出流，向服务器写入数据
+            OutputStream outputStream = urlConnection.getOutputStream();
+            outputStream.write(data);
+            int response = urlConnection.getResponseCode();//获得服务器的响应码
+            if (response == HttpURLConnection.HTTP_OK) {
+                InputStream inputStream = urlConnection.getInputStream();
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                byte[] result = new byte[1024];
+                int len = 0;
+                while ((len = inputStream.read(result)) != -1) {
+                    byteArrayOutputStream.write(result, 0, len);
+                }
+                String resultData = new String(byteArrayOutputStream.toByteArray()).trim();
+            } else {
+
+            }
+            Log.d("result", "312");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     @Override
     protected void onDestroy() {
-        final CommonMethod commonMethod = new CommonMethod();
         super.onDestroy();
         new Thread(new Runnable() {
             @Override
@@ -506,25 +558,22 @@ public class DocInformation extends AppCompatActivity {
                 try {
                     String ID = method.getFileData("ID", getBaseContext());
                     OkHttpClient client = new OkHttpClient();
-                    String name2 = method.str2HexStr(name.getText().toString()).toString();
+                    String name2 = name.getText().toString();
                     commonMethod.saveFileData("DocName", name.getText().toString(), getBaseContext());
-                    String offices2 = method.str2HexStr(offices.getText().toString());
+                    String offices2 =offices.getText().toString();
                     commonMethod.saveFileData("DocOffice", offices.getText().toString(), getBaseContext());
-                    String title2 = method.str2HexStr(title.getText().toString());
+                    String title2 = title.getText().toString();
                     commonMethod.saveFileData("DocTitle", title.getText().toString(), getBaseContext());
-                    String s = sex.getText().toString();
+                    String sex2 = sex.getText().toString();
                     commonMethod.saveFileData("DocSex", sex.getText().toString(), getBaseContext());
-                    String sex2 = method.str2HexStr(sex.getText().toString()).toString();
-                    String introduce2 = method.str2HexStr(introduce.getText().toString());
+                    String introduce2 = introduce.getText().toString();
                     commonMethod.saveFileData("DocIntroduce", introduce.getText().toString(), getBaseContext());
-                    String url = ipAddress + "/IM/UpdateInformation?no=" + ID + "&name=" + name2 + "&type=" + type1 + "&offices=" + offices2 + "&state=rest&introduce=" + introduce2 + "&title=" + title2 + "&sex=" + sex2 + "&isStu=false";
-                    Log.d("url", url);
-                    Request request = new Request.Builder().url(url)
-                            .build();
-                    Response response = client.newCall(request).execute();
-
-                    String responseData = response.body().string();
-
+//                    String url = ipAddress + "/IM/UpdateInformation?no=" + ID + "&name=" + name2 + "&type=" + type1 + "&offices=" + offices2 + "&state=rest&introduce=" + introduce2 + "&title=" + title2 + "&sex=" + sex2 + "&isStu=false";
+//                    Log.d("url", url);
+//                    Request request = new Request.Builder().url(url)
+//                            .build();
+//                    Response response = client.newCall(request).execute();
+                    uploadInfo(ID,name2,type1,offices2,introduce2,title2,sex2);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -537,29 +586,8 @@ public class DocInformation extends AppCompatActivity {
                 method.uploadMultiFile(file2, ipAddress + "/IM/PictureUpload?id=" + method.getFileData("ID", getBaseContext()) + "&type=Icon_License");
             }
         }).start();
-
     }
 
-    public Bitmap getBitmap(String url) {
-        Bitmap bm = null;
-        try {
-            java.net.URL iconUrl = new URL(url);
-            URLConnection conn = iconUrl.openConnection();
-            HttpURLConnection http = (HttpURLConnection) conn;
-            int length = http.getContentLength();
-            conn.connect();
-            // 获得图像的字符流
-            InputStream is = conn.getInputStream();
-            BufferedInputStream bis = new BufferedInputStream(is, length);
-            bm = BitmapFactory.decodeStream(bis);
-            bis.close();
-            is.close();// 关闭流
-        } catch (Exception e) {
-            Log.d("ssss", "未完成！");
-            e.printStackTrace();
-        }
-        return bm;
-    }
 
     private File uri2File(Uri uri) {
         String img_path;
