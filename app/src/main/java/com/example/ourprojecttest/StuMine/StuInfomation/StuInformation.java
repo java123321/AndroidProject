@@ -625,16 +625,6 @@ public class StuInformation extends AppCompatActivity implements View.OnClickLis
         File file = new File(img_path);
         return file;
     }
-    public Bitmap fileToBitmap(String filePath) {
-        File file = new File(filePath);
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        /**
-         *压缩长宽各为一半避免图片过大装载不了
-         */
-        options.inPurgeable = true;
-        options.inSampleSize = 2;
-        return BitmapFactory.decodeFile(filePath, options);
-    }
     public  String getAge(String year,String month,String day){
         Calendar cal = Calendar.getInstance();
         int Year=Integer.parseInt(year);
