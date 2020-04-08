@@ -200,19 +200,21 @@ public class ShoppingCartActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             updateDisplayPrice(Double.valueOf(intent.getStringExtra("value")));
             Log.d("selectall", "1");
-            boolean all = intent.getBooleanExtra("selectAll", false);
             Log.d("selectall", "2");
-            Log.d("selectall", "all:" + all);
             //如果有全选的消息
-            if (all) {
-                selectAll.setImageResource(R.drawable.checked);
-                selectAllFlag = true;
-                Log.d("selectall", "true");
-            } else if (selectAllFlag) {//如果没有发送全选通知且当前全选选中的时候将它置位未选中
-                selectAll.setImageResource(R.drawable.unchecked);
-                selectAllFlag = false;
-                Log.d("selectall", "false");
+            if(intent.hasExtra("selectAll")){
+                boolean all = intent.getBooleanExtra("selectAll", false);
+                if (all) {
+                    selectAll.setImageResource(R.drawable.checked);
+                    selectAllFlag = true;
+                    Log.d("selectall", "true");
+                } else if (selectAllFlag) {//如果没有发送全选通知且当前全选选中的时候将它置位未选中
+                    selectAll.setImageResource(R.drawable.unchecked);
+                    selectAllFlag = false;
+                    Log.d("selectall", "false");
+                }
             }
+
         }
     }
 
