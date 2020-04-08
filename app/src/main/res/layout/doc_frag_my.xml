@@ -72,10 +72,6 @@
             android:background="@drawable/style_dialog_yuanjiao"
             android:orientation="vertical">
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="0.5dp"
-                android:background="#FF909090" />
 
             <LinearLayout
                 android:id="@+id/information"
