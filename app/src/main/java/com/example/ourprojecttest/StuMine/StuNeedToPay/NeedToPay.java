@@ -238,7 +238,7 @@ public class NeedToPay extends AppCompatActivity {
     }
     private void getData(){
         refresh.setRefreshing(true);
-        final String url=ipAddress+"IM/GetNeedToPayOrder?type=finishPay&id="+id;//finishPay是指学生刚付款款的订单
+        final String url=ipAddress+"IM/GetNeedToPayOrder?type=getOrder&id="+id;//finishPay是指学生刚付款款的订单
         Log.d("topay",url);
         new Thread(new Runnable() {
             @Override
