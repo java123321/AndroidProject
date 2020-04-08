@@ -214,7 +214,7 @@ public class StuBuyDrug extends AppCompatActivity {
                         bb.show();
                     }
                 } else {
-                    Toast toast = Toast.makeText(StuBuyDrug.this, "请完善信息", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(StuBuyDrug.this, "您暂未完善收获地址信息，请先完善！", Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
                     toast.show();
                 }
