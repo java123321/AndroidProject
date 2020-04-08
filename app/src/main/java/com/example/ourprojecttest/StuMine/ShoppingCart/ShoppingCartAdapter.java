@@ -130,6 +130,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     }
                     Log.d("selectall","true1");
                     mContext.sendBroadcast(intent);
+                    intent.removeExtra("selectAll");
                 } else {//如果是取消选中
                     //否则设置image1的src为R.drawable.A
                     viewHolder.drugChoiced.setImageResource(R.drawable.unchecked);

@@ -18,7 +18,7 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="center"
                 android:text="接诊确认"
-                android:textColor="#141414"
+                android:textColor="#FD0896F5"
                 android:textSize="18dp" />
             <View
                 android:layout_width="match_parent"
@@ -27,6 +27,7 @@
 
             <TextView
                 android:id="@+id/countTime"
+                android:textColor="#FD0896F5"
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"/>
