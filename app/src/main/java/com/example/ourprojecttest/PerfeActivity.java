@@ -70,7 +70,7 @@ public class PerfeActivity extends AppCompatActivity {
                 case 0:
                     String s="注册成功，准备好登录了吗？";
                     Intent intent = new Intent(PerfeActivity.this,LoginActivity.class);
-                    show(R.layout.layout_tishi_email,s,intent,R.drawable.zcsuccess);
+                    show(R.layout.layout_chenggong,s,intent);
                     Log.d("registerresult","success");
                     break;
                 case -1:
@@ -293,15 +293,13 @@ public class PerfeActivity extends AppCompatActivity {
     dialogWindow.setAttributes(lp);
     dialog.show();
 }
-    public void show(int x,String s,Intent intent,int y){
+    public void show(int x,String s,Intent intent){
         final Dialog dialog = new Dialog(PerfeActivity.this,R.style.ActionSheetDialogStyle);        //展示对话框
         //填充对话框的布局
         View inflate = LayoutInflater.from(PerfeActivity.this).inflate(x, null);
         TextView describe=inflate.findViewById(R.id.describe);
         describe.setText(s);
         TextView yes = inflate.findViewById(R.id.yes);
-        ImageView p=inflate.findViewById(R.id.picture);
-        p.setImageDrawable(getResources().getDrawable(y));
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

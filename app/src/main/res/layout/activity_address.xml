@@ -44,7 +44,8 @@
             android:layout_marginTop="12dp">
             <TextView
                 android:id="@+id/msg"
-                android:layout_width="312dp"
+                android:layout_width="0dp"
+                android:layout_weight="5"
                 android:layout_height="match_parent"
                 android:singleLine="false"
                 android:text="地址展示"
@@ -58,7 +59,8 @@
 
             <Button
             android:id="@+id/compile"
-            android:layout_width="100dp"
+            android:layout_width="0dp"
+                android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_gravity="right"
             android:background="#00000000"

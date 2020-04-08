@@ -3,14 +3,25 @@ package com.example.ourprojecttest.StuMine;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.ourprojecttest.PerfeActivity;
+import com.example.ourprojecttest.RegisterActivity;
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 import com.example.ourprojecttest.R;
@@ -35,11 +46,15 @@ public class AddressActivity extends AppCompatActivity {
             switch (msg.what) {
                 case 0:
                     //成功
-                    new AlertDialog.Builder(AddressActivity.this).setTitle("正确").setMessage("成功").setNegativeButton("确定",null).show();
+                   // new AlertDialog.Builder(AddressActivity.this).setTitle("正确").setMessage("成功").setNegativeButton("确定",null).show();
+                    String s1="恭喜您，操作成功";
+                    show(R.layout.layout_chenggong,s1);
                     break;
                 case -1:
-                    //失败
-                    new AlertDialog.Builder(AddressActivity.this).setTitle("错误").setMessage("失败").setNegativeButton("确定",null).show();
+                    //败
+                    //new AlertDialog.Builder(AddressActivity.this).setTitle("错误").setMessage("失败").setNegativeButton("确定",null).show();
+                    String s2="很遗憾，操作失败";
+                    show(R.layout.layout_tishi_email,s2);
                 default:
                     break;
             }
@@ -80,11 +95,15 @@ public class AddressActivity extends AppCompatActivity {
                 boolean flag = true;
                 if (show_name.isEmpty()||show_phone.isEmpty()||address.isEmpty())
                 {
-                    new AlertDialog.Builder(AddressActivity.this).setTitle("错误").setMessage("请补全信息").setNegativeButton("确定",null).show();
+                    //new AlertDialog.Builder(AddressActivity.this).setTitle("错误").setMessage("请补全信息").setNegativeButton("确定",null).show();
+                    String s1="请补全信息";
+                    show(R.layout.layout_tishi_email,s1);
                     flag = false;
                 }else if (!check_phone(show_phone)&&flag)
                 {
-                    new AlertDialog.Builder(AddressActivity.this).setTitle("错误").setMessage("请填入11位手机号").setNegativeButton("确定",null).show();
+                   // new AlertDialog.Builder(AddressActivity.this).setTitle("错误").setMessage("请填入11位手机号").setNegativeButton("确定",null).show();
+                    String s1="请填入11位手机号";
+                    show(R.layout.layout_tishi_email,s1);
                     flag = false;
                 }else if (flag){
                     method.saveFileData("Phone",show_phone,AddressActivity.this);
@@ -163,4 +182,31 @@ public class AddressActivity extends AppCompatActivity {
         Matcher m = p.matcher(phone);
         return m.matches();
     }
+    public void show(int x,String s){
+        final Dialog dialog = new Dialog(AddressActivity.this,R.style.ActionSheetDialogStyle);        //展示对话框
+        //填充对话框的布局
+        View inflate = LayoutInflater.from(AddressActivity.this).inflate(x, null);
+        TextView describe=inflate.findViewById(R.id.describe);
+        describe.setText(s);
+
+        TextView yes = inflate.findViewById(R.id.yes);
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setContentView(inflate);
+
+        Window dialogWindow = dialog.getWindow();
+        //设置Dialog从窗体底部弹出
+        dialogWindow.setGravity( Gravity.CENTER);
+        //获得窗体的属性
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        lp.width =800;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialogWindow.setAttributes(lp);
+        dialog.show();
+    }
+
 }

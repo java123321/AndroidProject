@@ -71,7 +71,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="115dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="-10dp"
             android:layout_marginRight="15dp"
@@ -186,7 +186,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="350dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
             android:layout_marginRight="15dp"
@@ -206,7 +206,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="5dp"
                     android:layout_weight="1"
-                    android:src="@drawable/address"></ImageView>
+                    android:src="@drawable/address1"></ImageView>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -333,7 +333,8 @@
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="0.5dp"
-                android:background="#FF909090" />
+                android:background="#FF909090"
+                android:layout_marginBottom="10dp"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
