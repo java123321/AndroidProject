@@ -116,8 +116,6 @@ public class NeedToPay extends AppCompatActivity {
                     break;
                 }
                 case SUCCESS:{//表示获取订单成功
-                    recyclerView.setVisibility(View.VISIBLE);
-                    empty.setVisibility(View.GONE);
                     ArrayList<OrderListBean> orderList=(ArrayList<OrderListBean>)msg.obj;
                     adapter.setList(NeedToPayHelper.getDataAfterHandle(orderList));
                     adapter.notifyDataSetChanged();

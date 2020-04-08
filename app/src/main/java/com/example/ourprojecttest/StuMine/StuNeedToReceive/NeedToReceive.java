@@ -16,6 +16,8 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.ourprojecttest.Utils.CommonMethod;
@@ -44,6 +46,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class NeedToReceive extends AppCompatActivity {
+    private LinearLayout empty;
     private String ipAddress;
     private final int RECEIVE_SUCCESS=2;
     private final int RECEIVE_FAILT=3;
@@ -86,9 +89,10 @@ public class NeedToReceive extends AppCompatActivity {
                     writeOrderListIntoSDcard("stuNeedToPeceiveOrder",orderList);
                     break;
                 }
-                case NO_ORDER:{
+                case NO_ORDER:{//暂无待收货订单
                     refresh.setRefreshing(false);
-                    Toast.makeText(NeedToReceive.this, "暂无代收货订单", Toast.LENGTH_SHORT).show();
+                   empty.setVisibility(View.VISIBLE);
+                   recyclerView.setVisibility(View.GONE);
                     break;
                 }
             }
@@ -136,6 +140,8 @@ public class NeedToReceive extends AppCompatActivity {
         registerReceiver(localReceiver,intentFilter);
     }
     private void getData(){
+        recyclerView.setVisibility(View.VISIBLE);
+        empty.setVisibility(View.GONE);
         refresh.setRefreshing(true);
         refresh.setColorSchemeColors(getResources().getColor(R.color.color_bottom));
         refresh.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.color_progressbar));
@@ -210,6 +216,7 @@ public class NeedToReceive extends AppCompatActivity {
 
 
     private void initView(){
+        empty=findViewById(R.id.empty);
         id=method.getFileData("ID",this);
         refresh=findViewById(R.id.refresh);
         //设置下拉刷新过去数据
