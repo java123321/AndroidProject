@@ -10,7 +10,6 @@ android {
     compileSdkVersion 28
 
     defaultConfig {
-
         useLibrary 'org.apache.http.legacy'
         applicationId "com.example.ourprojecttest"
         multiDexEnabled true

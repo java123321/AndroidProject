@@ -36,7 +36,7 @@ public class DrugStoreRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     private String type;
     private int num = 1;
     private Context mContext;
-    private List<DrugInformation> mList = new ArrayList<>();
+    public List<DrugInformation> mList = new ArrayList<>();
     //普通布局的type
     private static final int TYPE_ITEM = 0;
     //脚布局

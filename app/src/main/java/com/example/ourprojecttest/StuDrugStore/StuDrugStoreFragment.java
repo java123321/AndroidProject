@@ -1,6 +1,7 @@
 package com.example.ourprojecttest.StuDrugStore;
 
 import java.lang.String;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
@@ -27,6 +28,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 import com.example.ourprojecttest.R;
@@ -34,10 +36,12 @@ import com.example.ourprojecttest.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -48,25 +52,25 @@ public class StuDrugStoreFragment extends Fragment {
     //没有更多
     static final int NO_MORE = 2;
     private String ipAddress;
-    public boolean flag=false;
-    private final String loadNum="16";
+    public boolean flag = false;
+    private final String loadNum = "16";
     private LoadThread load;
-    private CommonMethod method=new CommonMethod();
+    private CommonMethod method = new CommonMethod();
     private Context context;
     private int totalNum;//该变量用于记录每次访问数据库时数据库总共返回了多少条数据
     private int currentNum;//该变量用于记录在下载图片的线程中进行数目的统计，用于标志位的判断
-    private int total=0;
-    private int last=0;
+    private int total = 0;
+    private int last = 0;
     private SwipeRefreshLayout refreshLayout;
     private Button addNewDrug;
     private TextView lastColorName;
     private Button sousuo;
     private EditText inputInspect;
-    private String selectedMenu="-1";
-    private Drawable searchEditDraw,searchEditDraw1;
+    private String selectedMenu = "-1";
+    private Drawable searchEditDraw, searchEditDraw1;
     private TextView quanbu;
-    private  TextView nanke;
-    private  TextView fuke;
+    private TextView nanke;
+    private TextView fuke;
     private TextView huxike;
     private TextView xiaohuake;
     private TextView neifenmike;
@@ -88,54 +92,53 @@ public class StuDrugStoreFragment extends Fragment {
     private GridLayoutManager gridLayoutManager;
     private int lastVisibleItem;
     private boolean isLoading = false;//用来控制进入getdata()的次数
-    private boolean clear=true;
+    private boolean clear = true;
     private LinearLayout empty;
     private DecimalFormat df = new DecimalFormat("##0.00");
-    private Handler handler=new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(@NonNull Message msg) {
-            List<DrugInformation> list=(List<DrugInformation>)msg.obj;
+            List<DrugInformation> list = (List<DrugInformation>) msg.obj;
 
 
-            if(clear){//如果通过更改检索条件检索的结果，则清空原有数组
+            if (clear) {//如果通过更改检索条件检索的结果，则清空原有数组
 
-                if(list.size()==0){//如果没有药品，则显示空界面
+                if (list.size() == 0) {//如果没有药品，则显示空界面
                     empty.setVisibility(View.VISIBLE);
                     mRecycler.setVisibility(View.GONE);
-                }else{
+                } else {
                     empty.setVisibility(View.GONE);
                     mRecycler.setVisibility(View.VISIBLE);
                     mAdapter.setList(list);
-                    if(last<total){
+                    if (last < total) {
                         mAdapter.changeState(LOADING_MORE);
-                    }else{
+                    } else {
                         mAdapter.changeState(NO_MORE);
                     }
                 }
-            }
-            else{//如果是通话下滑加载的数据，调用add方法
+            } else {//如果是通话下滑加载的数据，调用add方法
                 mAdapter.addList(list);
             }
             mAdapter.notifyDataSetChanged();
             refreshLayout.setRefreshing(false);
-            isLoading=false;
+            isLoading = false;
             //将清空恢复
-            clear=true;
+            clear = true;
         }
     };
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.stu_frag_yaodian_fore,container,false);//首先填充整个药店碎片的前段布局1
-        context=getContext();
-        ipAddress=getResources().getString(R.string.ipAdrress);
-        Activity a=getActivity();
-        ImmersiveStatusbar.getInstance().Immersive(a.getWindow(),a.getActionBar());//状态栏透明
+        View view = inflater.inflate(R.layout.stu_frag_yaodian_fore, container, false);//首先填充整个药店碎片的前段布局1
+        context = getContext();
+        ipAddress = getResources().getString(R.string.ipAdrress);
+        Activity a = getActivity();
+        ImmersiveStatusbar.getInstance().Immersive(a.getWindow(), a.getActionBar());//状态栏透明
         initView(view);
         initTextView(view);
-        Log.d("msg","获取图片");
-        getData("1",loadNum,"-1","");
+        Log.d("msg", "获取图片");
+        getData("1", loadNum, "-1", "");
 
         return view;
     }
@@ -143,18 +146,18 @@ public class StuDrugStoreFragment extends Fragment {
 
     //初始化RecyclerView布局
     private void initView(View view) {
-        empty=view.findViewById(R.id.empty);
+        empty = view.findViewById(R.id.empty);
         empty.setVisibility(View.GONE);
-        refreshLayout=view.findViewById(R.id.dropDownToRefresh);
+        refreshLayout = view.findViewById(R.id.dropDownToRefresh);
         mRecycler = view.findViewById(R.id.stu_yaodian_recycler);//获取RecyclerView的滚动布局2
-        gridLayoutManager=new GridLayoutManager(getActivity(),2);
+        gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         mRecycler.setLayoutManager(gridLayoutManager);
         //为RecyclerView添加适配器
-        mAdapter = new DrugStoreRecyclerAdapter(getContext(),this);
+        mAdapter = new DrugStoreRecyclerAdapter(getContext(), this);
         mRecycler.setAdapter(mAdapter);
         mRecycler.setVisibility(View.VISIBLE);
-        inputInspect=view.findViewById(R.id.stu_yaodian_search_box);
-        sousuo=view.findViewById(R.id.stu_yaodian_sousuo);
+        inputInspect = view.findViewById(R.id.stu_yaodian_search_box);
+        sousuo = view.findViewById(R.id.stu_yaodian_sousuo);
         searchEditDraw = context.getResources().getDrawable(R.drawable.sousou);
         searchEditDraw.setBounds(0, 0, 55, 55);
         inputInspect.setCompoundDrawables(searchEditDraw, null, null, null);
@@ -171,12 +174,11 @@ public class StuDrugStoreFragment extends Fragment {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getData("1",loadNum,selectedMenu,method.conversion(inputInspect.getText().toString().trim()));
+                getData("1", loadNum, selectedMenu, method.conversion(inputInspect.getText().toString().trim()));
             }
         });
         refreshLayout.setColorSchemeColors(getResources().getColor(R.color.color_bottom));
         refreshLayout.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.color_progressbar));
-
 
 
         //注册搜索的点击事件
@@ -184,8 +186,8 @@ public class StuDrugStoreFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                getData("1",loadNum,selectedMenu,method.conversion(inputInspect.getText().toString().trim()));
-                Log.d("yaodian","choiced:"+selectedMenu+"    input:"+inputInspect.getText().toString().trim());
+                getData("1", loadNum, selectedMenu, method.conversion(inputInspect.getText().toString().trim()));
+                Log.d("yaodian", "choiced:" + selectedMenu + "    input:" + inputInspect.getText().toString().trim());
             }
         });
 
@@ -201,23 +203,22 @@ public class StuDrugStoreFragment extends Fragment {
          */
 
                 //代表当前滚动状态为停止，否则会导致重绘异常     当前滑动到最后一个项目                     并且不在加载，以防止重复加载
-                Log.d("123321","getItemCount:"+mAdapter.getItemCount()+"");
-                Log.d("123321","isloading:"+isLoading);
-                Log.d("123321",recyclerView.SCROLL_STATE_IDLE+"");
-                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem+1== mAdapter.getItemCount() && !isLoading) {
+                Log.d("123321", "getItemCount:" + mAdapter.getItemCount() + "");
+                Log.d("123321", "isloading:" + isLoading);
+                Log.d("123321", recyclerView.SCROLL_STATE_IDLE + "");
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == mAdapter.getItemCount() && !isLoading) {
                     //到达底部之后如果footView的状态不是正在加载的状态,就将 他切换成正在加载的状态
 
-                    Log.d("123321","the last is :"+last+"total is :"+total);
+                    Log.d("123321", "the last is :" + last + "total is :" + total);
                     //如果当前的数据数小于总共的数据数的话则加载
-                    if(last<total){
+                    if (last < total) {
                         isLoading = true;
-                        mAdapter.changeState(1);
+                        mAdapter.changeState(LOADING_MORE);
                         //如果是加载更多获取的数据则不清空list
-                        clear=false;
-                        getData(String.valueOf(Integer.valueOf(last)+1),loadNum,selectedMenu,method.conversion(inputInspect.getText().toString().trim()));
-                    }
-                    else{
-                        mAdapter.changeState(2);
+                        clear = false;
+                        getData(String.valueOf(Integer.valueOf(last) + 1), loadNum, selectedMenu, method.conversion(inputInspect.getText().toString().trim()));
+                    } else {
+                        mAdapter.changeState(NO_MORE);
                     }
                 }
             }
@@ -227,7 +228,7 @@ public class StuDrugStoreFragment extends Fragment {
                 super.onScrolled(recyclerView, dx, dy);
                 //拿到最后一个出现的item的位置
                 lastVisibleItem = gridLayoutManager.findLastVisibleItemPosition();
-                Log.d("123321","last item is :"+lastVisibleItem);
+                Log.d("123321", "last item is :" + lastVisibleItem);
             }
         });
         //实现输入框文本清空功能
@@ -254,8 +255,7 @@ public class StuDrugStoreFragment extends Fragment {
                         }
                     });
 
-                }
-                else {
+                } else {
                     inputInspect.setCompoundDrawables(searchEditDraw, null, searchEditDraw1, null);
                     inputInspect.setOnTouchListener(new View.OnTouchListener() {
                         Drawable drawable = inputInspect.getCompoundDrawables()[2];
@@ -280,28 +280,28 @@ public class StuDrugStoreFragment extends Fragment {
 
     }
 
-    class LoadThread extends Thread{
+    class LoadThread extends Thread {
         private String start;
         private String count;
         private String type;
         private String name;
-        private volatile boolean flag=false;
+        private volatile boolean flag = false;
 
         @Override
         public void run() {
             String url;
-            StringBuilder stringBuilder=new StringBuilder();
+            StringBuilder stringBuilder = new StringBuilder();
             //添加基础字符串
-            stringBuilder.append(ipAddress+"IM/GetDrugInformation?start="+start+"&count="+count);
+            stringBuilder.append(ipAddress + "IM/GetDrugInformation?start=" + start + "&count=" + count);
             //添加类别变量
-            if(!type.equals("-1")){
-                stringBuilder.append("&type="+type);
+            if (!type.equals("-1")) {
+                stringBuilder.append("&type=" + type);
             }
-            if(!name.equals("")){
-                stringBuilder.append("&name="+name);
+            if (!name.equals("")) {
+                stringBuilder.append("&name=" + name);
             }
-            url=stringBuilder.toString();
-            Log.d("yaodian",url);
+            url = stringBuilder.toString();
+            Log.d("yaodian", url);
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
                     .url(url)
@@ -309,7 +309,7 @@ public class StuDrugStoreFragment extends Fragment {
             try {
                 Response response = client.newCall(request).execute();
                 String responseData = response.body().string();
-                Log.d("drugstore","response:"+responseData);
+                Log.d("drugstore", "response:" + responseData);
                 //-------------------------解析-↓---------------------------//
                 try {
                     //获取后面的药品数组
@@ -318,61 +318,61 @@ public class StuDrugStoreFragment extends Fragment {
                     totalNum = jsonArray.length() - 1;
                     currentNum = 0;//每次访问数据库的时候将已加载的数目重置为0
                     Log.d("yaodian", "the total num is :" + String.valueOf(totalNum));
-                    List<DrugInformation> list=new ArrayList<>();
+                    List<DrugInformation> list = new ArrayList<>();
                     JSONObject jsonObject = jsonArray.getJSONObject(0);
 
                     /*-------读取json数组中的第一个信息↓-----*/
-                        String description = jsonObject.getString("Msg");
-                        StringBuilder sb = new StringBuilder();
-                        //开始读取该检索总共有多少条数据
-                        for (int j = 5; ; j++) {
-                            char ch = description.charAt(j);
-                            //如果是数字，则截取下来
-                            if ((int) ch >= 48 && (int) ch <= 57) {
-                                sb.append(ch);
-                            } else {
-                                break;
-                            }
+                    String description = jsonObject.getString("Msg");
+                    StringBuilder sb = new StringBuilder();
+                    //开始读取该检索总共有多少条数据
+                    for (int j = 5; ; j++) {
+                        char ch = description.charAt(j);
+                        //如果是数字，则截取下来
+                        if ((int) ch >= 48 && (int) ch <= 57) {
+                            sb.append(ch);
+                        } else {
+                            break;
                         }
-                        Log.d("yaodianChar", sb.toString());
-                        //用total变量记录当前检索结果的总共数据个数
-                        total= Integer.valueOf(sb.toString().trim());
-                        //last变量用于记录当前已加载的个数
-                        last+=jsonArray.length()-1;
-                        Log.d("storea","total is "+total+"last is :"+last);
+                    }
+                    Log.d("yaodianChar", sb.toString());
+                    //用total变量记录当前检索结果的总共数据个数
+                    total = Integer.valueOf(sb.toString().trim());
+                    //last变量用于记录当前已加载的个数
+                    last += jsonArray.length() - 1;
+                    Log.d("storea", "total is " + total + "last is :" + last);
                     /*-------读取json数组中的第一个信息↑-----*/
 
                     for (int i = 1; i < jsonArray.length(); i++) {
-                        Log.d("drugstore",i+"");
+                        Log.d("drugstore", i + "");
                         //如果为当前的第一条数据的话，则读取数据数量的信息
-                        jsonObject=jsonArray.getJSONObject(i);
-                            try {
-                                Log.d("yaodianName", jsonObject.getString("Drug_Name"));
-                                final DrugInformation drug_information = new DrugInformation(); //创建药品对象
-                                drug_information.setDrug_Describe(jsonObject.getString("Drug_Describe"));
-                                drug_information.setDrug_Amount(jsonObject.getString("Drug_Amount"));
-                                drug_information.setDrug_Name(jsonObject.getString("Drug_Name"));
-                                drug_information.setDrug_Price(df.format(Double.valueOf(jsonObject.getString("Drug_Price"))));
-                                drug_information.setDrug_Type(jsonObject.getString("Drug_Type"));
-                                drug_information.setDrug_OTC(jsonObject.getString("Drug_OTC"));
-                                drug_information.setId(jsonObject.getString("Drug_Id"));
-                                final String imageUrl = jsonObject.getString("Drug_Index");
-                                drug_information.setDrug_Picture( Drawable.createFromStream(new URL(ipAddress+imageUrl).openStream(), "image.jpg"));
-                                if(flag){
-                                    Log.d("drugstore","中断--------------------------");
-                                    return;
-                                }
-                                list.add(drug_information);//将设置好的对象添加到数组里
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                        jsonObject = jsonArray.getJSONObject(i);
+                        try {
+                            Log.d("yaodianName", jsonObject.getString("Drug_Name"));
+                            final DrugInformation drug_information = new DrugInformation(); //创建药品对象
+                            drug_information.setDrug_Describe(jsonObject.getString("Drug_Describe"));
+                            drug_information.setDrug_Amount(jsonObject.getString("Drug_Amount"));
+                            drug_information.setDrug_Name(jsonObject.getString("Drug_Name"));
+                            drug_information.setDrug_Price(df.format(Double.valueOf(jsonObject.getString("Drug_Price"))));
+                            drug_information.setDrug_Type(jsonObject.getString("Drug_Type"));
+                            drug_information.setDrug_OTC(jsonObject.getString("Drug_OTC"));
+                            drug_information.setId(jsonObject.getString("Drug_Id"));
+                            final String imageUrl = jsonObject.getString("Drug_Index");
+                            drug_information.setDrug_Picture(Drawable.createFromStream(new URL(ipAddress + imageUrl).openStream(), "image.jpg"));
+                            if (flag) {
+                                Log.d("drugstore", "中断--------------------------");
+                                return;
                             }
+                            list.add(drug_information);//将设置好的对象添加到数组里
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
                     }
 
-                    Message msg=Message.obtain();
-                    msg.obj=list;
+                    Message msg = Message.obtain();
+                    msg.obj = list;
                     handler.sendMessage(msg);
-                }catch(JSONException e){
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 //-------------------------解析-↑---------------------------//
@@ -384,258 +384,263 @@ public class StuDrugStoreFragment extends Fragment {
 
 
     //该方法用于从数据库获取数据,参数分别为要搜索结果的开始，结束，药品类型(-1代表全部)，药品名字
-    private void getData(final String start, final String count, final String type, final String name){
-        if(clear){
-            last=0;
+    private void getData(final String start, final String count, final String type, final String name) {
+        //加载的过程中显示recycleview
+        mAdapter.mList.clear();
+        mAdapter.changeState(LOADING_MORE);
+        empty.setVisibility(View.GONE);
+        mRecycler.setVisibility(View.VISIBLE);
+        if (clear) {
+            last = 0;
         }
         refreshLayout.setRefreshing(true);
         //设置加载图片的显示
-               if(load!=null){
-                   boolean f=load.isAlive();
-                   Log.d("drugstore","------------------------------"+f);
-                   if(f){
-                    load.flag=true;
-                   }
-               }
-               Log.d("drugstore","中断后-------------------------------------------------");
-        load= new LoadThread();
-        load.start=start;
-        load.count=count;
-        load.type=type;
-        load.name=name;
+        if (load != null) {
+            boolean f = load.isAlive();
+            Log.d("drugstore", "------------------------------" + f);
+            if (f) {
+                load.flag = true;
+            }
+        }
+        Log.d("drugstore", "中断后-------------------------------------------------");
+        load = new LoadThread();
+        load.start = start;
+        load.count = count;
+        load.type = type;
+        load.name = name;
         load.start();
     }
-    private void initTextView(View view){
+
+    private void initTextView(View view) {
 
         //获取控件实例
-        addNewDrug=view.findViewById(R.id.doc_yaodian_add_yaopin);
+        addNewDrug = view.findViewById(R.id.doc_yaodian_add_yaopin);
         //如果是医生登录则显示添加药品的按钮
-        if(method.getFileData("Type",getContext()).equals("Doc")){
+        if (method.getFileData("Type", getContext()).equals("Doc")) {
             addNewDrug.setVisibility(View.VISIBLE);
             addNewDrug.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                        Intent intent=new Intent(getContext(), UpDrugMsgActivity.class);
-                        intent.putExtra("adjust","0");
-                        startActivity(intent);
+                    Intent intent = new Intent(getContext(), UpDrugMsgActivity.class);
+                    intent.putExtra("adjust", "0");
+                    startActivity(intent);
                 }
             });
-        }
-        else{
+        } else {
             addNewDrug.setVisibility(View.INVISIBLE);
         }
-        quanbu=view.findViewById(R.id.quanbu);
-         nanke=view.findViewById(R.id.nanke);
-        fuke=view.findViewById(R.id.fuke);
-         huxike=view.findViewById(R.id.huxike);
-        xiaohuake=view.findViewById(R.id.xiaohuake);
-        neifenmike=view.findViewById(R.id.neifenmike);
-       xinxueguanke=view.findViewById(R.id.xinxueguanke);
-         miniaoke=view.findViewById(R.id.miniaoke);
-         xueyeke=view.findViewById(R.id.xueyeke);
-         fengshigu=view.findViewById(R.id.fengshigu);
-        erbihouke=view.findViewById(R.id.erbihouke);
-        yanke=view.findViewById(R.id.yanke);
-        kouqiangke=view.findViewById(R.id.kouqinagke);
-        pifuke=view.findViewById(R.id.pifuke);
-        shenjingke=view.findViewById(R.id.shenjingke);
-        ganranke=view.findViewById(R.id.ganranke);
-      baojianshipin=view.findViewById(R.id.baojianshipin);
-         yiliaoqixie=view.findViewById(R.id.yiliaoqixie);
-        qita=view.findViewById(R.id.qita);
-        lastColorName=quanbu;
+        quanbu = view.findViewById(R.id.quanbu);
+        nanke = view.findViewById(R.id.nanke);
+        fuke = view.findViewById(R.id.fuke);
+        huxike = view.findViewById(R.id.huxike);
+        xiaohuake = view.findViewById(R.id.xiaohuake);
+        neifenmike = view.findViewById(R.id.neifenmike);
+        xinxueguanke = view.findViewById(R.id.xinxueguanke);
+        miniaoke = view.findViewById(R.id.miniaoke);
+        xueyeke = view.findViewById(R.id.xueyeke);
+        fengshigu = view.findViewById(R.id.fengshigu);
+        erbihouke = view.findViewById(R.id.erbihouke);
+        yanke = view.findViewById(R.id.yanke);
+        kouqiangke = view.findViewById(R.id.kouqinagke);
+        pifuke = view.findViewById(R.id.pifuke);
+        shenjingke = view.findViewById(R.id.shenjingke);
+        ganranke = view.findViewById(R.id.ganranke);
+        baojianshipin = view.findViewById(R.id.baojianshipin);
+        yiliaoqixie = view.findViewById(R.id.yiliaoqixie);
+        qita = view.findViewById(R.id.qita);
+        lastColorName = quanbu;
         lastColorName.setTextColor(Color.parseColor("#FD0896F5"));
-        quanbu.setOnClickListener(new View.OnClickListener(){
+        quanbu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu="-1";
+                selectedMenu = "-1";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 quanbu.setTextColor(Color.parseColor("#FD0896F5"));
-                lastColorName=quanbu;
-                Log.d("yaodian","test");
-                getData("1",loadNum,"-1","");
+                lastColorName = quanbu;
+                Log.d("yaodian", "test");
+                getData("1", loadNum, "-1", "");
             }
         });
-        nanke.setOnClickListener(new View.OnClickListener(){
+        nanke.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu="1";
+                selectedMenu = "1";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 nanke.setTextColor(Color.parseColor("#FD0896F5"));
-                lastColorName=nanke;
-                getData("1",loadNum,"1","");
+                lastColorName = nanke;
+                getData("1", loadNum, "1", "");
             }
         });
-        fuke.setOnClickListener(new View.OnClickListener(){
+        fuke.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu="2";
+                selectedMenu = "2";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 fuke.setTextColor(Color.parseColor("#FD0896F5"));
-                lastColorName=fuke;
-                getData("1",loadNum,"2","");
+                lastColorName = fuke;
+                getData("1", loadNum, "2", "");
             }
         });
 
-        huxike.setOnClickListener(new View.OnClickListener(){
+        huxike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu="3";
+                selectedMenu = "3";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 huxike.setTextColor(Color.parseColor("#FD0896F5"));
-                lastColorName=huxike;
-                getData("1",loadNum,"3","");
+                lastColorName = huxike;
+                getData("1", loadNum, "3", "");
             }
         });
 
-        xiaohuake.setOnClickListener(new View.OnClickListener(){
+        xiaohuake.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu="4";
+                selectedMenu = "4";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 xiaohuake.setTextColor(Color.parseColor("#FD0896F5"));
-                lastColorName=xiaohuake;
-                getData("1",loadNum,"4","");
+                lastColorName = xiaohuake;
+                getData("1", loadNum, "4", "");
             }
         });
-        neifenmike.setOnClickListener(new View.OnClickListener(){
+        neifenmike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu="5";
+                selectedMenu = "5";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 neifenmike.setTextColor(Color.parseColor("#FD0896F5"));
-                lastColorName=neifenmike;
-                getData("1",loadNum,"5","");
+                lastColorName = neifenmike;
+                getData("1", loadNum, "5", "");
             }
         });
-        xinxueguanke.setOnClickListener(new View.OnClickListener(){
+        xinxueguanke.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu="6";
+                selectedMenu = "6";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 xinxueguanke.setTextColor(Color.parseColor("#FD0896F5"));
-                lastColorName=xinxueguanke;
-                getData("1",loadNum,"6","");
+                lastColorName = xinxueguanke;
+                getData("1", loadNum, "6", "");
             }
         });
-        miniaoke.setOnClickListener(new View.OnClickListener(){
+        miniaoke.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu="7";
+                selectedMenu = "7";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 miniaoke.setTextColor(Color.parseColor("#FD0896F5"));
-                lastColorName=miniaoke;
-                getData("1",loadNum,"7","");
+                lastColorName = miniaoke;
+                getData("1", loadNum, "7", "");
             }
         });
-        xueyeke.setOnClickListener(new View.OnClickListener(){
+        xueyeke.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu="8";
+                selectedMenu = "8";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 xueyeke.setTextColor(Color.parseColor("#FD0896F5"));
-                lastColorName=xueyeke;
-                getData("1",loadNum,"8","");
+                lastColorName = xueyeke;
+                getData("1", loadNum, "8", "");
             }
         });
-        fengshigu.setOnClickListener(new View.OnClickListener(){
+        fengshigu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu="9";
+                selectedMenu = "9";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 fengshigu.setTextColor(Color.parseColor("#FD0896F5"));
-                lastColorName=fengshigu;
-                getData("1",loadNum,"9","");
+                lastColorName = fengshigu;
+                getData("1", loadNum, "9", "");
             }
         });
-        erbihouke.setOnClickListener(new View.OnClickListener(){
+        erbihouke.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu="10";
+                selectedMenu = "10";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 erbihouke.setTextColor(Color.parseColor("#FD0896F5"));
-                lastColorName=erbihouke;
-                getData("1",loadNum,"10","");
+                lastColorName = erbihouke;
+                getData("1", loadNum, "10", "");
             }
         });
-        yanke.setOnClickListener(new View.OnClickListener(){
+        yanke.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu="11";
+                selectedMenu = "11";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 yanke.setTextColor(Color.parseColor("#FD0896F5"));
-                lastColorName=yanke;
-                getData("1",loadNum,"11","");
+                lastColorName = yanke;
+                getData("1", loadNum, "11", "");
             }
         });
-        kouqiangke.setOnClickListener(new View.OnClickListener(){
+        kouqiangke.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu="12";
+                selectedMenu = "12";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 kouqiangke.setTextColor(Color.parseColor("#FD0896F5"));
-                lastColorName=kouqiangke;
-                getData("1",loadNum,"12","");
+                lastColorName = kouqiangke;
+                getData("1", loadNum, "12", "");
             }
         });
-        pifuke.setOnClickListener(new View.OnClickListener(){
+        pifuke.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu="13";
+                selectedMenu = "13";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 pifuke.setTextColor(Color.parseColor("#FD0896F5"));
-                lastColorName=pifuke;
-                getData("1",loadNum,"13","");
+                lastColorName = pifuke;
+                getData("1", loadNum, "13", "");
             }
         });
-        shenjingke.setOnClickListener(new View.OnClickListener(){
+        shenjingke.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu="14";
+                selectedMenu = "14";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 shenjingke.setTextColor(Color.parseColor("#FD0896F5"));
-                lastColorName=shenjingke;
-                getData("1",loadNum,"14","");
+                lastColorName = shenjingke;
+                getData("1", loadNum, "14", "");
             }
         });
-        ganranke.setOnClickListener(new View.OnClickListener(){
+        ganranke.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu="15";
+                selectedMenu = "15";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 ganranke.setTextColor(Color.parseColor("#FD0896F5"));
-                lastColorName=ganranke;
-                getData("1",loadNum,"15","");
+                lastColorName = ganranke;
+                getData("1", loadNum, "15", "");
             }
         });
-        baojianshipin.setOnClickListener(new View.OnClickListener(){
+        baojianshipin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu="16";
+                selectedMenu = "16";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 baojianshipin.setTextColor(Color.parseColor("#FD0896F5"));
-                lastColorName=baojianshipin;
-                getData("1",loadNum,"16","");
+                lastColorName = baojianshipin;
+                getData("1", loadNum, "16", "");
             }
         });
-        yiliaoqixie.setOnClickListener(new View.OnClickListener(){
+        yiliaoqixie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu="17";
+                selectedMenu = "17";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 yiliaoqixie.setTextColor(Color.parseColor("#FD0896F5"));
-                lastColorName=yiliaoqixie;
-                getData("1",loadNum,"17","");
+                lastColorName = yiliaoqixie;
+                getData("1", loadNum, "17", "");
             }
         });
-        qita.setOnClickListener(new View.OnClickListener(){
+        qita.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu="100";
+                selectedMenu = "100";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 qita.setTextColor(Color.parseColor("#FD0896F5"));
-                lastColorName=qita;
-                getData("1",loadNum,"100","");
+                lastColorName = qita;
+                getData("1", loadNum, "100", "");
             }
         });
     }

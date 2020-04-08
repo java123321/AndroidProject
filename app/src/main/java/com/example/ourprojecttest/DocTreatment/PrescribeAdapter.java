@@ -17,7 +17,6 @@ import com.example.ourprojecttest.R;
 import java.util.ArrayList;
 
 public class PrescribeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    CommonMethod method = new CommonMethod();
     Intent intent = new Intent("com.example.ourprojecttest.Perscribe");
     private Context mContext;
     private ArrayList<PrescribeBean> mList = new ArrayList<>();
@@ -50,8 +49,8 @@ public class PrescribeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     holder.drugNumber.setText(String.valueOf(--num));
                     mList.get(holder.rank).setDrugAmount(num);
                     intent.putExtra("sub", holder.singlePrice);
-
                     mContext.sendBroadcast(intent);
+                    intent.removeExtra("sub");
                 }
             }
         });
@@ -64,7 +63,7 @@ public class PrescribeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 mList.get(holder.rank).setDrugAmount(num);
                 intent.putExtra("add", holder.singlePrice);
                 mContext.sendBroadcast(intent);
-
+                intent.removeExtra("add");
             }
         });
         return holder;
