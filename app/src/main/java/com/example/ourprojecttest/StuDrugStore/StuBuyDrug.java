@@ -315,8 +315,10 @@ public class StuBuyDrug extends AppCompatActivity {
         //设置用户的收货地址
         String add = method.getFileData("Address", StuBuyDrug.this);
         Log.d("buyyaopin---", add);
-        if (add.equals("")) {
-            address.setText("您无收获地址，点击设置收货地址");
+        if (add.equals("用户暂未设置收货地址")||add == null) {
+            address.setText("您信息不全，点击完善信息");
+            address.setHighlightColor(0x6633B5E5);
+            buy.setEnabled(false);
         } else {
             address.setText(method.getFileData("Name", StuBuyDrug.this) + " " + method.getFileData("Phone", StuBuyDrug.this) + "\n" + add);
         }
