@@ -177,6 +177,8 @@ public class RegisterActivity extends AppCompatActivity {
             getmsg.setClickable(false);
             getmsg.setText("(" + millisUntilFinished / 1000 + ") 秒后可重发");
         }
+
+
         @Override
         public void onFinish() {
             getmsg.setText("重新获取验证码");

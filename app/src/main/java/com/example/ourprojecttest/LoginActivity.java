@@ -163,6 +163,7 @@ public class LoginActivity extends AppCompatActivity {
         userName.setCompoundDrawables(searchEditDraw, null, searchEditDraw1, null);
         passWord.setCompoundDrawables(searchEditDraw2, null, searchEditDraw3, null);
         //注册点击密码的点击事件
+
         login_forget_pass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
