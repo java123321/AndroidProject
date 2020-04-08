@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
 import com.example.ourprojecttest.AlipayModule.AuthResult;
+import com.example.ourprojecttest.LoginActivity;
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 import com.example.ourprojecttest.AlipayModule.OrderInfoUtil2_0;
@@ -69,6 +70,7 @@ public class StuBuyDrug extends AppCompatActivity {
     private LinearLayout addressChange;
     private boolean AliPayFlag = true;
     double unitePrice;
+    private boolean addressMessage = true;
     private DecimalFormat df = new DecimalFormat("##0.00");
 
     @SuppressLint("HandlerLeak")
@@ -200,16 +202,23 @@ public class StuBuyDrug extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (AliPayFlag) {
-                    payV2(getIntent().getStringExtra("price"));
+                if (addressMessage){
+                    if (AliPayFlag) {
+                        payV2(getIntent().getStringExtra("price"));
+                    } else {
+                        //如果用户选中的是微信支付，则弹出提示
+                        AlertDialog.Builder bb = new AlertDialog.Builder(StuBuyDrug.this);
+                        bb.setPositiveButton("确定", null);
+                        bb.setMessage("微信支付功能尚未开通，尽请期待！");
+                        bb.setTitle("提示");
+                        bb.show();
+                    }
                 } else {
-                    //如果用户选中的是微信支付，则弹出提示
-                    AlertDialog.Builder bb = new AlertDialog.Builder(StuBuyDrug.this);
-                    bb.setPositiveButton("确定", null);
-                    bb.setMessage("微信支付功能尚未开通，尽请期待！");
-                    bb.setTitle("提示");
-                    bb.show();
+                    Toast toast = Toast.makeText(StuBuyDrug.this, "请完善信息", Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                    toast.show();
                 }
+
 
             }
         });
@@ -316,9 +325,9 @@ public class StuBuyDrug extends AppCompatActivity {
         String add = method.getFileData("Address", StuBuyDrug.this);
         Log.d("buyyaopin---", add);
         if (add.equals("用户暂未设置收货地址")||add == null) {
-            address.setText("您信息不全，点击完善信息");
+            address.setText("您收货地址信息不完整，点击完善信息");
             address.setHighlightColor(0x6633B5E5);
-            buy.setEnabled(false);
+            addressMessage = false;
         } else {
             address.setText(method.getFileData("Name", StuBuyDrug.this) + " " + method.getFileData("Phone", StuBuyDrug.this) + "\n" + add);
         }
