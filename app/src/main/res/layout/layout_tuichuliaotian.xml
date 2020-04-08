@@ -17,7 +17,7 @@
                 android:layout_height="45dp"
                 android:layout_gravity="center_vertical"
                 android:gravity="center"
-                android:text="退出接诊"
+                android:text="退出"
                 android:textColor="#141414"
                 android:textSize="18dp" />
             <View
@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:gravity="center"
-                android:text="您确定要退出接诊吗？"
+                android:text="您确定要结束对当前学生的接诊？"
                 android:textSize="14dp" />
         </LinearLayout>
 
