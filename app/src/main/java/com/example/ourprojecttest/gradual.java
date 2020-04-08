@@ -44,7 +44,7 @@ public class gradual extends View {
 
     public void init() {
         postInvalidate();
-        ValueAnimator animator=ValueAnimator.ofInt(0,64);
+        ValueAnimator animator=ValueAnimator.ofInt(0,100);
         animator.setDuration(5000);
         animator.setRepeatCount(ValueAnimator.INFINITE);
         animator.setRepeatMode(ValueAnimator.REVERSE);
@@ -53,37 +53,8 @@ public class gradual extends View {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 animatedValue = (int) animation.getAnimatedValue();
-                if (animatedValue<64) {
-                    colorStart = Color.rgb(0, 255-animatedValue, 255);
-                    colorEnd = Color.rgb(0, 191+animatedValue, 255);
-                }else if (animatedValue==64){
-                    ValueAnimator animator1=ValueAnimator.ofInt(0,90);
-                    animator1.setDuration(5000);
-                    animator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                        @Override
-                        public void onAnimationUpdate(ValueAnimator animation) {
-                            animatedValue1 = (int) animation.getAnimatedValue();
-                            colorStart = Color.rgb(0,191-animatedValue1, 255);
-                            colorEnd = Color.rgb(0,255-animatedValue1, 255);
-                            if (animatedValue1==90){
-                                ValueAnimator animator2=ValueAnimator.ofInt(0,90);
-                                animator2.setDuration(5000);
-                                animator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                                    @Override
-                                    public void onAnimationUpdate(ValueAnimator animation) {
-                                        int animatedValue2 = (int) animation.getAnimatedValue();
-                                        colorStart = Color.rgb(0,101+animatedValue2,255);
-                                        colorEnd = Color.rgb(0,165+animatedValue2,255);
-                                        invalidate();
-                                    }
-                                });
-                                animator2.start();
-                            }
-                            invalidate();
-                        }
-                    });
-                    animator1.start();
-                }
+                    colorStart = Color.rgb(0+animatedValue, 255-animatedValue, 255);
+                    colorEnd = Color.rgb(0+animatedValue, 191-animatedValue, 255);
                 invalidate();
             }
         });

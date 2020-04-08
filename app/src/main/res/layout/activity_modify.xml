@@ -48,11 +48,11 @@
         </com.example.ourprojecttest.Utils.Roundimage>
 
         <ImageView
-            android:layout_width="11dp"
-            android:layout_height="wrap_content"
+            android:layout_width="10dp"
+            android:layout_height="20dp"
+            android:layout_marginRight="5dp"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:layout_marginRight="9dp"
             android:background="@drawable/jiantou"></ImageView>
     </LinearLayout>
     <View

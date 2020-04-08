@@ -44,12 +44,12 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:src="@drawable/yonghu1"></com.example.ourprojecttest.Utils.Roundimage>
-
             <ImageView
-                android:layout_width="11dp"
-                android:layout_height="wrap_content"
+                android:layout_width="10dp"
+                android:layout_height="20dp"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
+                android:layout_marginRight="5dp"
                 android:background="@drawable/jiantou"></ImageView>
         </LinearLayout>
         <View
@@ -81,12 +81,13 @@
                 android:gravity="center"
                 android:text="令狐聪"></TextView>
             <ImageView
-                android:layout_width="11dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_width="10dp"
+                android:layout_height="20dp"
                 android:layout_gravity="center_vertical"
-                android:background="@drawable/jiantou">
-            </ImageView>
+                android:layout_weight="1"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/jiantou"></ImageView>
+
         </LinearLayout>
         <View
             android:layout_width="match_parent"
@@ -115,13 +116,13 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="2"
                 android:gravity="center"
-                android:text="2391833769@qq.com"></TextView>
-
+                ></TextView>
             <ImageView
-                android:layout_width="11dp"
-                android:layout_height="wrap_content"
+                android:layout_width="10dp"
+                android:layout_height="20dp"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
+                android:layout_marginRight="5dp"
                 android:background="@drawable/jiantou"></ImageView>
         </LinearLayout>
         <View
@@ -152,13 +153,13 @@
             android:gravity="center"
             android:layout_weight="2">
         </TextView>
-        <ImageView
-            android:layout_width="11dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/jiantou"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1">
-        </ImageView>
+            <ImageView
+                android:layout_width="10dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/jiantou"></ImageView>
         </LinearLayout>
         <View
             android:layout_width="match_parent"
@@ -186,15 +187,14 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="2"
-                android:gravity="center"
-                android:text="皮肤科"></TextView>
+                android:gravity="center"/>
             <ImageView
-                android:layout_width="11dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/jiantou"
+                android:layout_width="10dp"
+                android:layout_height="20dp"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="1">
-            </ImageView>
+                android:layout_weight="1"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/jiantou"></ImageView>
         </LinearLayout>
         <View
             android:layout_width="match_parent"
@@ -223,14 +223,14 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="2"
                 android:gravity="center"
-                android:text="主任医师"></TextView>
+               ></TextView>
             <ImageView
-                android:layout_width="11dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/jiantou"
+                android:layout_width="10dp"
+                android:layout_height="20dp"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="1">
-            </ImageView>
+                android:layout_weight="1"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/jiantou"></ImageView>
         </LinearLayout>
         <View
             android:layout_width="match_parent"

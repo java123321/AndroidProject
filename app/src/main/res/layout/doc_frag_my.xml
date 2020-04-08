@@ -28,7 +28,8 @@
             android:layout_height="70dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="5dp"
-            android:src="@drawable/yonghu1"></com.example.ourprojecttest.Utils.Roundimage>
+            android:src="@drawable/yonghu1">
+        </com.example.ourprojecttest.Utils.Roundimage>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -96,8 +97,9 @@
                     android:text="我的资料" />
 
                 <ImageView
-                    android:layout_width="11dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="10dp"
+                    android:layout_height="20dp"
+                    android:layout_marginRight="5dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:background="@drawable/jiantou"></ImageView>
@@ -130,10 +132,11 @@
 " />
 
             <ImageView
-                android:layout_width="11dp"
-                android:layout_height="wrap_content"
+                android:layout_width="10dp"
+                android:layout_height="20dp"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
+                android:layout_marginRight="5dp"
                 android:background="@drawable/jiantou" />
         </LinearLayout>
             <View
@@ -165,10 +168,11 @@
                     android:text="修改密码" />
 
                 <ImageView
-                    android:layout_width="11dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="10dp"
+                    android:layout_height="20dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
+                    android:layout_marginRight="5dp"
                     android:background="@drawable/jiantou" />
             </LinearLayout>
             <View
@@ -200,10 +204,11 @@
                     android:text="退出登录" />
 
                 <ImageView
-                    android:layout_width="11dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="10dp"
+                    android:layout_height="20dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
+                    android:layout_marginRight="5dp"
                     android:background="@drawable/jiantou" />
             </LinearLayout>
             <View

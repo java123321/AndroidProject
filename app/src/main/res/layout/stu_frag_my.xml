@@ -56,10 +56,11 @@
                 </LinearLayout>
 
                 <ImageView
-                    android:layout_width="11dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="10dp"
+                    android:layout_height="20dp"
+                    android:layout_marginRight="5dp"
                     android:layout_gravity="center_vertical"
-                    android:layout_weight="1.5"
+                    android:layout_weight="1"
                     android:background="@drawable/jiantou"></ImageView>
             </LinearLayout>
         </FrameLayout>
@@ -101,8 +102,9 @@
                     android:text="查看历史订单"></TextView>
 
                 <ImageView
-                    android:layout_width="11dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="10dp"
+                    android:layout_height="20dp"
+                    android:layout_marginRight="5dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:background="@drawable/jiantou"></ImageView>
@@ -217,8 +219,9 @@
                     android:text="地址管理" />
 
                 <ImageView
-                    android:layout_width="11dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="10dp"
+                    android:layout_height="20dp"
+                    android:layout_marginRight="5dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:background="@drawable/jiantou"></ImageView>
@@ -252,8 +255,9 @@
                     android:text="购物车" />
 
                 <ImageView
-                    android:layout_width="11dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="10dp"
+                    android:layout_height="20dp"
+                    android:layout_marginRight="5dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:background="@drawable/jiantou"></ImageView>
@@ -288,8 +292,9 @@
                     android:text="修改密码" />
 
                 <ImageView
-                    android:layout_width="11dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="10dp"
+                    android:layout_height="20dp"
+                    android:layout_marginRight="5dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:background="@drawable/jiantou"></ImageView>
@@ -323,8 +328,9 @@
                     android:text="退出登录" />
 
                 <ImageView
-                    android:layout_width="11dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="10dp"
+                    android:layout_height="20dp"
+                    android:layout_marginRight="5dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:background="@drawable/jiantou"></ImageView>
