@@ -52,6 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Button btnRegister;
     private Button getmsg;
     private TimeCount time;
+    private Drawable searchEditDraw,searchEditDraw1;
     private boolean isHide=true;
     private Drawable drawableEyeOpen,drawableEyeClose;
     private Handler handler = new Handler(){
@@ -84,10 +85,15 @@ public class RegisterActivity extends AppCompatActivity {
         time = new TimeCount(60000, 1000);
 
         initView();
+        searchEditDraw = getResources().getDrawable(R.drawable.biyan);
+        searchEditDraw.setBounds(0, 0, 60, 60);
+        searchEditDraw1 = getResources().getDrawable(R.drawable.zhengyan);
+        searchEditDraw1.setBounds(0, 0, 60, 60);
         initListener();
         drawableEyeClose = getResources().getDrawable(R.drawable.biyan);
         drawableEyeOpen = getResources().getDrawable(R.drawable.zhengyan);
-
+        stuPwd.setCompoundDrawables(null, null, searchEditDraw, null);
+        stuPwd_two.setCompoundDrawables(null, null, searchEditDraw, null);
         stuPwd.setOnTouchListener(new View.OnTouchListener() {
 
             final Drawable[] drawables = stuPwd.getCompoundDrawables();//获取密码框的drawable数组
@@ -104,7 +110,7 @@ public class RegisterActivity extends AppCompatActivity {
                     if (isHide) {
                         drawableEyeOpen.setBounds(drawables[2].getBounds());//设置睁开眼睛的界限
 
-                        stuPwd.setCompoundDrawables(drawables[0], null, drawableEyeOpen, null);
+                        stuPwd.setCompoundDrawables(drawables[0], null,searchEditDraw1, null);
                         Log.d("loginfalse", String.valueOf(isHide));
                         stuPwd.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                         isHide = false;
@@ -112,7 +118,7 @@ public class RegisterActivity extends AppCompatActivity {
                     //如果当前密码框是明文
                     else {
                         drawableEyeClose.setBounds(drawables[2].getBounds());//设置闭眼的界限
-                        stuPwd.setCompoundDrawables(drawables[0], null, drawableEyeClose, null);
+                        stuPwd.setCompoundDrawables(drawables[0], null, searchEditDraw, null);
 
                         Log.d("logintrue", String.valueOf(isHide));
                         stuPwd.setTransformationMethod(PasswordTransformationMethod.getInstance());

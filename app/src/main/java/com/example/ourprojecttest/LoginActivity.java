@@ -58,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private EditText userName, passWord;
     private boolean isHide = true;
+    private Drawable searchEditDraw,searchEditDraw1,searchEditDraw2,searchEditDraw3,searchEditDraw4;
     private TextView login_forget_pass;
     private Drawable drawableEyeOpen, drawableEyeClose;
     private CommonMethod method = new CommonMethod();
@@ -149,6 +150,18 @@ public class LoginActivity extends AppCompatActivity {
         //获取加载圆圈
         progressBar = findViewById(R.id.loginProgress);
         progressBar.setVisibility(View.INVISIBLE);
+        searchEditDraw = getResources().getDrawable(R.drawable.yonghu);
+        searchEditDraw1 = getResources().getDrawable(R.drawable.chahao);
+        searchEditDraw2 = getResources().getDrawable(R.drawable.suo);
+        searchEditDraw3 = getResources().getDrawable(R.drawable.biyan);
+        searchEditDraw.setBounds(0, 0, 60, 60);
+        searchEditDraw1.setBounds(0, 0, 60, 60);
+        searchEditDraw2.setBounds(0, 0, 60, 60);
+        searchEditDraw3.setBounds(0, 0, 60, 60);
+        searchEditDraw4 = getResources().getDrawable(R.drawable.zhengyan);
+        searchEditDraw4.setBounds(0, 0, 60, 60);
+        userName.setCompoundDrawables(searchEditDraw, null, searchEditDraw1, null);
+        passWord.setCompoundDrawables(searchEditDraw2, null, searchEditDraw3, null);
         //注册点击密码的点击事件
         login_forget_pass.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,7 +202,7 @@ public class LoginActivity extends AppCompatActivity {
                     //如果当前密码框是密文
                     if (isHide) {
                         drawableEyeOpen.setBounds(drawables[2].getBounds());//设置睁开眼睛的界限
-                        passWord.setCompoundDrawables(drawables[0], null, drawableEyeOpen, null);
+                        passWord.setCompoundDrawables(drawables[0], null, searchEditDraw4, null);
                         Log.d("loginfalse", String.valueOf(isHide));
                         passWord.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                         isHide = false;
@@ -197,7 +210,7 @@ public class LoginActivity extends AppCompatActivity {
                     //如果当前密码框是明文
                     else {
                         drawableEyeClose.setBounds(drawables[2].getBounds());//设置闭眼的界限
-                        passWord.setCompoundDrawables(drawables[0], null, drawableEyeClose, null);
+                        passWord.setCompoundDrawables(drawables[0], null, searchEditDraw3, null);
                         Log.d("logintrue", String.valueOf(isHide));
                         passWord.setTransformationMethod(PasswordTransformationMethod.getInstance());
                         isHide = true;
