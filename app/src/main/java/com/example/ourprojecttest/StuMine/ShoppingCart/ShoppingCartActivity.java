@@ -34,6 +34,7 @@ import android.widget.Toast;
 import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
 import com.example.ourprojecttest.AlipayModule.AuthResult;
+import com.example.ourprojecttest.StuDrugStore.StuBuyDrug;
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 import com.example.ourprojecttest.AlipayModule.OrderInfoUtil2_0;
@@ -73,6 +74,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
     private LinearLayout selectAllButton;
     private ImageView selectAll;
     private boolean selectAllFlag = false;
+    private boolean AddressMessage = true;
     private String stuId;
     private CommonMethod method = new CommonMethod();
     private DecimalFormat df = new DecimalFormat("##0.00");
@@ -374,6 +376,11 @@ public class ShoppingCartActivity extends AppCompatActivity {
         mAdapter = new ShoppingCartAdapter(this);
         mRecycler.setAdapter(mAdapter);
         lists = method.readListFromSdCard("ShoppingCartList");
+
+        String add = method.getFileData("Address", ShoppingCartActivity.this);
+        if (add.equals("用户暂未设置收货地址")||add == "" ) {
+            AddressMessage = false;
+        }
         //当购物车内容是空的情况下
         if (lists == null || lists.size() == 0) {
             Log.d("cart", "null");
@@ -418,8 +425,15 @@ public class ShoppingCartActivity extends AppCompatActivity {
                 else{
                     //立即购买的点击事件
                     if (buyNow.getText().toString().trim().equals("去结算")) {
-                        //去付款
-                        payV2(orderPrice);
+                        if (AddressMessage){
+                            //去付款
+                            payV2(orderPrice);
+                        }else {
+                            Toast toast = Toast.makeText(ShoppingCartActivity.this, "请完善信息", Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                            toast.show();
+                        }
+
                     } else {//清除商品的点击事
                         //弹出确认框
                         // AlertDialog.Builder builder = new AlertDialog.Builder(ShoppingCartActivity.this);
