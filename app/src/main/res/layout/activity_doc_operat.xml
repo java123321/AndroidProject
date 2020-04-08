@@ -77,6 +77,7 @@
         android:layout_gravity="center"
         android:textColor="#F1EEEE"
         android:textSize="18dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/style_jiesuan"
         android:text="接     诊" />
 </LinearLayout>

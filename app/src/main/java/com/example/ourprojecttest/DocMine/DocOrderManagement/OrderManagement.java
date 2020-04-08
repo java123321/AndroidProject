@@ -251,6 +251,8 @@ private void havePost(String orderId,String type){
                 getData(type);
             }
         });
+        refresh.setColorSchemeColors(getResources().getColor(R.color.color_bottom));
+        refresh.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.color_progressbar));
         intentFilter=new IntentFilter();
         intentFilter.addAction("com.example.ourprojecttest.OrderManagement");
         localReceiver=new LocalReceiver();
