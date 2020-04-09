@@ -1,6 +1,8 @@
 package com.example.ourprojecttest.StuMine.StuNeedToReceive;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -133,9 +135,18 @@ public class NeedToReceiveAdapter extends RecyclerView.Adapter <RecyclerView.Vie
                 footViewHolder.confirmReceive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                    intentToReceiveOrder.putExtra("receive",bean.getOrderId());
-                    mContext.sendBroadcast(intentToReceiveOrder);
-
+                        AlertDialog.Builder builder  = new AlertDialog.Builder(mContext);
+                        builder.setTitle("提示" ) ;
+                        builder.setMessage("确认已收到药品?" ) ;
+                        builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                intentToReceiveOrder.putExtra("receive",bean.getOrderId());
+                                mContext.sendBroadcast(intentToReceiveOrder);
+                            }
+                        });
+                        builder.setNegativeButton("否",null);
+                        builder.show();
                     }
                 });
             }

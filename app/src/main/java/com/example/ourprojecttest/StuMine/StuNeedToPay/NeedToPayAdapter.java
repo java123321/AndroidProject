@@ -2,6 +2,10 @@ package com.example.ourprojecttest.StuMine.StuNeedToPay;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -149,7 +153,14 @@ public class NeedToPayAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         else{//绑定脚部信息
             FootViewHolder footViewHolder=(FootViewHolder)holder;
             final FooterInfoBean bean=(FooterInfoBean) dataList.get(position);
-            footViewHolder.orderInfo.setText("共"+bean.getDrugAmount()+"件商品 合计:￥ "+bean.getOrderPrice());
+
+                String str ="共"+bean.getDrugAmount()+"件商品 合计:￥ "+bean.getOrderPrice();
+                SpannableStringBuilder builder = new SpannableStringBuilder(str);
+                ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#FF1493"));
+                builder.setSpan(colorSpan, str.indexOf("￥"), str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                footViewHolder.orderInfo.setText(builder);
+
+            //footViewHolder.orderInfo.setText("共"+bean.getDrugAmount()+"件商品 合计:￥ "+bean.getOrderPrice());
             //设置去付款的点击事件
             footViewHolder.goToPay.setOnClickListener(new View.OnClickListener() {
                 @Override

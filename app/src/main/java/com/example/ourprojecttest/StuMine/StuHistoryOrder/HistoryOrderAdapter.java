@@ -1,6 +1,8 @@
 package com.example.ourprojecttest.StuMine.StuHistoryOrder;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
@@ -135,8 +137,19 @@ public class HistoryOrderAdapter extends RecyclerView.Adapter <RecyclerView.View
             footViewHolder.deleteOrder.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                intentToHistoryOrder.putExtra("delete",bean.getOrderId());
-                mContext.sendBroadcast(intentToHistoryOrder);
+
+                    AlertDialog.Builder builder  = new AlertDialog.Builder(mContext);
+                    builder.setTitle("提示" ) ;
+                    builder.setMessage("确定删除此订单?" ) ;
+                    builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            intentToHistoryOrder.putExtra("delete",bean.getOrderId());
+                            mContext.sendBroadcast(intentToHistoryOrder);
+                        }
+                    });
+                    builder.setNegativeButton("否",null);
+                    builder.show();
                 }
             });
         }

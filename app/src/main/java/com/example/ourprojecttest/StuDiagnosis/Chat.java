@@ -28,6 +28,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.DocTreatment.Prescribe;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
@@ -74,15 +75,15 @@ public class Chat extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String msg = intent.getStringExtra("ReceiveMsg");
-            Log.d("receiveChatmsg",msg);
+            Log.d("receiveChatmsg", msg);
             if (msg.equals("finishChat")) {//如果对方点击返回键退出了聊天
                 if (type.equals("Stu")) {//如果当前用户是学生登录
 
-                   // AlertDialog.Builder builder = new AlertDialog.Builder(Chat.this);
-                   // builder.setTitle("提示");
-                   // builder.setMessage("当前医生已离开聊天页面，您是否离开当前页面？");
+                    // AlertDialog.Builder builder = new AlertDialog.Builder(Chat.this);
+                    // builder.setTitle("提示");
+                    // builder.setMessage("当前医生已离开聊天页面，您是否离开当前页面？");
                     //如果用户确定要删除
-                   // builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    // builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     //    @Override
                     //    public void onClick(DialogInterface dialogInterface, int ii) {
                     //        finish();
@@ -91,7 +92,7 @@ public class Chat extends AppCompatActivity {
                     //builder.setNegativeButton("取消", null);
                     //builder.show();
                     //将医生标记为下线
-                    final Dialog dialog = new Dialog(Chat.this,R.style.ActionSheetDialogStyle);        //展示对话框
+                    final Dialog dialog = new Dialog(Chat.this, R.style.ActionSheetDialogStyle);        //展示对话框
                     //填充对话框的布局
                     View inflate = LayoutInflater.from(Chat.this).inflate(R.layout.layout_student_tuichu, null);
                     //初始化控件
@@ -115,10 +116,10 @@ public class Chat extends AppCompatActivity {
 
                     Window dialogWindow = dialog.getWindow();
                     //设置Dialog从窗体底部弹出
-                    dialogWindow.setGravity( Gravity.CENTER);
+                    dialogWindow.setGravity(Gravity.CENTER);
                     //获得窗体的属性
                     WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-                    lp.width =800;
+                    lp.width = 800;
                     lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
                     dialogWindow.setAttributes(lp);
 //       将属性设置给窗体
@@ -126,22 +127,22 @@ public class Chat extends AppCompatActivity {
                     docOnline = false;
 
                 } else {//如果当前用户是医生登录
-                 //   AlertDialog.Builder builder = new AlertDialog.Builder(Chat.this);
-                 //   builder.setTitle("提示");
-                 //   builder.setMessage("当前学生已离开聊天页面，您是否需要为其开处方？");
+                    //   AlertDialog.Builder builder = new AlertDialog.Builder(Chat.this);
+                    //   builder.setTitle("提示");
+                    //   builder.setMessage("当前学生已离开聊天页面，您是否需要为其开处方？");
                     //如果用户确定要删除
-                 //   builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                 //       @Override
-                 //       public void onClick(DialogInterface dialogInterface, int ii) {
-                 //           Intent intent = new Intent(Chat.this, Prescribe.class);
-                 //           intent.putExtra("stuId", stuOrDocId);
-                 //           startActivity(intent);
-                 //       }
-                 //   });
-                 //   builder.setNegativeButton("取消", null);
-                 //   builder.show();
+                    //   builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    //       @Override
+                    //       public void onClick(DialogInterface dialogInterface, int ii) {
+                    //           Intent intent = new Intent(Chat.this, Prescribe.class);
+                    //           intent.putExtra("stuId", stuOrDocId);
+                    //           startActivity(intent);
+                    //       }
+                    //   });
+                    //   builder.setNegativeButton("取消", null);
+                    //   builder.show();
                     //将学生标记为下线
-                    final Dialog dialog = new Dialog(Chat.this,R.style.ActionSheetDialogStyle);        //展示对话框
+                    final Dialog dialog = new Dialog(Chat.this, R.style.ActionSheetDialogStyle);        //展示对话框
                     //填充对话框的布局
                     View inflate = LayoutInflater.from(Chat.this).inflate(R.layout.layout_doc_chufang, null);
                     //初始化控件
@@ -168,45 +169,19 @@ public class Chat extends AppCompatActivity {
 
                     Window dialogWindow = dialog.getWindow();
                     //设置Dialog从窗体底部弹出
-                    dialogWindow.setGravity( Gravity.CENTER);
+                    dialogWindow.setGravity(Gravity.CENTER);
                     //获得窗体的属性
                     WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-                    lp.width =800;
+                    lp.width = 800;
                     lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
                     dialogWindow.setAttributes(lp);
 //       将属性设置给窗体
                     dialog.show();//显示对话框
                     stuOnline = false;
                 }
-            } else if(msg.equals("callVideo")){//如果收到对方发送的视频聊天邀请，则弹出提示
-                //AlertDialog.Builder builder = new AlertDialog.Builder(Chat.this);
-                //builder.setTitle("提示");
-                ///builder.setMessage("对方邀请您开启视频通话！");
-               /// builder.setPositiveButton("同意", new DialogInterface.OnClickListener() {
-                //    @Override
-                //    public void onClick(DialogInterface dialog, int which) {
-                //        AskPermission("invite");
+            } else if (msg.equals("callVideo")) {//如果收到对方发送的视频聊天邀请，则弹出提示
 
-
-                //    }
-                //});
-                //builder.setNegativeButton("拒绝", new DialogInterface.OnClickListener() {
-                //    @Override
-                 //   public void onClick(DialogInterface dialog, int which) {
-                 //       if(type.equals("Stu")){
-                 //           intentToStu.putExtra("chatMsg", stuOrDocId + "|denyVideoChat");//代表对方拒绝了视频聊天
-                 //           sendBroadcast(intentToStu);
-                 //           intentToStu.removeExtra("chatMsg");
-                 //       }else{
-                 //           intentToDoc.putExtra("chatMsg", stuOrDocId + "|denyVideoChat");
-                 //           sendBroadcast(intentToDoc);
-                 //           intentToDoc.removeExtra("chatMsg");
-                 //       }
-                 //
-                 //   }
-                //});
-               // builder.show();
-                final Dialog dialog = new Dialog(Chat.this,R.style.ActionSheetDialogStyle);        //展示对话框
+                final Dialog dialog = new Dialog(Chat.this, R.style.ActionSheetDialogStyle);        //展示对话框
                 //填充对话框的布局
                 View inflate = LayoutInflater.from(Chat.this).inflate(R.layout.layout_kaiqishipin, null);
                 //初始化控件
@@ -222,32 +197,32 @@ public class Chat extends AppCompatActivity {
                 no.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                if(type.equals("Stu")){
-                    intentToStu.putExtra("chatMsg", stuOrDocId + "|denyVideoChat");//代表对方拒绝了视频聊天
-                    sendBroadcast(intentToStu);
-                    intentToStu.removeExtra("chatMsg");
-                }else{
-                    intentToDoc.putExtra("chatMsg", stuOrDocId + "|denyVideoChat");
-                    sendBroadcast(intentToDoc);
-                    intentToDoc.removeExtra("chatMsg");
-                }
-                dialog.dismiss();
-            }
+                        if (type.equals("Stu")) {
+                            intentToStu.putExtra("chatMsg", stuOrDocId + "|denyVideoChat");//代表对方拒绝了视频聊天
+                            sendBroadcast(intentToStu);
+                            intentToStu.removeExtra("chatMsg");
+                        } else {
+                            intentToDoc.putExtra("chatMsg", stuOrDocId + "|denyVideoChat");
+                            sendBroadcast(intentToDoc);
+                            intentToDoc.removeExtra("chatMsg");
+                        }
+                        dialog.dismiss();
+                    }
                 });
                 //将布局设置给Dialog
                 dialog.setContentView(inflate);
                 //获取当前Activity所在的窗体
                 Window dialogWindow = dialog.getWindow();
                 //设置Dialog从窗体底部弹出
-                dialogWindow.setGravity( Gravity.CENTER);
+                dialogWindow.setGravity(Gravity.CENTER);
                 //获得窗体的属性
                 WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-                lp.width =800;
+                lp.width = 800;
                 lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
                 dialogWindow.setAttributes(lp);
 //       将属性设置给窗体
                 dialog.show();//显示对话框
-            }else{
+            } else {
                 update(msg, TYPE_RECEIVED);
             }
             Log.d("ReceiveMsg", msg);
@@ -270,8 +245,8 @@ public class Chat extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (type.equals("Stu")&&docOnline) {//如果是学生端并且医生在线的情况下给学生弹出提示
-            final Dialog dialog = new Dialog(this,R.style.ActionSheetDialogStyle);        //展示对话框
+        if (type.equals("Stu") && docOnline) {//如果是学生端并且医生在线的情况下给学生弹出提示
+            final Dialog dialog = new Dialog(this, R.style.ActionSheetDialogStyle);        //展示对话框
             //填充对话框的布局
             View inflate = LayoutInflater.from(this).inflate(R.layout.layout_tuichujiezhen, null);
             //初始化控件
@@ -298,16 +273,16 @@ public class Chat extends AppCompatActivity {
             //获取当前Activity所在的窗体
             Window dialogWindow = dialog.getWindow();
             //设置Dialog从窗体底部弹出
-            dialogWindow.setGravity( Gravity.CENTER);
+            dialogWindow.setGravity(Gravity.CENTER);
             //获得窗体的属性
             WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-            lp.width =800;
+            lp.width = 800;
             lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
             dialogWindow.setAttributes(lp);
 //       将属性设置给窗体
             dialog.show();//显示对话框
-        } else if(type.equals("Doc")&&stuOnline){//如果是医生端,并且学生在线的情况下给出医生退出提示
-            final Dialog dialog = new Dialog(this,R.style.ActionSheetDialogStyle);        //展示对话框
+        } else if (type.equals("Doc") && stuOnline) {//如果是医生端,并且学生在线的情况下给出医生退出提示
+            final Dialog dialog = new Dialog(this, R.style.ActionSheetDialogStyle);        //展示对话框
             //填充对话框的布局
             View inflate = LayoutInflater.from(this).inflate(R.layout.layout_tuichuliaotian, null);
             //初始化控件
@@ -334,14 +309,16 @@ public class Chat extends AppCompatActivity {
             //获取当前Activity所在的窗体
             Window dialogWindow = dialog.getWindow();
             //设置Dialog从窗体底部弹出
-            dialogWindow.setGravity( Gravity.CENTER);
+            dialogWindow.setGravity(Gravity.CENTER);
             //获得窗体的属性
             WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-            lp.width =800;
+            lp.width = 800;
             lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
             dialogWindow.setAttributes(lp);
 //       将属性设置给窗体
             dialog.show();//显示对话框
+        }else{
+            finish();
         }
     }
 
@@ -366,11 +343,11 @@ public class Chat extends AppCompatActivity {
             messageBean.setName(stuName);
             chatWindowName.setText(stuName + "同学");
             //获取学生头像
-            byte[] stuIcon=null;
-            if(intent.hasExtra("stuPicture")){
+            byte[] stuIcon = null;
+            if (intent.hasExtra("stuPicture")) {
                 stuIcon = intent.getByteArrayExtra("stuPicture");
                 messageBean.setIcon(stuIcon);
-            }else{
+            } else {
                 messageBean.setIcon(null);
             }
 
@@ -393,11 +370,11 @@ public class Chat extends AppCompatActivity {
             messageBean.setName(docName);
             chatWindowName.setText(docName + "医生");
             //获取医生的头像
-            byte[] docIcon=null;
-            if(intent.hasExtra("docPicture")){
+            byte[] docIcon = null;
+            if (intent.hasExtra("docPicture")) {
                 docIcon = intent.getByteArrayExtra("docPicture");
                 messageBean.setIcon(docIcon);
-            }else{
+            } else {
                 messageBean.setIcon(null);
             }
             Log.d("chat", "docIcon" + (docIcon == null));
@@ -418,7 +395,7 @@ public class Chat extends AppCompatActivity {
         video.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              //在开启音视频通话之前先检查权限
+                //在开启音视频通话之前先检查权限
                 AskPermission("call");
             }
         });
@@ -466,6 +443,7 @@ public class Chat extends AppCompatActivity {
             }
         });
     }
+
     private void AskPermission(String type) {
         List<PermissionItem> permissionItems = new ArrayList<PermissionItem>();
         permissionItems.add(new PermissionItem(Manifest.permission.CAMERA, "相机", R.drawable.permission_ic_camera));
@@ -481,20 +459,19 @@ public class Chat extends AppCompatActivity {
 
                     @Override
                     public void onFinish() {
-                        if(type.equals("invite")){//受邀请端
-                            Intent intent=new Intent(Chat.this,VideoChat.class);
-                            intent.putExtra("type","invite");//invite代表当前用户为被邀请视频聊天
-                            intent.putExtra("stuOrDocId",stuOrDocId);
+                        if (type.equals("invite")) {//受邀请端
+                            Intent intent = new Intent(Chat.this, VideoChat.class);
+                            intent.putExtra("type", "invite");//invite代表当前用户为被邀请视频聊天
+                            intent.putExtra("stuOrDocId", stuOrDocId);
                             startActivity(intent);
-                        }else{//主叫端
+                        } else {//主叫端
                             //如果用户同意申请权限,则跳到视频聊天活动
-                            Intent intent =new Intent(Chat.this,VideoChat.class);
+                            Intent intent = new Intent(Chat.this, VideoChat.class);
                             //添加标记为，call为主叫方
-                            intent.putExtra("type","call");
-                            intent.putExtra("stuOrDocId",stuOrDocId);
+                            intent.putExtra("type", "call");
+                            intent.putExtra("stuOrDocId", stuOrDocId);
                             startActivity(intent);
                         }
-
 
 
                     }
@@ -502,7 +479,7 @@ public class Chat extends AppCompatActivity {
                     @Override
                     public void onDeny(String permission, int position) {
                         Toast toast = Toast.makeText(Chat.this, "您已拒绝开启相关权限！", Toast.LENGTH_SHORT);
-                        toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                        toast.setGravity(Gravity.BOTTOM, 0, toastHeight / 5);
                         toast.show();
                     }
 

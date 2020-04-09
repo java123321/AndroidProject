@@ -71,15 +71,14 @@ public class HistoryOrder extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what){
                 case DELETE_SUCCESS:{
-
-                    Toast toast = Toast.makeText(HistoryOrder.this, "订单删除成功！", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(HistoryOrder.this, "订单删除成功,正在更新历史订单！", Toast.LENGTH_SHORT);
                     // 这里给了一个1/4屏幕高度的y轴偏移量
                     toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
                     toast.show();
+                    getData();
                     break;
                 }
                 case DELETE_FAULT:{
-
                     Toast toast = Toast.makeText(HistoryOrder.this, "订单删除失败！", Toast.LENGTH_SHORT);
                     // 这里给了一个1/4屏幕高度的y轴偏移量
                     toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
