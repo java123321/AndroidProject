@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -50,10 +51,12 @@ public void setmList(ArrayList<MessageBean> list){
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view=View.inflate(mContext,R.layout.swipe_item,null);
-        ViewHolder holder=new ViewHolder(view);
-        Log.d("msginit","oncreate");
-        return holder;
+        View view = LayoutInflater.from(mContext).inflate(R.layout.swipe_item,parent,false);
+        return new ViewHolder(view);
+//        View view=View.inflate(mContext,R.layout.swipe_item,null);
+//        ViewHolder holder=new ViewHolder(view);
+//        Log.d("msginit","oncreate");
+//        return holder;
 
     }
     @Override

@@ -57,6 +57,7 @@ public class StuService extends Service {
     private String nameT="channel_name_1";
     private NotificationManager manager;
     public static final String id = "channel_1";
+    private Notification notification = null;
 
 
     //当接收到活动发来的挂号通知时进行挂号操作
@@ -103,6 +104,7 @@ public class StuService extends Service {
                     case "Chat": {//如果是学生点击了沟通操作
                         Log.d("guahao", "chat");
                         chatListener.socket.send(docId + "|chat学生名字为" + name + "学生头像为" + method.getFileData("StuIconUrl", StuService.this));
+
                         break;
                     }
                     case "Deny": {//如果学生点击了拒绝服务
@@ -207,7 +209,7 @@ public class StuService extends Service {
                 intent.putExtra("docName", docName);
                 Log.d("chat", "docPicture" + (docPicture == null));
                 //startForeground(1, getNotification(CHANNEL_ID, docName + "医生即将为您接诊！", "到你了"));
-                sendNotification("到你了",docName + "医生即将为您接诊！");
+                notification = sendNotification("到你了",docName + "医生即将为您接诊！");
                 webSocket.close(1000, "再见");
 
                 sendBroadcast(intent);
@@ -312,7 +314,7 @@ public class StuService extends Service {
     }
 
 
-    private void sendNotification(String title,String content){
+    private Notification sendNotification(String title,String content){
         Intent intent = new Intent(this, RenGongWenZhen.class);
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         //8.0 以后需要加上channelId 才能正常显示
@@ -339,6 +341,8 @@ public class StuService extends Service {
                 .setContentIntent(pendingIntent)
                 .build();
         manager.notify(1, notification);
+
+        return notification;
     }
 
 }
