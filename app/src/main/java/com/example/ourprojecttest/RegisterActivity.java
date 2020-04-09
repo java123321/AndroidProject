@@ -179,6 +179,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
 
+
         @Override
         public void onFinish() {
             getmsg.setText("重新获取验证码");

@@ -16,12 +16,16 @@ import com.example.ourprojecttest.R;
 public class ModefyStuName extends AppCompatActivity {
     private EditText xingming;
     private TextView baocun;
+    private Drawable searchEditDraw;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nicheng_student);
         ImmersiveStatusbar.getInstance().Immersive(getWindow(),getActionBar());//状态栏透明
         baocun=findViewById(R.id.baocun);
+        searchEditDraw = getResources().getDrawable(R.drawable.chahao);
+        searchEditDraw.setBounds(0, 0, 60, 60);
         xingming= findViewById(R.id.xingming);
+        xingming.setCompoundDrawables(null, null, searchEditDraw, null);
         baocun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

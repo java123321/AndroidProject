@@ -22,6 +22,7 @@ import com.example.ourprojecttest.R;
 public class ModefyDocName extends AppCompatActivity {
     private Display display;
     private int toastHeight;
+    private Drawable searchEditDraw;
     private EditText xingming;
     private ImageView back;
     private ModifyAdapter adapter;
@@ -35,6 +36,9 @@ public class ModefyDocName extends AppCompatActivity {
         toastHeight = display.getHeight();
         baocun=findViewById(R.id.baocun);
         xingming= findViewById(R.id.xingming);
+        searchEditDraw = getResources().getDrawable(R.drawable.chahao);
+        searchEditDraw.setBounds(0, 0, 60, 60);
+        xingming.setCompoundDrawables(null, null, searchEditDraw, null);
         baocun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
