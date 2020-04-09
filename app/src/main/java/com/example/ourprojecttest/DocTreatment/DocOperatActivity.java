@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.example.ourprojecttest.PerfeActivity;
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.StuDiagnosis.Chat;
 import com.example.ourprojecttest.Service.DocService;
@@ -353,11 +354,34 @@ public class DocOperatActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             if (intent.hasExtra("updateStu")) {
                 if(intent.getStringExtra("updateStu").equals("noStuOnline")){//如果是通知没有学生挂号
-                    AlertDialog.Builder builder  = new AlertDialog.Builder(DocOperatActivity.this);
-                    builder.setTitle("提示" ) ;
-                    builder.setMessage("当前暂无学生挂号，请等候！" ) ;
-                    builder.setPositiveButton("确定" ,  null );
-                    builder.show();
+                   // AlertDialog.Builder builder  = new AlertDialog.Builder(DocOperatActivity.this);
+                   // builder.setTitle("提示" ) ;
+                   // builder.setMessage("当前暂无学生挂号，请等候！" ) ;
+                   // builder.setPositiveButton("确定" ,  null );
+                   // builder.show();
+                    final Dialog dialog = new Dialog(DocOperatActivity.this,R.style.ActionSheetDialogStyle);        //展示对话框
+                    //填充对话框的布局
+                    View inflate = LayoutInflater.from(DocOperatActivity.this).inflate(R.layout.layout_tishi_email,null);
+                    TextView describe=inflate.findViewById(R.id.describe);
+                    describe.setText("当前暂无学生挂号，请等候!");
+                    TextView yes = inflate.findViewById(R.id.yes);
+                    yes.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.setContentView(inflate);
+
+                    Window dialogWindow = dialog.getWindow();
+                    //设置Dialog从窗体底部弹出
+                    dialogWindow.setGravity( Gravity.CENTER);
+                    //获得窗体的属性
+                    WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+                    lp.width =800;
+                    lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                    dialogWindow.setAttributes(lp);
+                    dialog.show();
                 }else{//否则就是更新挂号学生
                     getData();
                 }
