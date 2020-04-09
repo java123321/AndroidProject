@@ -25,6 +25,7 @@ import java.util.Date;
 public class NeedToPayAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int ITEM_HEADER=1,ITEM_CONTENT=2,ITEM_FOOTER=3;
     Intent intentToNeedToPay=new Intent("com.example.ourprojecttest.BUY_ORDER");
+
     private Context mContext;
 
 
@@ -158,7 +159,8 @@ public class NeedToPayAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         intentToNeedToPay.putExtra("orderId",bean.getOrderId());
                         mContext.sendBroadcast(intentToNeedToPay);
                     } else {
-                        AddressMessage.flag = false;
+                        intentToNeedToPay.putExtra("flag",false);
+                        mContext.sendBroadcast(intentToNeedToPay);
                     }
 
                 }

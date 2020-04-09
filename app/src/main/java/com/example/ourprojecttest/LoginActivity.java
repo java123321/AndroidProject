@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.example.ourprojecttest.NavigationBar.DocBottomNavigation;
 import com.example.ourprojecttest.NavigationBar.StuBottomNavigation;
+import com.example.ourprojecttest.StuMine.StuNeedToPay.AddressMessage;
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 import com.example.ourprojecttest.Utils.PictureStore;
@@ -132,6 +133,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        new AddressMessage();
         display = getWindowManager().getDefaultDisplay();
         // 获取屏幕高度
         toastHeight = display.getHeight();

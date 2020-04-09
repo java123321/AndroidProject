@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
 import com.example.ourprojecttest.AlipayModule.AuthResult;
+import com.example.ourprojecttest.Service.DocService;
 import com.example.ourprojecttest.StuDrugStore.StuBuyDrug;
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
@@ -87,6 +88,10 @@ public class NeedToPay extends AppCompatActivity {
            if(intent.hasExtra("price")){
                orderId=intent.getStringExtra("orderId");
                payV2(intent.getStringExtra("price"));
+           } else {
+               Toast toast = Toast.makeText(NeedToPay.this, "您暂未完善收获地址信息，请先完善！", Toast.LENGTH_SHORT);
+               toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+               toast.show();
            }
         }
     }
@@ -200,7 +205,7 @@ public class NeedToPay extends AppCompatActivity {
         ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
         intentFilter=new IntentFilter();
         intentFilter.addAction("com.example.ourprojecttest.BUY_ORDER");
-        localReceiver=new LocalReceiver();
+        localReceiver= new LocalReceiver();
         registerReceiver(localReceiver,intentFilter);
     }
 
@@ -311,6 +316,10 @@ public class NeedToPay extends AppCompatActivity {
         }
     }
     private void initView(){
+        String add = method.getFileData("Address", NeedToPay.this);
+        if (add.equals("用户暂未设置收货地址")||add == null||add == "") {
+            AddressMessage.addressMessage = false;
+        }
         empty=findViewById(R.id.empty);
         display = getWindowManager().getDefaultDisplay();
         toastHeight = display.getHeight();
@@ -333,17 +342,13 @@ public class NeedToPay extends AppCompatActivity {
         adapter=new NeedToPayAdapter(NeedToPay.this);
         recyclerView.setAdapter(adapter);
         ArrayList<OrderListBean> orderList=readOrderListFromSdCard("stuNeedToPayOrder");
-        String add = method.getFileData("Address", NeedToPay.this);
-        if (add.equals("用户暂未设置收货地址")||add == null) {
-            AddressMessage.addressMessage = false;
-        }
+
         //如果本地缓存订单数据不为空，则先显示出来
         if(orderList!=null){
             adapter.setList(NeedToPayHelper.getDataAfterHandle(orderList));
             adapter.notifyDataSetChanged();
         }
         getData();//获取待付款订单
-        MyToas();
     }
 
     /**
@@ -474,16 +479,6 @@ public class NeedToPay extends AppCompatActivity {
     }
 
 
-    public void MyToas(){
-        new Thread(()->{
-            while (AddressMessage.flag){
 
-            }
-            Toast toast = Toast.makeText(NeedToPay.this, "您暂未完善收获地址信息，请先完善！", Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
-            toast.show();
-            AddressMessage.flag = true;
-        }).start();
-    }
 
 }
