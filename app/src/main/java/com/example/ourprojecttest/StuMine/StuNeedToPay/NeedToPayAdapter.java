@@ -2,14 +2,18 @@ package com.example.ourprojecttest.StuMine.StuNeedToPay;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ourprojecttest.StuDrugStore.StuBuyDrug;
 import com.example.ourprojecttest.StuMine.AddressActivity;
 import com.example.ourprojecttest.R;
 
@@ -149,9 +153,14 @@ public class NeedToPayAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             footViewHolder.goToPay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    intentToNeedToPay.putExtra("price",bean.getOrderPrice());
-                    intentToNeedToPay.putExtra("orderId",bean.getOrderId());
-                    mContext.sendBroadcast(intentToNeedToPay);
+                    if (AddressMessage.addressMessage){
+                        intentToNeedToPay.putExtra("price",bean.getOrderPrice());
+                        intentToNeedToPay.putExtra("orderId",bean.getOrderId());
+                        mContext.sendBroadcast(intentToNeedToPay);
+                    } else {
+                        AddressMessage.flag = false;
+                    }
+
                 }
             });
         }

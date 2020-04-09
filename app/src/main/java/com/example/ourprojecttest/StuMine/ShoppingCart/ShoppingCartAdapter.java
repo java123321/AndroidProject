@@ -3,6 +3,10 @@ package com.example.ourprojecttest.StuMine.ShoppingCart;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +76,10 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         final ShoppingCartBean drug = mList.get(position);
         final ViewHolder viewHolder = ((ViewHolder) holder);
         viewHolder.drugName.setText(drug.getDrugName());
-        viewHolder.drugPrice.setText(drug.getDrugPrice());
+        SpannableStringBuilder builder = new SpannableStringBuilder(drug.getDrugPrice());
+        ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#FF1493"));
+        builder.setSpan(colorSpan, 0, drug.getDrugPrice().length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        viewHolder.drugPrice.setText(builder);
         if (drug.getChecked().equals("false")) {
             viewHolder.drugChoiced.setImageResource(R.drawable.unchecked);
         } else {
