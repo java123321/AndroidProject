@@ -98,6 +98,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
             }
         });
+
         //设置药品的加号事件
         viewHolder.jiahao.setOnClickListener(new View.OnClickListener() {
             @Override

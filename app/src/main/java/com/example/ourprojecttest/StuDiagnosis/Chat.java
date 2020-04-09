@@ -270,19 +270,7 @@ public class Chat extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
-        if (type.equals("Stu")) {
-            //builder.setMessage("是否结束此次问诊?");
-            //builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-              //  @Override
-              //  public void onClick(DialogInterface dialog, int which) {
-                //    intentToStu.putExtra("chatMsg", stuOrDocId + "|finishChat");
-                  //  sendBroadcast(intentToStu);
-                  //  finish();
-                  //  Log.d("wee", "1");
-             //   }
-          //  }).setNegativeButton("取消", null)
-          //          .show();
+        if (type.equals("Stu")&&docOnline) {//如果是学生端并且医生在线的情况下给学生弹出提示
             final Dialog dialog = new Dialog(this,R.style.ActionSheetDialogStyle);        //展示对话框
             //填充对话框的布局
             View inflate = LayoutInflater.from(this).inflate(R.layout.layout_tuichujiezhen, null);
@@ -318,18 +306,7 @@ public class Chat extends AppCompatActivity {
             dialogWindow.setAttributes(lp);
 //       将属性设置给窗体
             dialog.show();//显示对话框
-        } else {//如果是医生
-            //builder.setMessage("是否结束此次接诊?");
-            //builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-              //  @Override
-               // public void onClick(DialogInterface dialog, int which) {
-               //     intentToDoc.putExtra("chatMsg", stuOrDocId + "|finishChat");
-               //     sendBroadcast(intentToDoc);
-               //     finish();
-               //     Log.d("wee", "2");
-               // }
-            //}).setNegativeButton("取消", null)
-             //       .show();
+        } else if(type.equals("Doc")&&stuOnline){//如果是医生端,并且学生在线的情况下给出医生退出提示
             final Dialog dialog = new Dialog(this,R.style.ActionSheetDialogStyle);        //展示对话框
             //填充对话框的布局
             View inflate = LayoutInflater.from(this).inflate(R.layout.layout_tuichuliaotian, null);

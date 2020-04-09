@@ -351,8 +351,17 @@ public class DocOperatActivity extends AppCompatActivity {
     class LocalReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.hasExtra("updateStu")) {//如果是更新挂号学生
-                getData();
+            if (intent.hasExtra("updateStu")) {
+                if(intent.getStringExtra("updateStu").equals("noStuOnline")){//如果是通知没有学生挂号
+                    AlertDialog.Builder builder  = new AlertDialog.Builder(DocOperatActivity.this);
+                    builder.setTitle("提示" ) ;
+                    builder.setMessage("当前暂无学生挂号，请等候！" ) ;
+                    builder.setPositiveButton("确定" ,  null );
+                    builder.show();
+                }else{//否则就是更新挂号学生
+                    getData();
+                }
+
             } else if (intent.hasExtra("Dialog")) {
                 //创建对话框
                 waitStuConfirmDialog();

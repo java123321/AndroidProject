@@ -20,6 +20,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
@@ -50,6 +52,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class NeedToPay extends AppCompatActivity {
+    private LinearLayout empty;
     private Display display;
     private int toastHeight;
     private String ipAddress;
@@ -91,32 +94,28 @@ public class NeedToPay extends AppCompatActivity {
         @SuppressWarnings("unused")
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case UPDATE_SUCCESS:{
-
+                case UPDATE_SUCCESS:{//表示付款成功！
                     Toast toast = Toast.makeText(NeedToPay.this, "付款成功！", Toast.LENGTH_SHORT);
                     // 这里给了一个1/4屏幕高度的y轴偏移量
                     toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
                     toast.show();
                     break;
                 }
-                case UPDATE_FAULT:{
-
+                case UPDATE_FAULT:{//表示付款失败
                     Toast toast = Toast.makeText(NeedToPay.this, "付款失败！", Toast.LENGTH_SHORT);
                     // 这里给了一个1/4屏幕高度的y轴偏移量
                     toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
                     toast.show();
                     break;
                 }
-                case FAULT:{
-
-                    Toast toast = Toast.makeText(NeedToPay.this, "暂无待付款订单！", Toast.LENGTH_SHORT);
-                    // 这里给了一个1/4屏幕高度的y轴偏移量
-                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
-                    toast.show();
+                case FAULT:{//表示当前暂无待付款订单
+                    Log.d("needtopay","fault");
+                  empty.setVisibility(View.VISIBLE);
+                  recyclerView.setVisibility(View.GONE);
                     refresh.setRefreshing(false);
                     break;
                 }
-                case SUCCESS:{
+                case SUCCESS:{//表示获取订单成功
                     ArrayList<OrderListBean> orderList=(ArrayList<OrderListBean>)msg.obj;
                     adapter.setList(NeedToPayHelper.getDataAfterHandle(orderList));
                     adapter.notifyDataSetChanged();
@@ -237,8 +236,11 @@ public class NeedToPay extends AppCompatActivity {
         }).start();
     }
     private void getData(){
+        //获取订单的时候显示recycleview才能看到下拉刷新图标
+        recyclerView.setVisibility(View.VISIBLE);
+        empty.setVisibility(View.GONE);
         refresh.setRefreshing(true);
-        final String url=ipAddress+"IM/GetNeedToPayOrder?type=finishPay&id="+id;//finishPay是指学生刚付款款的订单
+        final String url=ipAddress+"IM/GetNeedToPayOrder?type=getOrder&id="+id;//finishPay是指学生刚付款款的订单
         Log.d("topay",url);
         new Thread(new Runnable() {
             @Override
@@ -307,6 +309,7 @@ public class NeedToPay extends AppCompatActivity {
         }
     }
     private void initView(){
+        empty=findViewById(R.id.empty);
         display = getWindowManager().getDefaultDisplay();
         toastHeight = display.getHeight();
 

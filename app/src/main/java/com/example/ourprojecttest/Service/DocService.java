@@ -150,7 +150,11 @@ public class DocService extends Service {
             Log.d("msg的内容 ", info);
             int q = info.length();
             //获取返回的人数
-            if (info.indexOf("人数") != -1) {
+            if(info.equals("当前没有人在挂号，请稍等！")){
+                intentToBeforChat.putExtra("updateStu","noStuOnline");
+                sendBroadcast(intentToBeforChat);
+                intentToBeforChat.removeExtra("updateStu");
+            }else if (info.indexOf("人数") != -1) {
                 StringBuilder result = new StringBuilder();
                 int i = 7;
                 while (i < q) {

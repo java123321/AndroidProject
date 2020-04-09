@@ -14,6 +14,8 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.ourprojecttest.Utils.CommonMethod;
@@ -44,6 +46,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class NeedToPost extends AppCompatActivity {
+    private LinearLayout empty;
     private Display display;
     private int toastHeight;
     private String ipAddress;
@@ -69,12 +72,10 @@ public class NeedToPost extends AppCompatActivity {
                     writeOrderListIntoSDcard("stuNeedToPostOrder",orderList);
                     break;
                 }
-                case NO_ORDER:{
+                case NO_ORDER:{//如果没有订单
+                    recyclerView.setVisibility(View.GONE);
+                    empty.setVisibility(View.VISIBLE);
                     refresh.setRefreshing(false);
-                    Toast toast = Toast.makeText(NeedToPost.this, "暂无代发货订单！", Toast.LENGTH_SHORT);
-                    // 这里给了一个1/4屏幕高度的y轴偏移量
-                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
-                    toast.show();
                     break;
                 }
             }
@@ -92,6 +93,8 @@ public class NeedToPost extends AppCompatActivity {
 
 
     private void getData(){
+        recyclerView.setVisibility(View.VISIBLE);
+        empty.setVisibility(View.GONE);
         refresh.setRefreshing(true);
         refresh.setColorSchemeColors(getResources().getColor(R.color.color_bottom));
         refresh.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.color_progressbar));
@@ -165,6 +168,7 @@ public class NeedToPost extends AppCompatActivity {
     }
 
     private void initView(){
+        empty=findViewById(R.id.empty);
         display = getWindowManager().getDefaultDisplay();
         toastHeight = display.getHeight();
         id=method.getFileData("ID",this);
