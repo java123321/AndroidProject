@@ -79,7 +79,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         SpannableStringBuilder builder = new SpannableStringBuilder(drug.getDrugPrice());
         ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#FF1493"));
         builder.setSpan(colorSpan, 0, drug.getDrugPrice().length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        viewHolder.drugPrice.setText(builder);
+        viewHolder.drugPrice.setText(drug.getDrugPrice());
         if (drug.getChecked().equals("false")) {
             viewHolder.drugChoiced.setImageResource(R.drawable.unchecked);
         } else {
