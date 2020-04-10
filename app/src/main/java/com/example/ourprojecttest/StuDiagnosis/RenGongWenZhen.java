@@ -114,7 +114,12 @@ public class RenGongWenZhen extends AppCompatActivity {
     class LocalReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, final Intent intent) {
-            if (intent.hasExtra("persons")) {
+            if(intent.hasExtra("noDocOnline")){
+                noDoctor.setVisibility(View.VISIBLE);
+                mRecycler.setVisibility(View.GONE);
+                adapter.mList.clear();
+                adapter.notifyDataSetChanged();
+            }else if (intent.hasExtra("persons")) {
                 String person = intent.getStringExtra("persons");
                 if (person.equals("-1")) {//如果是-1的话代表到你了，发出提示窗口
                     show(intent);
@@ -198,17 +203,7 @@ public class RenGongWenZhen extends AppCompatActivity {
         display = getWindowManager().getDefaultDisplay();
         // 获取屏幕高度
         height = display.getHeight();
-        //如果有状态码state代表用户从前台服务跳进来
-        Intent intent = getIntent();
-        if (intent.hasExtra("state")) {
-            //如果是-1代表当前是
-            if (intent.getStringExtra("state").equals(-1)) {
 
-            } else {
-
-            }
-
-        }
         refresh = findViewById(R.id.swipeRefresh);
         //设置下拉刷新的的更新事件
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -252,7 +247,7 @@ public class RenGongWenZhen extends AppCompatActivity {
         guanbi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //如果服务在运行
+                //如果在挂号在运行
                 if (StuService.isGuaHao) {
                     //给服务发送取消挂号的广播
                     intentToService.putExtra("msg", "ExitGuaHao");
@@ -318,7 +313,7 @@ public class RenGongWenZhen extends AppCompatActivity {
         //倒计时
         mOffTime = new Timer(true);
         TimerTask tt = new TimerTask() {
-            int countTime = 10;
+            int countTime = 20;
 
             public void run() {
                 if (countTime > 0) {

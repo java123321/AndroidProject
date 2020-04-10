@@ -151,7 +151,6 @@ public class DocOperatActivity extends AppCompatActivity {
                 if (!jsonObject.has("#x")) {
                     DisplayStuBean info = new DisplayStuBean();
                     info.setName(jsonObject.getString("Stu_Name"));
-                    ;
                     info.setSex(jsonObject.getString("Stu_Sex"));
                     info.setBirthday(jsonObject.getString("Stu_Birth"));
                     info.setHeight(jsonObject.getString("Stu_Height"));
@@ -170,7 +169,7 @@ public class DocOperatActivity extends AppCompatActivity {
                     return;
                 }
             }
-            Log.d("msgwhat", "size1" + list.size());
+            Log.d("msgwhat", "size:" + list.size());
             msg.what = SUCCESS;
             msg.obj = list;
             handler.sendMessage(msg);
@@ -182,21 +181,12 @@ public class DocOperatActivity extends AppCompatActivity {
     }
 
     private void initView() {
-
         display = getWindowManager().getDefaultDisplay();
         // 获取屏幕高度
         height = display.getHeight();
-
         //如果有状态码state代表用户从前台服务跳进来
         Intent intent = getIntent();
-        if (intent.hasExtra("state")) {
-            //如果是-1代表当前是
-            if (intent.getStringExtra("state").equals(-1)) {
 
-            } else {
-
-            }
-        }
         refresh = findViewById(R.id.swipeRefresh);
         //设置下拉刷新的的更新事件
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -336,7 +326,7 @@ public class DocOperatActivity extends AppCompatActivity {
         //倒计时
         mOffTime = new Timer(true);
         TimerTask tt = new TimerTask() {
-            int countTime = 10;
+            int countTime = 25;
 
             public void run() {
                 if (countTime > 0) {
@@ -357,9 +347,10 @@ public class DocOperatActivity extends AppCompatActivity {
     class LocalReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("docoperate",intent.getStringExtra("updateStu"));
+
             if (intent.hasExtra("updateStu")) {
                 if(intent.getStringExtra("updateStu").equals("noStuOnline")){//如果是通知没有学生挂号
+                    Log.d("docoperate","nostuwenzhen");
                     Toast toast = Toast.makeText(DocOperatActivity.this, "当前暂无学生问诊，请等候！", Toast.LENGTH_SHORT);
                     // 这里给了一个1/4屏幕高度的y轴偏移量
                     toast.setGravity(Gravity.BOTTOM, 0, height / 5);

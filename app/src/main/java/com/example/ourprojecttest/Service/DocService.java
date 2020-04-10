@@ -166,7 +166,7 @@ public class DocService extends Service {
                 Log.d("队伍中人数：", result.toString());
                 startForeground(1, getNotification(CHANNEL_ID, info));
 
-            } else if (info.indexOf("向您发送了接诊邀请") != -1) {
+            } else if (info.endsWith("向您发送了接诊邀请！")) {
                 stuId = info.substring(0, info.indexOf("向"));
                 Log.d("学生Id", stuId);
                 //发送通知
@@ -314,14 +314,10 @@ public class DocService extends Service {
      * @return
      */
     private Notification getNotification(String chanelId, String content) {
-
-        Intent intent = new Intent(this, DocOperatActivity.class);
-        PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);
-
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, chanelId);
         builder.setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
-                .setContentIntent(pi)
+                .setAutoCancel(true)
                 .setContentTitle("学生挂号信息")
                 .setContentText(content);
         return builder.build();

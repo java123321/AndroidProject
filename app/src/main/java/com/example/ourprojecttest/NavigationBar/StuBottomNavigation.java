@@ -27,7 +27,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 public class StuBottomNavigation extends AppCompatActivity {
-
+    private Intent intentToService = new Intent("com.example.ourprojecttest.UPDATE_SERVICE");
     private Display display;
     private int toastHeight;
     public static Activity activity;
@@ -65,6 +65,13 @@ public class StuBottomNavigation extends AppCompatActivity {
                 toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
                 toast.show();
             } else {
+                //退出应用的时候，如果在挂号，则关闭
+                if(StuService.isGuaHao){
+                    //给服务发送取消挂号的广播
+                    intentToService.putExtra("msg", "ExitGuaHao");
+                    sendBroadcast(intentToService);
+                }
+                //退出的应用的时候关闭服务
                 Intent intent = new Intent(StuBottomNavigation.this, StuService.class);
                 stopService(intent);
                 finish();

@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.ourprojecttest.Service.DocService;
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.NavigationBar.DocBottomNavigation;
 import com.example.ourprojecttest.DocMine.DocInformation.DocInformation;
@@ -137,7 +138,11 @@ public class DocMineFragment extends Fragment {
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(mContext, WelcomeActivity.class);
+                //关闭医生服务
+                Intent intent=new Intent(mContext, DocService.class);
+                mContext.stopService(intent);
+                //跳转到欢迎界面
+                intent=new Intent(mContext, WelcomeActivity.class);
                 mContext.startActivity(intent);
             }
         });

@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.app.Fragment;
 
 import com.example.ourprojecttest.NavigationBar.StuBottomNavigation;
+import com.example.ourprojecttest.Service.StuService;
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.NavigationBar.DocBottomNavigation;
 import com.example.ourprojecttest.StuMine.StuInfomation.StuInformation;
@@ -35,6 +36,7 @@ import com.example.ourprojecttest.Utils.Roundimage;
 import com.example.ourprojecttest.StuMine.ShoppingCart.ShoppingCartActivity;
 
 public class StuMineFragment extends Fragment {
+    private Intent intentToService = new Intent("com.example.ourprojecttest.UPDATE_SERVICE");
     private  Receiver1 receiver1;
     private  Receiver receiver;
     private Activity a;
@@ -201,9 +203,18 @@ public class StuMineFragment extends Fragment {
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(mContext, WelcomeActivity.class);
+                //退出应用的时候，如果在挂号，则关闭
+                if(StuService.isGuaHao){
+                    //给服务发送取消挂号的广播
+                    intentToService.putExtra("msg", "ExitGuaHao");
+                    mContext.sendBroadcast(intentToService);
+                }
+                //退出的应用的时候关闭服务
+                Intent intent = new Intent(mContext, StuService.class);
+                mContext.stopService(intent);
+                //跳转到欢迎界面
+                intent=new Intent(mContext, WelcomeActivity.class);
                 mContext.startActivity(intent);
-
             }
         });
         TextView no = inflate.findViewById(R.id.no);

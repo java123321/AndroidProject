@@ -48,6 +48,12 @@
         </LinearLayout>
     </LinearLayout>
     <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:text="医生简介:"/>
+    <TextView
         android:layout_marginTop="10dp"
         android:id="@+id/docBrief"
         android:layout_width="match_parent"
@@ -55,7 +61,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:background="@drawable/style_dialog_yuanjiao"
-        android:text="我是天下第一"/>
+        android:text="医生还未设置简介！"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

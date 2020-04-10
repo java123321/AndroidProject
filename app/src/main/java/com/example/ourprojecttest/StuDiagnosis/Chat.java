@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ourprojecttest.Service.StuService;
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.DocTreatment.Prescribe;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
@@ -257,6 +258,12 @@ public class Chat extends AppCompatActivity {
                     intentToStu.putExtra("chatMsg", stuOrDocId + "|finishChat");
                     sendBroadcast(intentToStu);
                     intentToStu.removeExtra("chatMsg");
+
+                    //给服务发送取消挂号(结束此次挂号)的广播
+                    intentToStu.putExtra("msg", "ExitGuaHao");
+                    intentToStu.putExtra("finishedGuaHao","");//改标记代表学生已结束此次问诊
+                    sendBroadcast(intentToStu);
+                    intentToStu.removeExtra("finishedGuaHao");
                     finish();
                     Log.d("wee", "1");
                 }
@@ -317,7 +324,13 @@ public class Chat extends AppCompatActivity {
             dialogWindow.setAttributes(lp);
 //       将属性设置给窗体
             dialog.show();//显示对话框
-        }else{
+        }else{//
+            if(type.equals("Stu")){//如果是学生退出聊天室，则将此次挂号置为结束
+                intentToStu.putExtra("msg", "ExitGuaHao");
+                intentToStu.putExtra("finishedGuaHao","");//改标记代表学生已结束此次问诊
+                sendBroadcast(intentToStu);
+                intentToStu.removeExtra("finishedGuaHao");
+            }
             finish();
         }
     }
