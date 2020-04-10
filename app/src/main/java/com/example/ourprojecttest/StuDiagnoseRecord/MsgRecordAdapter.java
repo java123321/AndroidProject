@@ -18,6 +18,7 @@ import com.example.ourprojecttest.R;
 import com.example.ourprojecttest.Utils.Roundimage;
 import java.util.ArrayList;
 public class MsgRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
+    private Intent intentToMsgRecord = new Intent("com.example.ourprojecttest.MSG_RECORD");
     private CommonMethod method=new CommonMethod();
     private ArrayList<MessageBean> mList;
     private Context mContext;
@@ -28,6 +29,10 @@ public class MsgRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 public void setmList(ArrayList<MessageBean> list){
         mList=list;
         Log.d("msginit","123");
+    }
+
+    public ArrayList<MessageBean> getmList(){
+        return mList;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{
@@ -46,18 +51,12 @@ public void setmList(ArrayList<MessageBean> list){
             messageItem=itemView.findViewById(R.id.messageItem);
             Log.d("msginit","viewholder");
         }
-
     }
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.swipe_item,parent,false);
         return new ViewHolder(view);
-//        View view=View.inflate(mContext,R.layout.swipe_item,null);
-//        ViewHolder holder=new ViewHolder(view);
-//        Log.d("msginit","oncreate");
-//        return holder;
-
     }
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
@@ -86,11 +85,12 @@ public void setmList(ArrayList<MessageBean> list){
             public void onClick(View v) {
                 mList.remove(position);
                 notifyDataSetChanged();
+                //通知碎片保存删除后的记录
+                intentToMsgRecord.putExtra("save","");
+                mContext.sendBroadcast(intentToMsgRecord);
             }
         });
-
     }
-
     @Override
     public int getItemCount() {
         Log.d("msginit","count1:"+mList.size()+"");
