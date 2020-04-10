@@ -282,7 +282,7 @@ public class PerfeActivity extends AppCompatActivity {
         }
     });
     dialog.setContentView(inflate);
-
+        dialog.setCancelable(false);
     Window dialogWindow = dialog.getWindow();
     //设置Dialog从窗体底部弹出
     dialogWindow.setGravity( Gravity.CENTER);
@@ -310,7 +310,6 @@ public class PerfeActivity extends AppCompatActivity {
             }
         });
         dialog.setContentView(inflate);
-
         Window dialogWindow = dialog.getWindow();
         //设置Dialog从窗体底部弹出
         dialogWindow.setGravity( Gravity.CENTER);
