@@ -66,7 +66,12 @@ public class StuRecordFragment extends Fragment {
         @Override
         public void onReceive(Context context, final Intent intent) {
             //用户收到删除的广播后保存到本地
+            ArrayList<MessageBean> list=adapter.getmList();
             method.writeMessageRecordListIntoSDcard("MessageRecord",adapter.getmList());
+            if(list.size()==0){
+                mRecycler.setVisibility(View.GONE);
+                empty.setVisibility(View.VISIBLE);
+            }
         }
     }
     private void initView(View view){

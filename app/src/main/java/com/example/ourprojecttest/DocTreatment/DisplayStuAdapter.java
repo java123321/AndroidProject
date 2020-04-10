@@ -16,7 +16,7 @@ import java.util.Calendar;
 
 
 public class DisplayStuAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    private ArrayList<DisplayStuBean> mList=new ArrayList<>();
+    public ArrayList<DisplayStuBean> mList=new ArrayList<>();
     private Context mContext;
     public DisplayStuAdapter(Context context){
         this.mContext=context;
