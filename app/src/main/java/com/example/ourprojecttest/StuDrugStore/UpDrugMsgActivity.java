@@ -714,6 +714,7 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
                 return list;
             } catch (StreamCorruptedException e) {
                 e.printStackTrace();
+
                 return null;
             } catch (OptionalDataException e) {
                 e.printStackTrace();
