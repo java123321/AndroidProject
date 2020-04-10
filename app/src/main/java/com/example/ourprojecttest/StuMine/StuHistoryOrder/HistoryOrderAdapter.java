@@ -1,12 +1,17 @@
 package com.example.ourprojecttest.StuMine.StuHistoryOrder;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,6 +19,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ourprojecttest.StuDrugStore.UpDrugMsgActivity;
 import com.example.ourprojecttest.StuMine.StuNeedToPay.ContentInfoBean;
 import com.example.ourprojecttest.StuMine.StuNeedToPay.HeadInfoBean;
 import com.example.ourprojecttest.StuMine.StuNeedToPay.FooterInfoBean;
@@ -138,18 +144,46 @@ public class HistoryOrderAdapter extends RecyclerView.Adapter <RecyclerView.View
                 @Override
                 public void onClick(View v) {
 
-                    AlertDialog.Builder builder  = new AlertDialog.Builder(mContext);
-                    builder.setTitle("提示" ) ;
-                    builder.setMessage("确定删除此订单?" ) ;
-                    builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+                   // AlertDialog.Builder builder  = new AlertDialog.Builder(mContext);
+                   // builder.setTitle("提示" ) ;
+                   // builder.setMessage("确定删除此订单?" ) ;
+                   // builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+                   //     @Override
+                   //     public void onClick(DialogInterface dialog, int which) {
+                   //         intentToHistoryOrder.putExtra("delete",bean.getOrderId());
+                   //         mContext.sendBroadcast(intentToHistoryOrder);
+                   //     }
+                   // });
+                   // builder.setNegativeButton("否",null);
+                   // builder.show();
+                    final Dialog dialog = new Dialog(mContext,R.style.ActionSheetDialogStyle);
+                    View inflate = LayoutInflater.from(mContext).inflate(R.layout.layout_delete_dingdan, null);
+                    TextView no=inflate.findViewById(R.id.no);
+                    TextView yes = inflate.findViewById(R.id.yes);
+                    yes.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                        public void onClick(View view) {
                             intentToHistoryOrder.putExtra("delete",bean.getOrderId());
                             mContext.sendBroadcast(intentToHistoryOrder);
                         }
                     });
-                    builder.setNegativeButton("否",null);
-                    builder.show();
+                    no.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.setContentView(inflate);
+                    dialog.setCancelable(false);
+                    Window dialogWindow = dialog.getWindow();
+                    //设置Dialog从窗体底部弹出
+                    dialogWindow.setGravity( Gravity.CENTER);
+                    //获得窗体的属性
+                    WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+                    lp.width =800;
+                    lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                    dialogWindow.setAttributes(lp);
+                    dialog.show();
                 }
             });
         }
