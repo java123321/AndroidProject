@@ -304,10 +304,18 @@ public class DocOperatActivity extends AppCompatActivity {
         //设置Dialog从窗体底部弹出
         dialogWindow.setGravity(Gravity.CENTER);
         //获得窗体的属性
+        TextView yes = inflate.findViewById(R.id.yes);
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+             dialog1.dismiss();
+            }
+        });
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
         lp.width = 800;
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         dialogWindow.setAttributes(lp);
+        dialog1.setCancelable(false);
 //       将属性设置给窗体
         dialog1.show();//显示对话框
         mOffHandler = new Handler() {
@@ -453,7 +461,7 @@ public class DocOperatActivity extends AppCompatActivity {
         //将布局设置给Dialog
         dialog.setContentView(inflate);
         //获取当前Activity所在的窗体
-
+        dialog.setCancelable(false);
         Window dialogWindow = dialog.getWindow();
         //设置Dialog从窗体底部弹出
         dialogWindow.setGravity(Gravity.CENTER);

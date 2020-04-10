@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,14 +21,18 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
 import com.example.ourprojecttest.AlipayModule.AuthResult;
-import com.example.ourprojecttest.Service.DocService;
-import com.example.ourprojecttest.StuDrugStore.StuBuyDrug;
+import com.example.ourprojecttest.PerfeActivity;
+import com.example.ourprojecttest.RegisterActivity;
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 import com.example.ourprojecttest.AlipayModule.OrderInfoUtil2_0;
@@ -79,7 +84,6 @@ public class NeedToPay extends AppCompatActivity {
     private String orderId=null;
     private CommonMethod method=new CommonMethod();
 
-
     class LocalReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -88,10 +92,6 @@ public class NeedToPay extends AppCompatActivity {
            if(intent.hasExtra("price")){
                orderId=intent.getStringExtra("orderId");
                payV2(intent.getStringExtra("price"));
-           } else {
-               Toast toast = Toast.makeText(NeedToPay.this, "您暂未完善收获地址信息，请先完善！", Toast.LENGTH_SHORT);
-               toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
-               toast.show();
            }
         }
     }
@@ -146,20 +146,24 @@ public class NeedToPay extends AppCompatActivity {
 
                         Log.d("payment","succ");
                         finishedPay();
-                        AlertDialog.Builder builder = new AlertDialog.Builder(NeedToPay.this);
-                        builder.setTitle("提示");
-                        builder.setMessage("支付成功！");
-                        builder.setPositiveButton("确定", null);
-                        builder.show();
+                       // AlertDialog.Builder builder = new AlertDialog.Builder(NeedToPay.this);
+                       // builder.setTitle("提示");
+                       // builder.setMessage("支付成功！");
+                       // builder.setPositiveButton("确定", null);
+                       // builder.show();
+                        String s1="支付成功";
+                        show(R.layout.layout_chenggong,s1);
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
 //                        showAlert(NeedToPay.this, "Payment failed:" + payResult);
-                        Log.d("payment","false");
-                        AlertDialog.Builder builder = new AlertDialog.Builder(NeedToPay.this);
-                        builder.setTitle("提示");
-                        builder.setMessage("支付失败！");
-                        builder.setPositiveButton("确定", null);
-                        builder.show();
+                        //Log.d("payment","false");
+                        //AlertDialog.Builder builder = new AlertDialog.Builder(NeedToPay.this);
+                        //builder.setTitle("提示");
+                        //builder.setMessage("支付失败！");
+                        //builder.setPositiveButton("确定", null);
+                        //builder.show();
+                        String s1="支付失败";
+                        show(R.layout.layout_tishi_email,s1);
                     }
                     break;
                 }
@@ -205,7 +209,7 @@ public class NeedToPay extends AppCompatActivity {
         ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
         intentFilter=new IntentFilter();
         intentFilter.addAction("com.example.ourprojecttest.BUY_ORDER");
-        localReceiver= new LocalReceiver();
+        localReceiver=new LocalReceiver();
         registerReceiver(localReceiver,intentFilter);
     }
 
@@ -316,10 +320,6 @@ public class NeedToPay extends AppCompatActivity {
         }
     }
     private void initView(){
-        String add = method.getFileData("Address", NeedToPay.this);
-        if (add.equals("用户暂未设置收货地址")||add == null||add == "") {
-            AddressMessage.addressMessage = false;
-        }
         empty=findViewById(R.id.empty);
         display = getWindowManager().getDefaultDisplay();
         toastHeight = display.getHeight();
@@ -342,7 +342,6 @@ public class NeedToPay extends AppCompatActivity {
         adapter=new NeedToPayAdapter(NeedToPay.this);
         recyclerView.setAdapter(adapter);
         ArrayList<OrderListBean> orderList=readOrderListFromSdCard("stuNeedToPayOrder");
-
         //如果本地缓存订单数据不为空，则先显示出来
         if(orderList!=null){
             adapter.setList(NeedToPayHelper.getDataAfterHandle(orderList));
@@ -477,8 +476,29 @@ public class NeedToPay extends AppCompatActivity {
             return null;
         }
     }
-
-
-
+    public void show(int x,String s){
+        final Dialog dialog = new Dialog(NeedToPay.this,R.style.ActionSheetDialogStyle);        //展示对话框
+        //填充对话框的布局
+        View inflate = LayoutInflater.from(NeedToPay.this).inflate(x, null);
+        TextView describe=inflate.findViewById(R.id.describe);
+        describe.setText(s);
+        TextView yes = inflate.findViewById(R.id.yes);
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setContentView(inflate);
+        Window dialogWindow = dialog.getWindow();
+        //设置Dialog从窗体底部弹出
+        dialogWindow.setGravity( Gravity.CENTER);
+        //获得窗体的属性
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        lp.width =800;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialogWindow.setAttributes(lp);
+        dialog.show();
+    }
 
 }
