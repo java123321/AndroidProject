@@ -30,12 +30,10 @@
         android:layout_gravity="center_vertical"
         android:text="李时珍" />
 
-
     <TextView
         android:id="@+id/chatTime"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
         android:gravity="center"
         android:layout_marginRight="10dp"
         android:layout_gravity="center_vertical"

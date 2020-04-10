@@ -21,21 +21,18 @@
             android:textSize="18dp"
             android:layout_marginRight="20dp"
             android:textColor="#FFFFFF"
-            android:text="删除" />
+            android:text="下架" />
 
         <TextView
             android:id="@+id/show"
             android:layout_width="wrap_content"
             android:gravity="center"
             android:text="添加药品"
-            android:layout_marginLeft="77dp"
             android:textSize="25dp"
             android:layout_weight="10"
             android:layout_gravity="center_vertical"
             android:textColor="#FFFFFF"
             android:layout_height="wrap_content"/>
-
-
         <Button
             android:layout_marginTop="10dp"
             android:id="@+id/add"
