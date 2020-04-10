@@ -39,6 +39,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ourprojecttest.PerfeActivity;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 import com.example.ourprojecttest.R;
 import com.example.ourprojecttest.StuMine.ShoppingCart.ShoppingCartBean;
@@ -113,16 +114,18 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
             switch (msg.what) {
 
                 case DELETE_SUCCESS:{
-                    AlertDialog.Builder builder  = new AlertDialog.Builder(UpDrugMsgActivity.this);
-                    builder.setTitle("提示" ) ;
-                    builder.setMessage("该药品已删除成功！" ) ;
-                    builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    });
-                    builder.show();
+                   // AlertDialog.Builder builder  = new AlertDialog.Builder(UpDrugMsgActivity.this);
+                   // builder.setTitle("提示" ) ;
+                   // builder.setMessage("该药品已删除成功！" ) ;
+                   // builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+                    //    @Override
+                    //    public void onClick(DialogInterface dialog, int which) {
+                    //        finish();
+                    //    }
+                   // });
+                   // builder.show();
+                    String s="该药品已成功删除！";
+                    show(R.layout.layout_chenggong,s,1);
                     break;
                 }
                 case DELETE_FAULT:{
@@ -137,11 +140,15 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
 
                 case 0:
                     //成功
-                    new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("正确").setMessage("成功").setNegativeButton("确定", null).show();
+                    //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("正确").setMessage("成功").setNegativeButton("确定", null).show();
+                    String s1="";
+                    show(R.layout.layout_chenggong,s1,0);
                     break;
                 case -1:
                     //失败
-                    new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("失败").setNegativeButton("确定", null).show();
+                    //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("失败").setNegativeButton("确定", null).show();
+                    String s="失败";
+                    show(R.layout.layout_tishi_email,s,0);
                 default:
                     break;
             }
@@ -187,17 +194,45 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
         deleteOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(UpDrugMsgActivity.this);
-                builder.setTitle("提示");
-                builder.setMessage("确定要删除此药品吗?");
-                builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+               // AlertDialog.Builder builder = new AlertDialog.Builder(UpDrugMsgActivity.this);
+               // builder.setTitle("提示");
+               // builder.setMessage("确定要删除此药品吗?");
+               // builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+               //     @Override
+               //     public void onClick(DialogInterface dialog, int which) {
+               //         deleteOrder();
+               //     }
+               // });
+               // builder.setNegativeButton("否", null);
+               // builder.show();
+                final Dialog dialog = new Dialog(UpDrugMsgActivity.this,R.style.ActionSheetDialogStyle);        //展示对话框
+                //填充对话框的布局
+                View inflate = LayoutInflater.from(UpDrugMsgActivity.this).inflate(R.layout.layout_delete_yaopin, null);
+                TextView no=inflate.findViewById(R.id.no);
+                TextView yes = inflate.findViewById(R.id.yes);
+                yes.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(View view) {
                         deleteOrder();
                     }
                 });
-                builder.setNegativeButton("否", null);
-                builder.show();
+                no.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.setContentView(inflate);
+                dialog.setCancelable(false);
+                Window dialogWindow = dialog.getWindow();
+                //设置Dialog从窗体底部弹出
+                dialogWindow.setGravity( Gravity.CENTER);
+                //获得窗体的属性
+                WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+                lp.width =800;
+                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                dialogWindow.setAttributes(lp);
+                dialog.show();
             }
         });
         display = getWindowManager().getDefaultDisplay();
@@ -245,11 +280,17 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
                 final String describe = drug_resume.getText().toString().trim();
                 boolean flag = true;
                 if (drug_name_s.isEmpty() || drug_num_s.isEmpty() || drug_price_s.isEmpty() || path == "" || describe.isEmpty()) {
-                    new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请完善信息").setNegativeButton("确定", null).show();
+                    String s1="请完善信息";
+                    show(R.layout.layout_tishi_email,s1,0);
+                    //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请完善信息").setNegativeButton("确定", null).show();
                 } else if (!check_num(drug_num_s) && flag) {
-                    new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请填入数字").setNegativeButton("确定", null).show();
+                    //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请填入数字").setNegativeButton("确定", null).show();
+                    String s1="请输入数字";
+                    show(R.layout.layout_tishi_email,s1,0);
                 } else if (!check_price(drug_price_s) && flag) {
-                    new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请填入正确价格 ").setNegativeButton("确定", null).show();
+                    //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请填入正确价格 ").setNegativeButton("确定", null).show();
+                    String s1="请输入正确价格";
+                    show(R.layout.layout_tishi_email,s1,0);
                 }
                 //
                 new Thread(new Runnable() {
@@ -690,5 +731,33 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
         } else {
             return null;
         }
+    }
+    public void show(int x,String s,int y){
+        final Dialog dialog = new Dialog(UpDrugMsgActivity.this,R.style.ActionSheetDialogStyle);        //展示对话框
+        //填充对话框的布局
+        View inflate = LayoutInflater.from(UpDrugMsgActivity.this).inflate(x, null);
+        TextView describe=inflate.findViewById(R.id.describe);
+        describe.setText(s);
+        TextView yes = inflate.findViewById(R.id.yes);
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(y==0)
+                dialog.dismiss();
+                else
+                    finish();
+            }
+        });
+        dialog.setContentView(inflate);
+        dialog.setCancelable(false);
+        Window dialogWindow = dialog.getWindow();
+        //设置Dialog从窗体底部弹出
+        dialogWindow.setGravity( Gravity.CENTER);
+        //获得窗体的属性
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        lp.width =800;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialogWindow.setAttributes(lp);
+        dialog.show();
     }
 }
