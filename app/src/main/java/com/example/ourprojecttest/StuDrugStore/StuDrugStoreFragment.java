@@ -263,7 +263,7 @@ public class StuDrugStoreFragment extends Fragment {
                         @Override
                         public boolean onTouch(View view, MotionEvent event) {
                             //获取点击焦点
-                            if (event.getX() > inputInspect.getWidth() - inputInspect.getPaddingRight() - drawable.getIntrinsicWidth()) {
+                            if (event.getX() > inputInspect.getWidth() - inputInspect.getPaddingRight() - 60) {
                                 //其他活动无响应
                                 if (event.getAction() != MotionEvent.ACTION_UP)
                                     return false;

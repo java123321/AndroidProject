@@ -263,35 +263,35 @@ public class PerfeActivity extends AppCompatActivity {
             }
             handler.sendMessage(msg);
 
-        } catch ( Exception e)
+        } catch ( Exception e)  final Dialog dialog = new Dialog(PerfeActivity.this,R.style.ActionSheetDialogStyle);        //展示对话框
+        //填充对话框的布局
+        View inflate = LayoutInflater.from(PerfeActivity.this).inflate(x, null);
+        TextView describe=inflate.findViewById(R.id.describe);
+        describe.setText(s);
+        TextView yes = inflate.findViewById(R.id.yes);
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setContentView(inflate);
+        dialog.setCancelable(false);
+        Window dialogWindow = dialog.getWindow();
+        //设置Dialog从窗体底部弹出
+        dialogWindow.setGravity( Gravity.CENTER);
+        //获得窗体的属性
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        lp.width =800;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialogWindow.setAttributes(lp);
+        dialog.show();
         {
             e.printStackTrace();
         }
     }
     public void show(int x,String s){
-    final Dialog dialog = new Dialog(PerfeActivity.this,R.style.ActionSheetDialogStyle);        //展示对话框
-    //填充对话框的布局
-    View inflate = LayoutInflater.from(PerfeActivity.this).inflate(x, null);
-    TextView describe=inflate.findViewById(R.id.describe);
-    describe.setText(s);
-    TextView yes = inflate.findViewById(R.id.yes);
-    yes.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            dialog.dismiss();
-        }
-    });
-    dialog.setContentView(inflate);
-        dialog.setCancelable(false);
-    Window dialogWindow = dialog.getWindow();
-    //设置Dialog从窗体底部弹出
-    dialogWindow.setGravity( Gravity.CENTER);
-    //获得窗体的属性
-    WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-    lp.width =800;
-    lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-    dialogWindow.setAttributes(lp);
-    dialog.show();
+
 }
     public void show(int x,String s,Intent intent){
         final Dialog dialog = new Dialog(PerfeActivity.this,R.style.ActionSheetDialogStyle);        //展示对话框
