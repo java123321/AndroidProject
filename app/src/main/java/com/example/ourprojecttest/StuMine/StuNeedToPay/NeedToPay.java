@@ -120,6 +120,8 @@ public class NeedToPay extends AppCompatActivity {
                   empty.setVisibility(View.VISIBLE);
                   recyclerView.setVisibility(View.GONE);
                     refresh.setRefreshing(false);
+                    refresh.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.color_progressbar));
+                    recyclerView=findViewById(R.id.historyOrderRecyclerView);
                     break;
                 }
                 case SUCCESS:{//表示获取订单成功

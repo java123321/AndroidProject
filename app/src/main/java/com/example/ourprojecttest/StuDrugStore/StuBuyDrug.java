@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,7 +20,10 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,6 +35,7 @@ import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
 import com.example.ourprojecttest.AlipayModule.AuthResult;
 import com.example.ourprojecttest.LoginActivity;
+import com.example.ourprojecttest.StuMine.StuNeedToPay.NeedToPay;
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 import com.example.ourprojecttest.AlipayModule.OrderInfoUtil2_0;
@@ -91,19 +96,23 @@ public class StuBuyDrug extends AppCompatActivity {
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
                         //showAlert(StuBuyDrug.this, "Payment success:" + payResult);
-                        AlertDialog.Builder builder = new AlertDialog.Builder(StuBuyDrug.this);
-                        builder.setTitle("提示");
-                        builder.setMessage("支付成功！");
-                        builder.setPositiveButton("确定", null);
-                        builder.show();
+                       // AlertDialog.Builder builder = new AlertDialog.Builder(StuBuyDrug.this);
+                       // builder.setTitle("提示");
+                       // builder.setMessage("支付成功！");
+                       // builder.setPositiveButton("确定", null);
+                       // builder.show();
+                        String s1="支付成功";
+                        show(R.layout.layout_chenggong,s1);
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
                         //showAlert(StuBuyDrug.this, "Payment failed:" + payResult);
-                        AlertDialog.Builder builder = new AlertDialog.Builder(StuBuyDrug.this);
-                        builder.setTitle("提示");
-                        builder.setMessage("支付失败！");
-                        builder.setPositiveButton("确定", null);
-                        builder.show();
+                        //AlertDialog.Builder builder = new AlertDialog.Builder(StuBuyDrug.this);
+                        //builder.setTitle("提示");
+                        //builder.setMessage("支付失败！");
+                        //builder.setPositiveButton("确定", null);
+                        //builder.show();
+                        String s1="支付失败";
+                        show(R.layout.layout_tishi_email,s1);
                     }
                     break;
                 }
@@ -207,11 +216,13 @@ public class StuBuyDrug extends AppCompatActivity {
                         payV2(getIntent().getStringExtra("price"));
                     } else {
                         //如果用户选中的是微信支付，则弹出提示
-                        AlertDialog.Builder bb = new AlertDialog.Builder(StuBuyDrug.this);
-                        bb.setPositiveButton("确定", null);
-                        bb.setMessage("微信支付功能尚未开通，尽请期待！");
-                        bb.setTitle("提示");
-                        bb.show();
+                        //AlertDialog.Builder bb = new AlertDialog.Builder(StuBuyDrug.this);
+                        //bb.setPositiveButton("确定", null);
+                        //bb.setMessage("微信支付功能尚未开通，尽请期待！");
+                        //bb.setTitle("提示");
+                        //bb.show();
+                        String s1="微信支付功能尚未开通，尽请期待！";
+                        show(R.layout.layout_tishi_email,s1);
                     }
                 } else {
                     Toast toast = Toast.makeText(StuBuyDrug.this, "您暂未完善收获地址信息，请先完善！", Toast.LENGTH_SHORT);
@@ -339,6 +350,30 @@ public class StuBuyDrug extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+    public void show(int x,String s){
+        final Dialog dialog = new Dialog(StuBuyDrug.this,R.style.ActionSheetDialogStyle);        //展示对话框
+        //填充对话框的布局
+        View inflate = LayoutInflater.from(StuBuyDrug.this).inflate(x, null);
+        TextView describe=inflate.findViewById(R.id.describe);
+        describe.setText(s);
+        TextView yes = inflate.findViewById(R.id.yes);
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setContentView(inflate);
+        Window dialogWindow = dialog.getWindow();
+        //设置Dialog从窗体底部弹出
+        dialogWindow.setGravity( Gravity.CENTER);
+        //获得窗体的属性
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        lp.width =800;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialogWindow.setAttributes(lp);
+        dialog.show();
     }
 
 

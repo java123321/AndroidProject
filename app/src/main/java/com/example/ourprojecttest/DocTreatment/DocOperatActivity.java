@@ -303,6 +303,7 @@ public class DocOperatActivity extends AppCompatActivity {
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         dialogWindow.setAttributes(lp);
         dialog1.setCancelable(false);
+        dialog1.setCanceledOnTouchOutside(false);
 //       将属性设置给窗体
         dialog1.show();//显示对话框
         mOffHandler = new Handler() {
