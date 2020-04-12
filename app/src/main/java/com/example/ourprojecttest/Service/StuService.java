@@ -343,10 +343,10 @@ public class StuService extends Service {
                 .setShowWhen(true)
                 .setWhen(10000L)
                 .setAutoCancel(true)
-                //.setDefaults(Notification.DEFAULT_ALL)
+                .setDefaults(Notification.DEFAULT_SOUND)
                 .setWhen(System.currentTimeMillis())
                 .setContentIntent(pendingIntent)
-                .setVibrate(new long[] {0,1000,0,1000,0,1000,0,1000,1000,0,1000,1000,1000})
+                //.setVibrate(new long[] {0,1000,0,1000,0,1000,0,1000,1000,0,1000,1000,1000})
                 .build();
         manager.notify(1, notification);
 
