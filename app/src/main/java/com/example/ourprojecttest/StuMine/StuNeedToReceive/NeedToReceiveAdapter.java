@@ -1,9 +1,16 @@
 package com.example.ourprojecttest.StuMine.StuNeedToReceive;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -133,9 +140,50 @@ public class NeedToReceiveAdapter extends RecyclerView.Adapter <RecyclerView.Vie
                 footViewHolder.confirmReceive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                    intentToReceiveOrder.putExtra("receive",bean.getOrderId());
-                    mContext.sendBroadcast(intentToReceiveOrder);
-
+                       // AlertDialog.Builder builder  = new AlertDialog.Builder(mContext);
+                       // builder.setTitle("提示" ) ;
+                       // builder.setMessage("确认已收到药品?" ) ;
+                       // builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+                       //     @Override
+                       //     public void onClick(DialogInterface dialog, int which) {
+                       //         intentToReceiveOrder.putExtra("receive",bean.getOrderId());
+                       //         mContext.sendBroadcast(intentToReceiveOrder);
+                       //     }
+                       // });
+                       // builder.setNegativeButton("否",null);
+                       // builder.show();
+                        final Dialog dialog = new Dialog(mContext,R.style.ActionSheetDialogStyle);
+                        View inflate = LayoutInflater.from(mContext).inflate(R.layout.layout_delete_dingdan, null);
+                        TextView no=inflate.findViewById(R.id.no);
+                        TextView yes = inflate.findViewById(R.id.yes);
+                        TextView jianjie=inflate.findViewById(R.id.jianjie);
+                        TextView describe=inflate.findViewById(R.id.describe);
+                        jianjie.setText("确认收货");
+                        describe.setText("确认已收到药品？");
+                        yes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                intentToReceiveOrder.putExtra("receive",bean.getOrderId());
+                                mContext.sendBroadcast(intentToReceiveOrder);
+                            }
+                        });
+                        no.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        });
+                        dialog.setContentView(inflate);
+                        dialog.setCancelable(false);
+                        Window dialogWindow = dialog.getWindow();
+                        //设置Dialog从窗体底部弹出
+                        dialogWindow.setGravity( Gravity.CENTER);
+                        //获得窗体的属性
+                        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+                        lp.width =800;
+                        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                        dialogWindow.setAttributes(lp);
+                        dialog.show();
                     }
                 });
             }

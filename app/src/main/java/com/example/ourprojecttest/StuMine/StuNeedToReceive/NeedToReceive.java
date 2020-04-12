@@ -16,6 +16,8 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -46,6 +48,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class NeedToReceive extends AppCompatActivity {
+    private Display display;
+    private int toastHeight;
     private LinearLayout empty;
     private String ipAddress;
     private final int RECEIVE_SUCCESS=2;
@@ -73,11 +77,18 @@ public class NeedToReceive extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what){
                 case RECEIVE_SUCCESS:{
-                    Toast.makeText(NeedToReceive.this, "收货成功", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(NeedToReceive.this, "收货成功，正在更新待收货订单！", Toast.LENGTH_SHORT);
+                    // 这里给了一个1/4屏幕高度的y轴偏移量
+                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                    toast.show();
+                    getData();
                     break;
                 }
                 case RECEIVE_FAILT:{
-                    Toast.makeText(NeedToReceive.this, "收货失败", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(NeedToReceive.this, "收货失败！", Toast.LENGTH_SHORT);
+                    // 这里给了一个1/4屏幕高度的y轴偏移量
+                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                    toast.show();
                     break;
                 }
                 case HAVE_ORDER:{
@@ -216,6 +227,8 @@ public class NeedToReceive extends AppCompatActivity {
 
 
     private void initView(){
+        display = getWindowManager().getDefaultDisplay();
+        toastHeight = display.getHeight();
         empty=findViewById(R.id.empty);
         id=method.getFileData("ID",this);
         refresh=findViewById(R.id.refresh);

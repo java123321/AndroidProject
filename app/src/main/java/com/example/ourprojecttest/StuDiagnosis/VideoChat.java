@@ -511,7 +511,6 @@ public class VideoChat extends AppCompatActivity implements View.OnClickListener
         @Override
         public void onClosed(WebSocket webSocket, int code, String reason) {
 
-
         }
 
         @Override
@@ -554,20 +553,8 @@ public class VideoChat extends AppCompatActivity implements View.OnClickListener
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:{//点击返回键是进行确认
-                //AlertDialog.Builder builder = new AlertDialog.Builder(VideoChat.this);
-                //builder.setTitle("提示");
-                //builder.setMessage("是否退出视频通话！");
-                //用户点击确定之后销毁视频聊天界面
-                //builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                //    @Override
-                //    public void onClick(DialogInterface dialog, int which) {
-                //        finish();
-                //    }
-                //});
-                //builder.setNegativeButton("取消",null);
-                //builder.show();
-                //return true;
                 tuichuvideo();
+                return true;
             }
             case KeyEvent.KEYCODE_VOLUME_UP:
                 mAudioManager.adjustStreamVolume(AudioManager.STREAM_VOICE_CALL, AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);

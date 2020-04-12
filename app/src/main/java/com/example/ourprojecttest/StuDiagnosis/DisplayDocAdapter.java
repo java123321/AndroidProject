@@ -19,25 +19,21 @@ import java.util.ArrayList;
 
 public class DisplayDocAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private CommonMethod method=new CommonMethod();
-    private ArrayList<DisplayDocBean> mList=new ArrayList<>();
+    public ArrayList<DisplayDocBean> mList=new ArrayList<>();
     private Context mContext;
     public DisplayDocAdapter(Context context){
         this.mContext=context;
     }
-
     public void setList(ArrayList<DisplayDocBean> list){
         mList = list;
     }
-
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = View.inflate(mContext, R.layout.stu_display_doc_item, null);
         final ViewHolder holder=new ViewHolder(view);
-
         return holder;
     }
-
     class ViewHolder extends RecyclerView.ViewHolder{
         Roundimage docIcon;
         TextView docName;

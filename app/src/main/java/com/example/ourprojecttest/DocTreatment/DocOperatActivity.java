@@ -60,11 +60,9 @@ public class DocOperatActivity extends AppCompatActivity {
     private int height;
     private Handler mOffHandler;
     private Timer mOffTime;
-    private Dialog mDialog, dialog1;
+    private Dialog  dialog1;
     private String ipAddress;
     private final int SUCCESS = 1;
-    private View x;
-    private TextView mn;
     private final int FAULT = 0;
     private Intent intentToService = new Intent("com.example.ourprojecttest.DOC_UPDATE_SERVICE");//改
     private LocalReceiver localReceiver;
@@ -88,8 +86,6 @@ public class DocOperatActivity extends AppCompatActivity {
                     adapter.setList(list);
                     adapter.notifyDataSetChanged();
                     dispalyStuNumber.setText("当前学生挂号人数: "+list.size()+"人");
-                    noStudent.setVisibility(View.GONE);
-                    mRecycler.setVisibility(View.VISIBLE);
                     break;
                 case FAULT:
                     dispalyStuNumber.setText("当前学生挂号人数: 0人");
@@ -118,6 +114,8 @@ public class DocOperatActivity extends AppCompatActivity {
     //从服务器获取当前在线学生的信息
     private void getData() {
         Log.d("msgwhat","statgetstunumber");
+        noStudent.setVisibility(View.GONE);
+        mRecycler.setVisibility(View.VISIBLE);
         refresh.setRefreshing(true);
         refresh.setColorSchemeColors(getResources().getColor(R.color.color_bottom));
         refresh.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.color_progressbar));
@@ -153,14 +151,12 @@ public class DocOperatActivity extends AppCompatActivity {
                 if (!jsonObject.has("#x")) {
                     DisplayStuBean info = new DisplayStuBean();
                     info.setName(jsonObject.getString("Stu_Name"));
-                    ;
                     info.setSex(jsonObject.getString("Stu_Sex"));
                     info.setBirthday(jsonObject.getString("Stu_Birth"));
                     info.setHeight(jsonObject.getString("Stu_Height"));
                     info.setWeight(jsonObject.getString("Stu_Weight"));
                     //设置学生头像
-                    String stuIconUrl = jsonObject.getString("Stu_Icon").trim();
-                    if (stuIconUrl == null || stuIconUrl.equals("")) {//如果学生没有设置头像
+                    if ( jsonObject.has("Stu_Icon")) {//如果学生设置了头像
                         info.setIcon(method.drawableToBitamp(Drawable.createFromStream(new URL(ipAddress + jsonObject.getString("Stu_Icon")).openStream(), "image.jpg")));
                     } else {
                         info.setIcon(null);
@@ -173,7 +169,7 @@ public class DocOperatActivity extends AppCompatActivity {
                     return;
                 }
             }
-            Log.d("msgwhat", "size1" + list.size());
+            Log.d("msgwhat", "size:" + list.size());
             msg.what = SUCCESS;
             msg.obj = list;
             handler.sendMessage(msg);
@@ -185,21 +181,12 @@ public class DocOperatActivity extends AppCompatActivity {
     }
 
     private void initView() {
-
         display = getWindowManager().getDefaultDisplay();
         // 获取屏幕高度
         height = display.getHeight();
-
         //如果有状态码state代表用户从前台服务跳进来
         Intent intent = getIntent();
-        if (intent.hasExtra("state")) {
-            //如果是-1代表当前是
-            if (intent.getStringExtra("state").equals(-1)) {
 
-            } else {
-
-            }
-        }
         refresh = findViewById(R.id.swipeRefresh);
         //设置下拉刷新的的更新事件
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -304,10 +291,19 @@ public class DocOperatActivity extends AppCompatActivity {
         //设置Dialog从窗体底部弹出
         dialogWindow.setGravity(Gravity.CENTER);
         //获得窗体的属性
+        TextView yes = inflate.findViewById(R.id.yes);
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+             dialog1.dismiss();
+            }
+        });
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
         lp.width = 800;
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         dialogWindow.setAttributes(lp);
+        dialog1.setCancelable(false);
+        dialog1.setCanceledOnTouchOutside(false);
 //       将属性设置给窗体
         dialog1.show();//显示对话框
         mOffHandler = new Handler() {
@@ -331,7 +327,7 @@ public class DocOperatActivity extends AppCompatActivity {
         //倒计时
         mOffTime = new Timer(true);
         TimerTask tt = new TimerTask() {
-            int countTime = 10;
+            int countTime = 25;
 
             public void run() {
                 if (countTime > 0) {
@@ -352,37 +348,20 @@ public class DocOperatActivity extends AppCompatActivity {
     class LocalReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+
             if (intent.hasExtra("updateStu")) {
                 if(intent.getStringExtra("updateStu").equals("noStuOnline")){//如果是通知没有学生挂号
-                   // AlertDialog.Builder builder  = new AlertDialog.Builder(DocOperatActivity.this);
-                   // builder.setTitle("提示" ) ;
-                   // builder.setMessage("当前暂无学生挂号，请等候！" ) ;
-                   // builder.setPositiveButton("确定" ,  null );
-                   // builder.show();
-                    final Dialog dialog = new Dialog(DocOperatActivity.this,R.style.ActionSheetDialogStyle);        //展示对话框
-                    //填充对话框的布局
-                    View inflate = LayoutInflater.from(DocOperatActivity.this).inflate(R.layout.layout_tishi_email,null);
-                    TextView describe=inflate.findViewById(R.id.describe);
-                    describe.setText("当前暂无学生挂号，请等候!");
-                    TextView yes = inflate.findViewById(R.id.yes);
-                    yes.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            dialog.dismiss();
-                        }
-                    });
-                    dialog.setContentView(inflate);
-
-                    Window dialogWindow = dialog.getWindow();
-                    //设置Dialog从窗体底部弹出
-                    dialogWindow.setGravity( Gravity.CENTER);
-                    //获得窗体的属性
-                    WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-                    lp.width =800;
-                    lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-                    dialogWindow.setAttributes(lp);
-                    dialog.show();
+                    Log.d("docoperate","nostuwenzhen");
+                    Toast toast = Toast.makeText(DocOperatActivity.this, "当前暂无学生问诊，请等候！", Toast.LENGTH_SHORT);
+                    // 这里给了一个1/4屏幕高度的y轴偏移量
+                    toast.setGravity(Gravity.BOTTOM, 0, height / 5);
+                    toast.show();
+                    noStudent.setVisibility(View.VISIBLE);
+                    mRecycler.setVisibility(View.GONE);
+                    adapter.mList.clear();
+                    adapter.notifyDataSetChanged();
                 }else{//否则就是更新挂号学生
+                    Log.d("docoperate","getData");
                     getData();
                 }
 
@@ -453,7 +432,7 @@ public class DocOperatActivity extends AppCompatActivity {
         //将布局设置给Dialog
         dialog.setContentView(inflate);
         //获取当前Activity所在的窗体
-
+        dialog.setCancelable(false);
         Window dialogWindow = dialog.getWindow();
         //设置Dialog从窗体底部弹出
         dialogWindow.setGravity(Gravity.CENTER);

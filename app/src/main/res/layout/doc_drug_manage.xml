@@ -8,19 +8,31 @@
         android:layout_height="70dp"
         android:background="#FD0896F5"
         android:orientation="horizontal">
+
+        <Button
+            android:layout_marginTop="10dp"
+            android:id="@+id/delete"
+            android:layout_gravity="left"
+            android:layout_width="40dp"
+            android:layout_height="70dp"
+            android:background="@null"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="18dp"
+            android:layout_marginRight="20dp"
+            android:textColor="#FFFFFF"
+            android:text="下架" />
+
         <TextView
             android:id="@+id/show"
             android:layout_width="wrap_content"
             android:gravity="center"
             android:text="添加药品"
-            android:layout_marginLeft="77dp"
             android:textSize="25dp"
             android:layout_weight="10"
             android:layout_gravity="center_vertical"
             android:textColor="#FFFFFF"
             android:layout_height="wrap_content"/>
-
-
         <Button
             android:layout_marginTop="10dp"
             android:id="@+id/add"
@@ -33,7 +45,7 @@
             android:textSize="18dp"
             android:layout_marginLeft="20dp"
             android:textColor="#FFFFFF"
-            android:text="确定" />
+            android:text="保存" />
 
     </LinearLayout>
     <LinearLayout

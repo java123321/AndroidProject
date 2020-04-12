@@ -9,6 +9,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -38,6 +39,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ourprojecttest.PerfeActivity;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 import com.example.ourprojecttest.R;
 import com.example.ourprojecttest.StuMine.ShoppingCart.ShoppingCartBean;
@@ -71,14 +73,15 @@ import okhttp3.Response;
 
 import static com.blankj.utilcode.util.UriUtils.uri2File;
 
-public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClickListener{
-
+public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClickListener {
+    private final int DELETE_SUCCESS=5;
+    private final int DELETE_FAULT=6;
+    private Button deleteOrder;
     private Display display;
     private int toastHeight;
     private String ipAddress;
-    private final int UPPictureFinished=2;
-    private String path ;
-    private static final int TAKE_PHOTO = 1;
+    private final int UPPictureFinished = 2;
+    private String path;
     private static final int CHOOSE_PHOTO = 2;
     private ImageView picture;
     private TextView drug_name;
@@ -102,69 +105,166 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
     private Dialog dialog;
     private String fileName = "test";
     private File file;
-
+    private String drugId;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-
+             Log.d("updatedrug","what:"+msg.what);
             switch (msg.what) {
+
+                case DELETE_SUCCESS:{
+                   // AlertDialog.Builder builder  = new AlertDialog.Builder(UpDrugMsgActivity.this);
+                   // builder.setTitle("提示" ) ;
+                   // builder.setMessage("该药品已删除成功！" ) ;
+                   // builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+                    //    @Override
+                    //    public void onClick(DialogInterface dialog, int which) {
+                    //        finish();
+                    //    }
+                   // });
+                   // builder.show();
+                    String s="该药品已成功删除！";
+                    show(R.layout.layout_chenggong,s,1);
+                    break;
+                }
+                case DELETE_FAULT:{
+                    Toast toast = Toast.makeText(UpDrugMsgActivity.this, "药品删除失败，请稍后再试！", Toast.LENGTH_SHORT);
+                    // 这里给了一个1/4屏幕高度的y轴偏移量
+                    toast.setGravity(Gravity.BOTTOM, 0, toastHeight / 5);
+                    toast.show();
+                    break;
+                }
                 case UPPictureFinished:
 
 
                 case 0:
                     //成功
-                    new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("正确").setMessage("成功").setNegativeButton("确定",null).show();
+                    //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("正确").setMessage("成功").setNegativeButton("确定", null).show();
+                    String s1="";
+                    show(R.layout.layout_chenggong,s1,0);
                     break;
                 case -1:
                     //失败
-                    new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("失败").setNegativeButton("确定",null).show();
+                    //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("失败").setNegativeButton("确定", null).show();
+                    String s="失败";
+                    show(R.layout.layout_tishi_email,s,0);
                 default:
                     break;
             }
         }
     };
 
-
+    //该方法用于删除数据库中的药品
+    private void deleteOrder() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String url = ipAddress + "IM/DeleteDrug?drugId=" + drugId;
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url(url)
+                        .build();
+                try {
+                    Response response = client.newCall(request).execute();
+                    String responseData = response.body().string().trim();
+                    Log.d("denglu", "resdata:" + responseData);
+                    Message msg=handler.obtainMessage();
+                    if(responseData.equals("删除成功")){
+                        msg.what=DELETE_SUCCESS;
+                    }else{
+                        msg.what=DELETE_FAULT;
+                    }
+                    handler.sendMessage(msg);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doc_drug_manage);
-        ipAddress=getResources().getString(R.string.ipAdrress);
+        ipAddress = getResources().getString(R.string.ipAdrress);
         ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
-
+        deleteOrder = findViewById(R.id.delete);
+        //设置删除药品的点击事件
+        deleteOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               // AlertDialog.Builder builder = new AlertDialog.Builder(UpDrugMsgActivity.this);
+               // builder.setTitle("提示");
+               // builder.setMessage("确定要删除此药品吗?");
+               // builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+               //     @Override
+               //     public void onClick(DialogInterface dialog, int which) {
+               //         deleteOrder();
+               //     }
+               // });
+               // builder.setNegativeButton("否", null);
+               // builder.show();
+                final Dialog dialog = new Dialog(UpDrugMsgActivity.this,R.style.ActionSheetDialogStyle);        //展示对话框
+                //填充对话框的布局
+                View inflate = LayoutInflater.from(UpDrugMsgActivity.this).inflate(R.layout.layout_delete_yaopin, null);
+                TextView no=inflate.findViewById(R.id.no);
+                TextView yes = inflate.findViewById(R.id.yes);
+                yes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        deleteOrder();
+                    }
+                });
+                no.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.setContentView(inflate);
+                dialog.setCancelable(false);
+                Window dialogWindow = dialog.getWindow();
+                //设置Dialog从窗体底部弹出
+                dialogWindow.setGravity( Gravity.CENTER);
+                //获得窗体的属性
+                WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+                lp.width =800;
+                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                dialogWindow.setAttributes(lp);
+                dialog.show();
+            }
+        });
         display = getWindowManager().getDefaultDisplay();
         toastHeight = display.getHeight();
-        submit =  findViewById(R.id.add);
-        kind =  findViewById(R.id.drug_kind);
+        submit = findViewById(R.id.add);
+        kind = findViewById(R.id.drug_kind);
         attribute = findViewById(R.id.drug_attribyte);
         show = findViewById(R.id.show);
-        drug_name =  findViewById(R.id.drug_name);
-        drug_price =  findViewById(R.id.drug_price);
+        drug_name = findViewById(R.id.drug_name);
+        drug_price = findViewById(R.id.drug_price);
         drug_num = findViewById(R.id.drug_num);
-        drug_resume =  findViewById(R.id.drug_msg);
-        picture =  findViewById(R.id.picture);
+        drug_resume = findViewById(R.id.drug_msg);
+        picture = findViewById(R.id.picture);
         picture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog= show();
+                dialog = show();
             }
         });
 
-        if (getIntent().getStringExtra("adjust").trim().equals("0"))
-        {
+        if (getIntent().getStringExtra("adjust").trim().equals("0")) {
             show.setText("添加药品");
             addOrup = "UploadDrug";
-        }
-        else {
-            Intent intent=getIntent();
+        } else {
+            Intent intent = getIntent();
+            drugId = intent.getStringExtra("drugId").trim();
             drug_num.setText(intent.getStringExtra("amount").trim());
             drug_name.setText(intent.getStringExtra("drugName").trim());
             drug_price.setText(intent.getStringExtra("drugPrice").trim());
             drug_resume.setText(intent.getStringExtra("drugDescription").trim());
-            byte[] appIcon=intent.getByteArrayExtra("drugPicture");
-            picture.setImageBitmap(BitmapFactory.decodeByteArray(appIcon,0,appIcon.length));
+            byte[] appIcon = intent.getByteArrayExtra("drugPicture");
+            picture.setImageBitmap(BitmapFactory.decodeByteArray(appIcon, 0, appIcon.length));
             show.setText("修改药品");
             addOrup = "UpdateDrugInformation";
             createFileWithByte(appIcon);
@@ -179,26 +279,33 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
                 final String drug_num_s = drug_num.getText().toString().trim();
                 final String describe = drug_resume.getText().toString().trim();
                 boolean flag = true;
-                if (drug_name_s.isEmpty()||drug_num_s.isEmpty()||drug_price_s.isEmpty()||path==""||describe.isEmpty()){
-                    new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请完善信息").setNegativeButton("确定",null).show();
-                    flag = false;
-                }else if (!check_num(drug_num_s)&&flag){
-                    new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请填入数字").setNegativeButton("确定",null).show();
-                    flag = false;
-                }else if (!check_price(drug_price_s)&&flag){
-                    new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请填入正确价格 ").setNegativeButton("确定",null).show();
+                if (drug_name_s.isEmpty() || drug_num_s.isEmpty() || drug_price_s.isEmpty() || path == "" || describe.isEmpty()) {
+                    String s1="请完善信息";
+                    show(R.layout.layout_tishi_email,s1,0);
+                    //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请完善信息").setNegativeButton("确定", null).show();
+                } else if (!check_num(drug_num_s) && flag) {
+                    //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请填入数字").setNegativeButton("确定", null).show();
+                    String s1="请输入数字";
+                    show(R.layout.layout_tishi_email,s1,0);
+                } else if (!check_price(drug_price_s) && flag) {
+                    //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请填入正确价格 ").setNegativeButton("确定", null).show();
+                    String s1="请输入正确价格";
+                    show(R.layout.layout_tishi_email,s1,0);
                 }
                 //
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        uploadDrugInfo(file,ipAddress+"IM/PictureUpload?type=Drug",drug_name_s,drug_price_s,kind_s,describe,drug_num_s,attribute_s);
+                        uploadDrugInfo(file, ipAddress + "IM/PictureUpload?type=Drug", drug_name_s, drug_price_s, kind_s, describe, drug_num_s, attribute_s);
                     }
                 }).start();
             }
         });
     }
-    public void onClick(View v) {}
+
+    public void onClick(View v) {
+    }
+
     // 拍照
     private void takePhoto() {
         // 要保存的文件名
@@ -235,7 +342,7 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
         }
         Uri uri;
         if (Build.VERSION.SDK_INT >= 24) {
-            uri = FileProvider.getUriForFile(context.getApplicationContext(),"url", file);
+            uri = FileProvider.getUriForFile(context.getApplicationContext(), "url", file);
         } else {
             uri = Uri.fromFile(file);
         }
@@ -340,7 +447,7 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
         intent.putExtra(MediaStore.EXTRA_OUTPUT, mCutUri);
         Toast toast = Toast.makeText(UpDrugMsgActivity.this, "剪裁图片！", Toast.LENGTH_SHORT);
         // 这里给了一个1/4屏幕高度的y轴偏移量
-        toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+        toast.setGravity(Gravity.BOTTOM, 0, toastHeight / 5);
         toast.show();
         // 以广播方式刷新系统相册，以便能够在相册中找到刚刚所拍摄和裁剪的照片
         Intent intentBc = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
@@ -379,8 +486,7 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
                             file = uri2File(mCutUri);
                         picture.setImageURI(mCutUri);
                         dialog.dismiss();
-                    }
-                    catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                     break;
@@ -395,34 +501,34 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    private void parseJSONWithJSONObject(String jsonData){
-        try{
-            Log.d("updrugjson",jsonData);
-            JSONObject jsonObject=new JSONObject(jsonData);
-            String code=jsonObject.getString("code");
+    private void parseJSONWithJSONObject(String jsonData) {
+        try {
+            Log.d("updrugjson", jsonData);
+            JSONObject jsonObject = new JSONObject(jsonData);
+            String code = jsonObject.getString("code");
             Message msg = Message.obtain();
 
-            if(code.equals("0")){
+            if (code.equals("0")) {
                 msg.what = 0;
 
-            }
-            else{
-                msg.what =-1;
+            } else {
+                msg.what = -1;
             }
             handler.sendMessage(msg);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     /**
      * 该方法用于上传文件
+     *
      * @param file 要上传的文件对象
      * @param url  需要访问的url地址
-     *
      */
-    public void uploadDrugInfo(File file, String url, final String  drug_name_s, final String drug_price_s, final String kind_s, final String describe, final String drug_num_s, final String attribute_s) {
-        Log.d("updrugurl1",url);
+    public void uploadDrugInfo(File file, String url, final String drug_name_s, final String drug_price_s, final String kind_s, final String describe, final String drug_num_s, final String attribute_s) {
+        Log.d("updrugurl1", url);
         String imageType = "multipart/form-data";
         //File file = new File(imgUrl);//imgUrl为图片位置
         RequestBody fileBody = RequestBody.create(MediaType.parse("image/jpg"), file);
@@ -441,19 +547,20 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
         okHttpClient.newCall(request).enqueue(new Callback() {
                                                   @Override
                                                   public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                                                      Log.d("result","falure");
+                                                      Log.d("result", "falure");
                                                       System.out.println("失败");
                                                   }
+
                                                   @Override
                                                   public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                                                       String htmlStr = response.body().string();
                                                       Log.d("result0", htmlStr);
                                                       String chart = htmlStr.substring(htmlStr.indexOf("h"), htmlStr.indexOf("j"));
-                                                      chart = chart+"jpg";
+                                                      chart = chart + "jpg";
                                                       //上传图片成功并获取图片的地址之后开始上传药品的文本信息
                                                       String url;
-                                                      url=ipAddress+"IM/"+addOrup+"?name="+drug_name_s+"&price="+drug_price_s+"&type="+kind_s+"&describe="+describe+"&amount="+drug_num_s+"&index="+chart+"&attribute="+attribute_s;
-                                                      Log.d("updrugurl",url);
+                                                      url = ipAddress + "IM/" + addOrup + "?name=" + drug_name_s + "&price=" + drug_price_s + "&type=" + kind_s + "&describe=" + describe + "&amount=" + drug_num_s + "&index=" + chart + "&attribute=" + attribute_s;
+                                                      Log.d("updrugurl", url);
                                                       OkHttpClient client = new OkHttpClient();
                                                       Request request = new Request.Builder()
                                                               .url(url)
@@ -470,38 +577,41 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
         );
     }
 
-    public boolean check_num(String num){
-        String regex="^\\d+$";
-        if(num.matches(regex)==true)
+    public boolean check_num(String num) {
+        String regex = "^\\d+$";
+        if (num.matches(regex) == true)
             return true;
         else
             return false;
 
     }
+
     public boolean check_price(String price) {
         String re1 = "^[0-9]+\\.[0-9]{0,2}$";
         String re2 = "^\\d+$";
-        if (price.matches(re1)||price.matches(re2))
+        if (price.matches(re1) || price.matches(re2))
             return true;
         else
             return false;
     }
+
     private void openAlbum() {
         Intent intent = new Intent("android.intent.action.GET_CONTENT");
         intent.setType("image/*");
-        startActivityForResult(intent,CHOOSE_PHOTO);
+        startActivityForResult(intent, CHOOSE_PHOTO);
     }
+
     @Override
-    public void onRequestPermissionsResult(int requestCode,String[] permissions,int[] grandResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grandResults) {
         switch (requestCode) {
             case 1:
-                if (grandResults.length>0 && grandResults[0] == PackageManager.PERMISSION_GRANTED){
+                if (grandResults.length > 0 && grandResults[0] == PackageManager.PERMISSION_GRANTED) {
                     openAlbum();
                 } else {
 
                     Toast toast = Toast.makeText(UpDrugMsgActivity.this, "you denied the permission！", Toast.LENGTH_SHORT);
                     // 这里给了一个1/4屏幕高度的y轴偏移量
-                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                    toast.setGravity(Gravity.BOTTOM, 0, toastHeight / 5);
                     toast.show();
                 }
                 break;
@@ -509,104 +619,29 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    /**
-     * bitmap转化成byte数组
-     * @param bm 需要转换的Bitmap
-     * @return
-     */
-    public static byte[] bitmap2Bytes(Bitmap bm){
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        return baos.toByteArray();
-    }
 
-    private String saveBitmap(Bitmap bitmap) {
-        File file = new File(Environment.getExternalStorageDirectory() + "/image");
-        if (!file.exists())
-            file.mkdirs();
-        File imgFile = new File(file.getAbsolutePath() + ".jpg");
-        if (imgFile.exists())
-            imgFile.delete();
-        try {
-            FileOutputStream outputStream = new FileOutputStream(imgFile);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 85, outputStream);
-            outputStream.flush();
-            outputStream.close();
-            Uri uri = Uri.fromFile(imgFile);
-            return uri.toString();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * drawable转化成bitmap的方法
-     * @param drawable 需要转换的Drawable
-     */
-    public static Bitmap drawableToBitamp(Drawable drawable) {
-        Bitmap bitmap;
-        int w = drawable.getIntrinsicWidth();
-        int h = drawable.getIntrinsicHeight();
-        //System.out.println("Drawable转Bitmap");
-        Bitmap.Config config = drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565;
-        bitmap = Bitmap.createBitmap(w,h,config);
-        //注意，下面三行代码要用到，否在在View或者surfaceview里的canvas.drawBitmap会看不到图
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, w, h);
-        drawable.draw(canvas);
-        return bitmap;
-    }
-
-    @TargetApi(28)
-    private void handleImageOnKitKat(Intent data) {
-        String imagePath = null;
-        Uri uri = data.getData();
-        if (DocumentsContract.isDocumentUri(this,uri)) {
-            String docId = DocumentsContract.getDocumentId(uri);
-            if ("com.android.providers.media.documents".equals(uri.getAuthority())) {
-                String id = docId.split(":")[1];
-                String selection = MediaStore.Images.Media._ID + "=" + id;
-                imagePath = getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selection);
-            } else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())) {
-                Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(docId));
-                imagePath = getImagePath(contentUri, null);
-            }
-        }else if ("content".equalsIgnoreCase(uri.getScheme())){
-            imagePath = getImagePath(uri,null);
-        } else if ("file".equalsIgnoreCase(uri.getScheme())){
-            imagePath = uri.getPath();
-        }
-        displayImage(imagePath);
-    }
-    private void handleImageBeforeKitKat(Intent data) {
-        Uri uri = data.getData();
-        String imagePath = getImagePath(uri,null);
-        displayImage(imagePath);
-    }
-    private String getImagePath(Uri uri,String selection) {
+    private String getImagePath(Uri uri, String selection) {
         String path = null;
-        Cursor cursor = getContentResolver().query(uri,null,selection,null,null);
-        if (cursor != null){
-            if (cursor.moveToFirst()){
+        Cursor cursor = getContentResolver().query(uri, null, selection, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
                 path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
             }
             cursor.close();
         }
         return path;
     }
+
     private void displayImage(String imagePath) {
         if (imagePath != null) {
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
             path = imagePath;
             picture.setImageBitmap(bitmap);
-        }else {
+        } else {
 
             Toast toast = Toast.makeText(UpDrugMsgActivity.this, "filed to get image！", Toast.LENGTH_SHORT);
             // 这里给了一个1/4屏幕高度的y轴偏移量
-            toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+            toast.setGravity(Gravity.BOTTOM, 0, toastHeight / 5);
             toast.show();
         }
     }
@@ -617,7 +652,7 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
         View inflate = LayoutInflater.from(this).inflate(R.layout.layout_tanchuang, null);
         //初始化控件
         TextView choosePhoto = inflate.findViewById(R.id.choosePhoto);
-        TextView takePhoto =  inflate.findViewById(R.id.takePhoto);
+        TextView takePhoto = inflate.findViewById(R.id.takePhoto);
         choosePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -679,6 +714,7 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
                 return list;
             } catch (StreamCorruptedException e) {
                 e.printStackTrace();
+
                 return null;
             } catch (OptionalDataException e) {
                 e.printStackTrace();
@@ -696,5 +732,33 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
         } else {
             return null;
         }
+    }
+    public void show(int x,String s,int y){
+        final Dialog dialog = new Dialog(UpDrugMsgActivity.this,R.style.ActionSheetDialogStyle);        //展示对话框
+        //填充对话框的布局
+        View inflate = LayoutInflater.from(UpDrugMsgActivity.this).inflate(x, null);
+        TextView describe=inflate.findViewById(R.id.describe);
+        describe.setText(s);
+        TextView yes = inflate.findViewById(R.id.yes);
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(y==0)
+                dialog.dismiss();
+                else
+                    finish();
+            }
+        });
+        dialog.setContentView(inflate);
+        dialog.setCancelable(false);
+        Window dialogWindow = dialog.getWindow();
+        //设置Dialog从窗体底部弹出
+        dialogWindow.setGravity( Gravity.CENTER);
+        //获得窗体的属性
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        lp.width =800;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialogWindow.setAttributes(lp);
+        dialog.show();
     }
 }

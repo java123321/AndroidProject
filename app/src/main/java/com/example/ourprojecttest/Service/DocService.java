@@ -147,7 +147,7 @@ public class DocService extends Service {
         public void onMessage(WebSocket webSocket, String text) {
             output("onMessage: " + text);
             String info = parseJSONWithJSONObject(text);
-            Log.d("msg的内容 ", info);
+            Log.d("c", info);
             int q = info.length();
             //获取返回的人数
             if(info.equals("当前没有人在挂号，请稍等！")){
@@ -166,7 +166,7 @@ public class DocService extends Service {
                 Log.d("队伍中人数：", result.toString());
                 startForeground(1, getNotification(CHANNEL_ID, info));
 
-            } else if (info.indexOf("向您发送了接诊邀请") != -1) {
+            } else if (info.endsWith("向您发送了接诊邀请！")) {
                 stuId = info.substring(0, info.indexOf("向"));
                 Log.d("学生Id", stuId);
                 //发送通知
@@ -177,14 +177,15 @@ public class DocService extends Service {
                 intentToBeforChat.removeExtra("Dialog");
             }else if(info.startsWith("updateStu")){//如果是服务器通知医生更新在线学生
                 String stuNumber=info.substring(9);
-                intentToBeforChat.putExtra("updateStu","");
-                sendBroadcast(intentToBeforChat);
                 if(stuNumber.equals("0")){//如果当前没有学生排队
                     startForeground(1, getNotification(CHANNEL_ID,"当前暂无学生排队"));
+                    intentToBeforChat.putExtra("updateStu","noStuOnline");
                 }
                 else{
-                    startForeground(1, getNotification(CHANNEL_ID, "当前有"+info.substring(9)+"位同学正在挂号排队，请注意及时接诊！"));
+                    startForeground(1, getNotification(CHANNEL_ID, "当前有"+stuNumber+"位同学正在挂号排队，请注意及时接诊！"));
+                    intentToBeforChat.putExtra("updateStu","");
                 }
+                sendBroadcast(intentToBeforChat);
                 intentToBeforChat.removeExtra("updateStu");
             }
         }
@@ -313,14 +314,10 @@ public class DocService extends Service {
      * @return
      */
     private Notification getNotification(String chanelId, String content) {
-
-        Intent intent = new Intent(this, DocOperatActivity.class);
-        PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);
-
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, chanelId);
         builder.setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
-                .setContentIntent(pi)
+                .setAutoCancel(true)
                 .setContentTitle("学生挂号信息")
                 .setContentText(content);
         return builder.build();

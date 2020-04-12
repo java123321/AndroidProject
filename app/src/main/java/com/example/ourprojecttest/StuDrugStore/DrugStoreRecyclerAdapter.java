@@ -104,6 +104,7 @@ public class DrugStoreRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                         } else {
                             Intent intent = new Intent(mContext, UpDrugMsgActivity.class);
                             intent.putExtra("adjust", "1");
+                            intent.putExtra("drugId",drug_information.getId());
                             intent.putExtra("amount", drug_information.getDrug_Amount());
                             intent.putExtra("drugName", drug_information.getDrug_Name());
                             intent.putExtra("drugPrice", drug_information.getDrug_Price());

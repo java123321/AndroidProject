@@ -35,9 +35,8 @@ public class OnlineDocDetail extends AppCompatActivity {
         docIcon.setImageBitmap(BitmapFactory.decodeByteArray(icon,0,icon.length));
         docName.setText("姓名:"+intent.getStringExtra("docName"));
         docSex.setText("性别:"+intent.getStringExtra("docSex"));
-        docBrief.setText("简介:"+intent.getStringExtra("docBrief"));
+        docBrief.setText(intent.getStringExtra("docBrief"));
         icon=intent.getByteArrayExtra("docLicense");
         docLicense.setImageBitmap(BitmapFactory.decodeByteArray(icon,0,icon.length));
-
     }
 }
