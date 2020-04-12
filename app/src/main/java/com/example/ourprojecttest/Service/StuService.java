@@ -14,6 +14,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.util.Log;
 
@@ -88,6 +89,7 @@ public class StuService extends Service {
                         chatListener.socket.close(1000, null);
                         isGuaHao = false;
                         //startForeground(1, getNotification(CHANNEL_ID, "您已取消挂号！", "取消挂号成功"));
+
                         sendNotification("取消挂号成功","您已取消挂号");
                         //5秒之后关闭前台服务
                         TimerTask task = new TimerTask() {
@@ -109,6 +111,8 @@ public class StuService extends Service {
                     }
                     case "Deny": {//如果学生点击了拒绝服务
                         chatListener.socket.send(docId + "|deny" + name);
+                        //notification.
+                        manager.cancel(1);
                         break;
                     }
                 }
@@ -129,6 +133,7 @@ public class StuService extends Service {
         localReceiver = new LocalReceiver();
         registerReceiver(localReceiver, intentFilter);
         Log.d("guaHaoService", "服务已创建！");
+        manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
     }
 
@@ -211,6 +216,7 @@ public class StuService extends Service {
                 //startForeground(1, getNotification(CHANNEL_ID, docName + "医生即将为您接诊！", "到你了"));
                 notification = sendNotification("到你了",docName + "医生即将为您接诊！");
                 webSocket.close(1000, "再见");
+
 
                 sendBroadcast(intent);
                 //-1代表到你了
@@ -316,7 +322,6 @@ public class StuService extends Service {
 
     private Notification sendNotification(String title,String content){
         Intent intent = new Intent(this, RenGongWenZhen.class);
-        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         //8.0 以后需要加上channelId 才能正常显示
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             String channelId = "default";
@@ -335,10 +340,13 @@ public class StuService extends Service {
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
                 .setContentText(content)
+                .setShowWhen(true)
+                .setWhen(10000L)
                 .setAutoCancel(true)
-                .setDefaults(Notification.DEFAULT_ALL)
+                //.setDefaults(Notification.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis())
                 .setContentIntent(pendingIntent)
+                .setVibrate(new long[] {0,1000,0,1000,0,1000,0,1000,1000,0,1000,1000,1000})
                 .build();
         manager.notify(1, notification);
 

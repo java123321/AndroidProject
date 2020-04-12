@@ -15,6 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -31,6 +32,7 @@ import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.Service.StuService;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 import com.example.ourprojecttest.R;
+import com.example.ourprojecttest.Utils.VibratorUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -118,6 +120,7 @@ public class RenGongWenZhen extends AppCompatActivity {
                 String person = intent.getStringExtra("persons");
                 if (person.equals("-1")) {//如果是-1的话代表到你了，发出提示窗口
                     show(intent);
+                    VibratorUtil.Vibrate(RenGongWenZhen.this,10*1000);
                 } else {//否则显示当前排队人数
                     displayStuRank.setText("当前排队位次: " + intent.getStringExtra("persons") + "位");
                 }
@@ -299,6 +302,7 @@ public class RenGongWenZhen extends AppCompatActivity {
     private void stuCountTimeToDeny(final TextView countTime, final Dialog mDialog) {
         mOffHandler = new Handler() {
             public void handleMessage(Message msg) {
+
                 if (msg.what > 0) {
                     ////动态显示倒计时
                     countTime.setText("同意医生的接诊请求吗？" + msg.what + "秒后默认拒绝！");
@@ -343,7 +347,8 @@ public class RenGongWenZhen extends AppCompatActivity {
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //学生点击沟通之后取消计时器
+                VibratorUtil.StopVibrate(RenGongWenZhen.this);
+            //学生点击沟通之后取消计时器
                 mOffTime.cancel();
                 dialog.dismiss();
                 intentToService.putExtra("msg", "Chat");
@@ -365,6 +370,7 @@ public class RenGongWenZhen extends AppCompatActivity {
         no.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                VibratorUtil.StopVibrate(RenGongWenZhen.this);
                 //学生点击放弃沟通之后取消计时器
                 mOffTime.cancel();
                 dialog.dismiss();
