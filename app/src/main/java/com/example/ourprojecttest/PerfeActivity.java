@@ -263,7 +263,13 @@ public class PerfeActivity extends AppCompatActivity {
             }
             handler.sendMessage(msg);
 
-        } catch ( Exception e)  final Dialog dialog = new Dialog(PerfeActivity.this,R.style.ActionSheetDialogStyle);        //展示对话框
+        } catch ( Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+    public void show(int x,String s){
+        final Dialog dialog = new Dialog(PerfeActivity.this,R.style.ActionSheetDialogStyle);        //展示对话框
         //填充对话框的布局
         View inflate = LayoutInflater.from(PerfeActivity.this).inflate(x, null);
         TextView describe=inflate.findViewById(R.id.describe);
@@ -286,12 +292,6 @@ public class PerfeActivity extends AppCompatActivity {
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         dialogWindow.setAttributes(lp);
         dialog.show();
-        {
-            e.printStackTrace();
-        }
-    }
-    public void show(int x,String s){
-
 }
     public void show(int x,String s,Intent intent){
         final Dialog dialog = new Dialog(PerfeActivity.this,R.style.ActionSheetDialogStyle);        //展示对话框
