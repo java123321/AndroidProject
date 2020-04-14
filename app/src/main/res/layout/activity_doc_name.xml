@@ -9,13 +9,14 @@
         android:background="#FD0896F5"
         android:orientation="horizontal">
 
-
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical">
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="18"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_gravity="center"
             android:gravity="center"
             android:textColor="#FFFFFF"
             android:textSize="25dp"
@@ -24,13 +25,14 @@
         <TextView
             android:id="@+id/baocun"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
+            android:layout_height="70dp"
+            android:layout_gravity="right"
+            android:gravity="center_vertical"
             android:textColor="#FFFFFF"
             android:textSize="16dp"
             android:text="保存">
         </TextView>
+</FrameLayout>
     </LinearLayout>
 
     <LinearLayout
