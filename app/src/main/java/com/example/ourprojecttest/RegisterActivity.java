@@ -102,7 +102,7 @@ public class RegisterActivity extends AppCompatActivity {
             Drawable drawable = stuPwd.getCompoundDrawables()[2];
 
             public boolean onTouch(View view, MotionEvent event) {
-                if (event.getX() > stuPwd.getWidth() - stuPwd.getPaddingRight() - 60) {
+                if (event.getX() > stuPwd.getWidth() - stuPwd.getPaddingRight() - drawable.getIntrinsicWidth()) {
                     if (event.getAction() != MotionEvent.ACTION_UP)
                         return false;
 
@@ -137,7 +137,7 @@ public class RegisterActivity extends AppCompatActivity {
             Drawable drawable = stuPwd_two.getCompoundDrawables()[2];
 
             public boolean onTouch(View view, MotionEvent event) {
-                if (event.getX() > stuPwd_two.getWidth() - stuPwd_two.getPaddingRight() - 60) {
+                if (event.getX() > stuPwd_two.getWidth() - stuPwd_two.getPaddingRight() - drawable.getIntrinsicWidth()) {
                     if (event.getAction() != MotionEvent.ACTION_UP)
                         return false;
 

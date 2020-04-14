@@ -12,9 +12,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.Display;
@@ -53,6 +56,9 @@ import okhttp3.Response;
 
 
 public class RenGongWenZhen extends AppCompatActivity {
+    private SoundPool soundPool;
+    private VibrationEffect vibrationEffect ;
+    private Vibrator vibrator;
     private Handler mOffHandler;
     private Timer mOffTime;
     private String ipAddress;
@@ -136,6 +142,7 @@ public class RenGongWenZhen extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(localReceiver);
         Log.d("wenzhen", "onDestroy");
     }
 
@@ -203,6 +210,16 @@ public class RenGongWenZhen extends AppCompatActivity {
     }
 
     private void initView() {
+
+        //初始化声音模块
+        soundPool= new SoundPool(10, AudioManager.STREAM_SYSTEM,5);
+        soundPool.load(this,R.raw.tkzc,1);
+
+
+        //初始化震动模块
+        vibrator=(Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        vibrationEffect = VibrationEffect.createWaveform(new long[]{1000,1000},0);
+
         display = getWindowManager().getDefaultDisplay();
         // 获取屏幕高度
         height = display.getHeight();
@@ -295,6 +312,8 @@ public class RenGongWenZhen extends AppCompatActivity {
     }
 
     private void stuCountTimeToDeny(final TextView countTime, final Dialog mDialog) {
+        vibrator.vibrate(vibrationEffect);
+        soundPool.play(1,1, 1, 0, -1, 1);
         mOffHandler = new Handler() {
             public void handleMessage(Message msg) {
 
@@ -304,6 +323,11 @@ public class RenGongWenZhen extends AppCompatActivity {
                 } else {
                     ////倒计时结束后关闭计时器
                     mOffTime.cancel();
+                    vibrator.cancel();
+                    //给服务发送取消挂号的广播
+                    intentToService.putExtra("msg", "ExitGuaHao");
+                    sendBroadcast(intentToService);
+
                     //关闭倒计时窗口
                     mDialog.dismiss();
                     //弹出学生放弃沟通提示窗口
@@ -318,7 +342,6 @@ public class RenGongWenZhen extends AppCompatActivity {
         mOffTime = new Timer(true);
         TimerTask tt = new TimerTask() {
             int countTime = 20;
-
             public void run() {
                 if (countTime > 0) {
                     countTime--;
@@ -339,27 +362,26 @@ public class RenGongWenZhen extends AppCompatActivity {
         TextView countTime = inflate.findViewById(R.id.countTime);
         stuCountTimeToDeny(countTime, dialog);//该方法用于显示倒计时
         TextView yes = inflate.findViewById(R.id.yes);
-        yes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                VibratorUtil.StopVibrate(RenGongWenZhen.this);
-            //学生点击沟通之后取消计时器
-                mOffTime.cancel();
-                dialog.dismiss();
-                intentToService.putExtra("msg", "Chat");
-                sendBroadcast(intentToService);
-                //准备跳到聊天界面，并将医生的di放到意图里
-                Intent intentToChat = new Intent(RenGongWenZhen.this, Chat.class);
-                intentToChat.putExtra("docId", intent.getStringExtra("docId"));
-                intentToChat.putExtra("docName", intent.getStringExtra("docName"));
-                //对医生的头像进行判断是否有无
-                if (intent.hasExtra("docPicture")) {
-                    intentToChat.putExtra("docPicture", intent.getByteArrayExtra("docPicture"));
-                } else {
-                    intentToChat.removeExtra("docPicture");
-                }
-                startActivity(intentToChat);
+        yes.setOnClickListener(view -> {
+            VibratorUtil.StopVibrate(RenGongWenZhen.this);
+        //学生点击沟通之后取消计时器
+            mOffTime.cancel();
+            vibrator.cancel();//停止震动
+
+            dialog.dismiss();
+            intentToService.putExtra("msg", "Chat");
+            sendBroadcast(intentToService);
+            //准备跳到聊天界面，并将医生的di放到意图里
+            Intent intentToChat = new Intent(RenGongWenZhen.this, Chat.class);
+            intentToChat.putExtra("docId", intent.getStringExtra("docId"));
+            intentToChat.putExtra("docName", intent.getStringExtra("docName"));
+            //对医生的头像进行判断是否有无
+            if (intent.hasExtra("docPicture")) {
+                intentToChat.putExtra("docPicture", intent.getByteArrayExtra("docPicture"));
+            } else {
+                intentToChat.removeExtra("docPicture");
             }
+            startActivity(intentToChat);
         });
         TextView no = inflate.findViewById(R.id.no);
         no.setOnClickListener(new View.OnClickListener() {
@@ -368,7 +390,9 @@ public class RenGongWenZhen extends AppCompatActivity {
                 VibratorUtil.StopVibrate(RenGongWenZhen.this);
                 //学生点击放弃沟通之后取消计时器
                 mOffTime.cancel();
+                vibrator.cancel();//停止震动
                 dialog.dismiss();
+                //给服务发送拒绝问诊的广播
                 intentToService.putExtra("msg", "Deny");
                 sendBroadcast(intentToService);
             }

@@ -71,6 +71,13 @@ public class NeedToReceive extends AppCompatActivity {
                 receive(orderId);
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(localReceiver);
+    }
+
     private Handler handler=new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {

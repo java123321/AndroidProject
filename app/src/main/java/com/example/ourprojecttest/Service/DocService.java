@@ -151,6 +151,7 @@ public class DocService extends Service {
             int q = info.length();
             //获取返回的人数
             if(info.equals("当前没有人在挂号，请稍等！")){
+                Log.d("docservice.updatestu.count","当前没有人挂号");
                 intentToBeforChat.putExtra("updateStu","noStuOnline");
                 sendBroadcast(intentToBeforChat);
                 intentToBeforChat.removeExtra("updateStu");
@@ -176,17 +177,23 @@ public class DocService extends Service {
                 sendBroadcast(intentToBeforChat);
                 intentToBeforChat.removeExtra("Dialog");
             }else if(info.startsWith("updateStu")){//如果是服务器通知医生更新在线学生
+                Log.d("docservice.updatestu.count","---");
                 String stuNumber=info.substring(9);
                 if(stuNumber.equals("0")){//如果当前没有学生排队
                     startForeground(1, getNotification(CHANNEL_ID,"当前暂无学生排队"));
                     intentToBeforChat.putExtra("updateStu","noStuOnline");
+                    sendBroadcast(intentToBeforChat);
+                    intentToBeforChat.removeExtra("updateStu");
                 }
                 else{
+                    Log.d("docservice.updatestu.count","---111");
                     startForeground(1, getNotification(CHANNEL_ID, "当前有"+stuNumber+"位同学正在挂号排队，请注意及时接诊！"));
-                    intentToBeforChat.putExtra("updateStu","");
+                    intentToBeforChat.putExtra("updateStu","-1");
+                    sendBroadcast(intentToBeforChat);
+                    intentToBeforChat.removeExtra("updateStu");
                 }
-                sendBroadcast(intentToBeforChat);
-                intentToBeforChat.removeExtra("updateStu");
+
+
             }
         }
 
@@ -336,5 +343,7 @@ public class DocService extends Service {
         super.onDestroy();
         //注销广播
         unregisterReceiver(localReceiver);
+        //关闭通话接口
+        chatListener.socket.close(1000, "正常关闭");
     }
 }

@@ -31,7 +31,6 @@ public class StuBottomNavigation extends AppCompatActivity {
     private Display display;
     private int toastHeight;
     public static Activity activity;
-    private CommonMethod method = new CommonMethod();
     private StuDrugStoreFragment yaodian_frag = null;
     private StuMineFragment wode_frag = null;
     private StuDiagnosisFragment wenzhen_frag = null;

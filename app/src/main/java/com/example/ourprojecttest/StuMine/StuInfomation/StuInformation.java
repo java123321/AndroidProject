@@ -86,8 +86,6 @@ public class StuInformation extends AppCompatActivity implements View.OnClickLis
     private File file;
     private String Birthday;
     private String age1;
-    private String URL;
-    private String urL;
     private CommonMethod commonMethod=new CommonMethod();
     private Receiver v;
     private Receiver1 mm;
@@ -592,7 +590,6 @@ public class StuInformation extends AppCompatActivity implements View.OnClickLis
                 String[] ars = weight1.split(" ");
                 String weight = ars[0];
                 commonMethod.saveFileData("Weight",weight,getBaseContext());
-                try{
 //                    OkHttpClient client = new OkHttpClient();
 //                    Log.d("保存日期",Birthday);
 //                    Request request = new Request.Builder().url(ipAddress + "/IM/UpdateInformation?no=" + ID + "&name=" + name + "&sex=" + sex + "&birth=" + Birthday + "&height=" + height + "&weight=" + weight+"&isStu=true")
@@ -600,10 +597,6 @@ public class StuInformation extends AppCompatActivity implements View.OnClickLis
 //                    Response response = client.newCall(request).execute();
 //                    String responseData = response.body().string();
                     uploadInfo(ID,name,sex,Birthday,height,weight);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
             }
         }).start();
     }

@@ -290,4 +290,10 @@ private void havePost(String orderId,String type){
         }
     });
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(localReceiver);
+    }
 }

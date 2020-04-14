@@ -54,6 +54,7 @@ public class DrugStoreRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     }
     public void addList(List<DrugInformation> list) {
         mList.addAll(list);
+        Log.d("drugsize",mList.size()+"");
     }
     public DrugStoreRecyclerAdapter(Context context, StuDrugStoreFragment fragment) {
         mContext = context;
@@ -250,8 +251,6 @@ public class DrugStoreRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         this.footer_state = state;
         notifyDataSetChanged();
     }
-
-
     //该方法用来为脚布局跨越多行
     @Override
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {

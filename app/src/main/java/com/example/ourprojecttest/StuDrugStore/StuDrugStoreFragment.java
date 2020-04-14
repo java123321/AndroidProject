@@ -118,6 +118,8 @@ public class StuDrugStoreFragment extends Fragment {
                 }
             } else {//如果是通话下滑加载的数据，调用add方法
                 mAdapter.addList(list);
+                Log.d("drugsize","addsize:"+list.size());
+
             }
             mAdapter.notifyDataSetChanged();
             refreshLayout.setRefreshing(false);
@@ -126,6 +128,7 @@ public class StuDrugStoreFragment extends Fragment {
             clear = true;
         }
     };
+
 
     @Nullable
     @Override
@@ -179,13 +182,10 @@ public class StuDrugStoreFragment extends Fragment {
         });
         refreshLayout.setColorSchemeColors(getResources().getColor(R.color.color_bottom));
         refreshLayout.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.color_progressbar));
-
-
         //注册搜索的点击事件
         sousuo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 getData("1", loadNum, selectedMenu, method.conversion(inputInspect.getText().toString().trim()));
                 Log.d("yaodian", "choiced:" + selectedMenu + "    input:" + inputInspect.getText().toString().trim());
             }
@@ -213,7 +213,7 @@ public class StuDrugStoreFragment extends Fragment {
                     //如果当前的数据数小于总共的数据数的话则加载
                     if (last < total) {
                         isLoading = true;
-                        mAdapter.changeState(LOADING_MORE);
+                       // mAdapter.changeState(LOADING_MORE);
                         //如果是加载更多获取的数据则不清空list
                         clear = false;
                         getData(String.valueOf(Integer.valueOf(last) + 1), loadNum, selectedMenu, method.conversion(inputInspect.getText().toString().trim()));
@@ -263,7 +263,7 @@ public class StuDrugStoreFragment extends Fragment {
                         @Override
                         public boolean onTouch(View view, MotionEvent event) {
                             //获取点击焦点
-                            if (event.getX() > inputInspect.getWidth() - inputInspect.getPaddingRight() - 60) {
+                            if (event.getX() > inputInspect.getWidth() - inputInspect.getPaddingRight() - drawable.getIntrinsicWidth()) {
                                 //其他活动无响应
                                 if (event.getAction() != MotionEvent.ACTION_UP)
                                     return false;
@@ -385,13 +385,15 @@ public class StuDrugStoreFragment extends Fragment {
 
     //该方法用于从数据库获取数据,参数分别为要搜索结果的开始，结束，药品类型(-1代表全部)，药品名字
     private void getData(final String start, final String count, final String type, final String name) {
+        Log.d("getdrugstore","start:"+start+"count:"+count+"type:"+type+"name:"+name);
         //加载的过程中显示recycleview
-        mAdapter.mList.clear();
+        //mAdapter.mList.clear();
         mAdapter.changeState(LOADING_MORE);
         empty.setVisibility(View.GONE);
         mRecycler.setVisibility(View.VISIBLE);
         if (clear) {
             last = 0;
+            mAdapter.mList.clear();
         }
         refreshLayout.setRefreshing(true);
         //设置加载图片的显示

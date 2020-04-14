@@ -36,8 +36,6 @@ public class DocBottomNavigation extends AppCompatActivity {
     private DocMineFragment wode=null;
     private DocTreatmentFragment houzhen=null;
     private StuRecordFragment msg=null;
-    private LocalReceiver localReceiver;
-    private IntentFilter intentFilter;
     /** 上次点击返回键的时间 */
     private long lastBackPressed;
     /** 两次点击的间隔时间 */
@@ -67,25 +65,6 @@ public class DocBottomNavigation extends AppCompatActivity {
         }
     };
 
-    class LocalReceiver extends BroadcastReceiver{
-        @Override
-        public void onReceive(Context context, Intent intent) {
-        String msg=intent.getStringExtra("msg");
-        if(msg.equals("success")){
-
-            Toast toast = Toast.makeText(DocBottomNavigation.this, "药品添加成功！", Toast.LENGTH_SHORT);
-            // 这里给了一个1/4屏幕高度的y轴偏移量
-            toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
-            toast.show();
-        }
-        else{
-            Toast toast = Toast.makeText(DocBottomNavigation.this, "此药品已添加！", Toast.LENGTH_SHORT);
-            // 这里给了一个1/4屏幕高度的y轴偏移量
-            toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
-            toast.show();
-        }
-        }
-    }
 
 
     @Override

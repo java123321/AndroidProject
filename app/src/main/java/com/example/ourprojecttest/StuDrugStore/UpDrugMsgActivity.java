@@ -45,6 +45,7 @@ import com.example.ourprojecttest.R;
 import com.example.ourprojecttest.StuMine.ShoppingCart.ShoppingCartBean;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedOutputStream;
@@ -73,7 +74,7 @@ import okhttp3.Response;
 
 import static com.blankj.utilcode.util.UriUtils.uri2File;
 
-public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClickListener {
+public class UpDrugMsgActivity extends AppCompatActivity {
     private final int DELETE_SUCCESS=5;
     private final int DELETE_FAULT=6;
     private Button deleteOrder;
@@ -112,18 +113,7 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
             super.handleMessage(msg);
              Log.d("updatedrug","what:"+msg.what);
             switch (msg.what) {
-
                 case DELETE_SUCCESS:{
-                   // AlertDialog.Builder builder  = new AlertDialog.Builder(UpDrugMsgActivity.this);
-                   // builder.setTitle("提示" ) ;
-                   // builder.setMessage("该药品已删除成功！" ) ;
-                   // builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
-                    //    @Override
-                    //    public void onClick(DialogInterface dialog, int which) {
-                    //        finish();
-                    //    }
-                   // });
-                   // builder.show();
                     String s="该药品已成功删除！";
                     show(R.layout.layout_chenggong,s,1);
                     break;
@@ -136,7 +126,6 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
                     break;
                 }
                 case UPPictureFinished:
-
 
                 case 0:
                     //成功
@@ -194,17 +183,6 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
         deleteOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // AlertDialog.Builder builder = new AlertDialog.Builder(UpDrugMsgActivity.this);
-               // builder.setTitle("提示");
-               // builder.setMessage("确定要删除此药品吗?");
-               // builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
-               //     @Override
-               //     public void onClick(DialogInterface dialog, int which) {
-               //         deleteOrder();
-               //     }
-               // });
-               // builder.setNegativeButton("否", null);
-               // builder.show();
                 final Dialog dialog = new Dialog(UpDrugMsgActivity.this,R.style.ActionSheetDialogStyle);        //展示对话框
                 //填充对话框的布局
                 View inflate = LayoutInflater.from(UpDrugMsgActivity.this).inflate(R.layout.layout_delete_yaopin, null);
@@ -301,9 +279,6 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
                 }).start();
             }
         });
-    }
-
-    public void onClick(View v) {
     }
 
     // 拍照
@@ -553,13 +528,13 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
 
                                                   @Override
                                                   public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                                                      String htmlStr = response.body().string();
-                                                      Log.d("result0", htmlStr);
-                                                      String chart = htmlStr.substring(htmlStr.indexOf("h"), htmlStr.indexOf("j"));
-                                                      chart = chart + "jpg";
+
+                                                      String pictureUrl=ParseJSON(response.body().string());
+
+                                                      Log.d("drugpicture", pictureUrl);
                                                       //上传图片成功并获取图片的地址之后开始上传药品的文本信息
                                                       String url;
-                                                      url = ipAddress + "IM/" + addOrup + "?name=" + drug_name_s + "&price=" + drug_price_s + "&type=" + kind_s + "&describe=" + describe + "&amount=" + drug_num_s + "&index=" + chart + "&attribute=" + attribute_s;
+                                                      url = ipAddress + "IM/" + addOrup + "?name=" + drug_name_s + "&price=" + drug_price_s + "&type=" + kind_s + "&describe=" + describe + "&amount=" + drug_num_s + "&index=" + pictureUrl + "&attribute=" + attribute_s;
                                                       Log.d("updrugurl", url);
                                                       OkHttpClient client = new OkHttpClient();
                                                       Request request = new Request.Builder()
@@ -576,6 +551,17 @@ public class UpDrugMsgActivity extends AppCompatActivity implements View.OnClick
                                               }
         );
     }
+
+
+        private String  ParseJSON(String jsonData){
+            try {
+                JSONObject jsonObject=new JSONObject(jsonData);
+                return jsonObject.getString("msg");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
 
     public boolean check_num(String num) {
         String regex = "^\\d+$";

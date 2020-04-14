@@ -18,6 +18,7 @@ import com.example.ourprojecttest.R;
 import com.example.ourprojecttest.StuDrugStore.StuDrugStoreFragment;
 
 public class DocDrugStore extends AppCompatActivity {
+
     private Display display;
     private int toastHeight;
     private StuDrugStoreFragment drugStore;
@@ -66,7 +67,6 @@ public class DocDrugStore extends AppCompatActivity {
         Log.d("kaiyao","yes");
         Log.d("docstore","create");
     }
-
 
     @Override
     protected void onDestroy() {

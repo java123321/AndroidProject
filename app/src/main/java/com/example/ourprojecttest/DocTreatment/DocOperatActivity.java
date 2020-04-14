@@ -107,7 +107,7 @@ public class DocOperatActivity extends AppCompatActivity {
         intentFilter = new IntentFilter();
         intentFilter.addAction("com.example.ourprojecttest.DOC_UPDATE_PERSONS");//改
         localReceiver = new LocalReceiver();
-        getApplicationContext().registerReceiver(localReceiver, intentFilter);
+        registerReceiver(localReceiver, intentFilter);
         Log.d("目的", "监听学生人数开始");
     }
 
@@ -184,9 +184,6 @@ public class DocOperatActivity extends AppCompatActivity {
         display = getWindowManager().getDefaultDisplay();
         // 获取屏幕高度
         height = display.getHeight();
-        //如果有状态码state代表用户从前台服务跳进来
-        Intent intent = getIntent();
-
         refresh = findViewById(R.id.swipeRefresh);
         //设置下拉刷新的的更新事件
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -206,22 +203,19 @@ public class DocOperatActivity extends AppCompatActivity {
         //联网获取数据
         getData();
         //医生点击接诊的点击事件
-        access.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (noStudent.getVisibility() == View.VISIBLE) {
-                    Toast toast = Toast.makeText(DocOperatActivity.this, "当前暂无学生问诊，请等候！", Toast.LENGTH_SHORT);
-                    // 这里给了一个1/4屏幕高度的y轴偏移量
-                    toast.setGravity(Gravity.BOTTOM, 0, height / 5);
-                    toast.show();
-                } else {
-                    intentToService.putExtra("msg", "Access");
-                    sendBroadcast(intentToService);
-                    Log.d("线程信息", "：" + Thread.currentThread().getId() + "  " +
-                            "弹出聊天消息");
-                }
-
+        access.setOnClickListener(view -> {
+            if (noStudent.getVisibility() == View.VISIBLE) {
+                Toast toast = Toast.makeText(DocOperatActivity.this, "当前暂无学生问诊，请等候！", Toast.LENGTH_SHORT);
+                // 这里给了一个1/4屏幕高度的y轴偏移量
+                toast.setGravity(Gravity.BOTTOM, 0, height / 5);
+                toast.show();
+            } else {
+                intentToService.putExtra("msg", "Access");
+                sendBroadcast(intentToService);
+                Log.d("线程信息", "：" + Thread.currentThread().getId() + "  " +
+                        "弹出聊天消息");
             }
+
         });
 
     }
@@ -229,6 +223,8 @@ public class DocOperatActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        //离开页面的时候注销receiver
+        unregisterReceiver(localReceiver);
         Log.d("候诊页面状态", "onDestroy");
     }
 
@@ -248,21 +244,13 @@ public class DocOperatActivity extends AppCompatActivity {
         View inflate = LayoutInflater.from(this).inflate(R.layout.layout_jixujiezhen, null);
         //初始化控件
         TextView yes = inflate.findViewById(R.id.yes);
-        yes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                intentToService.putExtra("msg", "Access");
-                sendBroadcast(intentToService);
-                dialog.dismiss();
-            }
+        yes.setOnClickListener(view -> {
+            intentToService.putExtra("msg", "Access");
+            sendBroadcast(intentToService);
+            dialog.dismiss();
         });
         TextView no = inflate.findViewById(R.id.no);
-        no.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
+        no.setOnClickListener(view -> dialog.dismiss());
         //将布局设置给Dialog
         dialog.setContentView(inflate);
         //获取当前Activity所在的窗体
@@ -317,7 +305,7 @@ public class DocOperatActivity extends AppCompatActivity {
                     //关闭倒计时窗口
                     dialog1.dismiss();
                     //弹出学生取消沟通提示窗口
-                    Log.d("docop", "dialog13");
+                    Log.d("docop1111", "dialog13");
                     stuCancelConfirmDialog();
                 }
                 super.handleMessage(msg);
@@ -350,6 +338,7 @@ public class DocOperatActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
 
             if (intent.hasExtra("updateStu")) {
+                Log.d("docservice.updatestu.count","updatestuvalue:"+intent.getStringExtra("updateStu"));
                 if(intent.getStringExtra("updateStu").equals("noStuOnline")){//如果是通知没有学生挂号
                     Log.d("docoperate","nostuwenzhen");
                     Toast toast = Toast.makeText(DocOperatActivity.this, "当前暂无学生问诊，请等候！", Toast.LENGTH_SHORT);
@@ -361,7 +350,7 @@ public class DocOperatActivity extends AppCompatActivity {
                     adapter.mList.clear();
                     adapter.notifyDataSetChanged();
                 }else{//否则就是更新挂号学生
-                    Log.d("docoperate","getData");
+                    Log.d("docservice.updatestu.count","---2");
                     getData();
                 }
 

@@ -14,7 +14,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.IBinder;
-import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.util.Log;
 
@@ -55,10 +54,7 @@ public class StuService extends Service {
     private String CHANNEL_ID = "com.example.ourprojecttest.GuaHao";
     private String CHANNEL_NAME = "GuaHao";
     private String name;
-    private String nameT="channel_name_1";
-    private NotificationManager manager;
     public static final String id = "channel_1";
-    private Notification notification = null;
 
 
     //当接收到活动发来的挂号通知时进行挂号操作
@@ -71,36 +67,21 @@ public class StuService extends Service {
             if (intent.hasExtra("chatMsg")) {
                 msg = intent.getStringExtra("chatMsg");
                 chatListener.socket.send(msg);
-                if (msg.contains("finishChat")) {
-                    chatListener.socket.close(1000, "正常关闭");
-                }
             } else {//如果是挂号和聊天前的准备信息
                 msg = intent.getStringExtra("msg");
                 switch (msg) {
                     case "StartGuaHao": {
                         //开启挂号的连接
-                        chatConnet();
                         guaHaoConnect();
                         isGuaHao = true;
                         break;
                     }
                     case "ExitGuaHao": {//如果关闭挂号则关闭socket连接和服务
                         guaHaoListener.socket.close(1000, null);
-                        chatListener.socket.close(1000, null);
                         isGuaHao = false;
-                        //startForeground(1, getNotification(CHANNEL_ID, "您已取消挂号！", "取消挂号成功"));
-
-                        sendNotification("取消挂号成功","您已取消挂号");
-                        //5秒之后关闭前台服务
-                        TimerTask task = new TimerTask() {
-                            @Override
-                            public void run() {
-                                stopForeground(true);
-                            }
-                        };
-                        Timer timer = new Timer();
-                        timer.schedule(task, 5000);
-                        Log.d("stustop", "sent");
+                        if(!intent.hasExtra("finishedGuaHao")){
+                            startForeground(1, getNotification(CHANNEL_ID, "取消挂号成功", "您已取消挂号！"));
+                        }
                         break;
                     }
                     case "Chat": {//如果是学生点击了沟通操作
@@ -111,8 +92,9 @@ public class StuService extends Service {
                     }
                     case "Deny": {//如果学生点击了拒绝服务
                         chatListener.socket.send(docId + "|deny" + name);
-                        //notification.
-                        manager.cancel(1);
+                        guaHaoListener.socket.close(1000, null);
+                        isGuaHao = false;
+                            startForeground(1, getNotification(CHANNEL_ID, "提示", "您已拒绝了与医生问诊！"));
                         break;
                     }
                 }
@@ -124,6 +106,8 @@ public class StuService extends Service {
     public void onCreate() {
         super.onCreate();
         ipAddress = getResources().getString(R.string.ipAdrress);
+        //初始化通知信道服务
+        initChannel();
         Log.d("service123", "start");
         stuId = method.getFileData("ID", StuService.this);
         //开始注册广播监听器，准备接受发送给服务的更新挂号信息
@@ -133,8 +117,8 @@ public class StuService extends Service {
         localReceiver = new LocalReceiver();
         registerReceiver(localReceiver, intentFilter);
         Log.d("guaHaoService", "服务已创建！");
-        manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
+        //当服务启动的时候开启聊天接口
+        chatConnet();
     }
 
     //挂号连接方法
@@ -144,7 +128,6 @@ public class StuService extends Service {
                 .build();
         OkHttpClient client = new OkHttpClient();
         client.newWebSocket(request, guaHaoListener);
-
         client.dispatcher().executorService().shutdown();
     }
 
@@ -186,10 +169,10 @@ public class StuService extends Service {
                 //result代表当前的排队人数
                 method.saveFileData("GuaHaoNumber", m.replaceAll("").trim(), StuService.this);
 
-                //startForeground(1, getNotification(CHANNEL_ID, info, "挂号成功"));
-                sendNotification("挂号成功",info);
+                startForeground(1, getNotification(CHANNEL_ID, "挂号成功", info));
+//                sendNotification("挂号成功", info);
             }//服务器发送到我的通知时
-            else if (info.contains("到你啦！")) {
+            else if (info.startsWith("到你啦")) {
                 //获取医生的id
                 String docId = method.subString(info, "医生id为", "医生姓名为");
                 //获取医生的名字
@@ -199,9 +182,9 @@ public class StuService extends Service {
                 String docPictureUrl = info.substring(position + 5);
                 byte[] docPicture = null;
                 try {
-                    if(docPictureUrl==null||docPictureUrl.equals("")){//如果数据库没有用户头像，则设置null
+                    if (docPictureUrl == null || docPictureUrl.equals("")) {//如果数据库没有用户头像，则设置null
                         intent.removeExtra("docPicture");
-                    }else{//如果有数据则获取头像
+                    } else {//如果有数据则获取头像
                         docPicture = method.bitmap2Bytes(method.drawableToBitamp(Drawable.createFromStream(new URL(ipAddress + docPictureUrl).openStream(), "image.jpg")));
                         intent.putExtra("docPicture", docPicture);
                     }
@@ -213,14 +196,17 @@ public class StuService extends Service {
                 intent.putExtra("docId", docId);
                 intent.putExtra("docName", docName);
                 Log.d("chat", "docPicture" + (docPicture == null));
-                //startForeground(1, getNotification(CHANNEL_ID, docName + "医生即将为您接诊！", "到你了"));
-                notification = sendNotification("到你了",docName + "医生即将为您接诊！");
-                webSocket.close(1000, "再见");
+                startForeground(1, getNotification(CHANNEL_ID,  "到你了", docName+"医生即将为您接诊！"));
 
 
                 sendBroadcast(intent);
                 //-1代表到你了
                 method.saveFileData("GuaHaoNumber", "-1", StuService.this);
+            }else if(info.startsWith("当前没有医生在线")){
+                intent.putExtra("noDocOnline","");
+                sendBroadcast(intent);
+                startForeground(1, getNotification(CHANNEL_ID, "提示", "当前暂无医生在线，请稍后再来！"));
+                intent.removeExtra("noDocOnline");
             }
         }
 
@@ -251,33 +237,27 @@ public class StuService extends Service {
             socket = webSocket;
             Log.d("interfacechat", "连接成功");
         }
-
         //接受消息时回调
         @Override
         public void onMessage(WebSocket webSocket, String text) {
             Log.d("interfacechat", "123" + text);
             text = parseJSONWithJSONObject(text);
-            if(text.startsWith("IceInfo")||text.startsWith("SdpInfo")||text.equals("denyVideoChat")){//如果是和视频聊天有关的协商信息，则发送给视频聊天活动
-                intentToVideoChat.putExtra("videoInfo",text);
+            if (text.startsWith("IceInfo") || text.startsWith("SdpInfo") || text.equals("denyVideoChat")) {//如果是和视频聊天有关的协商信息，则发送给视频聊天活动
+                intentToVideoChat.putExtra("videoInfo", text);
                 sendBroadcast(intentToVideoChat);
-                Log.d("docservice","videoInfo:"+text);
-            }else{
+                Log.d("docservice", "videoInfo:" + text);
+            } else {
                 intentToChat.putExtra("ReceiveMsg", text);
                 sendBroadcast(intentToChat);
             }
-
         }
-
         @Override
         public void onClosing(WebSocket webSocket, int code, String reason) {
             webSocket.close(1000, null);
             output("onClosing: " + code + "/" + reason);
         }
-
         @Override
         public void onClosed(WebSocket webSocket, int code, String reason) {
-
-
             output("onClosed: " + code + "/" + reason);
         }
 
@@ -302,14 +282,13 @@ public class StuService extends Service {
     private void output(final String content) {
         Log.d("interface", content);
     }
-
-
-
     @Override
     public void onDestroy() {
         super.onDestroy();
         //解除广播注册
         unregisterReceiver(localReceiver);
+        //关闭通话接口
+        chatListener.socket.close(1000, "正常关闭");
         Log.d("service123", "destroy");
     }
 
@@ -319,38 +298,26 @@ public class StuService extends Service {
         return null;
     }
 
-
-    private Notification sendNotification(String title,String content){
-        Intent intent = new Intent(this, RenGongWenZhen.class);
-        //8.0 以后需要加上channelId 才能正常显示
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            String channelId = "default";
-            String channelName = "默认通知";
-            manager.createNotificationChannel(new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH));
-        }
-
-        //设置TaskStackBuilder
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(RenGongWenZhen.class);
-        stackBuilder.addNextIntent(intent);
-
-        PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Notification notification = new NotificationCompat.Builder(this, "default")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(title)
-                .setContentText(content)
-                .setShowWhen(true)
-                .setWhen(10000L)
+    /**
+     * @param chanelId 信号渠道
+     * @param content  通知内容
+     * @return
+     */
+    private Notification getNotification(String chanelId, String title,String content) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, chanelId);
+        builder.setSmallIcon(R.mipmap.ic_launcher)
                 .setAutoCancel(true)
-                .setDefaults(Notification.DEFAULT_SOUND)
-                .setWhen(System.currentTimeMillis())
-                .setContentIntent(pendingIntent)
-                //.setVibrate(new long[] {0,1000,0,1000,0,1000,0,1000,1000,0,1000,1000,1000})
-                .build();
-        manager.notify(1, notification);
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+                .setContentTitle(title)
+                .setContentText(content);
+        return builder.build();
+    }
 
-        return notification;
+    //开启前台服务
+    private void initChannel() {
+        NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.createNotificationChannel(notificationChannel);
     }
 
 }

@@ -109,6 +109,13 @@ public class HistoryOrder extends AppCompatActivity {
             delete(orderId);
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(localReceiver);
+    }
+
     private void delete(String orderId){
         final String url=ipAddress+"IM/GetNeedToPayOrder?type=stuDelete&orderId="+orderId;
         Log.d("finish",url);
