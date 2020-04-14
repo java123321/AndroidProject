@@ -131,7 +131,7 @@ public class RenGongWenZhen extends AppCompatActivity {
                 String person = intent.getStringExtra("persons");
                 if (person.equals("-1")) {//如果是-1的话代表到你了，发出提示窗口
                     show(intent);
-                    VibratorUtil.Vibrate(RenGongWenZhen.this,10*1000);
+
                 } else {//否则显示当前排队人数
                     displayStuRank.setText("当前排队位次: " + intent.getStringExtra("persons") + "位");
                 }
@@ -249,17 +249,29 @@ public class RenGongWenZhen extends AppCompatActivity {
         guaHao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //如果服务在运行
-                if (StuService.isGuaHao) {
-                    Toast toast = Toast.makeText(RenGongWenZhen.this, "正在挂号，请勿重复点击！", Toast.LENGTH_SHORT);
+
+
+                //如果当前医生不在线
+                if(noDoctor.getVisibility()==View.VISIBLE){
+                    Toast toast = Toast.makeText(RenGongWenZhen.this, "当前暂无医生接诊，请稍后再来！", Toast.LENGTH_SHORT);
                     // 这里给了一个1/4屏幕高度的y轴偏移量
                     toast.setGravity(Gravity.BOTTOM, 0, height / 5);
                     toast.show();
-                } else {
-                    //通知服务开启挂号
-                    intentToService.putExtra("msg", "StartGuaHao");
-                    sendBroadcast(intentToService);
+                }else{
+                    //如果服务在运行
+                    if (StuService.isGuaHao) {
+                        Toast toast = Toast.makeText(RenGongWenZhen.this, "正在挂号，请勿重复点击！", Toast.LENGTH_SHORT);
+                        // 这里给了一个1/4屏幕高度的y轴偏移量
+                        toast.setGravity(Gravity.BOTTOM, 0, height / 5);
+                        toast.show();
+                    } else {
+                        //通知服务开启挂号
+                        intentToService.putExtra("msg", "StartGuaHao");
+                        sendBroadcast(intentToService);
+                    }
                 }
+
+
             }
         });
 
@@ -363,13 +375,14 @@ public class RenGongWenZhen extends AppCompatActivity {
         stuCountTimeToDeny(countTime, dialog);//该方法用于显示倒计时
         TextView yes = inflate.findViewById(R.id.yes);
         yes.setOnClickListener(view -> {
-            VibratorUtil.StopVibrate(RenGongWenZhen.this);
+
         //学生点击沟通之后取消计时器
             mOffTime.cancel();
             vibrator.cancel();//停止震动
 
             dialog.dismiss();
             intentToService.putExtra("msg", "Chat");
+            intentToService.putExtra("docId",intent.getStringExtra("docId"));
             sendBroadcast(intentToService);
             //准备跳到聊天界面，并将医生的di放到意图里
             Intent intentToChat = new Intent(RenGongWenZhen.this, Chat.class);
@@ -384,18 +397,15 @@ public class RenGongWenZhen extends AppCompatActivity {
             startActivity(intentToChat);
         });
         TextView no = inflate.findViewById(R.id.no);
-        no.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                VibratorUtil.StopVibrate(RenGongWenZhen.this);
-                //学生点击放弃沟通之后取消计时器
-                mOffTime.cancel();
-                vibrator.cancel();//停止震动
-                dialog.dismiss();
-                //给服务发送拒绝问诊的广播
-                intentToService.putExtra("msg", "Deny");
-                sendBroadcast(intentToService);
-            }
+        no.setOnClickListener(view -> {
+            //学生点击放弃沟通之后取消计时器
+            mOffTime.cancel();
+            vibrator.cancel();//停止震动
+            dialog.dismiss();
+            //给服务发送拒绝问诊的广播
+            intentToService.putExtra("msg", "Deny");
+            intentToService.putExtra("docId",intent.getStringExtra("docId"));
+            sendBroadcast(intentToService);
         });
 
         //将布局设置给Dialog

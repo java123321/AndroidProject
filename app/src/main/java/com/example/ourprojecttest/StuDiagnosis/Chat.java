@@ -80,18 +80,6 @@ public class Chat extends AppCompatActivity {
             if (msg.equals("finishChat")) {//如果对方点击返回键退出了聊天
                 if (type.equals("Stu")) {//如果当前用户是学生登录
 
-                    // AlertDialog.Builder builder = new AlertDialog.Builder(Chat.this);
-                    // builder.setTitle("提示");
-                    // builder.setMessage("当前医生已离开聊天页面，您是否离开当前页面？");
-                    //如果用户确定要删除
-                    // builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    //    @Override
-                    //    public void onClick(DialogInterface dialogInterface, int ii) {
-                    //        finish();
-                    //    }
-                    //});
-                    //builder.setNegativeButton("取消", null);
-                    //builder.show();
                     //将医生标记为下线
                     final Dialog dialog = new Dialog(Chat.this, R.style.ActionSheetDialogStyle);        //展示对话框
                     //填充对话框的布局
@@ -325,15 +313,11 @@ public class Chat extends AppCompatActivity {
 //       将属性设置给窗体
             dialog.show();//显示对话框
         }else{//
-            if(type.equals("Stu")){//如果是学生退出聊天室，则将此次挂号置为结束
-                intentToStu.putExtra("msg", "ExitGuaHao");
-                intentToStu.putExtra("finishedGuaHao","");//改标记代表学生已结束此次问诊
-                sendBroadcast(intentToStu);
-                intentToStu.removeExtra("finishedGuaHao");
-            }
             finish();
         }
     }
+
+
 
     private void initView() {
         //与服务器建立websocket连接
@@ -537,5 +521,12 @@ public class Chat extends AppCompatActivity {
         Log.d("chatsave", "?12" + (record == null));
         record = method.readMessageRecordListFromSdCard("MessageRecord");
         Log.d("chatsave", "?" + (record == null));
+
+        if(type.equals("Stu")){//如果是学生退出聊天室，则将此次挂号置为结束
+            intentToStu.putExtra("msg", "ExitGuaHao");
+            intentToStu.putExtra("finishedGuaHao","");//该标记代表学生已结束此次问诊
+            sendBroadcast(intentToStu);
+            intentToStu.removeExtra("finishedGuaHao");
+        }
     }
 }

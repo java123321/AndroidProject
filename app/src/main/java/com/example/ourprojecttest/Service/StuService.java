@@ -44,7 +44,6 @@ public class StuService extends Service {
     public static boolean isGuaHao = false;//该变量用来标记是否正在挂号，true为挂号，false为不在挂号
     private String stuId;
     private CommonMethod method = new CommonMethod();
-    private String docId = "11111";
     private LocalReceiver localReceiver;
     private IntentFilter intentFilter;
     private Intent intent = new Intent("com.example.ourprojecttest.UPDATE_PERSONS");//该意图是通知RenGongWenZhen里的聊天前的准备服务
@@ -86,12 +85,12 @@ public class StuService extends Service {
                     }
                     case "Chat": {//如果是学生点击了沟通操作
                         Log.d("guahao", "chat");
-                        chatListener.socket.send(docId + "|chat学生名字为" + name + "学生头像为" + method.getFileData("StuIconUrl", StuService.this));
+                        chatListener.socket.send(intent.getStringExtra("docId") + "|chat学生名字为" + name + "学生头像为" + method.getFileData("StuIconUrl", StuService.this));
 
                         break;
                     }
                     case "Deny": {//如果学生点击了拒绝服务
-                        chatListener.socket.send(docId + "|deny" + name);
+                        chatListener.socket.send(intent.getStringExtra("docId") + "|deny" + name);
                         guaHaoListener.socket.close(1000, null);
                         isGuaHao = false;
                             startForeground(1, getNotification(CHANNEL_ID, "提示", "您已拒绝了与医生问诊！"));
@@ -106,6 +105,7 @@ public class StuService extends Service {
     public void onCreate() {
         super.onCreate();
         ipAddress = getResources().getString(R.string.ipAdrress);
+
         //初始化通知信道服务
         initChannel();
         Log.d("service123", "start");
@@ -197,8 +197,6 @@ public class StuService extends Service {
                 intent.putExtra("docName", docName);
                 Log.d("chat", "docPicture" + (docPicture == null));
                 startForeground(1, getNotification(CHANNEL_ID,  "到你了", docName+"医生即将为您接诊！"));
-
-
                 sendBroadcast(intent);
                 //-1代表到你了
                 method.saveFileData("GuaHaoNumber", "-1", StuService.this);
