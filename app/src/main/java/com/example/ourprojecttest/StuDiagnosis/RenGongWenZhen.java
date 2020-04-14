@@ -13,8 +13,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.VibrationEffect;
@@ -41,6 +43,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -56,7 +59,7 @@ import okhttp3.Response;
 
 
 public class RenGongWenZhen extends AppCompatActivity {
-    private SoundPool soundPool;
+
     private VibrationEffect vibrationEffect ;
     private Vibrator vibrator;
     private Handler mOffHandler;
@@ -78,6 +81,7 @@ public class RenGongWenZhen extends AppCompatActivity {
     private DisplayDocAdapter adapter;
     private RecyclerView mRecycler;
     private SwipeRefreshLayout refresh;
+    private MediaPlayer mediaPlayer;//MediaPlayer对象
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -143,6 +147,12 @@ public class RenGongWenZhen extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(localReceiver);
+        //释放音频文件
+        if(mediaPlayer.isLooping()){
+            mediaPlayer.stop();
+        }
+        mediaPlayer.release();
+
         Log.d("wenzhen", "onDestroy");
     }
 
@@ -211,10 +221,6 @@ public class RenGongWenZhen extends AppCompatActivity {
 
     private void initView() {
 
-        //初始化声音模块
-        soundPool= new SoundPool(10, AudioManager.STREAM_SYSTEM,5);
-        soundPool.load(this,R.raw.tkzc,1);
-
 
         //初始化震动模块
         vibrator=(Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -249,8 +255,6 @@ public class RenGongWenZhen extends AppCompatActivity {
         guaHao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 //如果当前医生不在线
                 if(noDoctor.getVisibility()==View.VISIBLE){
                     Toast toast = Toast.makeText(RenGongWenZhen.this, "当前暂无医生接诊，请稍后再来！", Toast.LENGTH_SHORT);
@@ -270,8 +274,6 @@ public class RenGongWenZhen extends AppCompatActivity {
                         sendBroadcast(intentToService);
                     }
                 }
-
-
             }
         });
 
@@ -324,8 +326,9 @@ public class RenGongWenZhen extends AppCompatActivity {
     }
 
     private void stuCountTimeToDeny(final TextView countTime, final Dialog mDialog) {
+        mediaPlayer= MediaPlayer.create(this,R.raw.tkzc);
+        mediaPlayer.start();
         vibrator.vibrate(vibrationEffect);
-        soundPool.play(1,1, 1, 0, -1, 1);
         mOffHandler = new Handler() {
             public void handleMessage(Message msg) {
 
@@ -336,6 +339,7 @@ public class RenGongWenZhen extends AppCompatActivity {
                     ////倒计时结束后关闭计时器
                     mOffTime.cancel();
                     vibrator.cancel();
+                    mediaPlayer.stop();
                     //给服务发送取消挂号的广播
                     intentToService.putExtra("msg", "ExitGuaHao");
                     sendBroadcast(intentToService);
@@ -379,6 +383,7 @@ public class RenGongWenZhen extends AppCompatActivity {
         //学生点击沟通之后取消计时器
             mOffTime.cancel();
             vibrator.cancel();//停止震动
+            mediaPlayer.stop();
 
             dialog.dismiss();
             intentToService.putExtra("msg", "Chat");
@@ -401,6 +406,7 @@ public class RenGongWenZhen extends AppCompatActivity {
             //学生点击放弃沟通之后取消计时器
             mOffTime.cancel();
             vibrator.cancel();//停止震动
+            mediaPlayer.stop();
             dialog.dismiss();
             //给服务发送拒绝问诊的广播
             intentToService.putExtra("msg", "Deny");
