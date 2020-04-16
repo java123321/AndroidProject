@@ -223,7 +223,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         //登陆
-
         login = findViewById(R.id.btn_login);//找到按钮
         login.setOnClickListener(new View.OnClickListener() {
             @Override
