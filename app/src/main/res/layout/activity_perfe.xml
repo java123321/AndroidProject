@@ -36,6 +36,7 @@
             android:layout_marginRight="35dp"
             android:background="@drawable/edit_selector"
             android:hint="姓名"
+            android:maxLength="4"
             android:textCursorDrawable="@null"
             android:textSize="14sp" />
 

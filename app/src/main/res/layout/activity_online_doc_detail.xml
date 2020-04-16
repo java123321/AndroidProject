@@ -73,16 +73,15 @@
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:gravity="center"
         android:background="@drawable/style_dialog_yuanjiao"
         android:layout_height="200dp">
+
         <ImageView
             android:id="@+id/docLicense"
-            android:layout_marginTop="10dp"
-            android:src="@drawable/add"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
+            android:layout_width="300dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:src="@drawable/add" />
     </LinearLayout>
 </LinearLayout>
