@@ -45,7 +45,7 @@ import me.weyye.hipermission.HiPermission;
 import me.weyye.hipermission.PermissionCallback;
 import me.weyye.hipermission.PermissionItem;
 
-public class Chat extends AppCompatActivity {
+public class  Chat extends AppCompatActivity {
     private Display display;
     // 获取屏幕高度
     private int toastHeight;
@@ -221,6 +221,7 @@ public class Chat extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_chat);
         time = df.format(new Date());
         initView();
