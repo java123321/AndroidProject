@@ -159,6 +159,7 @@ public class RenGongWenZhen extends AppCompatActivity {
                 //    public void onClick(DialogInterface dialog, int which) {
                         //给服务发送取消挂号的广播
 
+
                 //        intentToService.putExtra("msg", "ExitGuaHao");
                 //        sendBroadcast(intentToService);
                 //        finish();

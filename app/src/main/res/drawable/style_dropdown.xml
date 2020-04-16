@@ -8,6 +8,7 @@
     </item>
     <item>
         <bitmap
+
             android:gravity="end"
             android:src="@drawable/dropdown"/>
     </item>

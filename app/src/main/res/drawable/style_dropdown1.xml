@@ -9,6 +9,7 @@
                 android:color="#FFFFFF"/>
         </shape>
     </item>
+
     <item>
         <bitmap android:src="@drawable/dropdown"
             android:gravity="right"/>

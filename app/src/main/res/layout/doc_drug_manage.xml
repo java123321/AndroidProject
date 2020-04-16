@@ -9,7 +9,9 @@
         android:background="#FD0896F5"
         android:orientation="horizontal">
 
+
         <Button
+
             android:paddingTop="10dp"
             android:layout_marginTop="10dp"
             android:id="@+id/delete"
