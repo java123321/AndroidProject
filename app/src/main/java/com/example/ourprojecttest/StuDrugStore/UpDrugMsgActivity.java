@@ -116,20 +116,22 @@ public class UpDrugMsgActivity extends AppCompatActivity {
                     break;
                 }
                 case DELETE_FAULT: {
-                    Toast toast = Toast.makeText(UpDrugMsgActivity.this, "药品删除失败，请稍后再试！", Toast.LENGTH_SHORT);
+                   // Toast toast = Toast.makeText(UpDrugMsgActivity.this, "药品删除失败，请稍后再试！", Toast.LENGTH_SHORT);
                     // 这里给了一个1/4屏幕高度的y轴偏移量
-                    toast.setGravity(Gravity.BOTTOM, 0, toastHeight / 5);
-                    toast.show();
+                    //toast.setGravity(Gravity.BOTTOM, 0, toastHeight / 5);
+                    //toast.show();
+                    String s = "药品删除失败！";
+                    show(R.layout.layout_tishi_email, s, 0);
                     break;
                 }
                 case UPLOAD_DRUG_SUCCESS:
-                    String s1 = "";
-                    show(R.layout.layout_chenggong, s1, 0);
+                    String s1 = "操作成功";
+                    show(R.layout.layout_chenggong, s1, 1);
                     break;
                 case UPLOAD_DRUG_FAULT:
                     //失败
                     //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("失败").setNegativeButton("确定", null).show();
-                    String s = "失败";
+                    String s = "操作失败";
                     show(R.layout.layout_tishi_email, s, 0);
                 default:
                     break;
