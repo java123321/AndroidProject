@@ -110,6 +110,8 @@ public class DrugStoreRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                             intent.putExtra("drugName", drug_information.getDrug_Name());
                             intent.putExtra("drugPrice", drug_information.getDrug_Price());
                             intent.putExtra("drugDescription", drug_information.getDrug_Describe());
+                            intent.putExtra("drugType",drug_information.getDrug_Type());
+                            intent.putExtra("drugOtc",drug_information.getDrug_OTC());
                             intent.putExtra("drugPicture", method.bitmap2Bytes(method.drawableToBitamp(drug_information.getDrug_Picture())));
                             mContext.startActivity(intent);
                         }

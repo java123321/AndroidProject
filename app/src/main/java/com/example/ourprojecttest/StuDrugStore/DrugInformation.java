@@ -10,6 +10,10 @@ public class DrugInformation {
     private Drawable Drug_Picture;
     private String  Drug_Type;
     private String Drug_OTC;
+
+    public String getDrug_Type() {
+        return Drug_Type;
+    }
     public String getId() {
         return id;
     }
