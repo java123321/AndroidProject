@@ -22,10 +22,11 @@
 
         <TextView
             android:id="@+id/stuName"
-            android:layout_width="60dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="left"
+            android:layout_marginLeft="25dp"
             android:text="李时珍11" />
 
         <TextView
@@ -33,15 +34,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="25dp"
             android:gravity="left"
             android:text="男" />
 
         <TextView
             android:id="@+id/stuAge"
-            android:layout_width="35dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="25dp"
             android:layout_gravity="center_vertical"
             android:gravity="left"
             android:text="14岁" />
@@ -49,7 +50,7 @@
         <TextView
             android:id="@+id/stuShengao"
             android:layout_width="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="25dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="left"
@@ -58,7 +59,7 @@
         <TextView
             android:id="@+id/stuTizhong"
             android:layout_width="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="25dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="left"
