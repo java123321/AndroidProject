@@ -13,4 +13,5 @@
         <bitmap android:src="@drawable/dropdown"
             android:gravity="right"/>
     </item>
+
 </layer-list>

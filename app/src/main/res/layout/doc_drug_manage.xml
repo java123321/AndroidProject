@@ -205,6 +205,7 @@
             android:layout_marginTop="10dp"
             android:layout_height="150dp"
             android:textSize="16dp"
+
             android:gravity="top"
             android:textCursorDrawable="@null"
             android:background="@drawable/style_dialog_yuanjiao"

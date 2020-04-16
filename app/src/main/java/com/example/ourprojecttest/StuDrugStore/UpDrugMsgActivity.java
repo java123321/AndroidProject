@@ -257,6 +257,7 @@ public class UpDrugMsgActivity extends AppCompatActivity {
             addOrup = "UploadDrug";
             deleteOrder.setVisibility(View.INVISIBLE);
         } else {
+
             Intent intent = getIntent();
             drugId = intent.getStringExtra("drugId").trim();
             drug_num.setText(intent.getStringExtra("amount").trim());
