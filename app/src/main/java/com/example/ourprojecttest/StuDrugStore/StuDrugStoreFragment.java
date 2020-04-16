@@ -66,7 +66,7 @@ public class StuDrugStoreFragment extends Fragment {
     private TextView lastColorName;
     private Button sousuo;
     private EditText inputInspect;
-    private String selectedMenu = "-1";
+    private String selectedMenu = "全部";
     private Drawable searchEditDraw, searchEditDraw1;
     private TextView quanbu;
     private TextView nanke;
@@ -141,7 +141,7 @@ public class StuDrugStoreFragment extends Fragment {
         initView(view);
         initTextView(view);
         Log.d("msg", "获取图片");
-        getData("1", loadNum, "-1", "");
+        getData("1", loadNum, "全部", "");
 
         return view;
     }
@@ -289,12 +289,21 @@ public class StuDrugStoreFragment extends Fragment {
 
         @Override
         public void run() {
+
+
+
+
+
+
+
+
+
             String url;
             StringBuilder stringBuilder = new StringBuilder();
             //添加基础字符串
             stringBuilder.append(ipAddress + "IM/GetDrugInformation?start=" + start + "&count=" + count);
             //添加类别变量
-            if (!type.equals("-1")) {
+            if (!type.equals("全部")) {
                 stringBuilder.append("&type=" + type);
             }
             if (!name.equals("")) {
@@ -455,12 +464,12 @@ public class StuDrugStoreFragment extends Fragment {
         quanbu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu = "-1";
+                selectedMenu = "全部";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 quanbu.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName = quanbu;
                 Log.d("yaodian", "test");
-                getData("1", loadNum, "-1", "");
+                getData("1", loadNum, "全部", "");
             }
         });
         nanke.setOnClickListener(new View.OnClickListener() {

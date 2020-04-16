@@ -4,27 +4,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
-import android.annotation.TargetApi;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.ContentUris;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.PixelFormat;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Display;
@@ -39,7 +31,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ourprojecttest.PerfeActivity;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 import com.example.ourprojecttest.R;
 import com.example.ourprojecttest.StuMine.ShoppingCart.ShoppingCartBean;
@@ -55,9 +46,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.OptionalDataException;
+import java.io.OutputStream;
 import java.io.StreamCorruptedException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -75,13 +71,14 @@ import okhttp3.Response;
 import static com.blankj.utilcode.util.UriUtils.uri2File;
 
 public class UpDrugMsgActivity extends AppCompatActivity {
-    private final int DELETE_SUCCESS=5;
-    private final int DELETE_FAULT=6;
+    private final int UPLOAD_DRUG_SUCCESS = 10;
+    private final int UPLOAD_DRUG_FAULT = 11;
+    private final int DELETE_SUCCESS = 5;
+    private final int DELETE_FAULT = 6;
     private Button deleteOrder;
     private Display display;
     private int toastHeight;
     private String ipAddress;
-    private final int UPPictureFinished = 2;
     private String path;
     private static final int CHOOSE_PHOTO = 2;
     private ImageView picture;
@@ -111,33 +108,29 @@ public class UpDrugMsgActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-             Log.d("updatedrug","what:"+msg.what);
+            Log.d("updatedrug", "what:" + msg.what);
             switch (msg.what) {
-                case DELETE_SUCCESS:{
-                    String s="该药品已成功删除！";
-                    show(R.layout.layout_chenggong,s,1);
+                case DELETE_SUCCESS: {
+                    String s = "该药品已成功删除！";
+                    show(R.layout.layout_chenggong, s, 1);
                     break;
                 }
-                case DELETE_FAULT:{
+                case DELETE_FAULT: {
                     Toast toast = Toast.makeText(UpDrugMsgActivity.this, "药品删除失败，请稍后再试！", Toast.LENGTH_SHORT);
                     // 这里给了一个1/4屏幕高度的y轴偏移量
                     toast.setGravity(Gravity.BOTTOM, 0, toastHeight / 5);
                     toast.show();
                     break;
                 }
-                case UPPictureFinished:
-
-                case 0:
-                    //成功
-                    //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("正确").setMessage("成功").setNegativeButton("确定", null).show();
-                    String s1="";
-                    show(R.layout.layout_chenggong,s1,0);
+                case UPLOAD_DRUG_SUCCESS:
+                    String s1 = "";
+                    show(R.layout.layout_chenggong, s1, 0);
                     break;
-                case -1:
+                case UPLOAD_DRUG_FAULT:
                     //失败
                     //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("失败").setNegativeButton("确定", null).show();
-                    String s="失败";
-                    show(R.layout.layout_tishi_email,s,0);
+                    String s = "失败";
+                    show(R.layout.layout_tishi_email, s, 0);
                 default:
                     break;
             }
@@ -154,15 +147,16 @@ public class UpDrugMsgActivity extends AppCompatActivity {
                 Request request = new Request.Builder()
                         .url(url)
                         .build();
+                Log.d("updrugmsg.delete.url", url);
                 try {
                     Response response = client.newCall(request).execute();
                     String responseData = response.body().string().trim();
                     Log.d("denglu", "resdata:" + responseData);
-                    Message msg=handler.obtainMessage();
-                    if(responseData.equals("删除成功")){
-                        msg.what=DELETE_SUCCESS;
-                    }else{
-                        msg.what=DELETE_FAULT;
+                    Message msg = handler.obtainMessage();
+                    if (responseData.equals("删除成功")) {
+                        msg.what = DELETE_SUCCESS;
+                    } else {
+                        msg.what = DELETE_FAULT;
                     }
                     handler.sendMessage(msg);
                 } catch (Exception e) {
@@ -183,10 +177,10 @@ public class UpDrugMsgActivity extends AppCompatActivity {
         deleteOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Dialog dialog = new Dialog(UpDrugMsgActivity.this,R.style.ActionSheetDialogStyle);        //展示对话框
+                final Dialog dialog = new Dialog(UpDrugMsgActivity.this, R.style.ActionSheetDialogStyle);        //展示对话框
                 //填充对话框的布局
                 View inflate = LayoutInflater.from(UpDrugMsgActivity.this).inflate(R.layout.layout_delete_yaopin, null);
-                TextView no=inflate.findViewById(R.id.no);
+                TextView no = inflate.findViewById(R.id.no);
                 TextView yes = inflate.findViewById(R.id.yes);
                 yes.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -204,10 +198,10 @@ public class UpDrugMsgActivity extends AppCompatActivity {
                 dialog.setCancelable(false);
                 Window dialogWindow = dialog.getWindow();
                 //设置Dialog从窗体底部弹出
-                dialogWindow.setGravity( Gravity.CENTER);
+                dialogWindow.setGravity(Gravity.CENTER);
                 //获得窗体的属性
                 WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-                lp.width =800;
+                lp.width = 800;
                 lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
                 dialogWindow.setAttributes(lp);
                 dialog.show();
@@ -258,17 +252,17 @@ public class UpDrugMsgActivity extends AppCompatActivity {
                 final String describe = drug_resume.getText().toString().trim();
                 boolean flag = true;
                 if (drug_name_s.isEmpty() || drug_num_s.isEmpty() || drug_price_s.isEmpty() || path == "" || describe.isEmpty()) {
-                    String s1="请完善信息";
-                    show(R.layout.layout_tishi_email,s1,0);
+                    String s1 = "请完善信息";
+                    show(R.layout.layout_tishi_email, s1, 0);
                     //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请完善信息").setNegativeButton("确定", null).show();
                 } else if (!check_num(drug_num_s) && flag) {
                     //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请填入数字").setNegativeButton("确定", null).show();
-                    String s1="请输入数字";
-                    show(R.layout.layout_tishi_email,s1,0);
+                    String s1 = "请输入数字";
+                    show(R.layout.layout_tishi_email, s1, 0);
                 } else if (!check_price(drug_price_s) && flag) {
                     //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请填入正确价格 ").setNegativeButton("确定", null).show();
-                    String s1="请输入正确价格";
-                    show(R.layout.layout_tishi_email,s1,0);
+                    String s1 = "请输入正确价格";
+                    show(R.layout.layout_tishi_email, s1, 0);
                 }
                 //
                 new Thread(new Runnable() {
@@ -476,25 +470,25 @@ public class UpDrugMsgActivity extends AppCompatActivity {
         }
     }
 
-    private void parseJSONWithJSONObject(String jsonData) {
-        try {
-            Log.d("updrugjson", jsonData);
-            JSONObject jsonObject = new JSONObject(jsonData);
-            String code = jsonObject.getString("code");
-            Message msg = Message.obtain();
-
-            if (code.equals("0")) {
-                msg.what = 0;
-
-            } else {
-                msg.what = -1;
-            }
-            handler.sendMessage(msg);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    private void parseJSONWithJSONObject(String jsonData) {
+//        try {
+//            Log.d("updrugjson", jsonData);
+//            JSONObject jsonObject = new JSONObject(jsonData);
+//            String code = jsonObject.getString("code");
+//            Message msg = Message.obtain();
+//
+//            if (code.equals("0")) {
+//                msg.what = 0;
+//
+//            } else {
+//                msg.what = -1;
+//            }
+//            handler.sendMessage(msg);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     /**
      * 该方法用于上传文件
@@ -525,43 +519,93 @@ public class UpDrugMsgActivity extends AppCompatActivity {
                                                       Log.d("result", "falure");
                                                       System.out.println("失败");
                                                   }
-
                                                   @Override
                                                   public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-
-                                                      String pictureUrl=ParseJSON(response.body().string());
-
-                                                      Log.d("drugpicture", pictureUrl);
+                                                      String pictureUrl = ParseJSON(response.body().string());
                                                       //上传图片成功并获取图片的地址之后开始上传药品的文本信息
-                                                      String url;
-                                                      url = ipAddress + "IM/" + addOrup + "?name=" + drug_name_s + "&price=" + drug_price_s + "&type=" + kind_s + "&describe=" + describe + "&amount=" + drug_num_s + "&index=" + pictureUrl + "&attribute=" + attribute_s;
-                                                      Log.d("updrugurl", url);
-                                                      OkHttpClient client = new OkHttpClient();
-                                                      Request request = new Request.Builder()
-                                                              .url(url)
-                                                              .build();
-                                                      try {
-                                                          Response responseText = client.newCall(request).execute();
-                                                          String responseData = responseText.body().string();
-                                                          parseJSONWithJSONObject(responseData);
-                                                      } catch (Exception e) {
-                                                          e.printStackTrace();
-                                                      }
+                                                      upDrugTextInfo(drug_name_s,drug_price_s,kind_s,describe,drug_num_s,pictureUrl,attribute_s);
+
+//                                                      String url;
+//                                                      url = ipAddress + "IM/" + addOrup + "?name=" + drug_name_s + "&price=" + drug_price_s + "&type=" + kind_s + "&describe=" + describe + "&amount=" + drug_num_s + "&index=" + pictureUrl + "&attribute=" + attribute_s;
+//                                                      Log.d("updrugurl", url);
+//                                                      OkHttpClient client = new OkHttpClient();
+//                                                      Request request = new Request.Builder()
+//                                                              .url(url)
+//                                                              .build();
+//                                                      try {
+//                                                          Response responseText = client.newCall(request).execute();
+//                                                          String responseData = responseText.body().string();
+//                                                          parseJSONWithJSONObject(responseData);
+//                                                      } catch (Exception e) {
+//                                                          e.printStackTrace();
+//                                                      }
                                                   }
                                               }
         );
     }
 
 
-        private String  ParseJSON(String jsonData){
-            try {
-                JSONObject jsonObject=new JSONObject(jsonData);
-                return jsonObject.getString("msg");
-            } catch (JSONException e) {
-                e.printStackTrace();
+    private void upDrugTextInfo(String drug_name_s, String drug_price_s, String kind_s, String describe, String drug_num_s, String pictureUrl, String attribute_s) {
+        String info = "name=" + drug_name_s + "&price=" + drug_price_s + "&type=" + kind_s + "&describe=" + describe + "&amount=" + drug_num_s + "&index=" + pictureUrl + "&attribute=" + attribute_s;
+        byte[] data = info.getBytes();
+        try {
+            URL url = new URL(ipAddress + "IM/" + addOrup);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setConnectTimeout(3000);//设置连接超时时间
+            urlConnection.setDoInput(true);//设置输入流采用字节流
+            urlConnection.setDoOutput(true);//设置输出采用字节流
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setUseCaches(false);//使用post方式不能使用缓存
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");//设置meta参数
+            urlConnection.setRequestProperty("Content-Length", String.valueOf(data.length));
+            urlConnection.setRequestProperty("Charset", "utf-8");
+            //获得输出流，向服务器写入数据
+            OutputStream outputStream = urlConnection.getOutputStream();
+            outputStream.write(data);
+            int response = urlConnection.getResponseCode();//获得服务器的响应码
+            Message msg = handler.obtainMessage();
+            if (response == HttpURLConnection.HTTP_OK) {
+
+                InputStream inputStream = urlConnection.getInputStream();
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                byte[] result = new byte[1024];
+                int len = 0;
+                while ((len = inputStream.read(result)) != -1) {
+                    byteArrayOutputStream.write(result, 0, len);
+                }
+                String resultData = new String(byteArrayOutputStream.toByteArray()).trim();
+
+                if (resultData.equals("添加成功")) {
+                    msg.what = UPLOAD_DRUG_SUCCESS;
+                    Log.d("result", "success3");
+                } else {
+                    msg.what = UPLOAD_DRUG_FAULT;
+                    Log.d("result", "fault1");
+                }
+            } else {
+                msg.what = UPLOAD_DRUG_FAULT;
+                Log.d("result", "fault2");
             }
-            return null;
+            handler.sendMessage(msg);
+            Log.d("result", "312");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+    }
+
+
+    private String ParseJSON(String jsonData) {
+        try {
+            JSONObject jsonObject = new JSONObject(jsonData);
+            return jsonObject.getString("msg");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public boolean check_num(String num) {
         String regex = "^\\d+$";
@@ -719,18 +763,19 @@ public class UpDrugMsgActivity extends AppCompatActivity {
             return null;
         }
     }
-    public void show(int x,String s,int y){
-        final Dialog dialog = new Dialog(UpDrugMsgActivity.this,R.style.ActionSheetDialogStyle);        //展示对话框
+
+    public void show(int x, String s, int y) {
+        final Dialog dialog = new Dialog(UpDrugMsgActivity.this, R.style.ActionSheetDialogStyle);        //展示对话框
         //填充对话框的布局
         View inflate = LayoutInflater.from(UpDrugMsgActivity.this).inflate(x, null);
-        TextView describe=inflate.findViewById(R.id.describe);
+        TextView describe = inflate.findViewById(R.id.describe);
         describe.setText(s);
         TextView yes = inflate.findViewById(R.id.yes);
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(y==0)
-                dialog.dismiss();
+                if (y == 0)
+                    dialog.dismiss();
                 else
                     finish();
             }
@@ -739,10 +784,10 @@ public class UpDrugMsgActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         Window dialogWindow = dialog.getWindow();
         //设置Dialog从窗体底部弹出
-        dialogWindow.setGravity( Gravity.CENTER);
+        dialogWindow.setGravity(Gravity.CENTER);
         //获得窗体的属性
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-        lp.width =800;
+        lp.width = 800;
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         dialogWindow.setAttributes(lp);
         dialog.show();
