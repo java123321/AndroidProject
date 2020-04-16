@@ -6,7 +6,7 @@
     >
 
     <LinearLayout
-        android:layout_width="450dp"
+        android:layout_width="match_parent"
         android:layout_height="90dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/yuanjiao1"
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:gravity="center"
+            android:gravity="left"
             android:text="李时珍" />
 
         <TextView
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:gravity="center"
+            android:gravity="left"
             android:text="男" />
 
         <TextView
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:gravity="center"
+            android:gravity="left"
             android:text="男" />
 
         <TextView
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:gravity="center"
+            android:gravity="left"
             android:text="李时珍" />
 
         <TextView
@@ -62,15 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:layout_marginLeft="10dp"
-            android:gravity="right"
+            android:gravity="left"
             android:text="体重" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:gravity="center" />
     </LinearLayout>
 </LinearLayout>
