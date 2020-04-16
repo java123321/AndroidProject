@@ -229,7 +229,6 @@ public class DocService extends Service {
         @Override
         public void onOpen(WebSocket webSocket, Response response) {
             socket = webSocket;
-            output("连接成功聊天");
         }
 
         //接受消息时回调
