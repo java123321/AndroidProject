@@ -94,6 +94,8 @@ public class UpDrugMsgActivity extends AppCompatActivity {
     private Spinner kind;
     private Spinner attribute;
     private String addOrup;
+    private String drugType;
+    private String drugOtc;
     private boolean hasPermission = false;
     private static final int REQUEST_TAKE_PHOTO = 0;// 拍照
     private static final int REQUEST_CROP = 1;// 裁剪
@@ -265,6 +267,105 @@ public class UpDrugMsgActivity extends AppCompatActivity {
             drug_name.setText(intent.getStringExtra("drugName").trim());
             drug_price.setText(intent.getStringExtra("drugPrice").trim());
             drug_resume.setText(intent.getStringExtra("drugDescription").trim());
+            drugType = intent.getStringExtra("drugType").trim();
+            drugOtc = intent.getStringExtra("drugOtc").trim();
+//            <item>男科</item>
+//        <item>妇科</item>
+//        <item>消化科</item>
+//        <item>内分泌科</item>
+//        <item>心血管科</item>
+//        <item>泌尿科</item>
+//        <item>血液科</item>
+//        <item>风湿骨科</item>
+//        <item>耳鼻喉科</item>
+//        <item>眼科</item>
+//        <item>口腔科</item>
+//        <item>皮肤科</item>
+//        <item>神经科</item>
+//        <item>感染科</item>
+//        <item>保健食品</item>
+//        <item>医疗器械</item>
+//        <item>其他</item>
+            switch (drugType){
+                case "男科": {
+                    kind.setSelection(2,true);
+                    break;
+                }
+                case "妇科": {
+                    kind.setSelection(3,true);
+                    break;
+                }
+                case "消化科": {
+                    kind.setSelection(4,true);
+                    break;
+                }
+                case "内分泌科": {
+                    kind.setSelection(5,true);
+                    break;
+                }
+                case "泌尿科": {
+                    kind.setSelection(6,true);
+                    break;
+                }
+                case "血液科": {
+                    kind.setSelection(7,true);
+                    break;
+                }
+                case "风湿骨科": {
+                    kind.setSelection(8,true);
+                    break;
+                }
+                case "耳鼻喉科": {
+                    kind.setSelection(9,true);
+                    break;
+                }
+                case "眼科": {
+                    kind.setSelection(10,true);
+                    break;
+                }
+                case "口腔科": {
+                    kind.setSelection(11,true);
+                    break;
+                }
+                case "神经科": {
+                    kind.setSelection(12,true);
+                    break;
+                }
+                case "感染科": {
+                    kind.setSelection(13,true);
+                    break;
+                }
+                case "保健食品": {
+                    kind.setSelection(14,true);
+                    break;
+                }
+                case "医疗器械": {
+                    kind.setSelection(15,true);
+                    break;
+                }
+                case "其他": {
+                    kind.setSelection(16,true);
+                    break;
+                }
+                default:
+                    break;
+            }
+//            <item>OTC</item>
+//      <item>RX</item>
+            System.out.println("------------------------------------------------"+drugOtc);
+            switch (drugOtc){
+                case "true": {
+                    attribute.setSelection(0,true);
+                    break;
+                }
+                case "false": {
+                    attribute.setSelection(1,true);
+                    break;
+                }
+                default:
+                    break;
+            }
+            //kind.
             byte[] appIcon = intent.getByteArrayExtra("drugPicture");
             picture.setImageBitmap(BitmapFactory.decodeByteArray(appIcon, 0, appIcon.length));
             show.setText("修改药品");
@@ -287,7 +388,7 @@ public class UpDrugMsgActivity extends AppCompatActivity {
                     //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请完善信息").setNegativeButton("确定", null).show();
                 } else if (!check_num(drug_num_s) && flag) {
                     //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请填入数字").setNegativeButton("确定", null).show();
-                    String s1 = "请输入数字";
+                    String s1 = "药品数量请输入数字";
                     show(R.layout.layout_tishi_email, s1, 0);
                 } else if (!check_price(drug_price_s) && flag) {
                     //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请填入正确价格 ").setNegativeButton("确定", null).show();
