@@ -165,6 +165,7 @@ public class HistoryOrderAdapter extends RecyclerView.Adapter <RecyclerView.View
                         public void onClick(View view) {
                             intentToHistoryOrder.putExtra("delete",bean.getOrderId());
                             mContext.sendBroadcast(intentToHistoryOrder);
+                            dialog.dismiss();
                         }
                     });
                     no.setOnClickListener(new View.OnClickListener() {

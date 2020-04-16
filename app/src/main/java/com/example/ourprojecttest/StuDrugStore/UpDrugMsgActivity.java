@@ -119,15 +119,19 @@ public class UpDrugMsgActivity extends AppCompatActivity {
                     break;
                 }
                 case DELETE_FAULT: {//代表药品删除失败
-                    Toast toast = Toast.makeText(UpDrugMsgActivity.this, "药品删除失败，请稍后再试！", Toast.LENGTH_SHORT);
+//                    Toast toast = Toast.makeText(UpDrugMsgActivity.this, "药品删除失败，请稍后再试！", Toast.LENGTH_SHORT);
+//                case DELETE_FAULT: {
+                   // Toast toast = Toast.makeText(UpDrugMsgActivity.this, "药品删除失败，请稍后再试！", Toast.LENGTH_SHORT);
                     // 这里给了一个1/4屏幕高度的y轴偏移量
-                    toast.setGravity(Gravity.BOTTOM, 0, toastHeight / 5);
-                    toast.show();
+                    //toast.setGravity(Gravity.BOTTOM, 0, toastHeight / 5);
+                    //toast.show();
+                    String s = "药品删除失败！";
+                    show(R.layout.layout_tishi_email, s, 0);
                     break;
                 }
                 case UPLOAD_DRUG_SUCCESS:{//代表药品上传成功
-                    String s1 = "";
-                    show(R.layout.layout_chenggong, s1, 0);
+                    String s1 = "操作成功";
+                    show(R.layout.layout_chenggong, s1, 1);
                     break;
                 }
                 case UPLOAD_DRUG_FAULT:{//代表药品上传失败
@@ -193,25 +197,38 @@ public class UpDrugMsgActivity extends AppCompatActivity {
         ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
         deleteOrder = findViewById(R.id.delete);
         //设置删除药品的点击事件
-        deleteOrder.setOnClickListener(v -> {
-            final Dialog dialog = new Dialog(UpDrugMsgActivity.this, R.style.ActionSheetDialogStyle);        //展示对话框
-            //填充对话框的布局
-            View inflate = LayoutInflater.from(UpDrugMsgActivity.this).inflate(R.layout.layout_delete_yaopin, null);
-            TextView no = inflate.findViewById(R.id.no);
-            TextView yes = inflate.findViewById(R.id.yes);
-            yes.setOnClickListener(view -> deleteOrder());
-            no.setOnClickListener(v1 -> dialog.dismiss());
-            dialog.setContentView(inflate);
-            dialog.setCancelable(false);
-            Window dialogWindow = dialog.getWindow();
-            //设置Dialog从窗体底部弹出
-            dialogWindow.setGravity(Gravity.CENTER);
-            //获得窗体的属性
-            WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-            lp.width = 800;
-            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-            dialogWindow.setAttributes(lp);
-            dialog.show();
+        deleteOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog dialog = new Dialog(UpDrugMsgActivity.this, R.style.ActionSheetDialogStyle);        //展示对话框
+                //填充对话框的布局
+                View inflate = LayoutInflater.from(UpDrugMsgActivity.this).inflate(R.layout.layout_delete_yaopin, null);
+                TextView no = inflate.findViewById(R.id.no);
+                TextView yes = inflate.findViewById(R.id.yes);
+                yes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        deleteOrder();
+                    }
+                });
+                no.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.setContentView(inflate);
+                dialog.setCancelable(false);
+                Window dialogWindow = dialog.getWindow();
+                //设置Dialog从窗体底部弹出
+                dialogWindow.setGravity(Gravity.CENTER);
+                //获得窗体的属性
+                WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+                lp.width = 800;
+                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                dialogWindow.setAttributes(lp);
+                dialog.show();
+            }
         });
         display = getWindowManager().getDefaultDisplay();
         toastHeight = display.getHeight();
@@ -224,7 +241,12 @@ public class UpDrugMsgActivity extends AppCompatActivity {
         drug_num = findViewById(R.id.drug_num);
         drug_resume = findViewById(R.id.drug_msg);
         picture = findViewById(R.id.picture);
-        picture.setOnClickListener(view -> dialog = show());
+        picture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog = show();
+            }
+        });
 
         if (getIntent().getStringExtra("adjust").trim().equals("0")) {//添加药品
             show.setText("添加药品");
@@ -242,34 +264,37 @@ public class UpDrugMsgActivity extends AppCompatActivity {
             addOrup = "UpdateDrugInformation";
             createFileWithByte(appIcon);
         }
-        submit.setOnClickListener(view -> {
-            final String attribute_s = attribute.getSelectedItem().toString().trim();
-            final String kind_s = kind.getSelectedItem().toString().trim();
-            final String drug_name_s = drug_name.getText().toString().trim();
-            final String drug_price_s = drug_price.getText().toString().trim();
-            final String drug_num_s = drug_num.getText().toString().trim();
-            final String describe = drug_resume.getText().toString().trim();
-            boolean flag = true;
-            if (drug_name_s.isEmpty() || drug_num_s.isEmpty() || drug_price_s.isEmpty() || path == "" || describe.isEmpty()) {
-                String s1 = "请完善信息";
-                show(R.layout.layout_tishi_email, s1, 0);
-                //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请完善信息").setNegativeButton("确定", null).show();
-            } else if (!check_num(drug_num_s) && flag) {
-                //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请填入数字").setNegativeButton("确定", null).show();
-                String s1 = "请输入数字";
-                show(R.layout.layout_tishi_email, s1, 0);
-            } else if (!check_price(drug_price_s) && flag) {
-                //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请填入正确价格 ").setNegativeButton("确定", null).show();
-                String s1 = "请输入正确价格";
-                show(R.layout.layout_tishi_email, s1, 0);
-            }
-            //
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    uploadDrugInfo(file, ipAddress + "IM/PictureUpload?type=Drug", drug_name_s, drug_price_s, kind_s, describe, drug_num_s, attribute_s);
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String attribute_s = attribute.getSelectedItem().toString().trim();
+                final String kind_s = kind.getSelectedItem().toString().trim();
+                final String drug_name_s = drug_name.getText().toString().trim();
+                final String drug_price_s = drug_price.getText().toString().trim();
+                final String drug_num_s = drug_num.getText().toString().trim();
+                final String describe = drug_resume.getText().toString().trim();
+                boolean flag = true;
+                if (drug_name_s.isEmpty() || drug_num_s.isEmpty() || drug_price_s.isEmpty() || path == "" || describe.isEmpty()) {
+                    String s1 = "请完善信息";
+                    show(R.layout.layout_tishi_email, s1, 0);
+                    //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请完善信息").setNegativeButton("确定", null).show();
+                } else if (!check_num(drug_num_s) && flag) {
+                    //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请填入数字").setNegativeButton("确定", null).show();
+                    String s1 = "请输入数字";
+                    show(R.layout.layout_tishi_email, s1, 0);
+                } else if (!check_price(drug_price_s) && flag) {
+                    //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请填入正确价格 ").setNegativeButton("确定", null).show();
+                    String s1 = "请输入正确价格";
+                    show(R.layout.layout_tishi_email, s1, 0);
                 }
-            }).start();
+                //
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        uploadDrugInfo(file, ipAddress + "IM/PictureUpload?type=Drug", drug_name_s, drug_price_s, kind_s, describe, drug_num_s, attribute_s);
+                    }
+                }).start();
+            }
         });
     }
 
