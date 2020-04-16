@@ -350,13 +350,22 @@ public class  Chat extends AppCompatActivity {
             }
 
             Log.d("chat", "stuIcon" + (stuIcon == null));
-            Bitmap stuPicture = BitmapFactory.decodeByteArray(stuIcon, 0, stuIcon.length);
+            Bitmap stuPicture;
+            if(stuIcon==null){//如果学生没有设置头像，则使用本地默认头像
+                stuPicture=BitmapFactory.decodeResource(getResources(),R.drawable.yonghu1);
+            }else{
+                stuPicture = BitmapFactory.decodeByteArray(stuIcon, 0, stuIcon.length);
+            }
+
             //获取医生的头像
             PictureStore pictureStore = (PictureStore) method.readObjFromSDCard("DocIcon");
             Bitmap docPicture = null;
             if (pictureStore.getFlag()) {
                 byte[] docIcon = pictureStore.getPicture();
                 docPicture = BitmapFactory.decodeByteArray(docIcon, 0, docIcon.length);
+            }
+            if(docPicture==null){//如果医生没有设置头像,则默认使用本地头像
+                docPicture=BitmapFactory.decodeResource(getResources(),R.drawable.yonghu2);
             }
             adapter = new MsgAdapter(msgList, stuPicture, docPicture);
         } else {//如果是学生登录的话，则填写要聊天的医生id
@@ -376,13 +385,22 @@ public class  Chat extends AppCompatActivity {
                 messageBean.setIcon(null);
             }
             Log.d("chat", "docIcon" + (docIcon == null));
-            Bitmap docPicture = BitmapFactory.decodeByteArray(docIcon, 0, docIcon.length);
+            Bitmap docPicture;
+            if(docIcon==null){//如果医生没有设置头像，则使用本地默认头像
+                docPicture=BitmapFactory.decodeResource(getResources(),R.drawable.yonghu2);
+            }else{
+                docPicture = BitmapFactory.decodeByteArray(docIcon, 0, docIcon.length);
+            }
+
             //获取学生的头像
             PictureStore pictureStore = (PictureStore) method.readObjFromSDCard("Icon");
             Bitmap stuPicture = null;
             if (pictureStore.getFlag()) {
                 byte[] stuIcon = pictureStore.getPicture();
                 stuPicture = BitmapFactory.decodeByteArray(stuIcon, 0, stuIcon.length);
+            }
+            if(stuPicture==null){//如果学生没有设置头像，默认使用本地头像
+                stuPicture=BitmapFactory.decodeResource(getResources(),R.drawable.yonghu1);
             }
             adapter = new MsgAdapter(msgList, docPicture, stuPicture);
         }
