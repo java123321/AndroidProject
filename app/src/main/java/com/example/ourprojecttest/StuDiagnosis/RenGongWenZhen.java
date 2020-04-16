@@ -6,9 +6,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
@@ -24,6 +26,7 @@ import android.os.Vibrator;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -143,15 +146,42 @@ public class RenGongWenZhen extends AppCompatActivity {
         }
     }
 
+    @Override  //退出接诊活动时弹出提示框
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+
+            if(StuService.isGuaHao){//如果学生正在挂号，给学生弹出提示
+                AlertDialog.Builder builder  = new AlertDialog.Builder(RenGongWenZhen.this);
+                builder.setTitle("提示" ) ;
+                builder.setMessage("您当前正在挂号，如果退出当前界面将终止挂号功能，您可以选择点击手机home键返回桌面，app将在后台为您保持继续挂号，是否要结束挂号?" ) ;
+                builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //给服务发送取消挂号的广播
+                        intentToService.putExtra("msg", "ExitGuaHao");
+                        sendBroadcast(intentToService);
+                        finish();
+                    }
+                });
+                builder.setNegativeButton("否",null);
+                builder.show();
+            }else{
+                finish();
+            }
+
+        }
+        return false;
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(localReceiver);
         //释放音频文件
-        if(mediaPlayer.isLooping()){
+        if((mediaPlayer!=null)&&mediaPlayer.isLooping()){
             mediaPlayer.stop();
+            mediaPlayer.release();
         }
-        mediaPlayer.release();
 
         Log.d("wenzhen", "onDestroy");
     }

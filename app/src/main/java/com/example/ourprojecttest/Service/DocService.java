@@ -155,19 +155,21 @@ public class DocService extends Service {
                 intentToBeforChat.putExtra("updateStu","noStuOnline");
                 sendBroadcast(intentToBeforChat);
                 intentToBeforChat.removeExtra("updateStu");
-            }else if (info.indexOf("人数") != -1) {
-                StringBuilder result = new StringBuilder();
-                int i = 7;
-                while (i < q) {
-                    result.append(info.charAt(i++));
-                }
-                Log.d("人数", result + "");
-
-                //发送通知
-                Log.d("队伍中人数：", result.toString());
-                startForeground(1, getNotification(CHANNEL_ID, info));
-
-            } else if (info.endsWith("向您发送了接诊邀请！")) {
+            }
+//            else if (info.indexOf("人数") != -1) {
+//                StringBuilder result = new StringBuilder();
+//                int i = 7;
+//                while (i < q) {
+//                    result.append(info.charAt(i++));
+//                }
+//                Log.d("人数", result + "");
+//
+//                //发送通知
+//                Log.d("队伍中人数：", result.toString());
+//                startForeground(1, getNotification(CHANNEL_ID, info));
+//
+//            }
+            else if (info.endsWith("向您发送了接诊邀请！")) {
                 stuId = info.substring(0, info.indexOf("向"));
                 Log.d("学生Id", stuId);
                 //发送通知
