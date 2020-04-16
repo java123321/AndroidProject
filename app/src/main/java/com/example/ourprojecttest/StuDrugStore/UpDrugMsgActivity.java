@@ -71,6 +71,9 @@ import okhttp3.Response;
 import static com.blankj.utilcode.util.UriUtils.uri2File;
 
 public class UpDrugMsgActivity extends AppCompatActivity {
+    private final int MODEFY_DRUG_SUCCESS=12;
+    private final int MODEFY_DRUG_FAULT=13;
+    private final int FAULT_DUE_NET=15;
     private final int UPLOAD_DRUG_SUCCESS = 10;
     private final int UPLOAD_DRUG_FAULT = 11;
     private final int DELETE_SUCCESS = 5;
@@ -110,27 +113,43 @@ public class UpDrugMsgActivity extends AppCompatActivity {
             super.handleMessage(msg);
             Log.d("updatedrug", "what:" + msg.what);
             switch (msg.what) {
-                case DELETE_SUCCESS: {
+                case DELETE_SUCCESS: {//代表药品删除成功
                     String s = "该药品已成功删除！";
                     show(R.layout.layout_chenggong, s, 1);
                     break;
                 }
-                case DELETE_FAULT: {
+                case DELETE_FAULT: {//代表药品删除失败
                     Toast toast = Toast.makeText(UpDrugMsgActivity.this, "药品删除失败，请稍后再试！", Toast.LENGTH_SHORT);
                     // 这里给了一个1/4屏幕高度的y轴偏移量
                     toast.setGravity(Gravity.BOTTOM, 0, toastHeight / 5);
                     toast.show();
                     break;
                 }
-                case UPLOAD_DRUG_SUCCESS:
+                case UPLOAD_DRUG_SUCCESS:{//代表药品上传成功
                     String s1 = "";
                     show(R.layout.layout_chenggong, s1, 0);
                     break;
-                case UPLOAD_DRUG_FAULT:
-                    //失败
-                    //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("失败").setNegativeButton("确定", null).show();
+                }
+                case UPLOAD_DRUG_FAULT:{//代表药品上传失败
                     String s = "失败";
                     show(R.layout.layout_tishi_email, s, 0);
+                    break;
+                }
+                case MODEFY_DRUG_SUCCESS:{//代表药品修改信息成功
+                    //阿边在这里弹出提示框通知用户药品信息修改成功
+                    //将toast换成确认框即可，toast为了方便测试
+                    Toast.makeText(UpDrugMsgActivity.this, "修改信息成功", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                case MODEFY_DRUG_FAULT:{//代表药品修改信息失败
+                    //同理，弹出通知提示用户修改药品失败
+                    Toast.makeText(UpDrugMsgActivity.this, "修改信息失败", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                case FAULT_DUE_NET:{//由于网络原因造成的修改或上传药品失败
+                    //同理，弹出通知提示用户稍后再次尝试
+                    Toast.makeText(UpDrugMsgActivity.this, "失败，请稍后尝试", Toast.LENGTH_SHORT).show();
+                }
                 default:
                     break;
             }
@@ -174,38 +193,25 @@ public class UpDrugMsgActivity extends AppCompatActivity {
         ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
         deleteOrder = findViewById(R.id.delete);
         //设置删除药品的点击事件
-        deleteOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Dialog dialog = new Dialog(UpDrugMsgActivity.this, R.style.ActionSheetDialogStyle);        //展示对话框
-                //填充对话框的布局
-                View inflate = LayoutInflater.from(UpDrugMsgActivity.this).inflate(R.layout.layout_delete_yaopin, null);
-                TextView no = inflate.findViewById(R.id.no);
-                TextView yes = inflate.findViewById(R.id.yes);
-                yes.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        deleteOrder();
-                    }
-                });
-                no.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-                dialog.setContentView(inflate);
-                dialog.setCancelable(false);
-                Window dialogWindow = dialog.getWindow();
-                //设置Dialog从窗体底部弹出
-                dialogWindow.setGravity(Gravity.CENTER);
-                //获得窗体的属性
-                WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-                lp.width = 800;
-                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-                dialogWindow.setAttributes(lp);
-                dialog.show();
-            }
+        deleteOrder.setOnClickListener(v -> {
+            final Dialog dialog = new Dialog(UpDrugMsgActivity.this, R.style.ActionSheetDialogStyle);        //展示对话框
+            //填充对话框的布局
+            View inflate = LayoutInflater.from(UpDrugMsgActivity.this).inflate(R.layout.layout_delete_yaopin, null);
+            TextView no = inflate.findViewById(R.id.no);
+            TextView yes = inflate.findViewById(R.id.yes);
+            yes.setOnClickListener(view -> deleteOrder());
+            no.setOnClickListener(v1 -> dialog.dismiss());
+            dialog.setContentView(inflate);
+            dialog.setCancelable(false);
+            Window dialogWindow = dialog.getWindow();
+            //设置Dialog从窗体底部弹出
+            dialogWindow.setGravity(Gravity.CENTER);
+            //获得窗体的属性
+            WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+            lp.width = 800;
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            dialogWindow.setAttributes(lp);
+            dialog.show();
         });
         display = getWindowManager().getDefaultDisplay();
         toastHeight = display.getHeight();
@@ -218,14 +224,9 @@ public class UpDrugMsgActivity extends AppCompatActivity {
         drug_num = findViewById(R.id.drug_num);
         drug_resume = findViewById(R.id.drug_msg);
         picture = findViewById(R.id.picture);
-        picture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog = show();
-            }
-        });
+        picture.setOnClickListener(view -> dialog = show());
 
-        if (getIntent().getStringExtra("adjust").trim().equals("0")) {
+        if (getIntent().getStringExtra("adjust").trim().equals("0")) {//添加药品
             show.setText("添加药品");
             addOrup = "UploadDrug";
         } else {
@@ -241,37 +242,34 @@ public class UpDrugMsgActivity extends AppCompatActivity {
             addOrup = "UpdateDrugInformation";
             createFileWithByte(appIcon);
         }
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final String attribute_s = attribute.getSelectedItem().toString().trim();
-                final String kind_s = kind.getSelectedItem().toString().trim();
-                final String drug_name_s = drug_name.getText().toString().trim();
-                final String drug_price_s = drug_price.getText().toString().trim();
-                final String drug_num_s = drug_num.getText().toString().trim();
-                final String describe = drug_resume.getText().toString().trim();
-                boolean flag = true;
-                if (drug_name_s.isEmpty() || drug_num_s.isEmpty() || drug_price_s.isEmpty() || path == "" || describe.isEmpty()) {
-                    String s1 = "请完善信息";
-                    show(R.layout.layout_tishi_email, s1, 0);
-                    //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请完善信息").setNegativeButton("确定", null).show();
-                } else if (!check_num(drug_num_s) && flag) {
-                    //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请填入数字").setNegativeButton("确定", null).show();
-                    String s1 = "请输入数字";
-                    show(R.layout.layout_tishi_email, s1, 0);
-                } else if (!check_price(drug_price_s) && flag) {
-                    //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请填入正确价格 ").setNegativeButton("确定", null).show();
-                    String s1 = "请输入正确价格";
-                    show(R.layout.layout_tishi_email, s1, 0);
-                }
-                //
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        uploadDrugInfo(file, ipAddress + "IM/PictureUpload?type=Drug", drug_name_s, drug_price_s, kind_s, describe, drug_num_s, attribute_s);
-                    }
-                }).start();
+        submit.setOnClickListener(view -> {
+            final String attribute_s = attribute.getSelectedItem().toString().trim();
+            final String kind_s = kind.getSelectedItem().toString().trim();
+            final String drug_name_s = drug_name.getText().toString().trim();
+            final String drug_price_s = drug_price.getText().toString().trim();
+            final String drug_num_s = drug_num.getText().toString().trim();
+            final String describe = drug_resume.getText().toString().trim();
+            boolean flag = true;
+            if (drug_name_s.isEmpty() || drug_num_s.isEmpty() || drug_price_s.isEmpty() || path == "" || describe.isEmpty()) {
+                String s1 = "请完善信息";
+                show(R.layout.layout_tishi_email, s1, 0);
+                //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请完善信息").setNegativeButton("确定", null).show();
+            } else if (!check_num(drug_num_s) && flag) {
+                //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请填入数字").setNegativeButton("确定", null).show();
+                String s1 = "请输入数字";
+                show(R.layout.layout_tishi_email, s1, 0);
+            } else if (!check_price(drug_price_s) && flag) {
+                //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请填入正确价格 ").setNegativeButton("确定", null).show();
+                String s1 = "请输入正确价格";
+                show(R.layout.layout_tishi_email, s1, 0);
             }
+            //
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    uploadDrugInfo(file, ipAddress + "IM/PictureUpload?type=Drug", drug_name_s, drug_price_s, kind_s, describe, drug_num_s, attribute_s);
+                }
+            }).start();
         });
     }
 
@@ -546,12 +544,17 @@ public class UpDrugMsgActivity extends AppCompatActivity {
 
 
     private void upDrugTextInfo(String drug_name_s, String drug_price_s, String kind_s, String describe, String drug_num_s, String pictureUrl, String attribute_s) {
-        String info = "name=" + drug_name_s + "&price=" + drug_price_s + "&type=" + kind_s + "&describe=" + describe + "&amount=" + drug_num_s + "&index=" + pictureUrl + "&attribute=" + attribute_s;
-        byte[] data = info.getBytes();
+        StringBuilder info=new StringBuilder();
+         info.append("name=").append(drug_name_s ).append("&price=").append(drug_price_s).append("&type=").append(kind_s ).append("&describe=").append(describe).append("&amount=").append(drug_num_s).append("&index=").append(pictureUrl ).append("&attribute=").append(attribute_s);
+         if(addOrup.equals("UpdateDrugInformation")){//如果是修改药品信息
+             info.append("&drugId=").append(drugId);
+         }
+
+        byte[] data = info.toString().getBytes();
         try {
             URL url = new URL(ipAddress + "IM/" + addOrup);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setConnectTimeout(3000);//设置连接超时时间
+            urlConnection.setConnectTimeout(10000);//设置连接超时时间
             urlConnection.setDoInput(true);//设置输入流采用字节流
             urlConnection.setDoOutput(true);//设置输出采用字节流
             urlConnection.setRequestMethod("POST");
@@ -578,12 +581,16 @@ public class UpDrugMsgActivity extends AppCompatActivity {
                 if (resultData.equals("添加成功")) {
                     msg.what = UPLOAD_DRUG_SUCCESS;
                     Log.d("result", "success3");
-                } else {
+                } else if(resultData.equals("添加失败")){
                     msg.what = UPLOAD_DRUG_FAULT;
                     Log.d("result", "fault1");
+                }else if(resultData.equals("修改成功")){
+                    msg.what=MODEFY_DRUG_SUCCESS;
+                }else if(resultData.equals("修改失败")){
+                    msg.what=MODEFY_DRUG_FAULT;
                 }
             } else {
-                msg.what = UPLOAD_DRUG_FAULT;
+                msg.what = FAULT_DUE_NET;
                 Log.d("result", "fault2");
             }
             handler.sendMessage(msg);

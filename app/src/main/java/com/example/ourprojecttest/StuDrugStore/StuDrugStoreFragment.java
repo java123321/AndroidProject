@@ -1,5 +1,9 @@
 package com.example.ourprojecttest.StuDrugStore;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.String;
 
 import android.app.Activity;
@@ -37,6 +41,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -141,7 +147,7 @@ public class StuDrugStoreFragment extends Fragment {
         initView(view);
         initTextView(view);
         Log.d("msg", "获取图片");
-        getData("1", loadNum, "全部", "");
+        getData("1", loadNum, "全部", inputInspect.getText().toString().trim());
 
         return view;
     }
@@ -177,7 +183,7 @@ public class StuDrugStoreFragment extends Fragment {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getData("1", loadNum, selectedMenu, method.conversion(inputInspect.getText().toString().trim()));
+                getData("1", loadNum, selectedMenu,inputInspect.getText().toString().trim());
             }
         });
         refreshLayout.setColorSchemeColors(getResources().getColor(R.color.color_bottom));
@@ -186,7 +192,7 @@ public class StuDrugStoreFragment extends Fragment {
         sousuo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getData("1", loadNum, selectedMenu, method.conversion(inputInspect.getText().toString().trim()));
+                getData("1", loadNum, selectedMenu, inputInspect.getText().toString().trim());
                 Log.d("yaodian", "choiced:" + selectedMenu + "    input:" + inputInspect.getText().toString().trim());
             }
         });
@@ -216,7 +222,7 @@ public class StuDrugStoreFragment extends Fragment {
                        // mAdapter.changeState(LOADING_MORE);
                         //如果是加载更多获取的数据则不清空list
                         clear = false;
-                        getData(String.valueOf(Integer.valueOf(last) + 1), loadNum, selectedMenu, method.conversion(inputInspect.getText().toString().trim()));
+                        getData(String.valueOf(Integer.valueOf(last) + 1), loadNum, selectedMenu, inputInspect.getText().toString().trim());
                     } else {
                         mAdapter.changeState(NO_MORE);
                     }
@@ -280,6 +286,49 @@ public class StuDrugStoreFragment extends Fragment {
 
     }
 
+
+    private String getDrugInfoByPost(String start,String count,String type,String name){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("start=").append(start)
+                .append("&count=").append(count)
+                .append("&type=").append(type)
+                .append("&name=").append(name);;
+        byte[] data = stringBuilder.toString().getBytes();
+        try {
+            URL url = new URL(ipAddress + "IM/GetDrugInformation");
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setConnectTimeout(10000);//设置连接超时时间
+            urlConnection.setDoInput(true);//设置输入流采用字节流
+            urlConnection.setDoOutput(true);//设置输出采用字节流
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setUseCaches(false);//使用post方式不能使用缓存
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");//设置meta参数
+            urlConnection.setRequestProperty("Content-Length", String.valueOf(data.length));
+            urlConnection.setRequestProperty("Charset", "utf-8");
+            //获得输出流，向服务器写入数据
+            OutputStream outputStream = urlConnection.getOutputStream();
+            outputStream.write(data);
+            int response = urlConnection.getResponseCode();//获得服务器的响应码
+            if (response == HttpURLConnection.HTTP_OK) {
+                InputStream inputStream = urlConnection.getInputStream();
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                byte[] result = new byte[1024];
+                int len = 0;
+                while ((len = inputStream.read(result)) != -1) {
+                    byteArrayOutputStream.write(result, 0, len);
+                }
+                String resultData = new String(byteArrayOutputStream.toByteArray()).trim();
+                return resultData;
+            } else {
+             return "获取药品失败";
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "获取药品失败";
+    }
     class LoadThread extends Thread {
         private String start;
         private String count;
@@ -289,47 +338,38 @@ public class StuDrugStoreFragment extends Fragment {
 
         @Override
         public void run() {
+//            String url;
+//            StringBuilder stringBuilder = new StringBuilder();
+//            //添加基础字符串
+//            stringBuilder.append(ipAddress + "IM/GetDrugInformation?start=" + start + "&count=" + count);
+//            //添加类别变量
+//            if (!type.equals("全部")) {
+//                stringBuilder.append("&type=" + type);
+//            }
+//            if (!name.equals("")) {
+//                stringBuilder.append("&name=" + name);
+//            }
+//            url = stringBuilder.toString();
+//            Log.d("yaodian", url);
 
-
-
-
-
-
-
-
-
-            String url;
-            StringBuilder stringBuilder = new StringBuilder();
-            //添加基础字符串
-            stringBuilder.append(ipAddress + "IM/GetDrugInformation?start=" + start + "&count=" + count);
-            //添加类别变量
-            if (!type.equals("全部")) {
-                stringBuilder.append("&type=" + type);
-            }
-            if (!name.equals("")) {
-                stringBuilder.append("&name=" + name);
-            }
-            url = stringBuilder.toString();
-            Log.d("yaodian", url);
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .url(url)
-                    .build();
+//            OkHttpClient client = new OkHttpClient();
+//            Request request = new Request.Builder()
+//                    .url(url)
+//                    .build();
             try {
-                Response response = client.newCall(request).execute();
-                String responseData = response.body().string();
-                Log.d("drugstore", "response:" + responseData);
+//                Response response = client.newCall(request).execute();
+////                String responseData = response.body().string();
+//                Log.d("drugstore", "response:" + responseData);
                 //-------------------------解析-↓---------------------------//
                 try {
                     //获取后面的药品数组
-                    JSONArray jsonArray = new JSONArray(responseData);
+                    JSONArray jsonArray = new JSONArray(getDrugInfoByPost(start,count,type,name));
                     //totalNum用于记录当前的一次获取数据中一共有多少条数据
                     totalNum = jsonArray.length() - 1;
                     currentNum = 0;//每次访问数据库的时候将已加载的数目重置为0
                     Log.d("yaodian", "the total num is :" + String.valueOf(totalNum));
                     List<DrugInformation> list = new ArrayList<>();
                     JSONObject jsonObject = jsonArray.getJSONObject(0);
-
                     /*-------读取json数组中的第一个信息↓-----*/
                     String description = jsonObject.getString("Msg");
                     StringBuilder sb = new StringBuilder();
@@ -469,189 +509,189 @@ public class StuDrugStoreFragment extends Fragment {
                 quanbu.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName = quanbu;
                 Log.d("yaodian", "test");
-                getData("1", loadNum, "全部", "");
+                getData("1", loadNum, "全部", inputInspect.getText().toString().trim());
             }
         });
         nanke.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu = "1";
+                selectedMenu = "男科";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 nanke.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName = nanke;
-                getData("1", loadNum, "1", "");
+                getData("1", loadNum, "男科", inputInspect.getText().toString().trim());
             }
         });
         fuke.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu = "2";
+                selectedMenu = "妇科";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 fuke.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName = fuke;
-                getData("1", loadNum, "2", "");
+                getData("1", loadNum, "妇科", inputInspect.getText().toString().trim());
             }
         });
 
         huxike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu = "3";
+                selectedMenu = "呼吸科";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 huxike.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName = huxike;
-                getData("1", loadNum, "3", "");
+                getData("1", loadNum, "呼吸科", inputInspect.getText().toString().trim());
             }
         });
 
         xiaohuake.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu = "4";
+                selectedMenu = "消化科";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 xiaohuake.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName = xiaohuake;
-                getData("1", loadNum, "4", "");
+                getData("1", loadNum, "消化科", inputInspect.getText().toString().trim());
             }
         });
         neifenmike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu = "5";
+                selectedMenu = "内分泌科";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 neifenmike.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName = neifenmike;
-                getData("1", loadNum, "5", "");
+                getData("1", loadNum, "内分泌科", inputInspect.getText().toString().trim());
             }
         });
         xinxueguanke.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu = "6";
+                selectedMenu = "心血管科";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 xinxueguanke.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName = xinxueguanke;
-                getData("1", loadNum, "6", "");
+                getData("1", loadNum, "心血管科", inputInspect.getText().toString().trim());
             }
         });
         miniaoke.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu = "7";
+                selectedMenu = "泌尿科";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 miniaoke.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName = miniaoke;
-                getData("1", loadNum, "7", "");
+                getData("1", loadNum, "泌尿科", inputInspect.getText().toString().trim());
             }
         });
         xueyeke.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu = "8";
+                selectedMenu = "血液科";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 xueyeke.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName = xueyeke;
-                getData("1", loadNum, "8", "");
+                getData("1", loadNum, "血液科", inputInspect.getText().toString().trim());
             }
         });
         fengshigu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu = "9";
+                selectedMenu = "风湿骨科";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 fengshigu.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName = fengshigu;
-                getData("1", loadNum, "9", "");
+                getData("1", loadNum, "风湿骨科", inputInspect.getText().toString().trim());
             }
         });
         erbihouke.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu = "10";
+                selectedMenu = "耳鼻喉科";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 erbihouke.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName = erbihouke;
-                getData("1", loadNum, "10", "");
+                getData("1", loadNum, "耳鼻喉科", inputInspect.getText().toString().trim());
             }
         });
         yanke.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu = "11";
+                selectedMenu = "眼科";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 yanke.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName = yanke;
-                getData("1", loadNum, "11", "");
+                getData("1", loadNum, "眼科", inputInspect.getText().toString().trim());
             }
         });
         kouqiangke.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu = "12";
+                selectedMenu = "口腔科";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 kouqiangke.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName = kouqiangke;
-                getData("1", loadNum, "12", "");
+                getData("1", loadNum, "口腔科", inputInspect.getText().toString().trim());
             }
         });
         pifuke.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu = "13";
+                selectedMenu = "皮肤科";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 pifuke.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName = pifuke;
-                getData("1", loadNum, "13", "");
+                getData("1", loadNum, "皮肤科", inputInspect.getText().toString().trim());
             }
         });
         shenjingke.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu = "14";
+                selectedMenu = "神经科";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 shenjingke.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName = shenjingke;
-                getData("1", loadNum, "14", "");
+                getData("1", loadNum, "神经科",inputInspect.getText().toString().trim());
             }
         });
         ganranke.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu = "15";
+                selectedMenu = "感染科";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 ganranke.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName = ganranke;
-                getData("1", loadNum, "15", "");
+                getData("1", loadNum, "感染科", inputInspect.getText().toString().trim());
             }
         });
         baojianshipin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu = "16";
+                selectedMenu = "保健食品";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 baojianshipin.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName = baojianshipin;
-                getData("1", loadNum, "16", "");
+                getData("1", loadNum, "保健食品", inputInspect.getText().toString().trim());
             }
         });
         yiliaoqixie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu = "17";
+                selectedMenu = "医疗器械";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 yiliaoqixie.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName = yiliaoqixie;
-                getData("1", loadNum, "17", "");
+                getData("1", loadNum, "医疗器械", inputInspect.getText().toString().trim());
             }
         });
         qita.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedMenu = "100";
+                selectedMenu = "其他";
                 lastColorName.setTextColor(Color.parseColor("#000000"));
                 qita.setTextColor(Color.parseColor("#FD0896F5"));
                 lastColorName = qita;
-                getData("1", loadNum, "100", "");
+                getData("1", loadNum, "其他", inputInspect.getText().toString().trim());
             }
         });
     }
