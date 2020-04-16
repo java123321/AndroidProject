@@ -130,29 +130,33 @@ public class UpDrugMsgActivity extends AppCompatActivity {
                     break;
                 }
                 case UPLOAD_DRUG_SUCCESS:{//代表药品上传成功
-                    String s1 = "操作成功";
+                    String s1 = "药品上传成功";
                     show(R.layout.layout_chenggong, s1, 1);
                     break;
                 }
                 case UPLOAD_DRUG_FAULT:{//代表药品上传失败
-                    String s = "失败";
+                    String s = "药品上传失败";
                     show(R.layout.layout_tishi_email, s, 0);
                     break;
                 }
                 case MODEFY_DRUG_SUCCESS:{//代表药品修改信息成功
                     //阿边在这里弹出提示框通知用户药品信息修改成功
                     //将toast换成确认框即可，toast为了方便测试
-                    Toast.makeText(UpDrugMsgActivity.this, "修改信息成功", Toast.LENGTH_SHORT).show();
+                    String s = "药品修改成功";
+                    show(R.layout.layout_chenggong, s, 1);
                     break;
                 }
                 case MODEFY_DRUG_FAULT:{//代表药品修改信息失败
                     //同理，弹出通知提示用户修改药品失败
-                    Toast.makeText(UpDrugMsgActivity.this, "修改信息失败", Toast.LENGTH_SHORT).show();
+                    String s = "药品修改失败";
+                    show(R.layout.layout_tishi_email, s, 0);
                     break;
                 }
                 case FAULT_DUE_NET:{//由于网络原因造成的修改或上传药品失败
                     //同理，弹出通知提示用户稍后再次尝试
                     Toast.makeText(UpDrugMsgActivity.this, "失败，请稍后尝试", Toast.LENGTH_SHORT).show();
+                    String s = "操作失败，请稍后再试";
+                    show(R.layout.layout_tishi_email, s, 0);
                 }
                 default:
                     break;
@@ -251,6 +255,7 @@ public class UpDrugMsgActivity extends AppCompatActivity {
         if (getIntent().getStringExtra("adjust").trim().equals("0")) {//添加药品
             show.setText("添加药品");
             addOrup = "UploadDrug";
+            deleteOrder.setVisibility(View.INVISIBLE);
         } else {
             Intent intent = getIntent();
             drugId = intent.getStringExtra("drugId").trim();

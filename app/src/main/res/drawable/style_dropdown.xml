@@ -9,6 +9,6 @@
     <item>
         <bitmap
             android:gravity="end"
-            android:src="@drawable/xiasanjiao"/>
+            android:src="@drawable/dropdown"/>
     </item>
 </layer-list>

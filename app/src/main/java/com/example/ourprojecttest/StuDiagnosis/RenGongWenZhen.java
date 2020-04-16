@@ -151,20 +151,50 @@ public class RenGongWenZhen extends AppCompatActivity {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
 
             if(StuService.isGuaHao){//如果学生正在挂号，给学生弹出提示
-                AlertDialog.Builder builder  = new AlertDialog.Builder(RenGongWenZhen.this);
-                builder.setTitle("提示" ) ;
-                builder.setMessage("您当前正在挂号，如果退出当前界面将终止挂号功能，您可以选择点击手机home键返回桌面，app将在后台为您保持继续挂号，是否要结束挂号?" ) ;
-                builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                //AlertDialog.Builder builder  = new AlertDialog.Builder(RenGongWenZhen.this);
+                //builder.setTitle("提示" ) ;
+                //builder.setMessage("您当前正在挂号，如果退出当前界面将终止挂号功能，您可以选择点击手机home键返回桌面，app将在后台为您保持继续挂号，是否要结束挂号?" ) ;
+                //builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+                //    @Override
+                //    public void onClick(DialogInterface dialog, int which) {
                         //给服务发送取消挂号的广播
-                        intentToService.putExtra("msg", "ExitGuaHao");
-                        sendBroadcast(intentToService);
-                        finish();
-                    }
+                //        intentToService.putExtra("msg", "ExitGuaHao");
+                //        sendBroadcast(intentToService);
+                //        finish();
+                //    }
+                //});
+                //builder.setNegativeButton("否",null);
+                //builder.show();
+                final Dialog dialog = new Dialog(this, R.style.ActionSheetDialogStyle);        //展示对话框
+                //填充对话框的布局
+                View inflate = LayoutInflater.from(this).inflate(R.layout.layout_goutong, null);
+                //初始化控件
+                TextView countTime = inflate.findViewById(R.id.countTime);
+                countTime.setText("您当前正在挂号，如果退出当前界面将终止挂号功能，您可以选择点击手机home键返回桌面，app将在后台为您保持继续挂号，是否要结束挂号?");
+                TextView yes = inflate.findViewById(R.id.yes);
+                countTime.setTextSize(12);
+                yes.setOnClickListener(view -> {
+                    intentToService.putExtra("msg", "ExitGuaHao");
+                    sendBroadcast(intentToService);
+                    finish();
                 });
-                builder.setNegativeButton("否",null);
-                builder.show();
+                TextView no = inflate.findViewById(R.id.no);
+                no.setOnClickListener(view -> {
+                    dialog.dismiss();
+                });
+
+                //将布局设置给Dialog
+                dialog.setContentView(inflate);
+                //获取当前Activity所在的窗体
+                Window dialogWindow = dialog.getWindow();
+                //设置Dialog从窗体底部弹出
+                dialogWindow.setGravity(Gravity.CENTER);
+                //获得窗体的属性
+                WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+                lp.width = 800;
+                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                dialogWindow.setAttributes(lp);
+                dialog.show();//显示对话框
             }else{
                 finish();
             }
