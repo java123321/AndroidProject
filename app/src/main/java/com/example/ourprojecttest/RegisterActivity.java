@@ -99,6 +99,7 @@ public class RegisterActivity extends AppCompatActivity {
             final Drawable[] drawables = stuPwd.getCompoundDrawables();//获取密码框的drawable数组
             final int eyeWidth = drawables[2].getBounds().width();// 眼睛图标的宽度
 
+
             Drawable drawable = stuPwd.getCompoundDrawables()[2];
 
             public boolean onTouch(View view, MotionEvent event) {

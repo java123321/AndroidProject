@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".StuDiagnosis.OnlineDocDetail">
     <TextView
+
         android:text="医生详情"
         android:gravity="center"
         android:background="#FD0896F5"
