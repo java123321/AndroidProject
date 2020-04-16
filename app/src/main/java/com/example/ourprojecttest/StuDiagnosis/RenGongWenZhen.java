@@ -151,22 +151,6 @@ public class RenGongWenZhen extends AppCompatActivity {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
 
             if(StuService.isGuaHao){//如果学生正在挂号，给学生弹出提示
-                //AlertDialog.Builder builder  = new AlertDialog.Builder(RenGongWenZhen.this);
-                //builder.setTitle("提示" ) ;
-                //builder.setMessage("您当前正在挂号，如果退出当前界面将终止挂号功能，您可以选择点击手机home键返回桌面，app将在后台为您保持继续挂号，是否要结束挂号?" ) ;
-                //builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
-                //    @Override
-                //    public void onClick(DialogInterface dialog, int which) {
-                        //给服务发送取消挂号的广播
-
-
-                //        intentToService.putExtra("msg", "ExitGuaHao");
-                //        sendBroadcast(intentToService);
-                //        finish();
-                //    }
-                //});
-                //builder.setNegativeButton("否",null);
-                //builder.show();
                 final Dialog dialog = new Dialog(this, R.style.ActionSheetDialogStyle);        //展示对话框
                 //填充对话框的布局
                 View inflate = LayoutInflater.from(this).inflate(R.layout.layout_goutong, null);
@@ -200,7 +184,6 @@ public class RenGongWenZhen extends AppCompatActivity {
             }else{
                 finish();
             }
-
         }
         return false;
     }
@@ -287,11 +270,9 @@ public class RenGongWenZhen extends AppCompatActivity {
         //初始化震动模块
         vibrator=(Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         vibrationEffect = VibrationEffect.createWaveform(new long[]{1000,1000},0);
-
         display = getWindowManager().getDefaultDisplay();
         // 获取屏幕高度
         height = display.getHeight();
-
         refresh = findViewById(R.id.swipeRefresh);
         //设置下拉刷新的的更新事件
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

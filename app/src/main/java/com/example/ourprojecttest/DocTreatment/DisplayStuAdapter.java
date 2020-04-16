@@ -1,6 +1,7 @@
 package com.example.ourprojecttest.DocTreatment;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -29,7 +30,7 @@ public class DisplayStuAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHo
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = View.inflate(mContext, R.layout.doc_display_stu_item, null);
+        View view= LayoutInflater.from(mContext).inflate(R.layout.doc_display_stu_item,parent,false);
         final ViewHolder holder=new ViewHolder(view);
 
         return holder;
