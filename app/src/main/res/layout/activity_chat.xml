@@ -5,6 +5,8 @@
     android:orientation="vertical"
     android:background="#d8e0e8">
     <RelativeLayout
+
+
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:orientation="horizontal"
@@ -42,8 +44,12 @@
         android:background="#FF909090"/>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="70dp"
         android:background=" #FFFFFF">
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp">
         <ImageView
             android:id="@+id/videoChat"
             android:src="@drawable/shipin1"
@@ -70,6 +76,7 @@
             android:textColor="#FFFFFF"
             android:background="@drawable/style_jiesuan"
             android:text="发送"/>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
 

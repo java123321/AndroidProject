@@ -180,7 +180,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 //获取点击焦点
-                if (event.getX() > userName.getWidth() - userName.getPaddingRight() - drawable.getIntrinsicWidth()) {
+                if (event.getX() > userName.getWidth() - userName.getPaddingRight() -60) {
                     //其他活动无响应
                     if (event.getAction() != MotionEvent.ACTION_UP)
                         return false;
@@ -198,7 +198,7 @@ public class LoginActivity extends AppCompatActivity {
             Drawable drawable = passWord.getCompoundDrawables()[2];
 
             public boolean onTouch(View view, MotionEvent event) {
-                if (event.getX() > passWord.getWidth() - passWord.getPaddingRight() - drawable.getIntrinsicWidth()) {
+                if (event.getX() > passWord.getWidth() - passWord.getPaddingRight() - 60) {
                     if (event.getAction() != MotionEvent.ACTION_UP)
                         return false;
 
@@ -223,6 +223,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         //登陆
+
         login = findViewById(R.id.btn_login);//找到按钮
         login.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -9,6 +9,7 @@
         android:background="#FD0896F5"
         android:orientation="horizontal">
 
+
 <FrameLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -50,7 +51,7 @@
             android:layout_marginLeft="10dp"
             android:background="#FFFFFF"
             android:drawableRight="@drawable/chahao"
-            android:maxLength="10"
+            android:maxLength="4"
             android:hint="请输入姓名"
             android:textSize="14sp"></EditText>
     </LinearLayout>

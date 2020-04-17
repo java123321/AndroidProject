@@ -96,13 +96,13 @@ public class RegisterActivity extends AppCompatActivity {
         stuPwd_two.setCompoundDrawables(null, null, searchEditDraw, null);
         stuPwd.setOnTouchListener(new View.OnTouchListener() {
 
+
             final Drawable[] drawables = stuPwd.getCompoundDrawables();//获取密码框的drawable数组
             final int eyeWidth = drawables[2].getBounds().width();// 眼睛图标的宽度
-
             Drawable drawable = stuPwd.getCompoundDrawables()[2];
 
             public boolean onTouch(View view, MotionEvent event) {
-                if (event.getX() > stuPwd.getWidth() - stuPwd.getPaddingRight() - drawable.getIntrinsicWidth()) {
+                if (event.getX() > stuPwd.getWidth() - stuPwd.getPaddingRight() - 60) {
                     if (event.getAction() != MotionEvent.ACTION_UP)
                         return false;
 
@@ -137,7 +137,7 @@ public class RegisterActivity extends AppCompatActivity {
             Drawable drawable = stuPwd_two.getCompoundDrawables()[2];
 
             public boolean onTouch(View view, MotionEvent event) {
-                if (event.getX() > stuPwd_two.getWidth() - stuPwd_two.getPaddingRight() - drawable.getIntrinsicWidth()) {
+                if (event.getX() > stuPwd_two.getWidth() - stuPwd_two.getPaddingRight() - 60) {
                     if (event.getAction() != MotionEvent.ACTION_UP)
                         return false;
 
