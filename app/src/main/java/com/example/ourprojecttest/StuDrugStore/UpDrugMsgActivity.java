@@ -394,14 +394,16 @@ public class UpDrugMsgActivity extends AppCompatActivity {
                     //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请填入正确价格 ").setNegativeButton("确定", null).show();
                     String s1 = "请输入正确价格";
                     show(R.layout.layout_tishi_email, s1, 0);
+                } else if (flag){
+                    //
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            uploadDrugInfo(file, ipAddress + "IM/PictureUpload?type=Drug", drug_name_s, drug_price_s, kind_s, describe, drug_num_s, attribute_s);
+                        }
+                    }).start();
                 }
-                //
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        uploadDrugInfo(file, ipAddress + "IM/PictureUpload?type=Drug", drug_name_s, drug_price_s, kind_s, describe, drug_num_s, attribute_s);
-                    }
-                }).start();
+
             }
         });
     }
