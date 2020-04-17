@@ -228,10 +228,12 @@ public class DocOperatActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+
         //离开页面的时候注销receiver
+        Log.d("候诊页面状态", "onDestroy1");
         unregisterReceiver(localReceiver);
         Log.d("候诊页面状态", "onDestroy");
+        super.onDestroy();
     }
 
 
@@ -408,7 +410,9 @@ public class DocOperatActivity extends AppCompatActivity {
             public void onClick(View view) {
                 intentToService.putExtra("msg", "exit");
                 sendBroadcast(intentToService);
+                Log.d("候诊页面状态","1");
                 finish();
+                Log.d("候诊页面状态","2");
             }
         });
         TextView no = inflate.findViewById(R.id.no);

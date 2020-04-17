@@ -238,7 +238,7 @@ public class DocService extends Service {
                 String stuPictureUrl = text.substring(position + 5);
                 byte[] stuPicture = null;
                 try {
-                    if(stuPictureUrl==null||stuPictureUrl.equals("")){//如果学生头像为空
+                    if(stuPictureUrl.equals("null")){//如果学生头像为空
                         intentToBeforChat.removeExtra("stuPicture");
                     }else{
                         stuPicture = method.bitmap2Bytes(method.drawableToBitamp(Drawable.createFromStream(new URL( ipAddress+stuPictureUrl).openStream(), "image.jpg")));

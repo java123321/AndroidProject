@@ -222,6 +222,7 @@ public class Prescribe extends AppCompatActivity {
         });
         //设置界面为空的时候的添加药品按钮的事件
         addDrugToo.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Prescribe.this, DocDrugStore.class);

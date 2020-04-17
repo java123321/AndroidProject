@@ -491,7 +491,7 @@ public class LoginActivity extends AppCompatActivity {
             }
             Log.d("denglu", "2");
             if (jsonObject.has("Stu_Icon")) {
-                Log.d("denglu", "6");
+                Log.d("denglu", "haveIcon");
                 //将学生头像的url保存到本地，后续聊天的时候学生会将自己的头像url发送给医生
                 method.saveFileData("StuIconUrl", jsonObject.getString("Stu_Icon"), LoginActivity.this);
                 pictureStore.setFlag(true);
@@ -505,10 +505,12 @@ public class LoginActivity extends AppCompatActivity {
                 method.saveObj2SDCard("Icon", pictureStore);
                 pictureStore = (PictureStore) method.readObjFromSDCard("Icon");
                 Log.d("denglu", "4");
-            } else {
-                Log.d("denglu", "7");
+            } else {//如果数据库里没有头像
+                Log.d("denglu", "no_Icon");
                 pictureStore.setFlag(false);
                 method.saveObj2SDCard("Icon", pictureStore);
+                //如果学生没有设置头像的话，则将头像字符串设置为null
+                method.saveFileData("StuIconUrl", "null", LoginActivity.this);
                 Log.d("denglu", "5");
             }
             Log.d("denglu", "3");

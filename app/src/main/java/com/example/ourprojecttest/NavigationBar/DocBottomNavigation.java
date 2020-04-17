@@ -80,6 +80,7 @@ public class DocBottomNavigation extends AppCompatActivity {
                 toast.show();
 
             } else {
+                Log.d("docbottom.destroy","ondestroy1");
                 finish();
             }
             return true;
