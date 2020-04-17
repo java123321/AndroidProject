@@ -12,6 +12,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.ourprojecttest.R;
@@ -53,7 +56,6 @@ public class DocDrugStore extends AppCompatActivity {
         intentFilter.addAction("com.example.ourprojecttest.DocDrugStore");
         localReceiver=new LocalReceiver();
         registerReceiver(localReceiver,intentFilter);
-
         // 获取FragmentManager
         FragmentManager fragmentManager = getFragmentManager();
         // 开始事务管理

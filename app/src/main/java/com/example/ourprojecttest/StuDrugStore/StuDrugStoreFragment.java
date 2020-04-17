@@ -8,16 +8,20 @@ import java.lang.String;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,6 +30,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,6 +38,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.ourprojecttest.StuMine.StuInfomation.StuInformation;
+import com.example.ourprojecttest.StuMine.StuMineFragment;
+import com.example.ourprojecttest.StuMine.Tubiao;
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 import com.example.ourprojecttest.R;
@@ -67,6 +75,9 @@ public class StuDrugStoreFragment extends Fragment {
     private int currentNum;//该变量用于记录在下载图片的线程中进行数目的统计，用于标志位的判断
     private int total = 0;
     private int last = 0;
+    private  Activity a;
+    private  Receiver receiver;
+    private  Receiver1 receiver1;
     private SwipeRefreshLayout refreshLayout;
     private Button addNewDrug;
     private TextView lastColorName;
@@ -142,13 +153,20 @@ public class StuDrugStoreFragment extends Fragment {
         View view = inflater.inflate(R.layout.stu_frag_yaodian_fore, container, false);//首先填充整个药店碎片的前段布局1
         context = getContext();
         ipAddress = getResources().getString(R.string.ipAdrress);
-        Activity a = getActivity();
+        a = getActivity();
         ImmersiveStatusbar.getInstance().Immersive(a.getWindow(), a.getActionBar());//状态栏透明
         initView(view);
         initTextView(view);
+        IntentFilter intentFilter=new IntentFilter();
+        IntentFilter intentFilter1=new IntentFilter();
+        intentFilter1.addAction("xianshi");
+        receiver1=new Receiver1();
+        a.registerReceiver(receiver1,intentFilter1);
+        intentFilter.addAction("yincang");
+        receiver=new Receiver();
+        a.registerReceiver(receiver,intentFilter);
         Log.d("msg", "获取图片");
         getData("1", loadNum, "全部", inputInspect.getText().toString().trim());
-
         return view;
     }
 
@@ -467,7 +485,7 @@ public class StuDrugStoreFragment extends Fragment {
         //获取控件实例
         addNewDrug = view.findViewById(R.id.doc_yaodian_add_yaopin);
         //如果是医生登录则显示添加药品的按钮
-        if (method.getFileData("Type", getContext()).equals("Doc")) {
+        if ((method.getFileData("Type", getContext()).equals("Doc"))) {
             addNewDrug.setVisibility(View.VISIBLE);
             addNewDrug.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -695,6 +713,28 @@ public class StuDrugStoreFragment extends Fragment {
             }
         });
     }
+    public  class Receiver extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent){
+            addNewDrug.setVisibility(View.INVISIBLE);
+            Log.d("yincang","隐藏");
+        }
+    }
+    public  class Receiver1 extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent){
+            addNewDrug.setVisibility(View.INVISIBLE);
+            Log.d("xianshi","显示");
+        }
+    }
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        a.unregisterReceiver(receiver);
+        a.unregisterReceiver(receiver1);
+
+    }
+
 }
 
 
