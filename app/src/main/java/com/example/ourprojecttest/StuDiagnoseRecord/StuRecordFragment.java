@@ -84,15 +84,21 @@ public class StuRecordFragment extends Fragment {
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refresh.setRefreshing(true);
+
                 getData();
-                refresh.setRefreshing(false);
+
             }
         });
         refresh.setColorSchemeColors(getResources().getColor(R.color.color_bottom));
         refresh.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.color_progressbar));
 
         empty=view.findViewById(R.id.empty);
+        empty.setOnClickListener(new View.OnClickListener() {//当用户点击空界面时进行刷新操作
+            @Override
+            public void onClick(View v) {
+                getData();
+            }
+        });
         mRecycler = view.findViewById(R.id.stuMsgRecordRecycler);
         layoutManager = new LinearLayoutManager(mContext);
         // 如果lists为空，则代表还无聊天记录
@@ -110,7 +116,7 @@ public class StuRecordFragment extends Fragment {
         getData();
     }
     private void getData() {
-
+        refresh.setRefreshing(true);
         lists = method.readMessageRecordListFromSdCard("MessageRecord");
         Log.d("stulist", "is?" + (lists == null));
 
@@ -127,6 +133,7 @@ public class StuRecordFragment extends Fragment {
             adapter.setmList(lists);
             mRecycler.setAdapter(adapter);
         }
+        refresh.setRefreshing(false);
 
     }
 

@@ -194,6 +194,12 @@ public class DocOperatActivity extends AppCompatActivity {
         });
         dispalyStuNumber=findViewById(R.id.displayStuNumber);
         noStudent = findViewById(R.id.noStudent);
+        noStudent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getData();
+            }
+        });
         access = findViewById(R.id.access);
         mRecycler = findViewById(R.id.docDisplayStu);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
