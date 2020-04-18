@@ -292,7 +292,7 @@ public class UpDrugMsgActivity extends AppCompatActivity {
                 }
             });
 
-        }
+
 
 //            <item>男科</item>
 //        <item>妇科</item>
