@@ -20,7 +20,7 @@
         <TextView
             android:id="@+id/stu_otc_flag"
             android:text="OTC   "
-            android:layout_marginLeft="25dp"
+            android:layout_marginLeft="5dp"
             android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:gravity="center"/>

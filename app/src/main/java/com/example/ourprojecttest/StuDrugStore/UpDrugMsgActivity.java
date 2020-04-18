@@ -25,6 +25,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -96,6 +98,8 @@ public class UpDrugMsgActivity extends AppCompatActivity {
     private String addOrup;
     private String drugType;
     private String drugOtc;
+    private ArrayAdapter<String> mAdapter ;
+    private String [] mStringArray;
     private boolean hasPermission = false;
     private static final int REQUEST_TAKE_PHOTO = 0;// 拍照
     private static final int REQUEST_CROP = 1;// 裁剪
@@ -269,6 +273,27 @@ public class UpDrugMsgActivity extends AppCompatActivity {
             drug_resume.setText(intent.getStringExtra("drugDescription").trim());
             drugType = intent.getStringExtra("drugType").trim();
             drugOtc = intent.getStringExtra("drugOtc").trim();
+            mStringArray=getResources().getStringArray(R.array.sort);
+            //使用自定义的ArrayAdapter
+            mAdapter = new TestArrayAdapter(UpDrugMsgActivity.this,mStringArray);
+            //设置下拉列表风格(这句不些也行)
+            //mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            attribute.setAdapter(mAdapter);
+            //监听Item选中事件
+            attribute.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+        }
+
 //            <item>男科</item>
 //        <item>妇科</item>
 //        <item>消化科</item>
