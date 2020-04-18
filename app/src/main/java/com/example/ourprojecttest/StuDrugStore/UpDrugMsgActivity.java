@@ -288,42 +288,50 @@ public class UpDrugMsgActivity extends AppCompatActivity {
 //        <item>其他</item>
             switch (drugType){
                 case "男科": {
-                    kind.setSelection(2,true);
+                    kind.setSelection(0,true);
                     break;
                 }
                 case "妇科": {
-                    kind.setSelection(3,true);
+                    kind.setSelection(1,true);
                     break;
                 }
                 case "消化科": {
-                    kind.setSelection(4,true);
+                    kind.setSelection(2,true);
                     break;
                 }
                 case "内分泌科": {
-                    kind.setSelection(5,true);
+                    kind.setSelection(3,true);
+                    break;
+                }
+                case "心血管科": {
+                    kind.setSelection(4,true);
                     break;
                 }
                 case "泌尿科": {
-                    kind.setSelection(6,true);
+                    kind.setSelection(5,true);
                     break;
                 }
                 case "血液科": {
-                    kind.setSelection(7,true);
+                    kind.setSelection(6,true);
                     break;
                 }
                 case "风湿骨科": {
-                    kind.setSelection(8,true);
+                    kind.setSelection(7,true);
                     break;
                 }
                 case "耳鼻喉科": {
-                    kind.setSelection(9,true);
+                    kind.setSelection(8,true);
                     break;
                 }
                 case "眼科": {
-                    kind.setSelection(10,true);
+                    kind.setSelection(9,true);
                     break;
                 }
                 case "口腔科": {
+                    kind.setSelection(10,true);
+                    break;
+                }
+                case "皮肤科": {
                     kind.setSelection(11,true);
                     break;
                 }
