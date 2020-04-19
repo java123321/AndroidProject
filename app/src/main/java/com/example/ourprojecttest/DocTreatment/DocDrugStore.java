@@ -25,6 +25,8 @@ public class DocDrugStore extends AppCompatActivity {
     private int toastHeight;
     private StuDrugStoreFragment drugStore;
     private LocalReceiver localReceiver;
+    private Receiver receiver;
+    private Receiver1 receiver1;
     private IntentFilter intentFilter;
     class LocalReceiver extends BroadcastReceiver {
         @Override
@@ -51,6 +53,7 @@ public class DocDrugStore extends AppCompatActivity {
         setContentView(R.layout.activity_doc_drug_store);
         display = getWindowManager().getDefaultDisplay();
         toastHeight = display.getHeight();
+
         intentFilter=new IntentFilter();
         intentFilter.addAction("com.example.ourprojecttest.DocDrugStore");
         localReceiver=new LocalReceiver();
@@ -59,11 +62,16 @@ public class DocDrugStore extends AppCompatActivity {
         FragmentManager fragmentManager = getFragmentManager();
         IntentFilter intentFilter1=new IntentFilter();
         IntentFilter intentFilter2=new IntentFilter();
+        intentFilter2.addAction("xianshi");
+        intentFilter1.addAction("yincang");
+        receiver=new Receiver();
+        receiver1=new Receiver1();
+        registerReceiver(receiver1,intentFilter2);
+        registerReceiver(receiver,intentFilter1);
         // 开始事务管理
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         drugStore=new StuDrugStoreFragment();
         drugStore.flag=true;
-        drugStore.addNewDrug.setVisibility(View.INVISIBLE);
         transaction.add(R.id.docDrugMain,  drugStore);
         transaction.show(drugStore);
         transaction.commit();
@@ -75,5 +83,19 @@ public class DocDrugStore extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(localReceiver);
+    }
+    public  class Receiver extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent){
+            drugStore.addNewDrug.setVisibility(View.INVISIBLE);
+            Log.d("yincang","隐藏");
+        }
+    }
+    public  class Receiver1 extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent){
+            drugStore.addNewDrug.setVisibility(View.VISIBLE);
+            Log.d("xianshi","显示");
+        }
     }
 }

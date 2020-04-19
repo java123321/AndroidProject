@@ -303,9 +303,9 @@ public class StuService extends Service {
      */
     private Notification getNotification(String chanelId, String title,String content) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, chanelId);
-        builder.setSmallIcon(R.drawable.yll)
+        builder.setSmallIcon(R.mipmap.ic_launcher)
                 .setAutoCancel(true)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.yll))
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                 .setContentTitle(title)
                 .setContentText(content);
         return builder.build();

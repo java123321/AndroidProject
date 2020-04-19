@@ -228,8 +228,11 @@ public class Prescribe extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Prescribe.this, DocDrugStore.class);
-                intent.putExtra("yincang","yincang");
+                Intent intent1=new Intent();
+                intent1.setAction("yincang");
+                Log.d("yincang1","广播发送成功");
                 startActivity(intent);
+                sendBroadcast(intent1);
             }
         });
         //设置开处方按钮的点击事件
