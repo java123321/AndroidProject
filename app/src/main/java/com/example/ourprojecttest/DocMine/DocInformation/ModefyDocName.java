@@ -59,7 +59,7 @@ public class ModefyDocName extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 //获取点击焦点
-                if (event.getX() > xingming.getWidth() - xingming.getPaddingRight() - drawable.getIntrinsicWidth()) {
+                if (event.getX() > xingming.getWidth() - xingming.getPaddingRight() - 60) {
                     //其他活动无响应
                     if (event.getAction() != MotionEvent.ACTION_UP)
                         return false;
