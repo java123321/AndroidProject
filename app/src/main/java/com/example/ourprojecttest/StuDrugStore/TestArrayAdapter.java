@@ -27,9 +27,16 @@ public class TestArrayAdapter extends ArrayAdapter<String> {
 
         //此处text1是Spinner默认的用来显示文字的TextView
         TextView tv = (TextView) convertView.findViewById(android.R.id.text1);
-        tv.setText(mStringArray[position]);
-        tv.setTextSize(22f);
-        tv.setTextColor(Color.RED);
+        if(position == 0){
+            tv.setText(mStringArray[position]);
+            tv.setTextSize(18f);
+            tv.setTextColor(Color.GREEN);
+        } else {
+            tv.setText(mStringArray[position]);
+            tv.setTextSize(18f);
+            tv.setTextColor(Color.RED);
+        }
+
 
         return convertView;
 
@@ -44,17 +51,19 @@ public class TestArrayAdapter extends ArrayAdapter<String> {
         }
 
         //此处text1是Spinner默认的用来显示文字的TextView
-        TextView tv = (TextView) convertView.findViewById(android.R.id.text1);
-        if (tv.equals("RX"))
-        {
-            tv.setText(mStringArray[position]);
-            tv.setTextSize(18f);
-            tv.setTextColor(Color.RED);
-        } else {
+        TextView tv =  convertView.findViewById(android.R.id.text1);
+
+        if(position == 0){
             tv.setText(mStringArray[position]);
             tv.setTextSize(18f);
             tv.setTextColor(Color.GREEN);
+        } else {
+            tv.setText(mStringArray[position]);
+            tv.setTextSize(18f);
+            tv.setTextColor(Color.RED);
         }
+
+
 
         return convertView;
     }
