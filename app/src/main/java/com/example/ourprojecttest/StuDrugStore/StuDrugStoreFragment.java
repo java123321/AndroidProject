@@ -156,6 +156,7 @@ public class StuDrugStoreFragment extends Fragment {
         a = getActivity();
         ImmersiveStatusbar.getInstance().Immersive(a.getWindow(), a.getActionBar());//状态栏透明
         initView(view);
+        initTextView(view);
         Log.d("msg", "获取图片");
         getData("1", loadNum, "全部", inputInspect.getText().toString().trim());
         return view;
