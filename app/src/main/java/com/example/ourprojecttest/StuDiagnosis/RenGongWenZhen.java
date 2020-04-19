@@ -40,7 +40,7 @@ import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.Service.StuService;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 import com.example.ourprojecttest.R;
-import com.example.ourprojecttest.Utils.VibratorUtil;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -239,11 +239,13 @@ public class RenGongWenZhen extends AppCompatActivity {
                 if (!jsonObject.has("#x")) {
                     DisplayDocBean info = new DisplayDocBean();
                     info.setName(jsonObject.getString("Doc_Name"));
-                    ;
                     info.setBrief(jsonObject.getString("Doc_Introduce"));
                     info.setSex(jsonObject.getString("Doc_Sex"));
+                    Log.d("rengongwenzhen.doc.icon",ipAddress+jsonObject.getString("Doc_Icon"));
                     //设置医生头像
                     info.setIcon(method.drawableToBitamp(Drawable.createFromStream(new URL(ipAddress + jsonObject.getString("Doc_Icon")).openStream(), "image.jpg")));
+
+
                     //设置医生的执照
                     info.setLicense(method.drawableToBitamp(Drawable.createFromStream(new URL(ipAddress + jsonObject.getString("Doc_License")).openStream(), "image.jpg")));
                     list.add(info);

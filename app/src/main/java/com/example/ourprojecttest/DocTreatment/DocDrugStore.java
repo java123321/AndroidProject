@@ -60,6 +60,7 @@ public class DocDrugStore extends AppCompatActivity {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         drugStore=new StuDrugStoreFragment();
         drugStore.flag=true;
+        Log.d("stu.drug.store.fragment","flag.exe1");
         transaction.add(R.id.docDrugMain,  drugStore);
         transaction.show(drugStore);
         transaction.commit();
