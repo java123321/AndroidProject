@@ -83,7 +83,6 @@ public class RegisterActivity extends AppCompatActivity {
         ImmersiveStatusbar.getInstance().Immersive(getWindow(),getActionBar());//状态栏透明
         //获取验证码
         time = new TimeCount(60000, 1000);
-
         initView();
         searchEditDraw = getResources().getDrawable(R.drawable.biyan);
         searchEditDraw.setBounds(0, 0, 60, 60);
@@ -95,8 +94,6 @@ public class RegisterActivity extends AppCompatActivity {
         stuPwd.setCompoundDrawables(null, null, searchEditDraw, null);
         stuPwd_two.setCompoundDrawables(null, null, searchEditDraw, null);
         stuPwd.setOnTouchListener(new View.OnTouchListener() {
-
-
             final Drawable[] drawables = stuPwd.getCompoundDrawables();//获取密码框的drawable数组
             final int eyeWidth = drawables[2].getBounds().width();// 眼睛图标的宽度
             Drawable drawable = stuPwd.getCompoundDrawables()[2];

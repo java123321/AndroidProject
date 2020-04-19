@@ -96,7 +96,6 @@ public class Prescribe extends AppCompatActivity {
             }
         }
     };
-
     //该接收器可以接受医生从药店里给学生选的药品
     class LocalReceiver extends BroadcastReceiver {
         @Override
@@ -180,7 +179,7 @@ public class Prescribe extends AppCompatActivity {
         ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
         localReceiver = new LocalReceiver();
         registerReceiver(localReceiver, intentFilter);
-        Log.d("cribe", "register");
+        Log.d("cribe", "register" );
         initView();
     }
 
@@ -189,6 +188,9 @@ public class Prescribe extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(localReceiver);
+        Intent intent=new Intent();
+        intent.setAction("xianshi");
+        sendBroadcast(intent);
         Log.d("cribe", "unregister");
     }
 
@@ -226,7 +228,11 @@ public class Prescribe extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Prescribe.this, DocDrugStore.class);
+                Intent intent1=new Intent();
+                intent1.setAction("yincang");
+                Log.d("yincang1","广播发送成功");
                 startActivity(intent);
+                sendBroadcast(intent1);
             }
         });
         //设置开处方按钮的点击事件
@@ -318,4 +324,5 @@ public class Prescribe extends AppCompatActivity {
             }
         });
     }
+
 }

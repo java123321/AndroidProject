@@ -22,6 +22,7 @@ public class ModefyStuName extends AppCompatActivity {
         setContentView(R.layout.activity_nicheng_student);
         ImmersiveStatusbar.getInstance().Immersive(getWindow(),getActionBar());//状态栏透明
         baocun=findViewById(R.id.baocun);
+
         searchEditDraw = getResources().getDrawable(R.drawable.chahao);
         searchEditDraw.setBounds(0, 0, 60, 60);
         xingming= findViewById(R.id.xingming);
@@ -42,7 +43,7 @@ public class ModefyStuName extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 //获取点击焦点
-                if (event.getX() > xingming.getWidth() - xingming.getPaddingRight() - drawable.getIntrinsicWidth()) {
+                if (event.getX() > xingming.getWidth() - xingming.getPaddingRight() - 60) {
                     //其他活动无响应
                     if (event.getAction() != MotionEvent.ACTION_UP)
                         return false;
