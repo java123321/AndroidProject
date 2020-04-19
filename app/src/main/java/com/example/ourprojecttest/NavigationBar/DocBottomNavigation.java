@@ -80,13 +80,21 @@ public class DocBottomNavigation extends AppCompatActivity {
                 toast.show();
 
             } else {
-                Intent intent=new Intent(DocBottomNavigation.this,DocService.class);
-                stopService(intent);
+                Log.d("docbottom.destroy","ondestroy1");
                 finish();
             }
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //退出app的时候销毁服务
+        Intent intent=new Intent(DocBottomNavigation.this,DocService.class);
+        stopService(intent);
+        Log.d("docbottom.destroy","ondestroy");
     }
 
     @Override

@@ -74,7 +74,6 @@ public class DocDrugStore extends AppCompatActivity {
         transaction.add(R.id.docDrugMain,  drugStore);
         transaction.show(drugStore);
         transaction.commit();
-
         Log.d("kaiyao","yes");
         Log.d("docstore","create");
     }

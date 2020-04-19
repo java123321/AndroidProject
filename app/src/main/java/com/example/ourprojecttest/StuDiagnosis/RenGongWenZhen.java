@@ -204,6 +204,8 @@ public class RenGongWenZhen extends AppCompatActivity {
     //从服务器获取当前在线医生的信息
     private void getData() {
         Log.d("msgwhat","startgetdata");
+        noDoctor.setVisibility(View.GONE);
+        mRecycler.setVisibility(View.VISIBLE);
         refresh.setRefreshing(true);
         final String url = ipAddress + "IM/GetOnlineDoc";
         new Thread(new Runnable() {
@@ -284,6 +286,12 @@ public class RenGongWenZhen extends AppCompatActivity {
         refresh.setColorSchemeColors(getResources().getColor(R.color.color_bottom));
         refresh.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.color_progressbar));
         noDoctor = findViewById(R.id.noDoctor);
+        noDoctor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getData();
+            }
+        });
         mRecycler = findViewById(R.id.stuDisplayDoc);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecycler.setLayoutManager(layoutManager);

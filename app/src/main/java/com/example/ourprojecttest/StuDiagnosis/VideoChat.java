@@ -240,8 +240,9 @@ public class VideoChat extends AppCompatActivity implements View.OnClickListener
 
     private void initConstraints() {
         iceServers = new LinkedList<>();
-        iceServers.add(PeerConnection.IceServer.builder("stun:23.21.150.121").createIceServer());
-        iceServers.add(PeerConnection.IceServer.builder("stun:stun.l.google.com:19302").createIceServer());
+        iceServers.add(PeerConnection.IceServer.builder("turn:nodejs.zhenyuanhe.top")
+                .setPassword("123456")
+                .setUsername("ghost").createIceServer());
         pcConstraints = new MediaConstraints();
         pcConstraints.optional.add(new MediaConstraints.KeyValuePair("DtlsSrtpKeyAgreement", "true"));
         pcConstraints.optional.add(new MediaConstraints.KeyValuePair("RtpDataChannels", "true"));

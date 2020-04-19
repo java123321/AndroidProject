@@ -25,6 +25,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -96,6 +98,8 @@ public class UpDrugMsgActivity extends AppCompatActivity {
     private String addOrup;
     private String drugType;
     private String drugOtc;
+    private ArrayAdapter<String> mAdapter ;
+    private String [] mStringArray;
     private boolean hasPermission = false;
     private static final int REQUEST_TAKE_PHOTO = 0;// 拍照
     private static final int REQUEST_CROP = 1;// 裁剪
@@ -258,6 +262,24 @@ public class UpDrugMsgActivity extends AppCompatActivity {
             show.setText("添加药品");
             addOrup = "UploadDrug";
             deleteOrder.setVisibility(View.INVISIBLE);
+            mStringArray=getResources().getStringArray(R.array.sort);
+            //使用自定义的ArrayAdapter
+            mAdapter = new TestArrayAdapter(UpDrugMsgActivity.this,mStringArray);
+            //设置下拉列表风格(这句不些也行)
+            //mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            attribute.setAdapter(mAdapter);
+            //监听Item选中事件
+            attribute.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
         } else {
 
 
@@ -269,6 +291,27 @@ public class UpDrugMsgActivity extends AppCompatActivity {
             drug_resume.setText(intent.getStringExtra("drugDescription").trim());
             drugType = intent.getStringExtra("drugType").trim();
             drugOtc = intent.getStringExtra("drugOtc").trim();
+            mStringArray=getResources().getStringArray(R.array.sort);
+            //使用自定义的ArrayAdapter
+            mAdapter = new TestArrayAdapter(UpDrugMsgActivity.this,mStringArray);
+            //设置下拉列表风格(这句不些也行)
+            //mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            attribute.setAdapter(mAdapter);
+            //监听Item选中事件
+            attribute.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+
+
 //            <item>男科</item>
 //        <item>妇科</item>
 //        <item>消化科</item>
@@ -283,47 +326,56 @@ public class UpDrugMsgActivity extends AppCompatActivity {
 //        <item>皮肤科</item>
 //        <item>神经科</item>
 //        <item>感染科</item>
+            //呼吸
 //        <item>保健食品</item>
 //        <item>医疗器械</item>
 //        <item>其他</item>
             switch (drugType){
                 case "男科": {
-                    kind.setSelection(2,true);
+                    kind.setSelection(0,true);
                     break;
                 }
                 case "妇科": {
-                    kind.setSelection(3,true);
+                    kind.setSelection(1,true);
                     break;
                 }
                 case "消化科": {
-                    kind.setSelection(4,true);
+                    kind.setSelection(2,true);
                     break;
                 }
                 case "内分泌科": {
-                    kind.setSelection(5,true);
+                    kind.setSelection(3,true);
+                    break;
+                }
+                case "心血管科": {
+                    kind.setSelection(4,true);
                     break;
                 }
                 case "泌尿科": {
-                    kind.setSelection(6,true);
+                    kind.setSelection(5,true);
                     break;
                 }
                 case "血液科": {
-                    kind.setSelection(7,true);
+                    kind.setSelection(6,true);
                     break;
                 }
                 case "风湿骨科": {
-                    kind.setSelection(8,true);
+                    kind.setSelection(7,true);
                     break;
                 }
                 case "耳鼻喉科": {
-                    kind.setSelection(9,true);
+                    kind.setSelection(8,true);
                     break;
                 }
                 case "眼科": {
-                    kind.setSelection(10,true);
+                    kind.setSelection(9,true);
                     break;
                 }
                 case "口腔科": {
+                    kind.setSelection(10,true);
+                    break;
+                }
+                case "皮肤科": {
                     kind.setSelection(11,true);
                     break;
                 }
@@ -335,16 +387,20 @@ public class UpDrugMsgActivity extends AppCompatActivity {
                     kind.setSelection(13,true);
                     break;
                 }
-                case "保健食品": {
+                case "呼吸科": {
                     kind.setSelection(14,true);
                     break;
                 }
-                case "医疗器械": {
+                case "保健食品": {
                     kind.setSelection(15,true);
                     break;
                 }
-                case "其他": {
+                case "医疗器械": {
                     kind.setSelection(16,true);
+                    break;
+                }
+                case "其他": {
+                    kind.setSelection(17,true);
                     break;
                 }
                 default:
@@ -394,14 +450,16 @@ public class UpDrugMsgActivity extends AppCompatActivity {
                     //new AlertDialog.Builder(UpDrugMsgActivity.this).setTitle("错误").setMessage("请填入正确价格 ").setNegativeButton("确定", null).show();
                     String s1 = "请输入正确价格";
                     show(R.layout.layout_tishi_email, s1, 0);
+                } else if (flag){
+                    //
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            uploadDrugInfo(file, ipAddress + "IM/PictureUpload?type=Drug", drug_name_s, drug_price_s, kind_s, describe, drug_num_s, attribute_s);
+                        }
+                    }).start();
                 }
-                //
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        uploadDrugInfo(file, ipAddress + "IM/PictureUpload?type=Drug", drug_name_s, drug_price_s, kind_s, describe, drug_num_s, attribute_s);
-                    }
-                }).start();
+
             }
         });
     }
