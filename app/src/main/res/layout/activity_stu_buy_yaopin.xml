@@ -66,13 +66,13 @@
     <!--放置药品图片和简介-->
    <LinearLayout
        android:layout_width="match_parent"
-       android:layout_height="120dp"
+       android:layout_height="wrap_content"
        android:background="#FFFFFF"
        >
 <ImageView
     android:id="@+id/displayDrugPicture"
     android:layout_width="0dp"
-    android:layout_height="match_parent"
+    android:layout_height="120dp"
     android:layout_weight="2"
     android:src="@drawable/test"
     />
@@ -83,31 +83,29 @@
       android:layout_weight="3">
        <!--用于显示药品名字和简介-->
       <LinearLayout
-          android:layout_width="wrap_content"
+          android:layout_width="match_parent"
           android:layout_height="30dp"
-          android:layout_weight="1"
+          android:orientation="horizontal"
           >
-       <TextView
-           android:id="@+id/stuName"
-           android:layout_width="wrap_content"
-           android:layout_height="match_parent"
-           android:layout_gravity="center_vertical"
-           android:text="999感冒灵"
-           android:textSize="16dp"
-           android:textColor="#000000"
-           android:layout_weight="1"
-           />
-      <TextView
-          android:id="@+id/stuPrcie"
-          android:layout_width="wrap_content"
-          android:layout_marginLeft="100dp"
-          android:layout_gravity="center_vertical"
-          android:layout_height="match_parent"
-          android:text="￥ 198"
-          android:textColor="#FFFD0505"
-          android:gravity="right"
-          android:layout_weight="1"
-          />
+
+          <TextView
+              android:id="@+id/stuName"
+              android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:layout_gravity="center_vertical"
+              android:layout_weight="3"
+              android:text="999感冒灵"
+              android:textColor="#000000"
+              android:textSize="16dp" />
+
+              <TextView
+                  android:id="@+id/stuPrcie"
+                  android:layout_width="0dp"
+                  android:layout_height="30dp"
+                  android:gravity="center"
+                  android:text="￥ 198"
+                  android:layout_weight="1"
+                  android:textColor="#FFFD0505" />
       </LinearLayout>
       <TextView
           android:id="@+id/stuDiscribe"

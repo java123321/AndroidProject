@@ -179,7 +179,7 @@ public class Prescribe extends AppCompatActivity {
         ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
         localReceiver = new LocalReceiver();
         registerReceiver(localReceiver, intentFilter);
-        Log.d("cribe", "register");
+        Log.d("cribe", "register" );
         initView();
     }
 

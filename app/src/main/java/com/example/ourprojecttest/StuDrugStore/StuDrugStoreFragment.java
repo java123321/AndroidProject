@@ -76,10 +76,8 @@ public class StuDrugStoreFragment extends Fragment {
     private int total = 0;
     private int last = 0;
     private  Activity a;
-    private  Receiver receiver;
-    private  Receiver1 receiver1;
     private SwipeRefreshLayout refreshLayout;
-    private Button addNewDrug;
+    public Button addNewDrug;
     private TextView lastColorName;
     private Button sousuo;
     private EditText inputInspect;
@@ -156,15 +154,6 @@ public class StuDrugStoreFragment extends Fragment {
         a = getActivity();
         ImmersiveStatusbar.getInstance().Immersive(a.getWindow(), a.getActionBar());//状态栏透明
         initView(view);
-        initTextView(view);
-        IntentFilter intentFilter=new IntentFilter();
-        IntentFilter intentFilter1=new IntentFilter();
-        intentFilter1.addAction("xianshi");
-        receiver1=new Receiver1();
-        a.registerReceiver(receiver1,intentFilter1);
-        intentFilter.addAction("yincang");
-        receiver=new Receiver();
-        a.registerReceiver(receiver,intentFilter);
         Log.d("msg", "获取图片");
         getData("1", loadNum, "全部", inputInspect.getText().toString().trim());
         return view;
@@ -713,26 +702,11 @@ public class StuDrugStoreFragment extends Fragment {
             }
         });
     }
-    public  class Receiver extends BroadcastReceiver{
-        @Override
-        public void onReceive(Context context, Intent intent){
-            addNewDrug.setVisibility(View.INVISIBLE);
-            Log.d("yincang","隐藏");
-        }
-    }
-    public  class Receiver1 extends BroadcastReceiver{
-        @Override
-        public void onReceive(Context context, Intent intent){
-            addNewDrug.setVisibility(View.INVISIBLE);
-            Log.d("xianshi","显示");
-        }
-    }
+
+
     @Override
     public void onDestroy(){
         super.onDestroy();
-        a.unregisterReceiver(receiver);
-        a.unregisterReceiver(receiver1);
-
     }
 
 }
