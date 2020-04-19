@@ -262,6 +262,24 @@ public class UpDrugMsgActivity extends AppCompatActivity {
             show.setText("添加药品");
             addOrup = "UploadDrug";
             deleteOrder.setVisibility(View.INVISIBLE);
+            mStringArray=getResources().getStringArray(R.array.sort);
+            //使用自定义的ArrayAdapter
+            mAdapter = new TestArrayAdapter(UpDrugMsgActivity.this,mStringArray);
+            //设置下拉列表风格(这句不些也行)
+            //mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            attribute.setAdapter(mAdapter);
+            //监听Item选中事件
+            attribute.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
         } else {
 
 
@@ -308,6 +326,7 @@ public class UpDrugMsgActivity extends AppCompatActivity {
 //        <item>皮肤科</item>
 //        <item>神经科</item>
 //        <item>感染科</item>
+            //呼吸
 //        <item>保健食品</item>
 //        <item>医疗器械</item>
 //        <item>其他</item>
@@ -368,16 +387,20 @@ public class UpDrugMsgActivity extends AppCompatActivity {
                     kind.setSelection(13,true);
                     break;
                 }
-                case "保健食品": {
+                case "呼吸科": {
                     kind.setSelection(14,true);
                     break;
                 }
-                case "医疗器械": {
+                case "保健食品": {
                     kind.setSelection(15,true);
                     break;
                 }
-                case "其他": {
+                case "医疗器械": {
                     kind.setSelection(16,true);
+                    break;
+                }
+                case "其他": {
+                    kind.setSelection(17,true);
                     break;
                 }
                 default:
