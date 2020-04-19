@@ -85,7 +85,7 @@ public class VideoChat extends AppCompatActivity implements View.OnClickListener
     private boolean isOffer = false;
     private AudioManager mAudioManager;
     private VideoTrack remoteVideoTrack;
-    private ChatListener chatListener = new ChatListener();
+
 
     //接收从服务中发过来的广播
     class LocalReceiver extends BroadcastReceiver {
@@ -94,17 +94,6 @@ public class VideoChat extends AppCompatActivity implements View.OnClickListener
             String videoInfo=intent.getStringExtra("videoInfo");
             Log.d("videoreceive",videoInfo);
             if(videoInfo.equals("denyVideoChat")){//如果对方拒绝视频聊天，给出提示
-              //  AlertDialog.Builder builder = new AlertDialog.Builder(VideoChat.this);
-              //  builder.setTitle("提示");
-              //  builder.setMessage("对方拒绝了您的视频聊天！");
-              //  //用户点击确定之后销毁视频聊天界面
-              //  builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-              //      @Override
-              //      public void onClick(DialogInterface dialog, int which) {
-              //          finish();
-              //      }
-              //  });
-              //  builder.show();
                 String s="对方拒绝了您的视频聊天";
                 show(R.layout.layout_tishi_email,s);
             }else if (videoInfo.startsWith("IceInfo")) {
@@ -330,17 +319,6 @@ public class VideoChat extends AppCompatActivity implements View.OnClickListener
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                       //AlertDialog.Builder builder = new AlertDialog.Builder(VideoChat.this);
-                       // builder.setTitle("提示");
-                       // builder.setMessage("对方已退出视频聊天！");
-                        //用户点击确定之后销毁视频聊天界面
-                       // builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                       //     @Override
-                        //    public void onClick(DialogInterface dialog, int which) {
-                         //       finish();
-                         //   }
-                       // });
-                       // builder.show();
                         String s="对方已退出视频聊天";
                         show(R.layout.layout_tishi_email,s);
                     }
@@ -443,90 +421,8 @@ public class VideoChat extends AppCompatActivity implements View.OnClickListener
         }
     }
 
-    //webSocket回调方法
-    class ChatListener extends WebSocketListener {
-        WebSocket socket = null;
-
-        @Override
-        public void onOpen(WebSocket webSocket, Response response) {
-            socket = webSocket;
-            Log.d("interfacechat", "连接成功");
-            //webSocket.send("hello");
-        }
-
-
-        //接受消息时回调
-        @Override
-        public void onMessage(WebSocket webSocket, String text) {
-            if (text.equals("SomeOneOnline")) {
-                isOffer = true;
-                if (mPeer == null) {
-                    mPeer = new Peer();
-                }
-                Log.d("someoneonline", "yes");
-                mPeer.peerConnection.createOffer(mPeer, sdpConstraints);
-            } else if (text.startsWith("IceInfo")) {
-                JSONObject jsonObject = null;
-                try {
-                    jsonObject = new JSONObject(text.substring(7).toString());
-                    IceCandidate candidate = null;
-                    candidate = new IceCandidate(
-                            jsonObject.getString("id"),
-                            jsonObject.getInt("label"),
-                            jsonObject.getString("candidate")
-                    );
-                    mPeer.peerConnection.addIceCandidate(candidate);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Log.d("someoneonline", "yes1");
-                Log.d("someoneonline", "yes1:" + jsonObject.toString());
-            } else if (text.startsWith("SdpInfo")) {
-                if (mPeer == null) {
-                    mPeer = new Peer();
-                }
-                JSONObject jsonObject = null;
-                try {
-                    jsonObject = new JSONObject(text.substring(7));
-                    SessionDescription description = new SessionDescription
-                            (SessionDescription.Type.fromCanonicalForm(jsonObject.getString("type")),
-                                    jsonObject.getString("description"));
-                    mPeer.peerConnection.setRemoteDescription(mPeer, description);
-                    if (!isOffer) {
-                        mPeer.peerConnection.createAnswer(mPeer, sdpConstraints);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Log.d("someoneonline", "yes2");
-                Log.d("someoneonline", "yes2:" + jsonObject.toString());
-            }
-        }
-
-        @Override
-        public void onClosing(WebSocket webSocket, int code, String reason) {
-            webSocket.close(1000, null);
-
-        }
-
-        @Override
-        public void onClosed(WebSocket webSocket, int code, String reason) {
-
-        }
-
-        @Override
-        public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-            Log.d("interfacefalure", "学生聊天接口失败");
-            webSocket.close(1000, null);
-        }
-
-    }
-
     @Override
     protected void onDestroy() {
-//        if (mSocket != null) {
-//            mSocket.disconnect();
-//        }
         if (mVideoCapturer != null) {
             try {
                 mVideoCapturer.stopCapture();

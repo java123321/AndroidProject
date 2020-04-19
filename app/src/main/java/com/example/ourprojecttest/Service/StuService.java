@@ -86,7 +86,7 @@ public class StuService extends Service {
                     case "Chat": {//如果是学生点击了沟通操作
                         Log.d("guahao", "chat");
                         chatListener.socket.send(intent.getStringExtra("docId") + "|chat学生名字为" + name + "学生头像为" + method.getFileData("StuIconUrl", StuService.this));
-
+                        Log.d("stuservice.chat.id:",intent.getStringExtra("docId"));
                         break;
                     }
                     case "Deny": {//如果学生点击了拒绝服务

@@ -12,17 +12,20 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.ourprojecttest.R;
 import com.example.ourprojecttest.StuDrugStore.StuDrugStoreFragment;
 
 public class DocDrugStore extends AppCompatActivity {
-
     private Display display;
     private int toastHeight;
     private StuDrugStoreFragment drugStore;
     private LocalReceiver localReceiver;
+
     private IntentFilter intentFilter;
     class LocalReceiver extends BroadcastReceiver {
         @Override
@@ -53,13 +56,13 @@ public class DocDrugStore extends AppCompatActivity {
         intentFilter.addAction("com.example.ourprojecttest.DocDrugStore");
         localReceiver=new LocalReceiver();
         registerReceiver(localReceiver,intentFilter);
-
         // 获取FragmentManager
         FragmentManager fragmentManager = getFragmentManager();
         // 开始事务管理
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         drugStore=new StuDrugStoreFragment();
         drugStore.flag=true;
+        Log.d("stu.drug.store.fragment","flag.exe1");
         transaction.add(R.id.docDrugMain,  drugStore);
         transaction.show(drugStore);
         transaction.commit();
