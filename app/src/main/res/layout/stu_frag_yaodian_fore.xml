@@ -19,6 +19,7 @@
         android:background="#FD0896F5"
         android:orientation="horizontal">
 
+
         <EditText
             android:id="@+id/stu_yaodian_search_box"
             android:layout_width="0dp"
