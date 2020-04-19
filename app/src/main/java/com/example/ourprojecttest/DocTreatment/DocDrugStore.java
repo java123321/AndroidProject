@@ -53,6 +53,7 @@ public class DocDrugStore extends AppCompatActivity {
         setContentView(R.layout.activity_doc_drug_store);
         display = getWindowManager().getDefaultDisplay();
         toastHeight = display.getHeight();
+
         intentFilter=new IntentFilter();
         intentFilter.addAction("com.example.ourprojecttest.DocDrugStore");
         localReceiver=new LocalReceiver();

@@ -71,6 +71,7 @@ public class StuDrugStoreFragment extends Fragment {
     private LoadThread load;
     private CommonMethod method = new CommonMethod();
     private Context context;
+
     private int totalNum;//该变量用于记录每次访问数据库时数据库总共返回了多少条数据
     private int currentNum;//该变量用于记录在下载图片的线程中进行数目的统计，用于标志位的判断
     private int total = 0;
