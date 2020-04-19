@@ -53,6 +53,7 @@ public class ModefyDocName extends AppCompatActivity {
             }
         });
 
+
         xingming.setOnTouchListener(new View.OnTouchListener() {
             Drawable drawable = xingming.getCompoundDrawables()[2];
 

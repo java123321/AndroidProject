@@ -22,6 +22,7 @@ public class ModefyStuName extends AppCompatActivity {
         setContentView(R.layout.activity_nicheng_student);
         ImmersiveStatusbar.getInstance().Immersive(getWindow(),getActionBar());//状态栏透明
         baocun=findViewById(R.id.baocun);
+
         searchEditDraw = getResources().getDrawable(R.drawable.chahao);
         searchEditDraw.setBounds(0, 0, 60, 60);
         xingming= findViewById(R.id.xingming);
