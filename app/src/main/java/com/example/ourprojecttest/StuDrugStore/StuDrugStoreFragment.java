@@ -61,6 +61,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class StuDrugStoreFragment extends Fragment {
+
     //正在加载更多
     static final int LOADING_MORE = 1;
     //没有更多
@@ -73,7 +74,7 @@ public class StuDrugStoreFragment extends Fragment {
     private Context context;
 
     private int totalNum;//该变量用于记录每次访问数据库时数据库总共返回了多少条数据
-    private int currentNum;//该变量用于记录在下载图片的线程中进行数目的统计，用于标志位的判断
+//    private int currentNum;//该变量用于记录在下载图片的线程中进行数目的统计，用于标志位的判断
     private int total = 0;
     private int last = 0;
     private  Activity a;
@@ -155,6 +156,7 @@ public class StuDrugStoreFragment extends Fragment {
         a = getActivity();
         ImmersiveStatusbar.getInstance().Immersive(a.getWindow(), a.getActionBar());//状态栏透明
         initView(view);
+        initTextView(view);
         Log.d("msg", "获取图片");
         getData("1", loadNum, "全部", inputInspect.getText().toString().trim());
         return view;
@@ -346,35 +348,13 @@ public class StuDrugStoreFragment extends Fragment {
 
         @Override
         public void run() {
-//            String url;
-//            StringBuilder stringBuilder = new StringBuilder();
-//            //添加基础字符串
-//            stringBuilder.append(ipAddress + "IM/GetDrugInformation?start=" + start + "&count=" + count);
-//            //添加类别变量
-//            if (!type.equals("全部")) {
-//                stringBuilder.append("&type=" + type);
-//            }
-//            if (!name.equals("")) {
-//                stringBuilder.append("&name=" + name);
-//            }
-//            url = stringBuilder.toString();
-//            Log.d("yaodian", url);
-
-//            OkHttpClient client = new OkHttpClient();
-//            Request request = new Request.Builder()
-//                    .url(url)
-//                    .build();
             try {
-//                Response response = client.newCall(request).execute();
-////                String responseData = response.body().string();
-//                Log.d("drugstore", "response:" + responseData);
-                //-------------------------解析-↓---------------------------//
                 try {
                     //获取后面的药品数组
                     JSONArray jsonArray = new JSONArray(getDrugInfoByPost(start,count,type,name));
                     //totalNum用于记录当前的一次获取数据中一共有多少条数据
                     totalNum = jsonArray.length() - 1;
-                    currentNum = 0;//每次访问数据库的时候将已加载的数目重置为0
+//                    currentNum = 0;//每次访问数据库的时候将已加载的数目重置为0
                     Log.d("yaodian", "the total num is :" + String.valueOf(totalNum));
                     List<DrugInformation> list = new ArrayList<>();
                     JSONObject jsonObject = jsonArray.getJSONObject(0);
@@ -474,6 +454,10 @@ public class StuDrugStoreFragment extends Fragment {
 
         //获取控件实例
         addNewDrug = view.findViewById(R.id.doc_yaodian_add_yaopin);
+        Log.d("stu.drug.store.fragment","flag.exe");
+        Log.d("stu.drug.store.fragment.flag.value",this.flag+"");
+
+
         //如果是医生登录则显示添加药品的按钮
         if ((method.getFileData("Type", getContext()).equals("Doc"))) {
             addNewDrug.setVisibility(View.VISIBLE);
@@ -488,6 +472,10 @@ public class StuDrugStoreFragment extends Fragment {
         } else {
             addNewDrug.setVisibility(View.INVISIBLE);
         }
+        if(this.flag){//如果是从开处方活动跳过来的，则隐藏添加药品阿牛
+            addNewDrug.setVisibility(View.INVISIBLE);
+        }
+
         quanbu = view.findViewById(R.id.quanbu);
         nanke = view.findViewById(R.id.nanke);
         fuke = view.findViewById(R.id.fuke);

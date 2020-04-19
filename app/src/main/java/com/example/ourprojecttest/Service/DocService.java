@@ -333,5 +333,6 @@ public class DocService extends Service {
         unregisterReceiver(localReceiver);
         //关闭通话接口
         chatListener.socket.close(1000, "正常关闭");
+       Log.d("docservice.ondestroy","ondestroy");
     }
 }
