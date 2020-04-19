@@ -319,8 +319,6 @@ public class  Chat extends AppCompatActivity {
         }
     }
 
-
-
     private void initView() {
         //与服务器建立websocket连接
         type = method.getFileData("Type", Chat.this);
