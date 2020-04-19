@@ -33,6 +33,7 @@ import com.alipay.sdk.app.PayTask;
 import com.example.ourprojecttest.AlipayModule.AuthResult;
 import com.example.ourprojecttest.PerfeActivity;
 import com.example.ourprojecttest.RegisterActivity;
+import com.example.ourprojecttest.StuMine.ShoppingCart.ShoppingCartActivity;
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 import com.example.ourprojecttest.AlipayModule.OrderInfoUtil2_0;
@@ -87,6 +88,13 @@ public class NeedToPay extends AppCompatActivity {
     class LocalReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+
+            if (intent.hasExtra("flag")){
+                Toast toast = Toast.makeText(NeedToPay.this, "您暂未完善收获地址信息，请先完善！", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                toast.show();
+            }
+
 
             //当接收的广播为付款时，则调用支付宝进行支付
            if(intent.hasExtra("price")){
@@ -335,6 +343,10 @@ public class NeedToPay extends AppCompatActivity {
                 getData();
             }
         });
+        String add = method.getFileData("Address", NeedToPay.this);
+        if (add.equals("用户暂未设置收货地址")||add == "" ) {
+            AddressMessage.addressMessage = false;
+        }
         refresh.setColorSchemeColors(getResources().getColor(R.color.color_bottom));
         refresh.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.color_progressbar));
         recyclerView=findViewById(R.id.displayOrder);
