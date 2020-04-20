@@ -81,6 +81,7 @@ public class Prescribe extends AppCompatActivity {
                     String s="添加订单成功！";
                     show(R.layout.layout_chenggong,s);
                     break;
+
                 }
                 case FAULT:{
                     Toast toast = Toast.makeText(Prescribe.this, "订单添加失败！", Toast.LENGTH_SHORT);

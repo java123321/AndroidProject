@@ -7,6 +7,7 @@
     <!--显示上方标题和搜索按钮-->
    <LinearLayout
        android:orientation="horizontal"
+
        android:layout_width="match_parent"
        android:layout_height="85dp"
        android:background="#FD0896F5">

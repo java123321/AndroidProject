@@ -7,6 +7,7 @@
     android:paddingLeft="10dp"
     >
 
+
     <ImageView
         android:id="@+id/stu_yaopin_item_pic"
         android:layout_width="110dp"

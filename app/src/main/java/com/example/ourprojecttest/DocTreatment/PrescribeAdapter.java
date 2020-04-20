@@ -34,6 +34,7 @@ public class PrescribeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         length = mList.size();
     }
 
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
