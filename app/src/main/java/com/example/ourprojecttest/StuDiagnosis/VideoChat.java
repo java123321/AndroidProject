@@ -183,7 +183,7 @@ public class VideoChat extends AppCompatActivity implements View.OnClickListener
         VideoSource videoSource = mPeerConnectionFactory.createVideoSource(mVideoCapturer);
         mVideoTrack = mPeerConnectionFactory.createVideoTrack("videtrack", videoSource);
         //设置视频画质 i:width i1 :height i2:fps
-        mVideoCapturer.startCapture(720, 1280, 30);
+        mVideoCapturer.startCapture(240, 320, 20);
         AudioSource audioSource = mPeerConnectionFactory.createAudioSource(new MediaConstraints());
         mAudioTrack = mPeerConnectionFactory.createAudioTrack("audiotrack", audioSource);
         //播放本地视频

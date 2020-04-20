@@ -41,7 +41,7 @@ import okhttp3.WebSocketListener;
 public class StuService extends Service {
     private Intent intentToVideoChat = new Intent("com.example.ourprojecttest.VIDEO_CHAT");//该意图是向聊天活动提供媒体协商信息
     private String ipAddress;
-    public static boolean isGuaHao = false;//该变量用来标记是否正在挂号，true为挂号，false为不在挂号
+    public static volatile boolean isGuaHao = false;//该变量用来标记是否正在挂号，true为挂号，false为不在挂号
     private String stuId;
     private CommonMethod method = new CommonMethod();
     private LocalReceiver localReceiver;
@@ -71,13 +71,16 @@ public class StuService extends Service {
                 switch (msg) {
                     case "StartGuaHao": {
                         //开启挂号的连接
-                        guaHaoConnect();
                         isGuaHao = true;
+                        guaHaoConnect();
                         break;
                     }
                     case "ExitGuaHao": {//如果关闭挂号则关闭socket连接和服务
-                        guaHaoListener.socket.close(1000, null);
-                        isGuaHao = false;
+                        if(isGuaHao){
+                            isGuaHao = false;
+                            guaHaoListener.socket.close(1000, null);
+                        }
+
                         if(!intent.hasExtra("finishedGuaHao")){
                             startForeground(1, getNotification(CHANNEL_ID, "取消挂号成功", "您已取消挂号！"));
                         }
@@ -87,12 +90,20 @@ public class StuService extends Service {
                         Log.d("guahao", "chat");
                         chatListener.socket.send(intent.getStringExtra("docId") + "|chat学生名字为" + name + "学生头像为" + method.getFileData("StuIconUrl", StuService.this));
                         Log.d("stuservice.chat.id:",intent.getStringExtra("docId"));
+                        //用户点击沟通之后，将挂号接口取消掉
+//                        if(isGuaHao){
+//                            guaHaoListener.socket.close(1000, null);
+//                            isGuaHao = false;
+//                        }
                         break;
                     }
                     case "Deny": {//如果学生点击了拒绝服务
                         chatListener.socket.send(intent.getStringExtra("docId") + "|deny" + name);
-                        guaHaoListener.socket.close(1000, null);
-                        isGuaHao = false;
+                        //用户点击取消之后将挂号服务接口取消掉
+//                        if(isGuaHao){
+//                            guaHaoListener.socket.close(1000, null);
+//                            isGuaHao = false;
+//                        }
                             startForeground(1, getNotification(CHANNEL_ID, "提示", "您已拒绝了与医生问诊！"));
                         break;
                     }
@@ -166,8 +177,8 @@ public class StuService extends Service {
                 //将更新人数广播出去
                 intent.putExtra("persons", m.replaceAll("").trim());
                 sendBroadcast(intent);
-                //result代表当前的排队人数
-                method.saveFileData("GuaHaoNumber", m.replaceAll("").trim(), StuService.this);
+//                //result代表当前的排队人数
+//                method.saveFileData("GuaHaoNumber", m.replaceAll("").trim(), StuService.this);
 
                 startForeground(1, getNotification(CHANNEL_ID, "挂号成功", info));
 //                sendNotification("挂号成功", info);
@@ -198,8 +209,14 @@ public class StuService extends Service {
                 Log.d("chat", "docPicture" + (docPicture == null));
                 startForeground(1, getNotification(CHANNEL_ID,  "到你了", docName+"医生即将为您接诊！"));
                 sendBroadcast(intent);
-                //-1代表到你了
-                method.saveFileData("GuaHaoNumber", "-1", StuService.this);
+                //当通知用户到你的时候，关闭挂号接口
+                if(isGuaHao){
+                    isGuaHao = false;
+                    guaHaoListener.socket.close(1000, null);
+                }
+
+//                //-1代表到你了
+//                method.saveFileData("GuaHaoNumber", "-1", StuService.this);
             }else if(info.startsWith("当前没有医生在线")){
                 intent.putExtra("noDocOnline","");
                 sendBroadcast(intent);
@@ -210,19 +227,25 @@ public class StuService extends Service {
 
         @Override
         public void onClosing(WebSocket webSocket, int code, String reason) {
-            webSocket.close(1000, null);
-            output("onClosing: " + code + "/" + reason);
+//            webSocket.close(1000, null);
+//            output("onClosing: " + code + "/" + reason);
         }
 
         @Override
         public void onClosed(WebSocket webSocket, int code, String reason) {
-            output("onClosed: " + code + "/" + reason);
+//            output("onClosed: " + code + "/" + reason);
+            if(isGuaHao){
+                guaHaoConnect();
+            }
         }
 
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-            output("onFailure: " + t.getMessage());
-            webSocket.close(1000, null);
+//            output("onFailure: " + t.getMessage());
+//            webSocket.close(1000, null);
+            if(isGuaHao){
+                guaHaoConnect();
+            }
         }
     }
 
@@ -251,18 +274,18 @@ public class StuService extends Service {
         }
         @Override
         public void onClosing(WebSocket webSocket, int code, String reason) {
-            webSocket.close(1000, null);
-            output("onClosing: " + code + "/" + reason);
+//            webSocket.close(1000, null);
+//            output("onClosing: " + code + "/" + reason);
         }
         @Override
         public void onClosed(WebSocket webSocket, int code, String reason) {
-            output("onClosed: " + code + "/" + reason);
+//            output("onClosed: " + code + "/" + reason);
+            chatConnet();
         }
 
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-            Log.d("interfacefalure", "学生聊天接口失败");
-            webSocket.close(1000, null);
+            chatConnet();
         }
     }
 

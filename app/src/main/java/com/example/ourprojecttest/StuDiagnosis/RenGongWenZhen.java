@@ -203,6 +203,8 @@ public class RenGongWenZhen extends AppCompatActivity {
 
     //从服务器获取当前在线医生的信息
     private void getData() {
+        adapter.mList.clear();
+        adapter.notifyDataSetChanged();
         Log.d("msgwhat","startgetdata");
         noDoctor.setVisibility(View.GONE);
         mRecycler.setVisibility(View.VISIBLE);
@@ -432,7 +434,6 @@ public class RenGongWenZhen extends AppCompatActivity {
         stuCountTimeToDeny(countTime, dialog);//该方法用于显示倒计时
         TextView yes = inflate.findViewById(R.id.yes);
         yes.setOnClickListener(view -> {
-
         //学生点击沟通之后取消计时器
             mOffTime.cancel();
             vibrator.cancel();//停止震动

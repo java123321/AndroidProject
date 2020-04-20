@@ -36,6 +36,7 @@ import okhttp3.WebSocketListener;
 
 
 public class DocService extends Service {
+    public static volatile boolean docOnline=false;
     private String ipAddress;
     private LocalReceiver localReceiver;
     private IntentFilter intentFilter;
@@ -73,6 +74,7 @@ public class DocService extends Service {
                 switch (intent.getStringExtra("msg")) {
                     //医生上线的消息
                     case "Online":{
+                        docOnline=true;
                         retreatConnect();
                         Log.d("医生上线", "医生上线了");
                         break;
@@ -85,6 +87,7 @@ public class DocService extends Service {
                         break;
                     }
                     case "exit":{
+                        docOnline=false;
                         beforeChatlistener.socket.close(1000, "正常关闭");
                     }
 
@@ -194,12 +197,21 @@ public class DocService extends Service {
 
         @Override
         public void onClosed(WebSocket webSocket, int code, String reason) {
-            output("onClosed: " + code + "/" + reason);
+            if(docOnline){//如果医生还在接诊页面，则重新连接
+                Log.d("docservice.closed","reconnect");
+            retreatConnect();
+            }
+            Log.d("docservice.closed","close");
+//            output("onClosed: " + code + "/" + reason);
         }
 
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-            output("onFailure: " + t.getMessage());
+            if(docOnline){//如果医生还在接诊页面，则重新连接
+                retreatConnect();
+            }
+//            output("onFailure: " + t.getMessage());
+            Log.d("docservice.closed","failure");
         }
     }
 
@@ -273,13 +285,21 @@ public class DocService extends Service {
 
         @Override
         public void onClosed(WebSocket webSocket, int code, String reason) {
-            output("onClosed: " + code + "/" + reason);
+            if(docOnline){//如果医生还在接诊页面，则重新连接
+                Log.d("docservice.closed","reconnect");
+                chatConnet();
+            }
+//            output("onClosed: " + code + "/" + reason);
         }
 
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-            output("onFailure: " + t.getMessage());
-            webSocket.close(1000, null);
+            if(docOnline){//如果医生还在接诊页面，则重新连接
+                Log.d("docservice.closed","reconnect");
+                chatConnet();
+            }
+//            output("onFailure: " + t.getMessage());
+//            webSocket.close(1000, null);
         }
     }
 
