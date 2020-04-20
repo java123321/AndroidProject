@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,13 +20,17 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ourprojecttest.R;
+import com.example.ourprojecttest.StuDrugStore.UpDrugMsgActivity;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 
 import org.json.JSONArray;
@@ -73,10 +78,8 @@ public class Prescribe extends AppCompatActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case SUCCESS:{
-                    Toast toast = Toast.makeText(Prescribe.this, "订单添加成功！", Toast.LENGTH_SHORT);
-                    // 这里给了一个1/4屏幕高度的y轴偏移量
-                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
-                    toast.show();
+                    String s="添加订单成功！";
+                    show(R.layout.layout_chenggong,s);
                     break;
                 }
                 case FAULT:{
@@ -320,5 +323,29 @@ public class Prescribe extends AppCompatActivity {
             }
         });
     }
-
+    public void show(int x, String s) {
+        final Dialog dialog = new Dialog(Prescribe.this, R.style.ActionSheetDialogStyle);        //展示对话框
+        //填充对话框的布局
+        View inflate = LayoutInflater.from(Prescribe.this).inflate(x, null);
+        TextView describe = inflate.findViewById(R.id.describe);
+        describe.setText(s);
+        TextView yes = inflate.findViewById(R.id.yes);
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                    finish();
+            }
+        });
+        dialog.setContentView(inflate);
+        dialog.setCancelable(false);
+        Window dialogWindow = dialog.getWindow();
+        //设置Dialog从窗体底部弹出
+        dialogWindow.setGravity(Gravity.CENTER);
+        //获得窗体的属性
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        lp.width = 800;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialogWindow.setAttributes(lp);
+        dialog.show();
+    }
 }

@@ -3,6 +3,7 @@ package com.example.ourprojecttest.DocTreatment;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -36,7 +37,7 @@ public class PrescribeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = View.inflate(mContext, R.layout.prescribe_recyler_item, null);
+        View view= LayoutInflater.from(mContext).inflate(R.layout.prescribe_recyler_item,parent,false);
         final ViewHolder holder = new ViewHolder(view);
         holder.rank = rankBig++;
         Log.d("cribe", "oncreate");
