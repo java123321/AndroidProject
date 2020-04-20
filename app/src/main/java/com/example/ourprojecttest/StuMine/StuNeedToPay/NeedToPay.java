@@ -355,12 +355,12 @@ public class NeedToPay extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         adapter=new NeedToPayAdapter(NeedToPay.this);
         recyclerView.setAdapter(adapter);
-        ArrayList<OrderListBean> orderList=readOrderListFromSdCard("stuNeedToPayOrder");
-        //如果本地缓存订单数据不为空，则先显示出来
-        if(orderList!=null){
-            adapter.setList(NeedToPayHelper.getDataAfterHandle(orderList));
-            adapter.notifyDataSetChanged();
-        }
+//        ArrayList<OrderListBean> orderList=readOrderListFromSdCard("stuNeedToPayOrder");
+//        //如果本地缓存订单数据不为空，则先显示出来
+//        if(orderList!=null){
+//            adapter.setList(NeedToPayHelper.getDataAfterHandle(orderList));
+//            adapter.notifyDataSetChanged();
+//        }
         getData();//获取待付款订单
     }
 
@@ -451,45 +451,45 @@ public class NeedToPay extends AppCompatActivity {
         }
     }
 
-    /**
-     * 读取sd卡中的订单数组对象
-     *
-     * @param fileName 文件名
-     * @return
-     */
-    @SuppressWarnings("unchecked")
-    public ArrayList<OrderListBean> readOrderListFromSdCard(String fileName) {
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {  //检测sd卡是否存在
-            ArrayList<OrderListBean> list;
-            File sdCardDir = Environment.getExternalStorageDirectory();
-            File sdFile = new File(sdCardDir, fileName);
-            try {
-                FileInputStream fis = new FileInputStream(sdFile);
-                ObjectInputStream ois = new ObjectInputStream(fis);
-                list = (ArrayList<OrderListBean>) ois.readObject();
-                fis.close();
-                ois.close();
-                return list;
-            } catch (StreamCorruptedException e) {
-                e.printStackTrace();
-                return null;
-            } catch (OptionalDataException e) {
-                e.printStackTrace();
-                return null;
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                return null;
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-                return null;
-            }
-        } else {
-            return null;
-        }
-    }
+//    /**
+//     * 读取sd卡中的订单数组对象
+//     *
+//     * @param fileName 文件名
+//     * @return
+//     */
+//    @SuppressWarnings("unchecked")
+//    public ArrayList<OrderListBean> readOrderListFromSdCard(String fileName) {
+//        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {  //检测sd卡是否存在
+//            ArrayList<OrderListBean> list;
+//            File sdCardDir = Environment.getExternalStorageDirectory();
+//            File sdFile = new File(sdCardDir, fileName);
+//            try {
+//                FileInputStream fis = new FileInputStream(sdFile);
+//                ObjectInputStream ois = new ObjectInputStream(fis);
+//                list = (ArrayList<OrderListBean>) ois.readObject();
+//                fis.close();
+//                ois.close();
+//                return list;
+//            } catch (StreamCorruptedException e) {
+//                e.printStackTrace();
+//                return null;
+//            } catch (OptionalDataException e) {
+//                e.printStackTrace();
+//                return null;
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//                return null;
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                return null;
+//            } catch (ClassNotFoundException e) {
+//                e.printStackTrace();
+//                return null;
+//            }
+//        } else {
+//            return null;
+//        }
+//    }
     public void show(int x,String s){
         final Dialog dialog = new Dialog(NeedToPay.this,R.style.ActionSheetDialogStyle);        //展示对话框
         //填充对话框的布局

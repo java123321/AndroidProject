@@ -408,6 +408,7 @@ public class DocOperatActivity extends AppCompatActivity {
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 intentToService.putExtra("msg", "exit");
                 sendBroadcast(intentToService);
                 Log.d("候诊页面状态","1");
