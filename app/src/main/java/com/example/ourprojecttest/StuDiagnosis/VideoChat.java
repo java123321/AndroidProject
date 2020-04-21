@@ -53,9 +53,6 @@ import org.webrtc.VideoRenderer;
 import org.webrtc.VideoSource;
 import org.webrtc.VideoTrack;
 import java.util.LinkedList;
-import okhttp3.Response;
-import okhttp3.WebSocket;
-import okhttp3.WebSocketListener;
 
 public class VideoChat extends AppCompatActivity implements View.OnClickListener {
     private Display display;
@@ -183,7 +180,7 @@ public class VideoChat extends AppCompatActivity implements View.OnClickListener
         VideoSource videoSource = mPeerConnectionFactory.createVideoSource(mVideoCapturer);
         mVideoTrack = mPeerConnectionFactory.createVideoTrack("videtrack", videoSource);
         //设置视频画质 i:width i1 :height i2:fps
-        mVideoCapturer.startCapture(240, 320, 20);
+        mVideoCapturer.startCapture(120, 160, 10);
         AudioSource audioSource = mPeerConnectionFactory.createAudioSource(new MediaConstraints());
         mAudioTrack = mPeerConnectionFactory.createAudioTrack("audiotrack", audioSource);
         //播放本地视频
@@ -229,9 +226,15 @@ public class VideoChat extends AppCompatActivity implements View.OnClickListener
 
     private void initConstraints() {
         iceServers = new LinkedList<>();
-        iceServers.add(PeerConnection.IceServer.builder("turn:nodejs.zhenyuanhe.top")
-                .setPassword("123456")
-                .setUsername("ghost").createIceServer());
+//        iceServers.add(PeerConnection.IceServer.builder("turn:nodejs.zhenyuanhe.top:3478")
+//                .setPassword("123456")
+//                .setUsername("ghost").createIceServer());
+//        iceServers.add(PeerConnection.IceServer.builder("stun:stun.xten.com")
+//        .createIceServer());
+
+        iceServers.add(PeerConnection.IceServer.builder("turn:nodejs.zhenyuanhe.top:3478")
+        .setPassword("123456")
+        .setUsername("ghost").createIceServer());
         pcConstraints = new MediaConstraints();
         pcConstraints.optional.add(new MediaConstraints.KeyValuePair("DtlsSrtpKeyAgreement", "true"));
         pcConstraints.optional.add(new MediaConstraints.KeyValuePair("RtpDataChannels", "true"));

@@ -4,7 +4,6 @@ package com.example.ourprojecttest.Service;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,15 +17,16 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import com.example.ourprojecttest.DocTreatment.DocOperatActivity;
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.R;
-import com.example.ourprojecttest.StuDiagnosis.RenGongWenZhen;
 
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -36,7 +36,15 @@ import okhttp3.WebSocketListener;
 
 
 public class DocService extends Service {
-    public static volatile boolean docOnline=false;
+    private Timer detectChatOfflineTimer = null;
+    private Timer detecRetreatOfflineTimer = null;//检测接诊是否掉线的计时器
+    private volatile long lastRetreatHeartBeatTime = -1;//代表上次接诊接口的呼吸包时间
+    private volatile long lastChatHeartBeatTime=-1;//代表上次聊天接口的呼吸包时间
+    private Date date;
+    private Timer retreatReconnectTimer = null;
+    private Timer chatReconnectTimer = null;
+    private Timer chatTimer = null;
+    public static volatile boolean docOnline = false;
     private String ipAddress;
     private LocalReceiver localReceiver;
     private IntentFilter intentFilter;
@@ -68,27 +76,29 @@ public class DocService extends Service {
             if (intent.hasExtra("chatMsg")) {
                 msg = intent.getStringExtra("chatMsg");
                 chatListener.socket.send(msg);
-                Log.d("wee","msg:"+msg);
+                Log.d("wee", "msg:" + msg);
             }    //如果是查看排队人数的信息
             else {
                 switch (intent.getStringExtra("msg")) {
                     //医生上线的消息
-                    case "Online":{
-                        docOnline=true;
+                    case "Online": {
+                        docOnline = true;
                         retreatConnect();
+                        chatConnet();
                         Log.d("医生上线", "医生上线了");
                         break;
                     }
                     //医生通知队列中第一个学生看病
-                    case "Access":{
+                    case "Access": {
                         beforeChatlistener.socket.send("next");
                         client.dispatcher().executorService().shutdown();
                         Log.d("接诊", "弹出队首学生");
                         break;
                     }
-                    case "exit":{
-                        docOnline=false;
+                    case "exit": {
+                        docOnline = false;
                         beforeChatlistener.socket.close(1000, "正常关闭");
+                        chatListener.socket.close(1000,"正常关闭");
                     }
 
                 }
@@ -100,7 +110,7 @@ public class DocService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        ipAddress=getResources().getString(R.string.ipAdrress);
+        ipAddress = getResources().getString(R.string.ipAdrress);
         //初始化通知信道服务
         initChannel();
         //开始注册广播监听器，准备接受发送给服务的更新挂号信息
@@ -108,8 +118,8 @@ public class DocService extends Service {
         intentFilter.addAction("com.example.ourprojecttest.DOC_UPDATE_SERVICE");
         localReceiver = new LocalReceiver();
         registerReceiver(localReceiver, intentFilter);
-        //医生开启服务的时候同时打开聊天接口
-        chatConnet();
+//        //医生开启服务的时候同时打开聊天接口
+//        chatConnet();
     }
 
     /**
@@ -124,6 +134,7 @@ public class DocService extends Service {
         client.dispatcher().executorService().shutdown();
         Log.d("链接状态", "发送完查看人数请求");
     }
+
     //聊天连接方法
     private void chatConnet() {
         String url = getResources().getString(R.string.ipAdrressSocket) + "IM/message/" + method.getFileData("ID", DocService.this);
@@ -142,7 +153,16 @@ public class DocService extends Service {
         @Override
         public void onOpen(WebSocket webSocket, okhttp3.Response response) {
             socket = webSocket;
-            Log.d("监听器状态", "监听器打开");
+            if (retreatReconnectTimer != null) {//如果是断线重连后打开的
+                retreatReconnectTimer.cancel();
+                retreatReconnectTimer = null;
+            }
+            socket.send("heartBeat");
+            date = new Date();
+            lastRetreatHeartBeatTime = date.getTime();
+            //接诊接口连接成功后启动检测心跳包是否超市方法
+            detectRetreatOffline();
+            Log.d("docservice.closed", "onopen");
         }
 
         //接受消息时回调
@@ -151,15 +171,25 @@ public class DocService extends Service {
             output("onMessage: " + text);
             String info = parseJSONWithJSONObject(text);
             Log.d("c", info);
-            int q = info.length();
-            //获取返回的人数
-            if(info.equals("当前没有人在挂号，请稍等！")){
-                Log.d("docservice.updatestu.count","当前没有人挂号");
-                intentToBeforChat.putExtra("updateStu","noStuOnline");
+
+            if (info.equals("heartBeat")) {//如果服务器返回的是心跳检测包
+                date = new Date();
+                lastRetreatHeartBeatTime = date.getTime();//更新最新接诊最新心跳包时间
+                //接收到心跳包之后，过3秒再次发送心跳包
+                Timer timer = new Timer(true);
+                TimerTask tt = new TimerTask() {
+                    @Override
+                    public void run() {
+                        webSocket.send("heartBeat");
+                    }
+                };
+                timer.schedule(tt, 3000);
+            } else if (info.equals("当前没有人在挂号，请稍等！")) { //获取返回的人数
+                Log.d("docservice.updatestu.count", "当前没有人挂号");
+                intentToBeforChat.putExtra("updateStu", "noStuOnline");
                 sendBroadcast(intentToBeforChat);
                 intentToBeforChat.removeExtra("updateStu");
-            }
-            else if (info.endsWith("向您发送了接诊邀请！")) {
+            } else if (info.endsWith("向您发送了接诊邀请！")) {
                 stuId = info.substring(0, info.indexOf("向"));
                 Log.d("学生Id", stuId);
                 //发送通知
@@ -168,19 +198,18 @@ public class DocService extends Service {
                 intentToBeforChat.putExtra("Dialog", "true");
                 sendBroadcast(intentToBeforChat);
                 intentToBeforChat.removeExtra("Dialog");
-            }else if(info.startsWith("updateStu")){//如果是服务器通知医生更新在线学生
-                Log.d("docservice.updatestu.count","---");
-                String stuNumber=info.substring(9);
-                if(stuNumber.equals("0")){//如果当前没有学生排队
-                    startForeground(1, getNotification(CHANNEL_ID,"当前暂无学生排队"));
-                    intentToBeforChat.putExtra("updateStu","noStuOnline");
+            } else if (info.startsWith("updateStu")) {//如果是服务器通知医生更新在线学生
+                Log.d("docservice.updatestu.count", "---");
+                String stuNumber = info.substring(9);
+                if (stuNumber.equals("0")) {//如果当前没有学生排队
+                    startForeground(1, getNotification(CHANNEL_ID, "当前暂无学生排队"));
+                    intentToBeforChat.putExtra("updateStu", "noStuOnline");
                     sendBroadcast(intentToBeforChat);
                     intentToBeforChat.removeExtra("updateStu");
-                }
-                else{
-                    Log.d("docservice.updatestu.count","---111");
-                    startForeground(1, getNotification(CHANNEL_ID, "当前有"+stuNumber+"位同学正在挂号排队，请注意及时接诊！"));
-                    intentToBeforChat.putExtra("updateStu","-1");
+                } else {
+                    Log.d("docservice.updatestu.count", "---111");
+                    startForeground(1, getNotification(CHANNEL_ID, "当前有" + stuNumber + "位同学正在挂号排队，请注意及时接诊！"));
+                    intentToBeforChat.putExtra("updateStu", "-1");
                     sendBroadcast(intentToBeforChat);
                     intentToBeforChat.removeExtra("updateStu");
                 }
@@ -191,27 +220,19 @@ public class DocService extends Service {
 
         @Override
         public void onClosing(WebSocket webSocket, int code, String reason) {
-            webSocket.close(1000, null);
-            output("onClosing: " + code + "/" + reason);
+
         }
 
         @Override
         public void onClosed(WebSocket webSocket, int code, String reason) {
-            if(docOnline){//如果医生还在接诊页面，则重新连接
-                Log.d("docservice.closed","reconnect");
-            retreatConnect();
-            }
-            Log.d("docservice.closed","close");
-//            output("onClosed: " + code + "/" + reason);
+            retreatReconnect();
+            Log.d("docservice.closed", "close");
         }
 
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-            if(docOnline){//如果医生还在接诊页面，则重新连接
-                retreatConnect();
-            }
-//            output("onFailure: " + t.getMessage());
-            Log.d("docservice.closed","failure");
+            retreatReconnect();
+            Log.d("docservice.closed", "failure");
         }
     }
 
@@ -224,10 +245,19 @@ public class DocService extends Service {
     //webSocket回调方法
     private final class ChatListener extends WebSocketListener {
         WebSocket socket = null;
-
         @Override
         public void onOpen(WebSocket webSocket, Response response) {
             socket = webSocket;
+            if (chatReconnectTimer != null) {//如果是断线重连后打开的
+                chatReconnectTimer.cancel();
+                chatReconnectTimer = null;
+            }
+            socket.send("heartBeat");
+            date = new Date();
+            lastChatHeartBeatTime = date.getTime();
+            //接诊接口连接成功后启动检测心跳包是否超市方法
+            detectChatOffline();
+            Log.d("docservice.chat.closed", "onopen");
         }
 
         //接受消息时回调
@@ -236,13 +266,24 @@ public class DocService extends Service {
             Log.d("学生消息0", text);
             text = parseJSONWithJSONObject(text);
             Log.d("学生消息1", text);
-
-             if(text.startsWith("IceInfo")||text.startsWith("SdpInfo")||text.equals("denyVideoChat")){//如果是和视频聊天有关的协商信息，则发送给视频活动
-                intentToVideoChat.putExtra("videoInfo",text);
+            if (text.equals("heartBeat")) {//如果服务器返回的是心跳检测包
+                date = new Date();
+                lastChatHeartBeatTime = date.getTime();//更新最新接诊最新心跳包时间
+                //接收到心跳包之后，过3秒再次发送心跳包
+                Timer timer = new Timer(true);
+                TimerTask tt = new TimerTask() {
+                    @Override
+                    public void run() {
+                        webSocket.send("heartBeat");
+                    }
+                };
+                timer.schedule(tt, 3000);
+            }else if (text.startsWith("IceInfo") || text.startsWith("SdpInfo") || text.equals("denyVideoChat")) {//如果是和视频聊天有关的协商信息，则发送给视频活动
+                intentToVideoChat.putExtra("videoInfo", text);
                 sendBroadcast(intentToVideoChat);
-                Log.d("docservice","videoInfo:"+text);
+                Log.d("docservice", "videoInfo:" + text);
 
-            }else if (text.startsWith("chat")) { //如果学生发送的是沟通
+            } else if (text.startsWith("chat")) { //如果学生发送的是沟通
                 intentToBeforChat.putExtra("validate", stuId);
                 intentToBeforChat.putExtra("stuName", method.subString(text, "学生名字为", "学生头像为"));
                 //获取学生的头像
@@ -250,10 +291,10 @@ public class DocService extends Service {
                 String stuPictureUrl = text.substring(position + 5);
                 byte[] stuPicture = null;
                 try {
-                    if(stuPictureUrl.equals("null")){//如果学生头像为空
+                    if (stuPictureUrl.equals("null")) {//如果学生头像为空
                         intentToBeforChat.removeExtra("stuPicture");
-                    }else{
-                        stuPicture = method.bitmap2Bytes(method.drawableToBitamp(Drawable.createFromStream(new URL( ipAddress+stuPictureUrl).openStream(), "image.jpg")));
+                    } else {
+                        stuPicture = method.bitmap2Bytes(method.drawableToBitamp(Drawable.createFromStream(new URL(ipAddress + stuPictureUrl).openStream(), "image.jpg")));
                         intentToBeforChat.putExtra("stuPicture", stuPicture);
                     }
 
@@ -285,21 +326,88 @@ public class DocService extends Service {
 
         @Override
         public void onClosed(WebSocket webSocket, int code, String reason) {
-            if(docOnline){//如果医生还在接诊页面，则重新连接
-                Log.d("docservice.closed","reconnect");
-                chatConnet();
-            }
-//            output("onClosed: " + code + "/" + reason);
+            chatReconnect();
+            Log.d("docservice.chat.closed", "onclose");
         }
 
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-            if(docOnline){//如果医生还在接诊页面，则重新连接
-                Log.d("docservice.closed","reconnect");
-                chatConnet();
+            chatReconnect();
+            Log.d("docservice.chat.closed", "onfailure");
+        }
+    }
+
+
+    private void detectRetreatOffline() {//该方法通过检测接诊接口来判断是否断线
+
+        detecRetreatOfflineTimer = new Timer(true);
+        TimerTask tt = new TimerTask() {
+            public void run() {
+                date = new Date();
+                if (date.getTime() - lastRetreatHeartBeatTime > 6000) {//如果客户端距离上次接收到心跳表超过6秒，则判断为连接中断，然后尝试重连
+                    retreatReconnect();
+                    Log.d("docservice.closed", "heartBeat offline");
+                } else {
+                    Log.d("docservice.closed", "heartBeat online");
+                }
             }
-//            output("onFailure: " + t.getMessage());
-//            webSocket.close(1000, null);
+
+            ;
+        };
+        detecRetreatOfflineTimer.schedule(tt, 0, 6000);//六秒检测一下是否掉线
+    }
+    private void detectChatOffline(){//该方法用于检测聊天接口来判断是否断线
+        detectChatOfflineTimer=new Timer(true);
+        TimerTask tt=new TimerTask() {
+            @Override
+            public void run() {
+                date = new Date();
+                if (date.getTime() - lastChatHeartBeatTime > 6000) {//如果客户端距离上次接收到心跳表超过6秒，则判断为连接中断，然后尝试重连
+                    chatReconnect();
+                    Log.d("docservice.chat.closed", "heartBeat offline");
+                } else {
+                    Log.d("docservice.chat.closed", "heartBeat online");
+                }
+            }
+        };
+        detectChatOfflineTimer.schedule(tt,0,6000);
+    }
+
+    //该方法用于接诊断线重连
+    private void retreatReconnect() {
+        if (detecRetreatOfflineTimer != null) {//在重新连接的时候停止心跳检测
+            detecRetreatOfflineTimer.cancel();
+            detecRetreatOfflineTimer = null;
+        }
+        if (docOnline && retreatReconnectTimer == null) {//只有当医生在线,并且没有在连接的情况下才重连
+            retreatReconnectTimer = new Timer(true);
+            TimerTask tt = new TimerTask() {
+                public void run() {
+                    retreatConnect();
+                    Log.d("docservice.closed", "try to connecting");
+                }
+            };
+            retreatReconnectTimer.schedule(tt, 0, 3000);//每三秒执行一次重连，直到连接成功
+        }
+
+    }
+
+    //该方法用于聊天接口断线重连
+    private void chatReconnect() {
+        if (detectChatOfflineTimer != null) {//在重新连接的时候停止心跳检测
+            detectChatOfflineTimer.cancel();
+            detectChatOfflineTimer = null;
+        }
+        if (docOnline && chatReconnectTimer == null) {//只有当医生在线，并且没有在尝试连接的情况下才重连
+        chatReconnectTimer=new Timer(true);
+        TimerTask tt=new TimerTask() {
+            @Override
+            public void run() {
+                chatConnet();
+                Log.d("docservice.chat.closed", "try to connecting");
+            }
+        };
+        chatReconnectTimer.schedule(tt,0,3000);//每三秒执行一次重连，直到连接成功
         }
     }
 
@@ -353,6 +461,6 @@ public class DocService extends Service {
         unregisterReceiver(localReceiver);
         //关闭通话接口
         chatListener.socket.close(1000, "正常关闭");
-       Log.d("docservice.ondestroy","ondestroy");
+        Log.d("docservice.ondestroy", "ondestroy");
     }
 }

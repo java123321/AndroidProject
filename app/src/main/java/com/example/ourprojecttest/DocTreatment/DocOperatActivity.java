@@ -113,6 +113,8 @@ public class DocOperatActivity extends AppCompatActivity {
 
     //从服务器获取当前在线学生的信息
     private void getData() {
+        adapter.mList.clear();
+        adapter.notifyDataSetChanged();
         Log.d("msgwhat","statgetstunumber");
         noStudent.setVisibility(View.GONE);
         mRecycler.setVisibility(View.VISIBLE);
