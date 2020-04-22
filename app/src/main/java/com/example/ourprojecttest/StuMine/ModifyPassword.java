@@ -90,10 +90,24 @@ public class ModifyPassword extends AppCompatActivity {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                String url=ipAddress+"IM/servlet/PasswordModify?no="+method.getFileData("ID", ModifyPassword.this)+"&pwd="+newPass.getText().toString().trim();
+//                                String url=ipAddress+"IM/servlet/PasswordModify?no="+method.getFileData("ID", ModifyPassword.this)+"&pwd="+newPass.getText().toString().trim();
+                                StringBuilder urlBuilder=new StringBuilder();
+                                urlBuilder.append(ipAddress)
+                                        .append("IM/servlet/PasswordModify?no=")
+                                        .append(method.getFileData("ID", ModifyPassword.this))
+                                        .append("&pwd=")
+                                        .append(newPass.getText().toString().trim())
+                                        .append("&isStu=");
+                                if(method.getFileData("Type",ModifyPassword.this).equals("Stu")){
+                                    urlBuilder.append("true");
+                                }else{
+                                    urlBuilder.append("false");
+                                }
+
+                                Log.d("modify.password.url",urlBuilder.toString());
                                 OkHttpClient client = new OkHttpClient();
                                 Request request = new Request.Builder()
-                                        .url(url)
+                                        .url(urlBuilder.toString())
                                         .build();
                                 try{
                                     Response response = client.newCall(request).execute();
