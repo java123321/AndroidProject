@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Telephony;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +30,13 @@ import com.example.ourprojecttest.R;
 
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -106,28 +115,27 @@ public class AddressActivity extends AppCompatActivity {
                     show(R.layout.layout_tishi_email,s1);
                     flag = false;
                 }else if (flag){
+                    method.saveFileData("Name",show_name,AddressActivity.this);
                     method.saveFileData("Phone",show_phone,AddressActivity.this);
                     method.saveFileData("Address",address,AddressActivity.this);
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            String address16 = conversion(address).trim();
-                            String url;
-                            url=ipAddress+"IM/UpdateAddress?name="+stu_name+"&address="+address16+"&phone="+show_phone;
-                            OkHttpClient client = new OkHttpClient();
-                            Request request = new Request.Builder()
-                                    .url(url)
-                                    .build();
-                            try {
 
-                                Response response = client.newCall(request).execute();
-
-                                String responseData = response.body().string();
-
-                                parseJSONWithJSONObject(responseData);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+//                            url=ipAddress+"IM/UpdateAddress?name="+stu_name+"&address="+address16+"&phone="+show_phone;
+//                            OkHttpClient client = new OkHttpClient();
+//                            Request request = new Request.Builder()
+//                                    .url(url)
+//                                    .build();
+////                            try {
+//
+//                                Response response = client.newCall(request).execute();
+//
+//                                String responseData = response.body().string();
+                                parseJSONWithJSONObject(upAddressByPost(show_name,address,show_phone,method.getFileData("ID", AddressActivity.this)));
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                            }
 
                         }
                     }).start();
@@ -143,6 +151,55 @@ public class AddressActivity extends AppCompatActivity {
         });
     }
 
+    private String upAddressByPost(String stu_name,String address,String show_phone,String stuId){
+        StringBuilder info=new StringBuilder();
+        info.append("name=")
+                .append(stu_name)
+                .append("&address=")
+                .append(address)
+                .append("&phone=")
+                .append(show_phone)
+                .append("&stuId=")
+                .append(stuId);
+
+
+        byte[] data = info.toString().getBytes();
+        try {
+            URL url = new URL(ipAddress + "IM/UpdateAddress");
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setConnectTimeout(10000);//设置连接超时时间
+            urlConnection.setDoInput(true);//设置输入流采用字节流
+            urlConnection.setDoOutput(true);//设置输出采用字节流
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setUseCaches(false);//使用post方式不能使用缓存
+            urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");//设置meta参数
+            urlConnection.setRequestProperty("Content-Length", String.valueOf(data.length));
+            urlConnection.setRequestProperty("Charset", "utf-8");
+            //获得输出流，向服务器写入数据
+            OutputStream outputStream = urlConnection.getOutputStream();
+            outputStream.write(data);
+            int response = urlConnection.getResponseCode();//获得服务器的响应码
+            Message msg = handler.obtainMessage();
+            if (response == HttpURLConnection.HTTP_OK) {
+
+                InputStream inputStream = urlConnection.getInputStream();
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                byte[] result = new byte[1024];
+                int len = 0;
+                while ((len = inputStream.read(result)) != -1) {
+                    byteArrayOutputStream.write(result, 0, len);
+                }
+                return new String(byteArrayOutputStream.toByteArray()).trim();
+
+            }
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return  null;
+    }
 
     private void parseJSONWithJSONObject(String jsonData){
         try{
@@ -164,18 +221,18 @@ public class AddressActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    private String conversion(String origin){
-        if(origin.equals("")||origin.equals(null)){
-            return "";
-        }
-        else{
-            StringBuilder sb=new StringBuilder();
-            for(int i=0;i<origin.length();i++) {
-                sb.append(Integer.toHexString(origin.charAt(i)&0xffff));
-            }
-            return sb.toString().trim();
-        }
-    }
+//    private String conversion(String origin){
+//        if(origin.equals("")||origin.equals(null)){
+//            return "";
+//        }
+//        else{
+//            StringBuilder sb=new StringBuilder();
+//            for(int i=0;i<origin.length();i++) {
+//                sb.append(Integer.toHexString(origin.charAt(i)&0xffff));
+//            }
+//            return sb.toString().trim();
+//        }
+//    }
     public boolean check_phone(String phone){
         Pattern p = Pattern
                 .compile("^((1[0-9][0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
