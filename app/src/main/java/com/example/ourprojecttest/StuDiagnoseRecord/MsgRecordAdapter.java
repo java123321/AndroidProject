@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class MsgRecordAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
     private Intent intentToMsgRecord = new Intent("com.example.ourprojecttest.MSG_RECORD");
     private CommonMethod method=new CommonMethod();
-    private ArrayList<MessageBean> mList;
+    private ArrayList<MessageBean> mList=new ArrayList<>();
     private Context mContext;
     public MsgRecordAdapter(Context context){
         mContext=context;
@@ -63,8 +63,9 @@ public void setmList(ArrayList<MessageBean> list){
        final MessageBean info=mList.get(position);
        ViewHolder viewHolder=(ViewHolder)holder;
         Log.d("msginit","position"+position);
+
         byte[] appIcon=info.getIcon();
-        viewHolder.chatIcon.setImageBitmap(BitmapFactory.decodeByteArray(appIcon,0,appIcon.length));
+            viewHolder.chatIcon.setImageBitmap(BitmapFactory.decodeByteArray(appIcon,0,appIcon.length));
         viewHolder.chatName.setText(info.getName());
         viewHolder.chatTime.setText(info.getTime());
         Log.d("msginit","time"+info.getTime());
