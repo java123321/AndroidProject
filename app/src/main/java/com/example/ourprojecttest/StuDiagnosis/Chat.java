@@ -358,8 +358,6 @@ public class  Chat extends AppCompatActivity {
 
             Log.d("chat", "stuIcon" + (stuIcon == null));
 
-
-
             //获取医生的头像
             PictureStore pictureStore = (PictureStore) method.readObjFromSDCard("DocIcon");
             Bitmap docPicture = null;
