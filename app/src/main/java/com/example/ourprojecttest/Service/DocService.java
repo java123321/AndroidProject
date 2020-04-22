@@ -433,8 +433,8 @@ public class DocService extends Service {
      */
     private Notification getNotification(String chanelId, String content) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, chanelId);
-        builder.setSmallIcon(R.drawable.yll)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.yll))
+        builder.setSmallIcon(R.drawable.icon)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon))
                 .setAutoCancel(true)
                 .setContentTitle("学生挂号信息")
                 .setContentText(content);
