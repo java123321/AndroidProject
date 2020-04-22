@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ourprojecttest.StuMine.StuNeedToPay.ContentInfoBean;
 import com.example.ourprojecttest.R;
 
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class OrderManagementAdapter extends RecyclerView.Adapter <RecyclerView.V
     Context mContext;
     private final int NOT_POST=2;
     private final int HAVE_POST=5;
-    private int TYPE;
+    private volatile int TYPE;
     public ArrayList<Object> dataList=new ArrayList<>();
 
     public OrderManagementAdapter(Context context){
@@ -40,6 +41,7 @@ public class OrderManagementAdapter extends RecyclerView.Adapter <RecyclerView.V
     public void setList(ArrayList<Object> list,int type){
         dataList=list;
         TYPE=type;
+        Log.d("test.order.manage.type","set.list.type:"+TYPE);
     }
 
 
@@ -79,12 +81,6 @@ public class OrderManagementAdapter extends RecyclerView.Adapter <RecyclerView.V
             super(itemView);
             alreadPost=itemView.findViewById(R.id.alreadyPostDoc);
 
-            if(TYPE==HAVE_POST){//如果是已经发货的
-                alreadPost.setText("删除订单");
-            }
-            else{
-                alreadPost.setText("已发货");
-            }
             orderTime=itemView.findViewById(R.id.orderTime);
         }
     }
@@ -152,6 +148,16 @@ public class OrderManagementAdapter extends RecyclerView.Adapter <RecyclerView.V
             date.setTime(Long.valueOf(bean.getOrderTime()));
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             footViewHolder.orderTime.setText("订单时间:"+format.format(date));
+
+            Log.d("test.order.manage.type","footview.type"+ TYPE);
+            if(TYPE==HAVE_POST){//如果是已经发货的
+                footViewHolder.alreadPost.setText("删除订单");
+            }
+            else{
+                footViewHolder.alreadPost.setText("已发货");
+            }
+
+
 
             //设置已发货的点击事件
             footViewHolder.alreadPost.setOnClickListener(new View.OnClickListener() {

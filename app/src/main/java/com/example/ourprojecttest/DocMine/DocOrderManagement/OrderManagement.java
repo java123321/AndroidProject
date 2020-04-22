@@ -84,6 +84,7 @@ public class OrderManagement extends AppCompatActivity {
                 case HAVE_POST:{//展示已发货的
                     ArrayList<OrderListBean> orderList=(ArrayList<OrderListBean>)msg.obj;
                     adapter.setList(NeedToPostHelper.getDataAfterHandle(orderList),HAVE_POST);
+                    Log.d("test.order.manage.type","order.manage.havepost");
                     adapter.notifyDataSetChanged();
                     refresh.setRefreshing(false);
                     break;
