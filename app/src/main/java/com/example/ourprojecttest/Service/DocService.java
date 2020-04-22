@@ -1,6 +1,4 @@
 package com.example.ourprojecttest.Service;
-
-
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -13,29 +11,25 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.IBinder;
 import android.util.Log;
-
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.R;
-
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
-
-
 public class DocService extends Service {
+    private final int reconnectInterval=3000;//两次重连的间隔
+    private final int sendHeartBeatInterval=5000;//发送心跳包的时间间隔
+    private final int judegOfflineInterval=8000;//判断掉线的时间间隔
     private Timer detectChatOfflineTimer = null;
     private Timer detecRetreatOfflineTimer = null;//检测接诊是否掉线的计时器
     private volatile long lastRetreatHeartBeatTime = -1;//代表上次接诊接口的呼吸包时间
@@ -96,6 +90,7 @@ public class DocService extends Service {
                         break;
                     }
                     case "exit": {
+
                         docOnline = false;
                         beforeChatlistener.socket.close(1000, "正常关闭");
                         chatListener.socket.close(1000,"正常关闭");
@@ -183,7 +178,7 @@ public class DocService extends Service {
                         webSocket.send("heartBeat");
                     }
                 };
-                timer.schedule(tt, 3000);
+                timer.schedule(tt, sendHeartBeatInterval);
             } else if (info.equals("当前没有人在挂号，请稍等！")) { //获取返回的人数
                 Log.d("docservice.updatestu.count", "当前没有人挂号");
                 intentToBeforChat.putExtra("updateStu", "noStuOnline");
@@ -277,7 +272,7 @@ public class DocService extends Service {
                         webSocket.send("heartBeat");
                     }
                 };
-                timer.schedule(tt, 3000);
+                timer.schedule(tt, sendHeartBeatInterval);
             }else if (text.startsWith("IceInfo") || text.startsWith("SdpInfo") || text.equals("denyVideoChat")) {//如果是和视频聊天有关的协商信息，则发送给视频活动
                 intentToVideoChat.putExtra("videoInfo", text);
                 sendBroadcast(intentToVideoChat);
@@ -344,7 +339,7 @@ public class DocService extends Service {
         TimerTask tt = new TimerTask() {
             public void run() {
                 date = new Date();
-                if (date.getTime() - lastRetreatHeartBeatTime > 6000) {//如果客户端距离上次接收到心跳表超过6秒，则判断为连接中断，然后尝试重连
+                if (date.getTime() - lastRetreatHeartBeatTime > judegOfflineInterval) {//如果客户端距离上次接收到心跳表超过6秒，则判断为连接中断，然后尝试重连
                     retreatReconnect();
                     Log.d("docservice.closed", "heartBeat offline");
                 } else {
@@ -354,7 +349,7 @@ public class DocService extends Service {
 
             ;
         };
-        detecRetreatOfflineTimer.schedule(tt, 0, 6000);//六秒检测一下是否掉线
+        detecRetreatOfflineTimer.schedule(tt, 0, judegOfflineInterval);
     }
     private void detectChatOffline(){//该方法用于检测聊天接口来判断是否断线
         detectChatOfflineTimer=new Timer(true);
@@ -362,7 +357,7 @@ public class DocService extends Service {
             @Override
             public void run() {
                 date = new Date();
-                if (date.getTime() - lastChatHeartBeatTime > 6000) {//如果客户端距离上次接收到心跳表超过6秒，则判断为连接中断，然后尝试重连
+                if (date.getTime() - lastChatHeartBeatTime > judegOfflineInterval) {//如果客户端距离上次接收到心跳表超过6秒，则判断为连接中断，然后尝试重连
                     chatReconnect();
                     Log.d("docservice.chat.closed", "heartBeat offline");
                 } else {
@@ -370,7 +365,7 @@ public class DocService extends Service {
                 }
             }
         };
-        detectChatOfflineTimer.schedule(tt,0,6000);
+        detectChatOfflineTimer.schedule(tt,0,judegOfflineInterval);
     }
 
     //该方法用于接诊断线重连
@@ -387,7 +382,7 @@ public class DocService extends Service {
                     Log.d("docservice.closed", "try to connecting");
                 }
             };
-            retreatReconnectTimer.schedule(tt, 0, 3000);//每三秒执行一次重连，直到连接成功
+            retreatReconnectTimer.schedule(tt, 0, reconnectInterval);
         }
 
     }
@@ -407,7 +402,7 @@ public class DocService extends Service {
                 Log.d("docservice.chat.closed", "try to connecting");
             }
         };
-        chatReconnectTimer.schedule(tt,0,3000);//每三秒执行一次重连，直到连接成功
+        chatReconnectTimer.schedule(tt,0,reconnectInterval);//每三秒执行一次重连，直到连接成功
         }
     }
 
@@ -459,8 +454,9 @@ public class DocService extends Service {
         super.onDestroy();
         //注销广播
         unregisterReceiver(localReceiver);
-        //关闭通话接口
-        chatListener.socket.close(1000, "正常关闭");
-        Log.d("docservice.ondestroy", "ondestroy");
+//        //关闭通话接口
+//        chatListener.socket.close(1000, "正常关闭");
+//
+//        Log.d("docservice.ondestroy", "ondestroy");
     }
 }

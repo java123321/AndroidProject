@@ -544,7 +544,8 @@ public class  Chat extends AppCompatActivity {
         record = method.readMessageRecordListFromSdCard("MessageRecord");
         Log.d("chatsave", "?" + (record == null));
 
-        if(type.equals("Stu")){//如果是学生退出聊天室，则将此次挂号置为结束
+        if(type.equals("Stu")){//如果是学生退出聊天室，将聊天接口关闭
+            StuService.isChat=false;
             intentToStu.putExtra("msg", "ExitGuaHao");
             intentToStu.putExtra("finishedGuaHao","");//该标记代表学生已结束此次问诊
             sendBroadcast(intentToStu);

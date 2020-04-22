@@ -1,5 +1,4 @@
 package com.example.ourprojecttest.Service;
-
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -12,26 +11,19 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.IBinder;
-import android.provider.MediaStore;
 import android.util.Log;
-
 import androidx.core.app.NotificationCompat;
-
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.R;
-import com.example.ourprojecttest.StuDiagnosis.RenGongWenZhen;
-
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.net.URL;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -39,9 +31,20 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 
 public class StuService extends Service {
+    private Date date;
+    private Timer guaHaoReconnectTimer=null;
+    private Timer chatReconnectTimer = null;
+    private Timer detecGuaHaoOfflineTimer=null;
+    private Timer detectChatOfflineTimer = null;
+    private final int reconnectInterval=3000;//两次重连的间隔
+    private final int sendHeartBeatInterval=5000;//发送心跳包的时间间隔
+    private final int judegOfflineInterval=8000;//判断掉线的时间间隔
+    private volatile long lastGuaHaoHeartBeatTime=-1;
+    private volatile long lastChatHeartBeatTime=-1;//代表上次聊天接口的呼吸包时间
     private Intent intentToVideoChat = new Intent("com.example.ourprojecttest.VIDEO_CHAT");//该意图是向聊天活动提供媒体协商信息
     private String ipAddress;
     public static volatile boolean isGuaHao = false;//该变量用来标记是否正在挂号，true为挂号，false为不在挂号
+    public static volatile boolean isChat=true;
     private String stuId;
     private CommonMethod method = new CommonMethod();
     private LocalReceiver localReceiver;
@@ -72,6 +75,8 @@ public class StuService extends Service {
                     case "StartGuaHao": {
                         //开启挂号的连接
                         isGuaHao = true;
+                        isChat=true;
+                        chatConnet();
                         guaHaoConnect();
                         break;
                     }
@@ -80,7 +85,10 @@ public class StuService extends Service {
                             isGuaHao = false;
                             guaHaoListener.socket.close(1000, null);
                         }
-
+                        if(isChat){
+                            isChat=false;
+                            chatListener.socket.close(1000,null);
+                        }
                         if(!intent.hasExtra("finishedGuaHao")){
                             startForeground(1, getNotification(CHANNEL_ID, "取消挂号成功", "您已取消挂号！"));
                         }
@@ -99,12 +107,16 @@ public class StuService extends Service {
                     }
                     case "Deny": {//如果学生点击了拒绝服务
                         chatListener.socket.send(intent.getStringExtra("docId") + "|deny" + name);
-                        //用户点击取消之后将挂号服务接口取消掉
-//                        if(isGuaHao){
-//                            guaHaoListener.socket.close(1000, null);
-//                            isGuaHao = false;
-//                        }
                             startForeground(1, getNotification(CHANNEL_ID, "提示", "您已拒绝了与医生问诊！"));
+                        //用户点击取消之后将挂号服务接口取消掉
+                        if(isGuaHao){
+                            isGuaHao = false;
+                            guaHaoListener.socket.close(1000, null);
+                        }
+                        if(isChat){
+                            isChat=false;
+                            chatListener.socket.close(1000,null);
+                        }
                         break;
                     }
                 }
@@ -128,8 +140,8 @@ public class StuService extends Service {
         localReceiver = new LocalReceiver();
         registerReceiver(localReceiver, intentFilter);
         Log.d("guaHaoService", "服务已创建！");
-        //当服务启动的时候开启聊天接口
-        chatConnet();
+//        //当服务启动的时候开启聊天接口
+//        chatConnet();
     }
 
     //挂号连接方法
@@ -154,13 +166,58 @@ public class StuService extends Service {
         client.dispatcher().executorService().shutdown();
     }
 
+    private void detectGuaHaoOffline(){//该方法通过检测挂号接口来判断是否断线
+        detecGuaHaoOfflineTimer = new Timer(true);
+        TimerTask tt = new TimerTask() {
+            public void run() {
+                date = new Date();
+                if (date.getTime() - lastGuaHaoHeartBeatTime > judegOfflineInterval) {//如果客户端距离上次接收到心跳表超过6秒，则判断为连接中断，然后尝试重连
+                    guaHaoReconnect();
+                    Log.d("stuservice.closed", "heartBeat offline");
+                } else {
+                    Log.d("stuservice.closed", "heartBeat online");
+                }
+            }
+
+            ;
+        };
+        detecGuaHaoOfflineTimer.schedule(tt, 0, judegOfflineInterval);
+    }
+
+    //该方法用于挂号断线重连
+    private void guaHaoReconnect(){
+        if (detecGuaHaoOfflineTimer != null) {//在重新连接的时候停止心跳检测
+            detecGuaHaoOfflineTimer.cancel();
+            detecGuaHaoOfflineTimer = null;
+        }
+        if (isGuaHao && guaHaoReconnectTimer == null) {//只有当学生在挂号,并且没有重连连接的情况下才重连
+            guaHaoReconnectTimer = new Timer(true);
+            TimerTask tt = new TimerTask() {
+                public void run() {
+                    guaHaoConnect();
+                    Log.d("stuservice.closed", "try to connecting");
+                }
+            };
+            guaHaoReconnectTimer.schedule(tt, 0, reconnectInterval);
+        }
+    }
+
+
     private final class GuaHaoListener extends WebSocketListener {
         WebSocket socket = null;
-
         @Override
         public void onOpen(WebSocket webSocket, Response response) {
             socket = webSocket;
-            Log.d("interfaceguahao", "挂号成功");
+            if (guaHaoReconnectTimer != null) {//如果是断线重连后打开的
+                guaHaoReconnectTimer.cancel();
+                guaHaoReconnectTimer = null;
+            }
+            socket.send("heartBeat");
+            date = new Date();
+            lastGuaHaoHeartBeatTime = date.getTime();
+            //接诊接口连接成功后启动检测心跳包是否超市方法
+            detectGuaHaoOffline();
+            Log.d("stuservice.closed", "onopen");
         }
 
         //接受消息时回调
@@ -169,7 +226,20 @@ public class StuService extends Service {
             Log.d("interfaceguahaomessage", text);
             String info = parseJSONWithJSONObject(text);
             //当服务器更新排队人数时:
-            if (info.startsWith("您当前排队位次为")) {
+
+            if (info.equals("heartBeat")) {//如果服务器返回的是心跳检测包
+                date = new Date();
+                lastGuaHaoHeartBeatTime = date.getTime();//更新最新接诊最新心跳包时间
+                //接收到心跳包之后，过3秒再次发送心跳包
+                Timer timer = new Timer(true);
+                TimerTask tt = new TimerTask() {
+                    @Override
+                    public void run() {
+                        webSocket.send("heartBeat");
+                    }
+                };
+                timer.schedule(tt, sendHeartBeatInterval);
+            } else if (info.startsWith("您当前排队位次为")) {
                 String regEx = "[^0-9]";
                 Pattern p = Pattern.compile(regEx);
                 Matcher m = p.matcher(info);
@@ -214,9 +284,6 @@ public class StuService extends Service {
                     isGuaHao = false;
                     guaHaoListener.socket.close(1000, null);
                 }
-
-//                //-1代表到你了
-//                method.saveFileData("GuaHaoNumber", "-1", StuService.this);
             }else if(info.startsWith("当前没有医生在线")){
                 intent.putExtra("noDocOnline","");
                 sendBroadcast(intent);
@@ -233,22 +300,52 @@ public class StuService extends Service {
 
         @Override
         public void onClosed(WebSocket webSocket, int code, String reason) {
-//            output("onClosed: " + code + "/" + reason);
-            if(isGuaHao){
-                guaHaoConnect();
-            }
+            guaHaoReconnect();
+            Log.d("stuservice.closed", "close");
         }
 
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-//            output("onFailure: " + t.getMessage());
-//            webSocket.close(1000, null);
-            if(isGuaHao){
-                guaHaoConnect();
-            }
+            guaHaoReconnect();
+            Log.d("stuservice.closed", "failure");
         }
     }
 
+
+    private void detectChatOffline(){//该方法用于检测聊天接口来判断是否断线
+        detectChatOfflineTimer=new Timer(true);
+        TimerTask tt=new TimerTask() {
+            @Override
+            public void run() {
+                date = new Date();
+                if (date.getTime() - lastChatHeartBeatTime > judegOfflineInterval) {//如果客户端距离上次接收到心跳表超过6秒，则判断为连接中断，然后尝试重连
+                    chatReconnect();
+                    Log.d("stuservice.chat.closed", "heartBeat offline");
+                } else {
+                    Log.d("stuservice.chat.closed", "heartBeat online");
+                }
+            }
+        };
+        detectChatOfflineTimer.schedule(tt,0,judegOfflineInterval);
+    }
+    //该方法用于聊天接口断线重连
+    private void chatReconnect() {
+        if (detectChatOfflineTimer != null) {//在重新连接的时候停止心跳检测
+            detectChatOfflineTimer.cancel();
+            detectChatOfflineTimer = null;
+        }
+        if (isChat && chatReconnectTimer == null) {//只有当医生在线，并且没有在尝试连接的情况下才重连
+            chatReconnectTimer=new Timer(true);
+            TimerTask tt=new TimerTask() {
+                @Override
+                public void run() {
+                    chatConnet();
+                    Log.d("stuservice.chat.closed", "try to connecting");
+                }
+            };
+            chatReconnectTimer.schedule(tt,0,reconnectInterval);//每三秒执行一次重连，直到连接成功
+        }
+    }
     //webSocket回调方法
     private final class ChatListener extends WebSocketListener {
         WebSocket socket = null;
@@ -256,14 +353,36 @@ public class StuService extends Service {
         @Override
         public void onOpen(WebSocket webSocket, Response response) {
             socket = webSocket;
-            Log.d("interfacechat", "连接成功");
+            if (chatReconnectTimer != null) {//如果是断线重连后打开的
+                chatReconnectTimer.cancel();
+                chatReconnectTimer = null;
+            }
+            socket.send("heartBeat");
+            date = new Date();
+            lastChatHeartBeatTime = date.getTime();
+            //接诊接口连接成功后启动检测心跳包是否超市方法
+            detectChatOffline();
+            Log.d("stuservice.chat.closed", "onopen");
         }
         //接受消息时回调
         @Override
         public void onMessage(WebSocket webSocket, String text) {
             Log.d("interfacechat", "123" + text);
             text = parseJSONWithJSONObject(text);
-            if (text.startsWith("IceInfo") || text.startsWith("SdpInfo") || text.equals("denyVideoChat")) {//如果是和视频聊天有关的协商信息，则发送给视频聊天活动
+
+            if (text.equals("heartBeat")) {//如果服务器返回的是心跳检测包
+                date = new Date();
+                lastChatHeartBeatTime = date.getTime();//更新最新接诊最新心跳包时间
+                //接收到心跳包之后，过3秒再次发送心跳包
+                Timer timer = new Timer(true);
+                TimerTask tt = new TimerTask() {
+                    @Override
+                    public void run() {
+                        webSocket.send("heartBeat");
+                    }
+                };
+                timer.schedule(tt, sendHeartBeatInterval);
+            }else if (text.startsWith("IceInfo") || text.startsWith("SdpInfo") || text.equals("denyVideoChat")) {//如果是和视频聊天有关的协商信息，则发送给视频聊天活动
                 intentToVideoChat.putExtra("videoInfo", text);
                 sendBroadcast(intentToVideoChat);
                 Log.d("docservice", "videoInfo:" + text);
@@ -274,18 +393,18 @@ public class StuService extends Service {
         }
         @Override
         public void onClosing(WebSocket webSocket, int code, String reason) {
-//            webSocket.close(1000, null);
-//            output("onClosing: " + code + "/" + reason);
+
         }
         @Override
         public void onClosed(WebSocket webSocket, int code, String reason) {
-//            output("onClosed: " + code + "/" + reason);
-            chatConnet();
+            chatReconnect();
+            Log.d("stuservice.chat.closed", "onclose");
         }
 
         @Override
         public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-            chatConnet();
+            chatReconnect();
+            Log.d("stuservice.chat.closed", "failure");
         }
     }
 
@@ -308,9 +427,9 @@ public class StuService extends Service {
         super.onDestroy();
         //解除广播注册
         unregisterReceiver(localReceiver);
-        //关闭通话接口
-        chatListener.socket.close(1000, "正常关闭");
-        Log.d("service123", "destroy");
+//        //关闭通话接口
+//        chatListener.socket.close(1000, "正常关闭");
+//        Log.d("service123", "destroy");
     }
 
     @Override
@@ -340,5 +459,4 @@ public class StuService extends Service {
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.createNotificationChannel(notificationChannel);
     }
-
 }
