@@ -467,8 +467,8 @@ public class RenGongWenZhen extends AppCompatActivity {
             intentToService.putExtra("docId",intent.getStringExtra("docId"));
             sendBroadcast(intentToService);
         });
-
         //将布局设置给Dialog
+        dialog.setCanceledOnTouchOutside(false);
         dialog.setContentView(inflate);
         //获取当前Activity所在的窗体
         Window dialogWindow = dialog.getWindow();
