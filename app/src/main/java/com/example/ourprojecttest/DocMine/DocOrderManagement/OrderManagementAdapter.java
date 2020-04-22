@@ -1,11 +1,15 @@
 package com.example.ourprojecttest.DocMine.DocOrderManagement;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -136,7 +140,7 @@ public class OrderManagementAdapter extends RecyclerView.Adapter <RecyclerView.V
         else if(type==ITEM_HEADER){
             HeadViewHolder headViewHolder=(HeadViewHolder)holder;
             HeadInfoBean bean=(HeadInfoBean)dataList.get(position);
-            headViewHolder.receiverName.setText("收货人姓名:"+bean.getReceiverName());
+            headViewHolder.receiverName.setText("姓名:"+bean.getReceiverName());
             headViewHolder.receiverTelephone.setText("电话:"+bean.getReceiverTelephone());
             headViewHolder.receiverAddress.setText("地址:"+bean.getReceiverAddress());
         }
@@ -154,12 +158,78 @@ public class OrderManagementAdapter extends RecyclerView.Adapter <RecyclerView.V
                 @Override
                 public void onClick(View v) {
                     if(TYPE==NOT_POST){//如果是点击的已发货按钮
-                        intentToOrderManagement.putExtra("havePost",bean.getOrderTime());
-                        mContext.sendBroadcast(intentToOrderManagement);
+                       // intentToOrderManagement.putExtra("havePost",bean.getOrderTime());
+                       // mContext.sendBroadcast(intentToOrderManagement);
+                        final Dialog dialog = new Dialog(mContext,R.style.ActionSheetDialogStyle);
+                        View inflate = LayoutInflater.from(mContext).inflate(R.layout.layout_delete_dingdan, null);
+                        TextView no=inflate.findViewById(R.id.no);
+                        TextView yes = inflate.findViewById(R.id.yes);
+                        TextView jianjie=inflate.findViewById(R.id.jianjie);
+                        TextView describe=inflate.findViewById(R.id.describe);
+                        jianjie.setText("确认发货");
+                        describe.setText("确认已发货？");
+                        yes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                intentToOrderManagement.putExtra("havePost",bean.getOrderTime());
+                                mContext.sendBroadcast(intentToOrderManagement);
+                                dialog.dismiss();
+                            }
+                        });
+                        no.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        });
+                        dialog.setContentView(inflate);
+                        dialog.setCancelable(false);
+                        Window dialogWindow = dialog.getWindow();
+                        //设置Dialog从窗体底部弹出
+                        dialogWindow.setGravity( Gravity.CENTER);
+                        //获得窗体的属性
+                        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+                        lp.width =800;
+                        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                        dialogWindow.setAttributes(lp);
+                        dialog.show();
                     }
                     else{//如果是点击的删除订单按钮
-                        intentToOrderManagement.putExtra("delete",bean.getOrderTime());
-                        mContext.sendBroadcast(intentToOrderManagement);
+                       // intentToOrderManagement.putExtra("delete",bean.getOrderTime());
+                       // mContext.sendBroadcast(intentToOrderManagement);
+                        final Dialog dialog = new Dialog(mContext,R.style.ActionSheetDialogStyle);
+                        View inflate = LayoutInflater.from(mContext).inflate(R.layout.layout_delete_dingdan, null);
+                        TextView no=inflate.findViewById(R.id.no);
+                        TextView yes = inflate.findViewById(R.id.yes);
+                        TextView jianjie=inflate.findViewById(R.id.jianjie);
+                        TextView describe=inflate.findViewById(R.id.describe);
+                        jianjie.setText("删除订单");
+                        describe.setText("确认删除订单？");
+                        yes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                intentToOrderManagement.putExtra("delete",bean.getOrderTime());
+                                mContext.sendBroadcast(intentToOrderManagement);
+                                dialog.dismiss();
+                            }
+                        });
+                        no.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        });
+                        dialog.setContentView(inflate);
+                        dialog.setCancelable(false);
+                        Window dialogWindow = dialog.getWindow();
+                        //设置Dialog从窗体底部弹出
+                        dialogWindow.setGravity( Gravity.CENTER);
+                        //获得窗体的属性
+                        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+                        lp.width =800;
+                        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                        dialogWindow.setAttributes(lp);
+                        dialog.show();
                     }
 
                 }
