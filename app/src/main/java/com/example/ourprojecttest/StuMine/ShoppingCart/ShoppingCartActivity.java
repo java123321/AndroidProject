@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -34,6 +35,7 @@ import android.widget.Toast;
 import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
 import com.example.ourprojecttest.AlipayModule.AuthResult;
+import com.example.ourprojecttest.DocTreatment.Prescribe;
 import com.example.ourprojecttest.StuDrugStore.StuBuyDrug;
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
@@ -126,18 +128,22 @@ public class ShoppingCartActivity extends AppCompatActivity {
                     if (TextUtils.equals(resultStatus, "9000")) {
                         //用户支付成功之后，开始将订单上传到数据库
                         uploadOrder();
-                        AlertDialog.Builder builder = new AlertDialog.Builder(ShoppingCartActivity.this);
-                        builder.setTitle("提示");
-                        builder.setMessage("支付成功！");
-                        builder.setPositiveButton("确定", null);
-                        builder.show();
+                        //AlertDialog.Builder builder = new AlertDialog.Builder(ShoppingCartActivity.this);
+                        //builder.setTitle("提示");
+                        //builder.setMessage("支付成功！");
+                        //builder.setPositiveButton("确定", null);
+                        //builder.show();
+                        String s="支付成功！";
+                        show(R.layout.layout_chenggong,s);
                         Log.d("msp", "2");
                     } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(ShoppingCartActivity.this);
-                        builder.setTitle("提示");
-                        builder.setMessage("支付失败！");
-                        builder.setPositiveButton("确定", null);
-                        builder.show();
+                       // AlertDialog.Builder builder = new AlertDialog.Builder(ShoppingCartActivity.this);
+                       // builder.setTitle("提示");
+                       // builder.setMessage("支付失败！");
+                       // builder.setPositiveButton("确定", null);
+                       // builder.show();
+                        String s="支付失败！";
+                        show(R.layout.layout_tishi_email,s);
                     }
                     break;
                 }
@@ -578,6 +584,30 @@ public class ShoppingCartActivity extends AppCompatActivity {
             }
         });
     }
-
+    public void show(int x, String s) {
+        final Dialog dialog = new Dialog(ShoppingCartActivity.this, R.style.ActionSheetDialogStyle);        //展示对话框
+        //填充对话框的布局
+        View inflate = LayoutInflater.from(ShoppingCartActivity.this).inflate(x, null);
+        TextView describe = inflate.findViewById(R.id.describe);
+        describe.setText(s);
+        TextView yes = inflate.findViewById(R.id.yes);
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setContentView(inflate);
+        dialog.setCancelable(false);
+        Window dialogWindow = dialog.getWindow();
+        //设置Dialog从窗体底部弹出
+        dialogWindow.setGravity(Gravity.CENTER);
+        //获得窗体的属性
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        lp.width = 800;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialogWindow.setAttributes(lp);
+        dialog.show();
+    }
 
 }

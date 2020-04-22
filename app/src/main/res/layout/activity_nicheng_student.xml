@@ -28,6 +28,7 @@
             android:layout_gravity="center_vertical"
             android:gravity="right"
             android:textColor="#FFFFFF"
+            android:layout_marginRight="10dp"
             android:textSize="16dp"
             android:text="保存"></TextView>
 </FrameLayout>
