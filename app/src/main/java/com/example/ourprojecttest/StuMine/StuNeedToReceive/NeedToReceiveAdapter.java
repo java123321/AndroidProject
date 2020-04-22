@@ -96,15 +96,17 @@ public class NeedToReceiveAdapter extends RecyclerView.Adapter <RecyclerView.Vie
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view;
             if(viewType==ITEM_CONTENT){
-                view=View.inflate(mContext, R.layout.need_to_pay_content,null);
+                //view=View.inflate(mContext, R.layout.need_to_pay_content,null);
+                view=LayoutInflater.from(mContext).inflate(R.layout.need_to_pay_content,parent,false);
                 return new ContentViewHolder(view);
             }
             else if (viewType==ITEM_HEADER){
-                view=View.inflate(mContext,R.layout.need_to_pay_header,null);
+                view=LayoutInflater.from(mContext).inflate(R.layout.need_to_pay_header,parent,false);
                 return new HeadViewHolder(view);
             }
             else{
-                view=View.inflate(mContext,R.layout.need_to_receive_footer,null);
+                //view=View.inflate(mContext,R.layout.need_to_receive_footer,null);
+                view=LayoutInflater.from(mContext).inflate(R.layout.need_to_receive_footer,parent,false);
                 return new FootViewHolder(view);
             }
 
@@ -163,6 +165,7 @@ public class NeedToReceiveAdapter extends RecyclerView.Adapter <RecyclerView.Vie
                             public void onClick(View view) {
                                 intentToReceiveOrder.putExtra("receive",bean.getOrderId());
                                 mContext.sendBroadcast(intentToReceiveOrder);
+                                dialog.dismiss();
                             }
                         });
                         no.setOnClickListener(new View.OnClickListener() {
