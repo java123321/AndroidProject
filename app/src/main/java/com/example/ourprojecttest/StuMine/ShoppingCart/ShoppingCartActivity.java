@@ -102,11 +102,11 @@ public class ShoppingCartActivity extends AppCompatActivity {
                     Toast toast = Toast.makeText(ShoppingCartActivity.this, "订单添加成功！", Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
                     toast.show();
-
                     //订单上传到服务器之后，将购物车选中的药品删除
                     //将药品删除之后保存到本地
                     method.saveObj2SDCard("drugIdSet", set);
                     method.writeListIntoSDcard("ShoppingCartList", drugList);
+                    displayDrug(drugList);
                     break;
                 }
                 case FAULT: {
@@ -128,20 +128,11 @@ public class ShoppingCartActivity extends AppCompatActivity {
                     if (TextUtils.equals(resultStatus, "9000")) {
                         //用户支付成功之后，开始将订单上传到数据库
                         uploadOrder();
-                        //AlertDialog.Builder builder = new AlertDialog.Builder(ShoppingCartActivity.this);
-                        //builder.setTitle("提示");
-                        //builder.setMessage("支付成功！");
-                        //builder.setPositiveButton("确定", null);
-                        //builder.show();
+
                         String s="支付成功！";
                         show(R.layout.layout_chenggong,s);
                         Log.d("msp", "2");
                     } else {
-                       // AlertDialog.Builder builder = new AlertDialog.Builder(ShoppingCartActivity.this);
-                       // builder.setTitle("提示");
-                       // builder.setMessage("支付失败！");
-                       // builder.setPositiveButton("确定", null);
-                       // builder.show();
                         String s="支付失败！";
                         show(R.layout.layout_tishi_email,s);
                     }
@@ -365,6 +356,33 @@ public class ShoppingCartActivity extends AppCompatActivity {
 
     }
 
+
+    private void displayDrug(ArrayList<ShoppingCartBean> lists){
+        //当购物车内容是空的情况下
+        if (lists == null || lists.size() == 0) {
+            Log.d("cart", "null");
+            mRecycler.setVisibility(View.GONE);
+            empty.setVisibility(View.VISIBLE);
+            updateDisplayPrice(0.0);
+        } else {//不为空的情况下
+            Log.d("cart", "notnull");
+            empty.setVisibility(View.GONE);
+            mRecycler.setVisibility(View.VISIBLE);
+            mAdapter.setList(lists);
+            mAdapter.notifyDataSetChanged();
+            //统计药品总价格
+            Double[] info = method.calculatePrice(lists, lists.size());
+            updateDisplayPrice(info[0]);
+            //判断是否全选
+            if (info[1] == 1.0) {
+                selectAll.setImageResource(R.drawable.checked);
+                selectAllFlag = true;
+            } else {
+                selectAll.setImageResource(R.drawable.unchecked);
+            }
+        }
+    }
+
     private void initView() {
         //获取学生的id
         stuId = method.getFileData("ID", ShoppingCartActivity.this);
@@ -389,29 +407,8 @@ public class ShoppingCartActivity extends AppCompatActivity {
         if (add.equals("用户暂未设置收货地址")||add == "" ) {
             AddressMessage = false;
         }
-        //当购物车内容是空的情况下
-        if (lists == null || lists.size() == 0) {
-            Log.d("cart", "null");
-            mRecycler.setVisibility(View.GONE);
-            empty.setVisibility(View.VISIBLE);
-            updateDisplayPrice(0.0);
-        } else {//不为空的情况下
-            Log.d("cart", "notnull");
-            empty.setVisibility(View.GONE);
-            mRecycler.setVisibility(View.VISIBLE);
-            mAdapter.setList(lists);
-            mAdapter.notifyDataSetChanged();
-            //统计药品总价格
-            Double[] info = method.calculatePrice(lists, lists.size());
-            updateDisplayPrice(info[0]);
-            //判断是否全选
-            if (info[1] == 1.0) {
-                selectAll.setImageResource(R.drawable.checked);
-                selectAllFlag = true;
-            } else {
-                selectAll.setImageResource(R.drawable.unchecked);
-            }
-        }
+      //显示药品
+       displayDrug(lists);
         //设置添加药品的点击事件
         addDrug.setOnClickListener(new View.OnClickListener() {
             @Override
