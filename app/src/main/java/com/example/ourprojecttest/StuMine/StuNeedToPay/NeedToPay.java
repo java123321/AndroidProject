@@ -89,17 +89,18 @@ public class NeedToPay extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            if (intent.hasExtra("flag")){
-                Toast toast = Toast.makeText(NeedToPay.this, "您暂未完善收获地址信息，请先完善！", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
-                toast.show();
-            }
-
-
             //当接收的广播为付款时，则调用支付宝进行支付
            if(intent.hasExtra("price")){
-               orderId=intent.getStringExtra("orderId");
-               payV2(intent.getStringExtra("price"));
+               //如果用户收获地址信息没有完善，先提示用户完善
+               if(method.getFileData("Address",NeedToPay.this).equals("用户暂未设置收货地址")||method.getFileData("Phone",NeedToPay.this).equals("用户暂未设置手机号码")||method.getFileData("Name",NeedToPay.this).equals("用户暂未设置名字")){
+                   Toast toast = Toast.makeText(NeedToPay.this, "您暂未完善收获地址信息，请先完善！", Toast.LENGTH_SHORT);
+                   toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                   toast.show();
+               }else{
+                   orderId=intent.getStringExtra("orderId");
+                   payV2(intent.getStringExtra("price"));
+               }
+
            }
         }
     }
@@ -153,25 +154,12 @@ public class NeedToPay extends AppCompatActivity {
                     // 判断resultStatus 为900        0则代表支付成功
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
-
                         Log.d("payment","succ");
                         finishedPay();
-                       // AlertDialog.Builder builder = new AlertDialog.Builder(NeedToPay.this);
-                       // builder.setTitle("提示");
-                       // builder.setMessage("支付成功！");
-                       // builder.setPositiveButton("确定", null);
-                       // builder.show();
                         String s1="支付成功";
                         show(R.layout.layout_chenggong,s1);
                     } else {
-                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-//                        showAlert(NeedToPay.this, "Payment failed:" + payResult);
-                        //Log.d("payment","false");
-                        //AlertDialog.Builder builder = new AlertDialog.Builder(NeedToPay.this);
-                        //builder.setTitle("提示");
-                        //builder.setMessage("支付失败！");
-                        //builder.setPositiveButton("确定", null);
-                        //builder.show();
+                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。//
                         String s1="支付失败";
                         show(R.layout.layout_tishi_email,s1);
                     }
@@ -343,12 +331,6 @@ public class NeedToPay extends AppCompatActivity {
                 getData();
             }
         });
-        String add = method.getFileData("Address", NeedToPay.this);
-        if (add.equals("用户暂未设置收货地址")||add == "" ) {
-            AddressMessage.addressMessage = false;
-        }else {
-            AddressMessage.addressMessage=true;
-        }
         refresh.setColorSchemeColors(getResources().getColor(R.color.color_bottom));
         refresh.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.color_progressbar));
         recyclerView=findViewById(R.id.displayOrder);
@@ -453,45 +435,6 @@ public class NeedToPay extends AppCompatActivity {
         }
     }
 
-//    /**
-//     * 读取sd卡中的订单数组对象
-//     *
-//     * @param fileName 文件名
-//     * @return
-//     */
-//    @SuppressWarnings("unchecked")
-//    public ArrayList<OrderListBean> readOrderListFromSdCard(String fileName) {
-//        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {  //检测sd卡是否存在
-//            ArrayList<OrderListBean> list;
-//            File sdCardDir = Environment.getExternalStorageDirectory();
-//            File sdFile = new File(sdCardDir, fileName);
-//            try {
-//                FileInputStream fis = new FileInputStream(sdFile);
-//                ObjectInputStream ois = new ObjectInputStream(fis);
-//                list = (ArrayList<OrderListBean>) ois.readObject();
-//                fis.close();
-//                ois.close();
-//                return list;
-//            } catch (StreamCorruptedException e) {
-//                e.printStackTrace();
-//                return null;
-//            } catch (OptionalDataException e) {
-//                e.printStackTrace();
-//                return null;
-//            } catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//                return null;
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                return null;
-//            } catch (ClassNotFoundException e) {
-//                e.printStackTrace();
-//                return null;
-//            }
-//        } else {
-//            return null;
-//        }
-//    }
     public void show(int x,String s){
         final Dialog dialog = new Dialog(NeedToPay.this,R.style.ActionSheetDialogStyle);        //展示对话框
         //填充对话框的布局

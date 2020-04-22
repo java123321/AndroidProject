@@ -203,18 +203,8 @@ public class StuBuyDrug extends AppCompatActivity {
 
                             String resultData = new String(byteArrayOutputStream.toByteArray()).trim();
                             Log.d("stubuydrug.resultdata",resultData);
-//                    if (resultData.equals("订单添加成功")) {
-//                        msg.what = SUCCESS;
-//                        Log.d("result", "success3");
-//                    } else {
-//                        msg.what = FAULT;
-//                        Log.d("result", "fault1");
-//                    }
-                        } else {
-//                    msg.what = FAULT;
-//                    Log.d("result", "fault2");
+
                         }
-//                handler.sendMessage(msg);
                         Log.d("result", "312");
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
@@ -294,22 +284,18 @@ public class StuBuyDrug extends AppCompatActivity {
         buy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (addressMessage){
-                    if (AliPayFlag) {
+                if (AliPayFlag) {
+                    if(method.getFileData("Address",StuBuyDrug.this).equals("用户暂未设置收货地址")||method.getFileData("Phone",StuBuyDrug.this).equals("用户暂未设置手机号码")||method.getFileData("Name",StuBuyDrug.this).equals("用户暂未设置名字")){
+                        Toast toast = Toast.makeText(StuBuyDrug.this, "您暂未完善收获地址信息，请先完善！", Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
+                        toast.show();
+                    }else{
                         payV2(orderPrice);
+                    }
                     } else {
-
                         String s1="微信支付功能尚未开通，尽请期待！";
                         show(R.layout.layout_tishi_email,s1);
                     }
-                } else {
-                    Toast toast = Toast.makeText(StuBuyDrug.this, "您暂未完善收获地址信息，请先完善！", Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
-                    toast.show();
-                }
-
-
             }
         });
     }
@@ -413,15 +399,7 @@ public class StuBuyDrug extends AppCompatActivity {
         yaoPinName.setText(intent.getStringExtra("name"));
         stuDiscribe.setText(intent.getStringExtra("description"));
         //设置用户的收货地址
-        String add = method.getFileData("Address", StuBuyDrug.this);
-        Log.d("buyyaopin---", add);
-        if (add.equals("用户暂未设置收货地址")||add == null||add == "") {
-            address.setText("您收货地址信息不完整，点击完善信息");
-            address.setHighlightColor(0x6633B5E5);
-            addressMessage = false;
-        } else {
-            address.setText(method.getFileData("Name", StuBuyDrug.this) + " " + method.getFileData("Phone", StuBuyDrug.this) + "\n" + add);
-        }
+            address.setText(method.getFileData("Name", StuBuyDrug.this) + " " + method.getFileData("Phone", StuBuyDrug.this) + "\n" + method.getFileData("Address",StuBuyDrug.this));
         //设置收获地址的点击事件
         addressChange.setOnClickListener(new View.OnClickListener() {
             @Override

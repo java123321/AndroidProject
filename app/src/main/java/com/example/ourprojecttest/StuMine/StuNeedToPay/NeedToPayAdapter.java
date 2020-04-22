@@ -167,15 +167,10 @@ public class NeedToPayAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             footViewHolder.goToPay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (AddressMessage.addressMessage){
+
                         intentToNeedToPay.putExtra("price",bean.getOrderPrice());
                         intentToNeedToPay.putExtra("orderId",bean.getOrderId());
                         mContext.sendBroadcast(intentToNeedToPay);
-                    } else {
-                        intentToNeedToPay.putExtra("flag",false);
-                        mContext.sendBroadcast(intentToNeedToPay);
-                    }
-
                 }
             });
         }

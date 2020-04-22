@@ -403,10 +403,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
         mRecycler.setAdapter(mAdapter);
         lists = method.readListFromSdCard("ShoppingCartList");
 
-        String add = method.getFileData("Address", ShoppingCartActivity.this);
-        if (add.equals("用户暂未设置收货地址")||add == "" ) {
-            AddressMessage = false;
-        }
+
       //显示药品
        displayDrug(lists);
         //设置添加药品的点击事件
@@ -430,13 +427,13 @@ public class ShoppingCartActivity extends AppCompatActivity {
                 else{
                     //立即购买的点击事件
                     if (buyNow.getText().toString().trim().equals("去结算")) {
-                        if (AddressMessage){
-                            //去付款
-                            payV2(orderPrice);
-                        }else {
+                        //如果用户收获地址信息没有完善，先提示用户完善
+                        if(method.getFileData("Address",ShoppingCartActivity.this).equals("用户暂未设置收货地址")||method.getFileData("Phone",ShoppingCartActivity.this).equals("用户暂未设置手机号码")||method.getFileData("Name",ShoppingCartActivity.this).equals("用户暂未设置名字")){
                             Toast toast = Toast.makeText(ShoppingCartActivity.this, "您暂未完善收获地址信息，请先完善！", Toast.LENGTH_SHORT);
                             toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
                             toast.show();
+                        }else {
+                            payV2(orderPrice);
                         }
 
                     } else {//清除商品的点击事
