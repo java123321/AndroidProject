@@ -659,25 +659,6 @@ public class UpDrugMsgActivity extends AppCompatActivity {
         }
     }
 
-//    private void parseJSONWithJSONObject(String jsonData) {
-//        try {
-//            Log.d("updrugjson", jsonData);
-//            JSONObject jsonObject = new JSONObject(jsonData);
-//            String code = jsonObject.getString("code");
-//            Message msg = Message.obtain();
-//
-//            if (code.equals("0")) {
-//                msg.what = 0;
-//
-//            } else {
-//                msg.what = -1;
-//            }
-//            handler.sendMessage(msg);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     /**
      * 该方法用于上传文件
