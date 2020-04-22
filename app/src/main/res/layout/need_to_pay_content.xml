@@ -47,6 +47,7 @@
             android:textSize="16dp" />
 
         <TextView
+
             android:id="@+id/drugAmount"
             android:text="x 3"
             android:layout_gravity="left"

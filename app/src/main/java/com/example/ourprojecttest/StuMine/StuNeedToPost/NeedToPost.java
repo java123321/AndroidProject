@@ -144,6 +144,7 @@ public class NeedToPost extends AppCompatActivity {
                         orderList.add(orderBean);//将一个订单加入到订单集合中
                         orderBean=new OrderListBean();//在新建一个订单
                     }
+
                     else{//如果是药品
                         drugData=new ContentInfoBean();
                         drugData.setDrugAmount(object.getString("DrugAmount"));

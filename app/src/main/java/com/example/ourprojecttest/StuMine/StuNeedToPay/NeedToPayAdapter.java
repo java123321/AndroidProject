@@ -115,6 +115,7 @@ public class NeedToPayAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
+
         if(viewType==ITEM_CONTENT){
             view= LayoutInflater.from(mContext).inflate(R.layout.need_to_pay_content,parent,false);
             return new ContentViewHolder(view);
