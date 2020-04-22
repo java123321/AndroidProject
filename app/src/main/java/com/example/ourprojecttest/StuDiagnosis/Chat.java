@@ -345,20 +345,18 @@ public class  Chat extends AppCompatActivity {
             chatWindowName.setText(stuName + "同学");
             //获取学生头像
             byte[] stuIcon = null;
+            Bitmap stuPicture;
             if (intent.hasExtra("stuPicture")) {
                 stuIcon = intent.getByteArrayExtra("stuPicture");
                 messageBean.setIcon(stuIcon);
+                stuPicture = BitmapFactory.decodeByteArray(stuIcon, 0, stuIcon.length);
             } else {
-                messageBean.setIcon(null);
+                stuPicture=BitmapFactory.decodeResource(getResources(),R.drawable.yonghu1);
+                messageBean.setIcon(method.bitmap2Bytes(stuPicture));
+
             }
 
             Log.d("chat", "stuIcon" + (stuIcon == null));
-            Bitmap stuPicture;
-            if(stuIcon==null){//如果学生没有设置头像，则使用本地默认头像
-                stuPicture=BitmapFactory.decodeResource(getResources(),R.drawable.yonghu1);
-            }else{
-                stuPicture = BitmapFactory.decodeByteArray(stuIcon, 0, stuIcon.length);
-            }
 
             //获取医生的头像
             PictureStore pictureStore = (PictureStore) method.readObjFromSDCard("DocIcon");
@@ -381,19 +379,22 @@ public class  Chat extends AppCompatActivity {
             chatWindowName.setText(docName + "医生");
             //获取医生的头像
             byte[] docIcon = null;
+            Bitmap docPicture;
             if (intent.hasExtra("docPicture")) {
                 docIcon = intent.getByteArrayExtra("docPicture");
                 messageBean.setIcon(docIcon);
+                docPicture = BitmapFactory.decodeByteArray(docIcon, 0, docIcon.length);
             } else {
-                messageBean.setIcon(null);
+                docPicture=BitmapFactory.decodeResource(getResources(),R.drawable.yonghu2);
+                messageBean.setIcon(method.bitmap2Bytes(docPicture));//将本地默认头像保存到聊天记录数组中
             }
             Log.d("chat", "docIcon" + (docIcon == null));
-            Bitmap docPicture;
-            if(docIcon==null){//如果医生没有设置头像，则使用本地默认头像
-                docPicture=BitmapFactory.decodeResource(getResources(),R.drawable.yonghu2);
-            }else{
-                docPicture = BitmapFactory.decodeByteArray(docIcon, 0, docIcon.length);
-            }
+
+//            if(docIcon==null){//如果医生没有设置头像，则使用本地默认头像
+//                docPicture=BitmapFactory.decodeResource(getResources(),R.drawable.yonghu2);
+//            }else{
+//                docPicture = BitmapFactory.decodeByteArray(docIcon, 0, docIcon.length);
+//            }
 
             //获取学生的头像
             PictureStore pictureStore = (PictureStore) method.readObjFromSDCard("Icon");
