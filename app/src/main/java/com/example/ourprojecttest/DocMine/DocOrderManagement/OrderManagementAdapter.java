@@ -104,16 +104,17 @@ public class OrderManagementAdapter extends RecyclerView.Adapter <RecyclerView.V
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         if(viewType==ITEM_CONTENT){
-            view=View.inflate(mContext,R.layout.need_to_pay_content,null);
+            view=LayoutInflater.from(mContext).inflate(R.layout.need_to_pay_content,parent,false);
             return new ContentViewHolder(view);
         }
         else if (viewType==ITEM_HEADER){
-            view=View.inflate(mContext,R.layout.need_to_post_header,null);
+            //view=View.inflate(mContext,R.layout.need_to_post_header,null);
+            view=LayoutInflater.from(mContext).inflate(R.layout.need_to_post_header,parent,false);
             return new HeadViewHolder(view);
         }
         else{
-            view= LayoutInflater.from(mContext)
-                    .inflate(R.layout.need_to_post_footer, parent, false);
+           // view= LayoutInflater.from(mContext).inflate(R.layout.need_to_post_footer, parent, false);
+            view=LayoutInflater.from(mContext).inflate(R.layout.need_to_post_footer,parent,false);
             return new FootViewHolder(view);
         }
     }
