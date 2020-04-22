@@ -1,6 +1,7 @@
 package com.example.ourprojecttest.StuMine.StuNeedToPost;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -80,19 +81,22 @@ public class NeedToPostAdapter extends RecyclerView.Adapter <RecyclerView.ViewHo
     }
 
     @NonNull
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         if(viewType==ITEM_CONTENT){
-            view=View.inflate(mContext, R.layout.need_to_pay_content,null);
+           // view=View.inflate(mContext, R.layout.need_to_pay_content,null);
+           view= LayoutInflater.from(mContext).inflate(R.layout.need_to_pay_content,parent,false);
             return new ContentViewHolder(view);
         }
         else if (viewType==ITEM_HEADER){
-            view=View.inflate(mContext,R.layout.need_to_pay_header,null);
+            //view=View.inflate(mContext,R.layout.need_to_pay_header,null);
+            view=LayoutInflater.from(mContext).inflate(R.layout.need_to_pay_header,parent,false);
             return new HeadViewHolder(view);
         }
         else{
-            view=View.inflate(mContext,R.layout.stu_need_to_post,null);
+           view= LayoutInflater.from(mContext).inflate(R.layout.stu_need_to_post,parent,false);
             return new FootViewHolder(view);
         }
     }
