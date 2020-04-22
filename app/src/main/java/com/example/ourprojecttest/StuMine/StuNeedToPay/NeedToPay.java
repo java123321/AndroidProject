@@ -346,6 +346,8 @@ public class NeedToPay extends AppCompatActivity {
         String add = method.getFileData("Address", NeedToPay.this);
         if (add.equals("用户暂未设置收货地址")||add == "" ) {
             AddressMessage.addressMessage = false;
+        }else {
+            AddressMessage.addressMessage=true;
         }
         refresh.setColorSchemeColors(getResources().getColor(R.color.color_bottom));
         refresh.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.color_progressbar));

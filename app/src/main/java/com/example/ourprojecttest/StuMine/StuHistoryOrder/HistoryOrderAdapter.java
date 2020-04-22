@@ -1,9 +1,7 @@
 package com.example.ourprojecttest.StuMine.StuHistoryOrder;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Gravity;
@@ -19,7 +17,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ourprojecttest.StuDrugStore.UpDrugMsgActivity;
 import com.example.ourprojecttest.StuMine.StuNeedToPay.ContentInfoBean;
 import com.example.ourprojecttest.StuMine.StuNeedToPay.HeadInfoBean;
 import com.example.ourprojecttest.StuMine.StuNeedToPay.FooterInfoBean;
