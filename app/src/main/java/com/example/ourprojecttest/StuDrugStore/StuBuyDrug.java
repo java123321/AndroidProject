@@ -43,10 +43,22 @@ import com.example.ourprojecttest.AlipayModule.PayResult;
 import com.example.ourprojecttest.R;
 import com.example.ourprojecttest.StuMine.AddressActivity;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.Map;
 
 public class StuBuyDrug extends AppCompatActivity {
+    private String ipAddress;
     private Display display;
     private int toastHeight;
     private static final int SDK_PAY_FLAG = 1;
@@ -71,8 +83,10 @@ public class StuBuyDrug extends AppCompatActivity {
     private TextView yaoPinNumber;
     private TextView stuDiscribe;
     private TextView priceShow;//用于显示药品单价,随个数变化而变化,显示在底部实付款位置
+    private String orderPrice;//订单总价格，用于传给支付宝支付接口
     private TextView address;
     private LinearLayout addressChange;
+    private String drugId;
     private boolean AliPayFlag = true;
     double unitePrice;
     private boolean addressMessage = true;
@@ -94,13 +108,8 @@ public class StuBuyDrug extends AppCompatActivity {
                     String resultStatus = payResult.getResultStatus();
                     // 判断resultStatus 为9000则代表支付成功
                     if (TextUtils.equals(resultStatus, "9000")) {
-                        // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
-                        //showAlert(StuBuyDrug.this, "Payment success:" + payResult);
-                       // AlertDialog.Builder builder = new AlertDialog.Builder(StuBuyDrug.this);
-                       // builder.setTitle("提示");
-                       // builder.setMessage("支付成功！");
-                       // builder.setPositiveButton("确定", null);
-                       // builder.show();
+
+                        upOrder();//用户支付成功后将药品订单添加到数据库中
                         String s1="支付成功";
                         show(R.layout.layout_chenggong,s1);
                     } else {
@@ -147,7 +156,81 @@ public class StuBuyDrug extends AppCompatActivity {
         ;
     };
 
+    private void upOrder(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                JSONArray jsonArray = new JSONArray();
+                try {
+                    JSONObject object = new JSONObject();
+                    object.put("stuId",method.getFileData("ID",StuBuyDrug.this ));
+                    jsonArray.put(object);
+                    object = new JSONObject();
+                    object.put("drugId", drugId);
+                    object.put("drugAmount", yaoPinNumber.getText().toString().trim());
+                    jsonArray.put(object);
+                    StringBuffer stringBuffer = new StringBuffer();
+                    stringBuffer.append("type=finishPay&order=")//notPost是学生待付款的订单
+                            .append(jsonArray.toString());
+                    Log.d("result", "arrayis:" + jsonArray.toString());
+                    byte[] data = stringBuffer.toString().getBytes();
+
+                    String strUrl = ipAddress + "IM/UploadOrder";
+                    try {
+                        URL url = new URL(strUrl);
+                        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                        urlConnection.setConnectTimeout(3000);//设置连接超时时间
+                        urlConnection.setDoInput(true);//设置输入流采用字节流
+                        urlConnection.setDoOutput(true);//设置输出采用字节流
+                        urlConnection.setRequestMethod("POST");
+                        urlConnection.setUseCaches(false);//使用post方式不能使用缓存
+                        urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");//设置meta参数
+                        urlConnection.setRequestProperty("Content-Length", String.valueOf(data.length));
+                        urlConnection.setRequestProperty("Charset", "utf-8");
+                        //获得输出流，向服务器写入数据
+                        OutputStream outputStream = urlConnection.getOutputStream();
+                        outputStream.write(data);
+                        int response = urlConnection.getResponseCode();//获得服务器的响应码
+                        if (response == HttpURLConnection.HTTP_OK) {
+
+                            InputStream inputStream = urlConnection.getInputStream();
+                            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                            byte[] result = new byte[1024];
+                            int len = 0;
+                            while ((len = inputStream.read(result)) != -1) {
+                                byteArrayOutputStream.write(result, 0, len);
+                            }
+
+                            String resultData = new String(byteArrayOutputStream.toByteArray()).trim();
+                            Log.d("stubuydrug.resultdata",resultData);
+//                    if (resultData.equals("订单添加成功")) {
+//                        msg.what = SUCCESS;
+//                        Log.d("result", "success3");
+//                    } else {
+//                        msg.what = FAULT;
+//                        Log.d("result", "fault1");
+//                    }
+                        } else {
+//                    msg.what = FAULT;
+//                    Log.d("result", "fault2");
+                        }
+//                handler.sendMessage(msg);
+                        Log.d("result", "312");
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+
     private void updateDisplayPrice(String orderPrice) {
+        this.orderPrice=orderPrice;
         String str = "合计:￥" + orderPrice;
         SpannableStringBuilder builder = new SpannableStringBuilder(str);
         ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#FF1493"));
@@ -160,6 +243,7 @@ public class StuBuyDrug extends AppCompatActivity {
         EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);//沙箱环境需要的代码
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stu_buy_yaopin);
+        ipAddress = getResources().getString(R.string.ipAdrress);
         initView();
         ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
         //设置点击减号事件
@@ -213,14 +297,9 @@ public class StuBuyDrug extends AppCompatActivity {
 
                 if (addressMessage){
                     if (AliPayFlag) {
-                        payV2(getIntent().getStringExtra("price"));
+                        payV2(orderPrice);
                     } else {
-                        //如果用户选中的是微信支付，则弹出提示
-                        //AlertDialog.Builder bb = new AlertDialog.Builder(StuBuyDrug.this);
-                        //bb.setPositiveButton("确定", null);
-                        //bb.setMessage("微信支付功能尚未开通，尽请期待！");
-                        //bb.setTitle("提示");
-                        //bb.show();
+
                         String s1="微信支付功能尚未开通，尽请期待！";
                         show(R.layout.layout_tishi_email,s1);
                     }
@@ -324,6 +403,7 @@ public class StuBuyDrug extends AppCompatActivity {
         displayDrugPicture.setImageBitmap(BitmapFactory.decodeByteArray(appIcon, 0, appIcon.length));
 
         unitePrice = Double.parseDouble(intent.getStringExtra("price"));
+        drugId=intent.getStringExtra("drugId");
         //用于显示药品单价
         displayPrice.setText("￥ " + df.format(unitePrice));
         //设置药品价格

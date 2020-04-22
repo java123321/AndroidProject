@@ -49,6 +49,7 @@ public class StuDrugDetail extends AppCompatActivity {
     private Button buy;
     private Button addToCart;
     private String Flag;
+    private String drugId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,6 +133,7 @@ public class StuDrugDetail extends AppCompatActivity {
                     intent.putExtra("name", name.getText().toString());
                     intent.putExtra("price", getIntent().getStringExtra("price"));
                     intent.putExtra("picture", getIntent().getByteArrayExtra("picture"));
+                    intent.putExtra("drugId",drugId);
                     Log.d("detail", name.getText().toString());
                     Log.d("detail", description.getText().toString());
                     startActivity(intent);
@@ -198,6 +200,7 @@ public class StuDrugDetail extends AppCompatActivity {
         description.setText(intent.getStringExtra("description"));
         rest.setText("库存量 " + intent.getStringExtra("rest"));
         Flag = intent.getStringExtra("Flag");
+        drugId=intent.getStringExtra("id");
         byte[] pic = intent.getByteArrayExtra("picture");
         picture.setImageBitmap(BitmapFactory.decodeByteArray(pic, 0, pic.length));
     }
