@@ -75,6 +75,8 @@ public class OrderManagement extends AppCompatActivity {
                     Toast.makeText(OrderManagement.this, "发货失败", Toast.LENGTH_SHORT).show();
                 }
                 case NO_DATA:{
+                    adapter.dataList.clear();
+                    adapter.notifyDataSetChanged();
                     Toast.makeText(OrderManagement.this, "暂无订单", Toast.LENGTH_SHORT).show();
                     refresh.setRefreshing(false);
                     break;

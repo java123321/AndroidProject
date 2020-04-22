@@ -32,7 +32,7 @@ public class OrderManagementAdapter extends RecyclerView.Adapter <RecyclerView.V
     private final int NOT_POST=2;
     private final int HAVE_POST=5;
     private int TYPE;
-    private ArrayList<Object> dataList=new ArrayList<>();
+    public ArrayList<Object> dataList=new ArrayList<>();
 
     public OrderManagementAdapter(Context context){
         mContext=context;
@@ -78,6 +78,7 @@ public class OrderManagementAdapter extends RecyclerView.Adapter <RecyclerView.V
         public FootViewHolder(@NonNull View itemView) {
             super(itemView);
             alreadPost=itemView.findViewById(R.id.alreadyPostDoc);
+
             if(TYPE==HAVE_POST){//如果是已经发货的
                 alreadPost.setText("删除订单");
             }
