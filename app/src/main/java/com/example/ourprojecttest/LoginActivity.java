@@ -1,21 +1,16 @@
 package com.example.ourprojecttest;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.Settings;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
@@ -32,7 +27,6 @@ import android.widget.Toast;
 
 import com.example.ourprojecttest.NavigationBar.DocBottomNavigation;
 import com.example.ourprojecttest.NavigationBar.StuBottomNavigation;
-import com.example.ourprojecttest.StuMine.StuNeedToPay.AddressMessage;
 import com.example.ourprojecttest.Utils.CommonMethod;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 import com.example.ourprojecttest.Utils.PictureStore;
@@ -40,7 +34,6 @@ import com.example.ourprojecttest.Utils.PictureStore;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.net.URL;
 
 import okhttp3.OkHttpClient;
@@ -133,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        new AddressMessage();
+
         display = getWindowManager().getDefaultDisplay();
         // 获取屏幕高度
         toastHeight = display.getHeight();

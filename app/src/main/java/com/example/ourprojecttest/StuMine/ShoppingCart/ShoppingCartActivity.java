@@ -102,11 +102,11 @@ public class ShoppingCartActivity extends AppCompatActivity {
                     Toast toast = Toast.makeText(ShoppingCartActivity.this, "订单添加成功！", Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
                     toast.show();
-
                     //订单上传到服务器之后，将购物车选中的药品删除
                     //将药品删除之后保存到本地
                     method.saveObj2SDCard("drugIdSet", set);
                     method.writeListIntoSDcard("ShoppingCartList", drugList);
+                    displayDrug(drugList);
                     break;
                 }
                 case FAULT: {
@@ -128,20 +128,11 @@ public class ShoppingCartActivity extends AppCompatActivity {
                     if (TextUtils.equals(resultStatus, "9000")) {
                         //用户支付成功之后，开始将订单上传到数据库
                         uploadOrder();
-                        //AlertDialog.Builder builder = new AlertDialog.Builder(ShoppingCartActivity.this);
-                        //builder.setTitle("提示");
-                        //builder.setMessage("支付成功！");
-                        //builder.setPositiveButton("确定", null);
-                        //builder.show();
+
                         String s="支付成功！";
                         show(R.layout.layout_chenggong,s);
                         Log.d("msp", "2");
                     } else {
-                       // AlertDialog.Builder builder = new AlertDialog.Builder(ShoppingCartActivity.this);
-                       // builder.setTitle("提示");
-                       // builder.setMessage("支付失败！");
-                       // builder.setPositiveButton("确定", null);
-                       // builder.show();
                         String s="支付失败！";
                         show(R.layout.layout_tishi_email,s);
                     }
@@ -365,30 +356,8 @@ public class ShoppingCartActivity extends AppCompatActivity {
 
     }
 
-    private void initView() {
-        //获取学生的id
-        stuId = method.getFileData("ID", ShoppingCartActivity.this);
-        display = getWindowManager().getDefaultDisplay();
-        // 获取屏幕高度
-        toastHeight = display.getHeight();
-        addDrug = findViewById(R.id.addDrug);
-        empty = findViewById(R.id.empty);
-        buyNow = findViewById(R.id.stu_shopping_cart_buy_now);
-        bianji = findViewById(R.id.stu_shopping_cart_bianji);
-        payPrice = findViewById(R.id.stu_shopping_cart_pay_price);
-        selectAllButton = findViewById(R.id.stu_shopping_cart_quanxuan_wrap);
-        selectAll = findViewById(R.id.stu_shopping_cart_quanxuan);
-        mRecycler = findViewById(R.id.stu_shopping_cart_recyclerview);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        mRecycler.setLayoutManager(layoutManager);
-        mAdapter = new ShoppingCartAdapter(this);
-        mRecycler.setAdapter(mAdapter);
-        lists = method.readListFromSdCard("ShoppingCartList");
 
-        String add = method.getFileData("Address", ShoppingCartActivity.this);
-        if (add.equals("用户暂未设置收货地址")||add == "" ) {
-            AddressMessage = false;
-        }
+    private void displayDrug(ArrayList<ShoppingCartBean> lists){
         //当购物车内容是空的情况下
         if (lists == null || lists.size() == 0) {
             Log.d("cart", "null");
@@ -412,6 +381,31 @@ public class ShoppingCartActivity extends AppCompatActivity {
                 selectAll.setImageResource(R.drawable.unchecked);
             }
         }
+    }
+
+    private void initView() {
+        //获取学生的id
+        stuId = method.getFileData("ID", ShoppingCartActivity.this);
+        display = getWindowManager().getDefaultDisplay();
+        // 获取屏幕高度
+        toastHeight = display.getHeight();
+        addDrug = findViewById(R.id.addDrug);
+        empty = findViewById(R.id.empty);
+        buyNow = findViewById(R.id.stu_shopping_cart_buy_now);
+        bianji = findViewById(R.id.stu_shopping_cart_bianji);
+        payPrice = findViewById(R.id.stu_shopping_cart_pay_price);
+        selectAllButton = findViewById(R.id.stu_shopping_cart_quanxuan_wrap);
+        selectAll = findViewById(R.id.stu_shopping_cart_quanxuan);
+        mRecycler = findViewById(R.id.stu_shopping_cart_recyclerview);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mRecycler.setLayoutManager(layoutManager);
+        mAdapter = new ShoppingCartAdapter(this);
+        mRecycler.setAdapter(mAdapter);
+        lists = method.readListFromSdCard("ShoppingCartList");
+
+
+      //显示药品
+       displayDrug(lists);
         //设置添加药品的点击事件
         addDrug.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -433,13 +427,13 @@ public class ShoppingCartActivity extends AppCompatActivity {
                 else{
                     //立即购买的点击事件
                     if (buyNow.getText().toString().trim().equals("去结算")) {
-                        if (AddressMessage){
-                            //去付款
-                            payV2(orderPrice);
-                        }else {
+                        //如果用户收获地址信息没有完善，先提示用户完善
+                        if(method.getFileData("Address",ShoppingCartActivity.this).equals("用户暂未设置收货地址")||method.getFileData("Phone",ShoppingCartActivity.this).equals("用户暂未设置手机号码")||method.getFileData("Name",ShoppingCartActivity.this).equals("用户暂未设置名字")){
                             Toast toast = Toast.makeText(ShoppingCartActivity.this, "您暂未完善收获地址信息，请先完善！", Toast.LENGTH_SHORT);
                             toast.setGravity(Gravity.BOTTOM,0,toastHeight/5);
                             toast.show();
+                        }else {
+                            payV2(orderPrice);
                         }
 
                     } else {//清除商品的点击事

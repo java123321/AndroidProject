@@ -40,6 +40,7 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.Address;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -82,9 +83,9 @@ public class AddressActivity extends AppCompatActivity {
         final EditText add_address =  findViewById(R.id.con_address);
         final Button add_submit = findViewById(R.id.submit);
         final TextView show_address =  findViewById(R.id.msg);
-        final String stu_name = method.getFileData("ID",AddressActivity.this);
+
         if (method.getFileData("Phone",AddressActivity.this)!=null&&method.getFileData("Address",AddressActivity.this)!=null)
-            show_address.setText("用户名:"+stu_name+"\n电话:"+method.getFileData("Phone",AddressActivity.this)+"\n地址:"+method.getFileData("Address",AddressActivity.this));
+            show_address.setText("用户名:"+method.getFileData("Name",AddressActivity.this)+"\n电话:"+method.getFileData("Phone",AddressActivity.this)+"\n地址:"+method.getFileData("Address",AddressActivity.this));
         compile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -121,22 +122,8 @@ public class AddressActivity extends AppCompatActivity {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-
-//                            url=ipAddress+"IM/UpdateAddress?name="+stu_name+"&address="+address16+"&phone="+show_phone;
-//                            OkHttpClient client = new OkHttpClient();
-//                            Request request = new Request.Builder()
-//                                    .url(url)
-//                                    .build();
-////                            try {
-//
-//                                Response response = client.newCall(request).execute();
-//
-//                                String responseData = response.body().string();
                                 parseJSONWithJSONObject(upAddressByPost(show_name,address,show_phone,method.getFileData("ID", AddressActivity.this)));
-//                            } catch (Exception e) {
-//                                e.printStackTrace();
-//                            }
-
+//
                         }
                     }).start();
                     show_address.setText("姓名："+show_name.trim()+"\n"+"电话："+show_phone.trim()+"\n"+"地址："+address.trim());

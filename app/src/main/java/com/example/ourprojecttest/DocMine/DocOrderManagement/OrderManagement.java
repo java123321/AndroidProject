@@ -61,6 +61,7 @@ public class OrderManagement extends AppCompatActivity {
             switch (msg.what){
                 case DELETE_SUCCESS:{
                     Toast.makeText(OrderManagement.this, "订单删除成功", Toast.LENGTH_SHORT).show();
+                    getData("getHavePost");//更新已发货的订单
                     break;
                 }
                 case DELETE_FAULT:{
@@ -69,6 +70,7 @@ public class OrderManagement extends AppCompatActivity {
                 }
                 case POST_SUCCESS:{
                     Toast.makeText(OrderManagement.this, "发货成功", Toast.LENGTH_SHORT).show();
+                    getData("notPost");//更新待发货订单
                     break;
                 }
                 case POST_FAILT:{
@@ -84,6 +86,7 @@ public class OrderManagement extends AppCompatActivity {
                 case HAVE_POST:{//展示已发货的
                     ArrayList<OrderListBean> orderList=(ArrayList<OrderListBean>)msg.obj;
                     adapter.setList(NeedToPostHelper.getDataAfterHandle(orderList),HAVE_POST);
+                    Log.d("test.order.manage.type","order.manage.havepost");
                     adapter.notifyDataSetChanged();
                     refresh.setRefreshing(false);
                     break;
