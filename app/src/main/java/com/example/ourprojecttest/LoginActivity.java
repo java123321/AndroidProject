@@ -492,7 +492,6 @@ public class LoginActivity extends AppCompatActivity {
                 String te = jsonObject.getString("Stu_Icon");
                 Log.d("denglu", te);
                 byte[] as = method.bitmap2Bytes(method.drawableToBitamp(Drawable.createFromStream(new URL(ipAddress + jsonObject.getString("Stu_Icon")).openStream(), "image.jpg")));
-
                 Log.d("denglu", "9");
                 pictureStore.setPicture(as);
                 method.saveObj2SDCard("Icon", pictureStore);

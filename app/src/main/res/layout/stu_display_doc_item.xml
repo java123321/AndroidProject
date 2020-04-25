@@ -24,13 +24,14 @@
             android:layout_marginLeft="10dp"
             android:src="@drawable/yonghu2">
         </com.example.ourprojecttest.Utils.Roundimage>
+
         <TextView
             android:id="@+id/docName"
-            android:text="李时珍"
-            android:layout_marginLeft="20dp"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_marginLeft="20dp"
+            android:text="李时珍" />
         <TextView
             android:id="@+id/docSex"
             android:text="李时珍"

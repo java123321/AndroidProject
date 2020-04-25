@@ -284,10 +284,14 @@ public class StuInformation extends AppCompatActivity implements View.OnClickLis
             String time = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA).format(new Date());
             String fileName = "photo_" + time;
             File mCutFile = new File(Environment.getExternalStorageDirectory() + "/take_photo/", fileName + ".jpeg");
+            try{
             if (!mCutFile.getParentFile().exists()) {
                 mCutFile.getParentFile().mkdirs();
             }
             mCutUri = Uri.fromFile(mCutFile);
+        }
+            catch(Exception e){
+            e.printStackTrace();}
         }
 
         intent.putExtra(MediaStore.EXTRA_OUTPUT, mCutUri);
@@ -317,7 +321,6 @@ public class StuInformation extends AppCompatActivity implements View.OnClickLis
                 // 裁剪后设置图片
                 case REQUEST_CROP:
                     try {
-
                         if (mCutUri != null)
                             img.setImageURI(mCutUri);
                         Intent intent=new Intent();
@@ -566,7 +569,7 @@ public class StuInformation extends AppCompatActivity implements View.OnClickLis
                     pictureStore.setPicture(as);
                     commonMethod.saveObj2SDCard("Icon",pictureStore);
                     commonMethod.uploadMultiFile(file, ipAddress + "/IM/PictureUpload?id=" + commonMethod.getFileData("ID", getBaseContext()) + "&type=Icon_Stu");
-
+                    Log.d("stuicon","上传成功！");
                 }
                 catch (Exception e){
                     e.printStackTrace();http://139.196.103.219:8080/IM/PictureUpload?id=12345&type=Drug_stu"
