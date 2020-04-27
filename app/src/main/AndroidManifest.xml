@@ -29,7 +29,9 @@
         android:supportsRtl="true"
         android:theme="@style/Noactionbar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".StuDiagnosis.MachineDiagnosis.DiseaseDetail"></activity>
+        <activity android:name=".StuDiagnosis.MachineDiagnosis.DrugDetail"></activity>
+        <activity android:name=".StuDiagnosis.MachineDiagnosis.RecommendDrug" />
+        <activity android:name=".StuDiagnosis.MachineDiagnosis.DiseaseDetail" />
         <activity android:name=".StuDiagnosis.MachineDiagnosis.MachineDiagnosis" />
         <activity android:name=".StuDiagnosis.VideoChat" />
         <activity
