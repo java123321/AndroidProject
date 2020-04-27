@@ -12,6 +12,7 @@
         android:background="#FD0896F5"
         >
         <EditText
+
             android:id="@+id/diseaseInput"
             android:layout_width="0dp"
             android:layout_marginLeft="40dp"

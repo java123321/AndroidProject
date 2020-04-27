@@ -56,6 +56,7 @@ public class MachineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             return holder;
         }else if(viewType==TYPE_FOOTER){//脚布局
             //脚布局
+
             View view = View.inflate(mContext, R.layout.recycler_load_more_layout, null);
             DrugStoreRecyclerAdapter.FootViewHolder footViewHolder = new DrugStoreRecyclerAdapter.FootViewHolder(view);
             return footViewHolder;

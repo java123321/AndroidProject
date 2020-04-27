@@ -208,6 +208,7 @@ public class MachineDiagnosis extends AppCompatActivity {
         当请求完成后,在把isLoading赋值为false,下次滑倒底又能进入这个方法了
          */
 
+
                 //代表当前滚动状态为停止，否则会导致重绘异常     当前滑动到最后一个项目                     并且不在加载，以防止重复加载
                 Log.d("123321", "getItemCount:" + mAdapter.getItemCount() + "");
                 Log.d("123321", "isloading:" + isLoading);
