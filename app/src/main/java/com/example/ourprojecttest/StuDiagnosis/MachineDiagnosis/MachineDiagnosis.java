@@ -6,18 +6,27 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextWatcher;
+import android.text.style.AbsoluteSizeSpan;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.example.ourprojecttest.R;
+import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,6 +47,7 @@ public class MachineDiagnosis extends AppCompatActivity {
     //正在加载更多
     private static final int LOADING_MORE = 1;
     //没有更多
+    private  Drawable searchEditDraw1,searchEditDraw;
     static final int NO_MORE = 2;
     private MachineAdapter mAdapter;
     private EditText diseaseInput;
@@ -81,12 +91,12 @@ public class MachineDiagnosis extends AppCompatActivity {
             clear = true;
         }
     };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_machine_diagnosis);
         initView();
+        ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
     }
     private void initView(){
         display = getWindowManager().getDefaultDisplay();
@@ -102,16 +112,28 @@ public class MachineDiagnosis extends AppCompatActivity {
                 getData("1", loadNum, diseaseInput.getText().toString().trim());
             }
         });
+        refreshLayout.setColorSchemeColors(getResources().getColor(R.color.color_bottom));
+        refreshLayout.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.color_progressbar));
         diseaseSearch=findViewById(R.id.search);
         diseaseInput=findViewById(R.id.diseaseInput);
         empty = findViewById(R.id.empty);
         empty.setVisibility(View.GONE);
         mRecycler=findViewById(R.id.machinRecycer);
         layoutManager = new LinearLayoutManager(MachineDiagnosis.this);
-        mRecycler.setLayoutManager(layoutManager);
+        //设置Editview 提示字大小
+        SpannableString s=new SpannableString("请输入病症");
+        AbsoluteSizeSpan textsize=new AbsoluteSizeSpan(14,true);
+        s.setSpan(textsize,0,s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        diseaseInput.setHint(s);
         //设置适配器
+        mRecycler.setLayoutManager(layoutManager);
         mAdapter=new MachineAdapter(this);
         mRecycler.setAdapter(mAdapter);
+        searchEditDraw = getResources().getDrawable(R.drawable.sousou);
+        searchEditDraw1 = getResources().getDrawable(R.drawable.chahao);
+        searchEditDraw.setBounds(0, 0, 60, 60);
+        searchEditDraw1.setBounds(0, 0, 70, 70);
+        diseaseInput.setCompoundDrawables(searchEditDraw, null, null, null);
         //设置搜索的点击事件
         diseaseSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,7 +149,52 @@ public class MachineDiagnosis extends AppCompatActivity {
 
             }
         });
+        //实现输入框文本清空功能
+        diseaseInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (diseaseInput.getText().toString().length() == 0) {
+                   diseaseInput.setCompoundDrawables(searchEditDraw, null, null, null);
+                    diseaseInput.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View view, MotionEvent event) {
+                            //获取点击焦点
+                            return false;
+                        }
+                    });
+
+                } else {
+                    diseaseInput.setCompoundDrawables(searchEditDraw, null, searchEditDraw1, null);
+                    diseaseInput.setOnTouchListener(new View.OnTouchListener() {
+                        Drawable drawable = diseaseInput.getCompoundDrawables()[2];
+
+                        @Override
+                        public boolean onTouch(View view, MotionEvent event) {
+                            //获取点击焦点
+                            if (event.getX() > diseaseInput.getWidth() - diseaseInput.getPaddingRight() - drawable.getIntrinsicWidth()) {
+                                //其他活动无响应
+                                if (event.getAction() != MotionEvent.ACTION_UP)
+                                    return false;
+                                //清空用户名
+                                diseaseInput.setText("");
+                            }
+                            return false;
+                        }
+                    });
+                }
+
+            }
+        });
 
 
         //给recyclerView添加滑动监听

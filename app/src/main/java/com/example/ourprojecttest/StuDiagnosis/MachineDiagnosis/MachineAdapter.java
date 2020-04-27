@@ -3,6 +3,7 @@ package com.example.ourprojecttest.StuDiagnosis.MachineDiagnosis;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -49,7 +50,8 @@ public class MachineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if(viewType==TYPE_ITEM){
-            View view = View.inflate(mContext, R.layout.display_disease_item, null);
+            //View view = View.inflate(mContext, R.layout.display_disease_item, null);
+            View view = LayoutInflater.from(mContext).inflate(R.layout.display_disease_item,parent,false);
             final ViewHolder holder = new ViewHolder(view);
             return holder;
         }else if(viewType==TYPE_FOOTER){//脚布局
