@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.ourprojecttest">
+
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+
     <uses-feature android:name="android.hardware.camera2" />
     <uses-feature android:name="android.hardware.camera2.autofocus" />
+
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -13,14 +16,12 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
-
     <application
-
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="智慧医疗"
@@ -28,7 +29,9 @@
         android:supportsRtl="true"
         android:theme="@style/Noactionbar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".StuDiagnosis.VideoChat"></activity>
+        <activity android:name=".StuDiagnosis.MachineDiagnosis.DiseaseDetail"></activity>
+        <activity android:name=".StuDiagnosis.MachineDiagnosis.MachineDiagnosis" />
+        <activity android:name=".StuDiagnosis.VideoChat" />
         <activity
             android:name=".DocTreatment.DocDrugStore"
             android:launchMode="singleInstance" />
@@ -48,8 +51,7 @@
         <activity android:name=".StuDrugStore.StuDrugDetail" />
         <activity android:name=".FindPass" />
         <activity android:name=".StuDrugStore.UpDrugMsgActivity" />
-        <activity android:name=".PerfeActivity" >
-        </activity>
+        <activity android:name=".PerfeActivity" />
         <activity android:name=".StuMine.AddressActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".DocTreatment.DocOperatActivity" />
@@ -61,8 +63,7 @@
             android:name=".NavigationBar.StuBottomNavigation"
             android:launchMode="singleTask" />
         <activity android:name=".DocMine.DocInformation.DocInformation" />
-        <activity
-            android:name=".WelcomeActivity">
+        <activity android:name=".WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -91,6 +92,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
         <receiver android:name=".StuMine.StuNeedToPay.NeedToPay$LocalReceiver" />
     </application>
 

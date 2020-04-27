@@ -21,6 +21,7 @@ public class DisplayDocAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHo
     private CommonMethod method=new CommonMethod();
     public ArrayList<DisplayDocBean> mList=new ArrayList<>();
     private Context mContext;
+
     public DisplayDocAdapter(Context context){
         this.mContext=context;
     }
@@ -37,7 +38,6 @@ public class DisplayDocAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHo
     class ViewHolder extends RecyclerView.ViewHolder{
         Roundimage docIcon;
         TextView docName;
-        TextView docBrief;
         TextView docSex;
         private LinearLayout item;
         public ViewHolder(@NonNull View itemView) {

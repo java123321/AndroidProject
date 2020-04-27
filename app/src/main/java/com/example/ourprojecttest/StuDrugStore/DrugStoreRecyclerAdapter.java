@@ -129,39 +129,6 @@ public class DrugStoreRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         return null;
     }
 
-    public ArrayList<ShoppingCartBean> readListFromSdCard(String fileName) {
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {  //检测sd卡是否存在
-            ArrayList<ShoppingCartBean> list;
-            File sdCardDir = Environment.getExternalStorageDirectory();
-            File sdFile = new File(sdCardDir, fileName);
-            try {
-                FileInputStream fis = new FileInputStream(sdFile);
-                ObjectInputStream ois = new ObjectInputStream(fis);
-                list = (ArrayList<ShoppingCartBean>) ois.readObject();
-                fis.close();
-                ois.close();
-                return list;
-            } catch (StreamCorruptedException e) {
-                e.printStackTrace();
-                return null;
-            } catch (OptionalDataException e) {
-                e.printStackTrace();
-                return null;
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                return null;
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-                return null;
-            }
-        } else {
-            return null;
-        }
-    }
-
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Log.d("adpter", "onBindView is started :" + num++);
@@ -183,10 +150,7 @@ public class DrugStoreRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                 footViewHolder.tv_state.setText("");
             }
             switch (footer_state) {//根据状态来让脚布局发生改变
-//        case PULL_LOAD_MORE://上拉加载
-//          footViewHolder.mProgressBar.setVisibility(View.GONE);
-//          footViewHolder.tv_state.setText("上拉加载更多");
-//          break;
+
                 case LOADING_MORE:
                     footViewHolder.tv_state.setText("正在加载...");
                     break;
@@ -236,7 +200,7 @@ public class DrugStoreRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
      * 脚布局的ViewHolder
      */
     public static class FootViewHolder extends RecyclerView.ViewHolder {
-        private TextView tv_state;
+        public TextView tv_state;
 
         public FootViewHolder(View itemView) {
             super(itemView);
@@ -251,7 +215,7 @@ public class DrugStoreRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
      */
     public void changeState(int state) {
         this.footer_state = state;
-        notifyDataSetChanged();
+//        notifyDataSetChanged();
     }
     //该方法用来为脚布局跨越多行
     @Override

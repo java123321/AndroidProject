@@ -320,9 +320,12 @@ public class StuInformation extends AppCompatActivity implements View.OnClickLis
                     break;
                 // 裁剪后设置图片
                 case REQUEST_CROP:
+                    Log.d("stuinformation","test1");
                     try {
                         if (mCutUri != null)
                             img.setImageURI(mCutUri);
+
+                        Log.d("stuinformation","test");
                         Intent intent=new Intent();
                         intent.putExtra("Picture",mCutUri.toString());
                         intent.setAction("Picture");

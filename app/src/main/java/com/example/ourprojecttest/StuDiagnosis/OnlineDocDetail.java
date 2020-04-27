@@ -16,6 +16,7 @@ public class OnlineDocDetail extends AppCompatActivity {
     private TextView docSex;
     private TextView docBrief;
     private ImageView docLicense;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

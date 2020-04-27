@@ -12,15 +12,15 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
+
+import com.example.ourprojecttest.StuDiagnosis.MachineDiagnosis.MachineDiagnosis;
 import com.example.ourprojecttest.Utils.CommonMethod;
-import com.example.ourprojecttest.Utils.DiffuseView;
 import com.example.ourprojecttest.R;
 import com.example.ourprojecttest.Utils.DiffuseView1;
 import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 
 public class StuDiagnosisFragment extends Fragment {
         Context mContext;
-        private TextView docWorkTime;
         CommonMethod method=new CommonMethod();
 
     @Nullable
@@ -37,12 +37,20 @@ public class StuDiagnosisFragment extends Fragment {
         diffuseView1.start();
         diffuseView.start();
         return view;
-
     }
 
 
     private void initView(View view){
         Button rgwenzhen=view.findViewById(R.id.wenzhen1);
+        Button machineDiagnoise=view.findViewById(R.id.wenzhen2);
+        //设置机器问诊的点击事件
+        machineDiagnoise.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getContext(), MachineDiagnosis.class);
+                startActivity(intent);
+            }
+        });
 
         //注册人工问诊的点击事件
         rgwenzhen.setOnClickListener(new View.OnClickListener(){

@@ -75,7 +75,7 @@ public class StuDrugStoreFragment extends Fragment {
 
     private int totalNum;//该变量用于记录每次访问数据库时数据库总共返回了多少条数据
 //    private int currentNum;//该变量用于记录在下载图片的线程中进行数目的统计，用于标志位的判断
-    private int total = 0;
+    private int total = 0;//改变量用于统计每次检索检索条件数据库里共有多少条数据
     private int last = 0;
     private  Activity a;
     private SwipeRefreshLayout refreshLayout;
@@ -116,7 +116,6 @@ public class StuDrugStoreFragment extends Fragment {
         @Override
         public void handleMessage(@NonNull Message msg) {
             List<DrugInformation> list = (List<DrugInformation>) msg.obj;
-
 
             if (clear) {//如果通过更改检索条件检索的结果，则清空原有数组
 
@@ -381,7 +380,6 @@ public class StuDrugStoreFragment extends Fragment {
 
                     for (int i = 1; i < jsonArray.length(); i++) {
                         Log.d("drugstore", i + "");
-                        //如果为当前的第一条数据的话，则读取数据数量的信息
                         jsonObject = jsonArray.getJSONObject(i);
                         try {
                             Log.d("yaodianName", jsonObject.getString("Drug_Name"));
@@ -451,7 +449,6 @@ public class StuDrugStoreFragment extends Fragment {
     }
 
     private void initTextView(View view) {
-
         //获取控件实例
         addNewDrug = view.findViewById(R.id.doc_yaodian_add_yaopin);
         Log.d("stu.drug.store.fragment","flag.exe");
