@@ -86,6 +86,7 @@ public class RecommendDrug extends AppCompatActivity {
         initView();
     }
 
+
     private void initView(){
         String drugName=getIntent().getStringExtra("diseaseName");
         machineIpAddress=getResources().getString(R.string.machineIpAddress);

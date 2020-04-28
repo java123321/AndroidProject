@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".StuDiagnosis.MachineDiagnosis.RecommendDrug">
     <TextView
+
         android:text="药品推荐"
         android:gravity="center"
         android:layout_width="match_parent"

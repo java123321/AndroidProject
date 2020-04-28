@@ -41,6 +41,7 @@ public class DrugDetail extends AppCompatActivity {
         guige.setText("规格:"+intent.getStringExtra("guiGe"));
         unite=findViewById(R.id.unite);
         unite.setText("单位:"+intent.getStringExtra("unit"));
+
         wenhao=findViewById(R.id.wenhao);
         wenhao.setText("批准文号:"+intent.getStringExtra("approvalNumber"));
         changjia=findViewById(R.id.changjia);

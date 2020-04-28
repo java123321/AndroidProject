@@ -45,6 +45,7 @@
                 app:diffuse_maxWidth="300"
                 app:diffuse_speed="2"
                 app:diffuse_width="6" />
+
         </FrameLayout>
     <FrameLayout
         android:layout_width="match_parent"
