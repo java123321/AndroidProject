@@ -178,6 +178,7 @@ public class MachineDiagnosis extends AppCompatActivity {
                     diseaseInput.setOnTouchListener(new View.OnTouchListener() {
                         Drawable drawable = diseaseInput.getCompoundDrawables()[2];
 
+
                         @Override
                         public boolean onTouch(View view, MotionEvent event) {
                             //获取点击焦点

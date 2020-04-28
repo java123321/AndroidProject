@@ -275,6 +275,7 @@ public class StuDrugStoreFragment extends Fragment {
                     inputInspect.setOnTouchListener(new View.OnTouchListener() {
                         Drawable drawable = inputInspect.getCompoundDrawables()[2];
 
+
                         @Override
                         public boolean onTouch(View view, MotionEvent event) {
                             //获取点击焦点
