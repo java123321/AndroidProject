@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.ourprojecttest.R;
+import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 
 public class DiseaseDetail extends AppCompatActivity {
     private TextView diseaseName;
@@ -58,7 +59,7 @@ public class DiseaseDetail extends AppCompatActivity {
         introduction=findViewById(R.id.introduction);
         introduction.setText("疾病介绍:"+intent.getStringExtra("introducton"));
         suggestDrug=findViewById(R.id.suggestDrug);
-
+        ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
         //设置药品推荐按钮的点击事件
         suggestDrug.setOnClickListener(new View.OnClickListener() {
             @Override

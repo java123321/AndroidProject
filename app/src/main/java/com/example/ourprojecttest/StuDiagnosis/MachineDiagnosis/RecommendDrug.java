@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.example.ourprojecttest.R;
+import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -87,6 +88,7 @@ public class RecommendDrug extends AppCompatActivity {
     private void initView(){
         String drugName=getIntent().getStringExtra("diseaseName");
         machineIpAddress=getResources().getString(R.string.machineIpAddress);
+        ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
         refreshLayout = findViewById(R.id.dropDownToRefresh);
         //实现下拉刷新的更新事件
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

@@ -6,95 +6,193 @@
     android:orientation="vertical"
     tools:context=".StuDiagnosis.MachineDiagnosis.DiseaseDetail">
 
-    <ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:scrollbars="vertical"
-        android:fadingEdge="vertical">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
-            android:gravity="right"
+        android:layout_height="70dp"
+        android:gravity="right">
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            >
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="100dp"
-                android:layout_gravity="center"
-                android:text="药品详情" />
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="#FD0896F5"
+                android:gravity="center"
+                android:textSize="25dp"
+                android:textColor="#FFFFFF"
+                android:text="疾病详情"/>
 
             <Button
                 android:id="@+id/suggestDrug"
                 android:text="药品推荐"
                 android:layout_gravity="right"
+                android:gravity="center_vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
+                android:layout_height="70dp"/>
+        </FrameLayout>
+    </LinearLayout>
 
-
-
+        <ScrollView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:scrollbars="vertical"
+            android:fadingEdge="vertical">
+        <LinearLayout
+            android:background="#FFFFFF"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
         <TextView
+            android:text="疾病名称"
             android:id="@+id/diseaseName"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
+            android:textSize="16dp"
+            android:gravity="center_vertical"
+            android:textColor="#0B0A0A"
+            android:layout_height="50dp"
+            />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#FF909090"/>
         <TextView
+            android:text="疾病名称"
             android:id="@+id/diseaseAlias"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
+            android:textSize="16dp"
+            android:gravity="center_vertical"
+            android:textColor="#0B0A0A"
+            android:layout_height="50dp"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#FF909090"/>
         <TextView
+            android:text="疾病名称"
             android:id="@+id/infectious"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
+            android:textSize="16dp"
+            android:gravity="center_vertical"
+            android:textColor="#0B0A0A"
+            android:layout_height="50dp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#FF909090"/>
         <TextView
+            android:text="疾病名称"
             android:id="@+id/treatmentDepart"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
+            android:textSize="16dp"
+            android:gravity="center_vertical"
+            android:textColor="#0B0A0A"
+            android:layout_height="50dp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#FF909090"/>
         <TextView
+            android:text="疾病名称"
             android:id="@+id/insurance"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:textSize="16dp"
+            android:gravity="center_vertical"
+            android:textColor="#0B0A0A"
+            android:layout_height="50dp"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#FF909090"/>
         <TextView
+            android:text="疾病名称"
             android:id="@+id/population"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:textSize="16dp"
+            android:gravity="center_vertical"
+            android:textColor="#0B0A0A"
+            android:layout_height="50dp"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#FF909090"/>
         <TextView
+            android:text="疾病名称"
             android:id="@+id/cocurrentDisease"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
+            android:textSize="16dp"
+            android:gravity="center_vertical"
+            android:textColor="#0B0A0A"
+            android:layout_height="50dp"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#FF909090"/>
         <TextView
+            android:text="疾病名称"
             android:id="@+id/symptom"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
+            android:textSize="16dp"
+            android:gravity="center_vertical"
+            android:textColor="#0B0A0A"
+            android:layout_height="50dp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#FF909090"/>
+            <TextView
+                android:text="疾病名称"
+                android:id="@+id/recoveryRate"
+                android:layout_width="match_parent"
+                android:textSize="16dp"
+                android:gravity="center_vertical"
+                android:textColor="#0B0A0A"
+                android:layout_height="50dp"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#FF909090"/>
         <TextView
+            android:text="疾病名称"
             android:id="@+id/location"
             android:layout_width="match_parent"
+            android:textSize="16dp"
+            android:gravity="center_vertical"
+            android:textColor="#0B0A0A"
             android:layout_height="wrap_content" />
-
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#FF909090"/>
         <TextView
+            android:text="疾病名称"
             android:id="@+id/duration"
             android:layout_width="match_parent"
+            android:textSize="16dp"
+            android:gravity="center_vertical"
+            android:textColor="#0B0A0A"
             android:layout_height="wrap_content" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#FF909090"/>
+
 
         <TextView
-            android:id="@+id/recoveryRate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
+            android:text="疾病名称"
             android:id="@+id/introduction"
             android:layout_width="match_parent"
+            android:textSize="16dp"
+            android:gravity="center_vertical"
+            android:textColor="#0B0A0A"
             android:layout_height="wrap_content" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#FF909090"/>
     </LinearLayout>
-    </ScrollView>
+        </ScrollView>
+    </LinearLayout>
 
-</LinearLayout>
