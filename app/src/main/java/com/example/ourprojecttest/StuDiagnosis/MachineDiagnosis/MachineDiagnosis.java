@@ -181,7 +181,7 @@ public class MachineDiagnosis extends AppCompatActivity {
                         @Override
                         public boolean onTouch(View view, MotionEvent event) {
                             //获取点击焦点
-                            if (event.getX() > diseaseInput.getWidth() - diseaseInput.getPaddingRight() - drawable.getIntrinsicWidth()) {
+                            if (event.getX() > diseaseInput.getWidth() - diseaseInput.getPaddingRight() - 70) {
                                 //其他活动无响应
                                 if (event.getAction() != MotionEvent.ACTION_UP)
                                     return false;
