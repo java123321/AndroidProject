@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="85dp"
         android:background="#FD0896F5"
         >
         <EditText
