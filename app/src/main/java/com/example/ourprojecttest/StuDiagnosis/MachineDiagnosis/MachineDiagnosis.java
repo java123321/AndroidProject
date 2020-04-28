@@ -303,61 +303,66 @@ public class MachineDiagnosis extends AppCompatActivity {
 
                     //获取后面的药品数组
                     JSONArray jsonArray = new JSONArray(responseData);
+
                     //totalNum用于记录当前的一次获取数据中一共有多少条数据
                     totalNum = jsonArray.length() - 1;
 //                    currentNum = 0;//每次访问数据库的时候将已加载的数目重置为0
                     Log.d("yaodian", "the total num is :" + String.valueOf(totalNum));
                     ArrayList<DiseaseBean> list = new ArrayList<>();
-                    JSONObject jsonObject = jsonArray.getJSONObject(0);
-                    /*-------读取json数组中的第一个信息↓-----*/
-                    String description = jsonObject.getString("Msg");
-                    StringBuilder sb = new StringBuilder();
-                    //开始读取该检索总共有多少条数据
-                    for (int j = 5; ; j++) {
-                        char ch = description.charAt(j);
-                        //如果是数字，则截取下来
-                        if ((int) ch >= 48 && (int) ch <= 57) {
-                            sb.append(ch);
-                        } else {
-                            break;
-                        }
-                    }
-                    Log.d("yaodianChar", sb.toString());
-                    //用total变量记录当前检索结果的总共数据个数
-                    total = Integer.valueOf(sb.toString().trim());
-                    //last变量用于记录当前已加载的个数
-                    last += jsonArray.length() - 1;
-                    Log.d("storea", "total is " + total + "last is :" + last);
-                    /*-------读取json数组中的第一个信息↑-----*/
-                    for (int i = 1; i < jsonArray.length(); i++) {
-                        Log.d("drugstore", i + "");
-                        jsonObject = jsonArray.getJSONObject(i);
-                        try {
-
-                            final DiseaseBean diseaseBean = new DiseaseBean(); //创建药品对象
-                            diseaseBean.setRecoveryRate(jsonObject.getString("recovery_rate"));
-                            diseaseBean.setInfectious(jsonObject.getString("infectious"));
-                            diseaseBean.setTreatmentDepartment(jsonObject.getString("recovery_rate"));
-                            diseaseBean.setBelongInsurance(jsonObject.getString("insurance_belong"));
-                            diseaseBean.setPopulation(jsonObject.getString("population"));
-                            diseaseBean.setConcurrentDisease(jsonObject.getString("population"));
-                            diseaseBean.setSymptom(jsonObject.getString("symptom"));
-                            diseaseBean.setId(jsonObject.getString("disease_id"));
-                            diseaseBean.setDiseaseName(jsonObject.getString("disease_name"));
-                            diseaseBean.setDiseaseAlias(jsonObject.getString("disease_alias"));
-                            diseaseBean.setIntroduction(jsonObject.getString("introduction"));
-                            diseaseBean.setDiseaseLocation(jsonObject.getString("introduction"));
-                            diseaseBean.setTreatmentDuration(jsonObject.getString("introduction"));
-
-                            if (flag) {
-                                Log.d("drugstore", "中断--------------------------");
-                                return;
+                    if(totalNum>0){
+                        JSONObject jsonObject = jsonArray.getJSONObject(0);
+                        /*-------读取json数组中的第一个信息↓-----*/
+                        String description = jsonObject.getString("Msg");
+                        StringBuilder sb = new StringBuilder();
+                        //开始读取该检索总共有多少条数据
+                        for (int j = 5; ; j++) {
+                            char ch = description.charAt(j);
+                            //如果是数字，则截取下来
+                            if ((int) ch >= 48 && (int) ch <= 57) {
+                                sb.append(ch);
+                            } else {
+                                break;
                             }
-                            list.add(diseaseBean);//将设置好的对象添加到数组里
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        }
+                        Log.d("yaodianChar", sb.toString());
+                        //用total变量记录当前检索结果的总共数据个数
+                        total = Integer.valueOf(sb.toString().trim());
+                        //last变量用于记录当前已加载的个数
+                        last += jsonArray.length() - 1;
+                        Log.d("storea", "total is " + total + "last is :" + last);
+                        /*-------读取json数组中的第一个信息↑-----*/
+                        for (int i = 1; i < jsonArray.length(); i++) {
+                            Log.d("drugstore", i + "");
+                            jsonObject = jsonArray.getJSONObject(i);
+                            try {
+
+                                final DiseaseBean diseaseBean = new DiseaseBean(); //创建药品对象
+                                diseaseBean.setRecoveryRate(jsonObject.getString("recovery_rate"));
+                                diseaseBean.setInfectious(jsonObject.getString("infectious"));
+                                diseaseBean.setTreatmentDepartment(jsonObject.getString("recovery_rate"));
+                                diseaseBean.setBelongInsurance(jsonObject.getString("insurance_belong"));
+                                diseaseBean.setPopulation(jsonObject.getString("population"));
+                                diseaseBean.setConcurrentDisease(jsonObject.getString("population"));
+                                diseaseBean.setSymptom(jsonObject.getString("symptom"));
+                                diseaseBean.setId(jsonObject.getString("disease_id"));
+                                diseaseBean.setDiseaseName(jsonObject.getString("disease_name"));
+                                diseaseBean.setDiseaseAlias(jsonObject.getString("disease_alias"));
+                                diseaseBean.setIntroduction(jsonObject.getString("introduction"));
+                                diseaseBean.setDiseaseLocation(jsonObject.getString("introduction"));
+                                diseaseBean.setTreatmentDuration(jsonObject.getString("introduction"));
+
+                                if (flag) {
+                                    Log.d("drugstore", "中断--------------------------");
+                                    return;
+                                }
+                                list.add(diseaseBean);//将设置好的对象添加到数组里
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
                         }
 
+                        Log.d("machin.diagnose.list.size",list.size()+"");
                     }
 
                     Message msg = Message.obtain();
