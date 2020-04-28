@@ -61,6 +61,7 @@ public class DiseaseDetail extends AppCompatActivity {
         suggestDrug=findViewById(R.id.suggestDrug);
         ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
         //设置药品推荐按钮的点击事件
+
         suggestDrug.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
