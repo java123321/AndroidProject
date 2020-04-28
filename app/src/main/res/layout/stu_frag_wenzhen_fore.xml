@@ -67,11 +67,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="#00000000"
-            app:diffuse_color="#BA03FC"
-            app:diffuse_coreColor="#BA03FC"
+            app:diffuse_color="#03FC5E"
+            app:diffuse_coreColor="#03FC5E"
             app:diffuse_coreImage="@android:drawable/ic_menu_search"
             app:diffuse_coreRadius="120"
             app:diffuse_maxWidth="350"
+
             app:diffuse_speed="2"
             app:diffuse_width="6" />
     </FrameLayout>
