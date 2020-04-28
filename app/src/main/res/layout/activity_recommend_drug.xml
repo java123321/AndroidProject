@@ -9,7 +9,10 @@
         android:text="药品推荐"
         android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:background="#FD0896F5"
+        android:textSize="25dp"
+        android:textColor="#FFFFFF"
+        android:layout_height="70dp"/>
 
     <LinearLayout
         android:id="@+id/empty"

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.example.ourprojecttest.R;
+import com.example.ourprojecttest.Utils.ImmersiveStatusbar;
 
 public class DrugDetail extends AppCompatActivity {
     private TextView name;
@@ -31,6 +32,7 @@ public class DrugDetail extends AppCompatActivity {
 
     private void initView(){
         Intent intent=getIntent();
+        ImmersiveStatusbar.getInstance().Immersive(getWindow(), getActionBar());//状态栏透明
         name=findViewById(R.id.name);
         name.setText("药品名字:"+intent.getStringExtra("goodsName"));
         py=findViewById(R.id.py);

@@ -5,73 +5,179 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".StuDiagnosis.MachineDiagnosis.DrugDetail">
-    <ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:scrollbars="vertical"
-        android:fadingEdge="vertical">
+
     <LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="70dp">
+
     <TextView
         android:gravity="center"
         android:text="药品详情"
+        android:background="#FD0896F5"
+        android:textSize="25dp"
+        android:textColor="#FFFFFF"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="70dp"/>
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/name"
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fadingEdge="vertical"
+        android:scrollbars="vertical">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical">
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:textSize="16dp"
+            android:gravity="center_vertical"
+            android:textColor="#0B0A0A"
+            android:text="药品"
+            android:layout_height="50dp" />
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="0.5dp"
+        android:background="#FF909090"/>
 
-    <TextView
-        android:id="@+id/py"
+        <TextView
+            android:id="@+id/py"
+            android:layout_width="match_parent"
+            android:textSize="16dp"
+            android:gravity="center_vertical"
+            android:textColor="#0B0A0A"
+            android:text="药品"
+            android:layout_height="50dp" />
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="0.5dp"
+        android:background="#FF909090"/>
     <TextView
         android:id="@+id/guige"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:textSize="16dp"
+        android:text="药品"
+        android:gravity="center_vertical"
+        android:textColor="#0B0A0A"
+        android:layout_height="50dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#FF909090"/>
     <TextView
         android:id="@+id/unite"
+        android:text="药品"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
+        android:textSize="16dp"
+        android:gravity="center_vertical"
+        android:textColor="#0B0A0A"
+        android:layout_height="50dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#FF909090"/>
     <TextView
         android:id="@+id/wenhao"
+        android:text="药品"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
+        android:textSize="16dp"
+        android:gravity="center_vertical"
+        android:textColor="#0B0A0A"
+        android:layout_height="50dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#FF909090"/>
     <TextView
         android:id="@+id/changjia"
+        android:textSize="16dp"
+        android:text="药品"
+        android:gravity="center_vertical"
+        android:textColor="#0B0A0A"
+        android:layout_height="50dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+      />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#FF909090"/>
     <TextView
         android:id="@+id/tiaoxingma"
+        android:text="药品"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:textSize="16dp"
+        android:gravity="center_vertical"
+        android:textColor="#0B0A0A"
+        android:layout_height="50dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#FF909090"/>
     <TextView
         android:id="@+id/zhuzhi"
+        android:text="药品"
         android:layout_width="match_parent"
+        android:textSize="16dp"
+        android:gravity="center_vertical"
+        android:textColor="#0B0A0A"
         android:layout_height="wrap_content"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#FF909090"/>
     <TextView
         android:id="@+id/shuomingshu"
+        android:text="药品"
         android:layout_width="match_parent"
+        android:textSize="16dp"
+        android:gravity="center_vertical"
+        android:textColor="#0B0A0A"
         android:layout_height="wrap_content"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#FF909090"/>
     <TextView
         android:id="@+id/buchong"
         android:layout_width="match_parent"
+        android:textSize="16dp"
+        android:text="药品"
+        android:gravity="center_vertical"
+        android:textColor="#0B0A0A"
         android:layout_height="wrap_content"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#FF909090"/>
     <TextView
+        android:text="药品"
         android:id="@+id/otc"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:textSize="16dp"
+        android:gravity="center_vertical"
+        android:textColor="#0B0A0A"
+        android:layout_height="50dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#FF909090"/>
     <TextView
         android:id="@+id/time"
+        android:text="药品"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:textSize="16dp"
+        android:gravity="center_vertical"
+        android:textColor="#0B0A0A"
+        android:layout_height="50dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#FF909090"/>
 </LinearLayout>
     </ScrollView>
 </LinearLayout>
+

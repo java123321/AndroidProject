@@ -98,7 +98,8 @@ public class RecommendDrug extends AppCompatActivity {
                 getData("1", loadNum,drugName);
             }
         });
-
+        refreshLayout.setColorSchemeColors(getResources().getColor(R.color.color_bottom));
+        refreshLayout.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.color_progressbar));
         empty = findViewById(R.id.empty);
         empty.setVisibility(View.GONE);
         mRecycler=findViewById(R.id.machinRecycer);
